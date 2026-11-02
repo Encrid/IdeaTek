@@ -1,0 +1,47 @@
+[[case]]
+name = "ideatek_place_t has the size and the alignment of its Usage"
+run = ["{out}/window_layout{exe}", "place"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/window_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_window_mode_t has the size and the alignment of its Usage"
+run = ["{out}/window_layout{exe}", "window_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/window_layout{exe}", "state"] }
+
+[[case]]
+name = "ideatek_surface_t has the size and the alignment of its Usage"
+run = ["{out}/window_layout{exe}", "surface"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/window_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_window_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/window_layout{exe}", "request"]
+claims = { status = 0, order = ["size 152", "alignment 4", "title 0", "width 128", "height 132", "x 136", "y 140", "screen 144", "place 148", "mode 149", "resizable 150", "borderless 151"] }
+false = { run = ["{out}/window_layout{exe}", "state"] }
+
+[[case]]
+name = "ideatek_window_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/window_layout{exe}", "state"]
+claims = { status = 0, order = ["size 48", "alignment 8", "display 0", "window 8", "width 16", "height 20", "scale 24", "x 28", "y 32", "screen 36", "mode 40", "focused 41", "close_asked 42", "surface 43"] }
+false = { run = ["{out}/window_layout{exe}", "request"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/window_layout{exe}", "descriptors"]
+claims = { status = 0, line = ["uint8_t { IDEATEK_PLACE_SYSTEM = 0, IDEATEK_PLACE_CENTER = 1, IDEATEK_PLACE_AT = 2 }", "uint8_t { IDEATEK_WINDOW_MODE_WINDOWED = 0, IDEATEK_WINDOW_MODE_MINIMIZED = 1, IDEATEK_WINDOW_MODE_MAXIMIZED = 2, IDEATEK_WINDOW_MODE_FULLSCREEN = 3, IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN = 4 }", "uint8_t { IDEATEK_SURFACE_NONE = 0, IDEATEK_SURFACE_WINDOWS = 1, IDEATEK_SURFACE_METAL = 2, IDEATEK_SURFACE_XLIB = 3, IDEATEK_SURFACE_XCB = 4, IDEATEK_SURFACE_WAYLAND = 5, IDEATEK_SURFACE_ANDROID = 6, IDEATEK_SURFACE_WEB = 7 }", "{ char title[128]; uint32_t width; uint32_t height; int32_t x; int32_t y; uint32_t screen; ideatek_place_t place; ideatek_window_mode_t mode; bool resizable; bool borderless; }", "{ uint64_t display; uint64_t window; uint32_t width; uint32_t height; float scale; int32_t x; int32_t y; uint32_t screen; ideatek_window_mode_t mode; bool focused; bool close_asked; ideatek_surface_t surface; }"] }
+false = { run = ["{out}/window_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/window_layout{exe}", "texts"]
+claims = { status = 0, line = ["{ IDEATEK_PLACE_SYSTEM = 0, IDEATEK_PLACE_CENTER = 1, IDEATEK_PLACE_AT = 2 }", "{ IDEATEK_WINDOW_MODE_WINDOWED = 0, IDEATEK_WINDOW_MODE_MINIMIZED = 1, IDEATEK_WINDOW_MODE_MAXIMIZED = 2, IDEATEK_WINDOW_MODE_FULLSCREEN = 3, IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN = 4 }", "{ IDEATEK_SURFACE_NONE = 0, IDEATEK_SURFACE_WINDOWS = 1, IDEATEK_SURFACE_METAL = 2, IDEATEK_SURFACE_XLIB = 3, IDEATEK_SURFACE_XCB = 4, IDEATEK_SURFACE_WAYLAND = 5, IDEATEK_SURFACE_ANDROID = 6, IDEATEK_SURFACE_WEB = 7 }", "{ char title[128]; uint32_t width; uint32_t height; int32_t x; int32_t y; uint32_t screen; ideatek_place_t place; ideatek_window_mode_t mode; bool resizable; bool borderless; }", "{ uint64_t display; uint64_t window; uint32_t width; uint32_t height; float scale; int32_t x; int32_t y; uint32_t screen; ideatek_window_mode_t mode; bool focused; bool close_asked; ideatek_surface_t surface; }"] }
+false = { run = ["{out}/window_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/window", "-I", "{bridge}/include", "-c", "tests/window/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/window", "-c", "tests/window/layout/alone.c", "-o", "{case}/alone.o"] }

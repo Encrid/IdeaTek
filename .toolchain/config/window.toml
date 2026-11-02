@@ -1,0 +1,53 @@
+[parts.window]
+name = "BC-IdeaTek-Window"
+uses = []
+third_party = []
+
+[parts.window.package]
+proof = "tests/window/package/proof.c"
+include = ["{bridge}/include"]
+
+[compose.window]
+part = "window"
+from = "include/window"
+headers = ["*.h"]
+into = "include"
+
+[[artifact]]
+name = "window_layout"
+kind = "program"
+part = "window"
+test = true
+sources = ["tests/window/layout/layout.c"]
+include = ["include/window", "{bridge}/include"]
+
+[[artifact]]
+name = "window_probe"
+kind = "native_module"
+part = "window"
+test = true
+sources = ["tests/window/probe/probe.c"]
+include = ["include/window"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{space_probe_words}"]
+
+
+[[artifact.variants]]
+name = "window_late"
+defines = ["ROLE_LATE"]
+manifest = ["test:probe@1.0.0", "{space_probe_words}"]
+
+[[artifact.variants]]
+name = "window_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{space_spawn_words}"]
+
+[[artifact.variants]]
+name = "window_module"
+defines = ["ROLE_WINDOW"]
+manifest = ["test:window@1.0.0", "{space_probe_words}"]
+
+[[artifact.variants]]
+name = "window_reader"
+defines = ["ROLE_READER"]
+manifest = ["test:reader@1.0.0", "{space_probe_words}"]

@@ -1,0 +1,115 @@
+[[case]]
+name = "a module declares the six types, each enum before the structs that have a field of it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/window_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["window_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = ["ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:WindowRequest", "ideatek:WindowState", "ideatek:MainWindow"]
+'''
+
+[case.false.folders]
+"{case}/m" = ["window_late"]
+
+[[case]]
+name = "the game loads with write on ideatek:WindowRequest and ideatek:MainWindow, and attaches both to a window"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/window_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["window_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:WindowRequest", "ideatek:MainWindow"]
+read = ["ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:WindowRequest"]
+read = ["ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:MainWindow"]
+'''
+
+[[case]]
+name = "the window module loads with write on ideatek:WindowState and read on the request"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:window@1.0.0, native, m/window_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["window_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:window@1.0.0"]
+write = ["ideatek:WindowState"]
+read = ["ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:WindowRequest", "ideatek:MainWindow"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:window@1.0.0"]
+write = []
+read = ["ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:WindowRequest", "ideatek:MainWindow"]
+'''
+
+[[case]]
+name = "a reader loads with read on ideatek:WindowState and the enums of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/window_reader{library}"] }
+
+[case.folders]
+"{case}/m" = ["window_reader"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = ["ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:WindowState"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = ["ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:WindowState"]
+'''
