@@ -1,7 +1,7 @@
 # include/space/ideatek_space.h
 
 `include/space/ideatek_space.h` gives the types of the place of an entity in the world: their C types and their descriptors.
-Each module in C that writes or reads one of these types includes this header.
+`readme.md`, *The contracts*, tells the rules of each contract.
 
 ## The space
 
@@ -18,7 +18,6 @@ Each module in C that writes or reads one of these types includes this header.
 
 `ideatek:WorldTransform` has one writer: the space module.
 In each round, the movers write before the space module reads, and the space module writes before the readers read.
-Two movers that write `ideatek:Transform` in one phase need a pair of the deployment. The document of `bridge.h` of Bridge tells the pairs.
 
 ## ideatek:ideatek_vec3_t
 
@@ -132,9 +131,6 @@ ENDPROCEDURE
 | `ideatek:Parent` | `ideatek_parent_t` | `ideatek_parent_t_desc` | `IDEATEK_PARENT_FIELDS` |
 | `ideatek:WorldTransform` | `ideatek_world_transform_t` | `ideatek_world_transform_t_desc` | `IDEATEK_WORLD_TRANSFORM_FIELDS` |
 
-Each macro of the text gives the braces of its type and the text between them.
-A module in another language does not include the header. It states the descriptor of each type with these bytes, in the order of the table:
-
 ```text
 { float x; float y; float z; }
 { float x; float y; float z; float w; }
@@ -147,8 +143,6 @@ A module in another language does not include the header. It states the descript
 
 ## The declarations
 
-Each module that uses a type declares it in its `init`. A module in C gives the C type and the descriptor of this header.
-Bridge compares the descriptors byte for byte. It also refuses a second module that states another kind, storage layout or `on_destroy`.
 
 | Type of Bridge | Kind | Storage layout | `on_destroy` |
 | --- | --- | --- | --- |
@@ -161,16 +155,12 @@ Bridge compares the descriptors byte for byte. It also refuses a second module t
 | `ideatek:WorldTransform` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 A module declares a type before the struct that names it. Bridge finds the type of a field only among the types that are already declared.
-Bridge does not compare `on_unload`, so each module states its own.
 
 ## The grants
 
-No module has the namespace `ideatek`. Thus each module needs a grant for each type that it declares. The deployment gives it in `read` or `write` of the module.
 
 | Role | `write` | `read` |
 | --- | --- | --- |
 | A mover | `ideatek:Transform` and `ideatek:Parent` | `ideatek:ideatek_vec3_t`, `ideatek:ideatek_quat_t`, `ideatek:ideatek_position_t` and `ideatek:ideatek_entity_t` |
 | The space module | `ideatek:WorldTransform` | `ideatek:Transform`, `ideatek:Parent` and the 4 types of the fields |
 | A reader | No type. | `ideatek:WorldTransform` and `ideatek:ideatek_position_t` |
-
-The document of `bridge_abi.h` of Bridge tells what each grant allows.

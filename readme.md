@@ -21,6 +21,21 @@ Python 3.11 or a later version.
 | `python project.py clean` | Removes what the build made. Keeps what `fetch` downloaded. |
 | `python project.py distclean` | Removes the folder `build`, also what `fetch` downloaded. |
 
+### The contracts
+
+Each part has a header in `include` and a document in `docs/extern`, which gives its types.
+
+- Each module in C that writes or reads a type of a part includes the header of the part.
+- Each macro of the text gives the braces of its type and the text between them.
+- A module in another language does not include a header. It states the descriptor of each type with the bytes of the document.
+- Each module that uses a type declares it in its `init`. A module in C gives the C type and the descriptor of the header.
+- Bridge compares the descriptors byte for byte. It also refuses a second module that states another kind, storage layout or `on_destroy`.
+- Bridge does not compare `on_unload`, so each module states its own.
+- No module has the namespace `ideatek`. Thus each module needs a grant for each type that it declares, in `read` or `write` of the deployment.
+- Two modules that conflict in one phase need a pair of the deployment.
+
+The documents of `bridge.h` and `bridge_abi.h` of Bridge tell the pairs and what each grant allows.
+
 ## Contributing
 
 | Document | Content |
