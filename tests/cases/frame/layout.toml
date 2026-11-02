@@ -1,0 +1,29 @@
+[[case]]
+name = "ideatek_frame_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/frame_layout{exe}", "frame"]
+claims = { status = 0, order = ["size 32", "alignment 8", "delta 0", "elapsed 8", "real_delta 16", "index 24"] }
+false = { run = ["{out}/frame_layout{exe}", "tick"] }
+
+[[case]]
+name = "ideatek_tick_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/frame_layout{exe}", "tick"]
+claims = { status = 0, order = ["size 24", "alignment 8", "step 0", "tick 8", "steps 16", "fraction 20"] }
+false = { run = ["{out}/frame_layout{exe}", "frame"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/frame_layout{exe}", "descriptors"]
+claims = { status = 0, line = ["{ double delta; double elapsed; double real_delta; uint64_t index; }", "{ double step; uint64_t tick; uint32_t steps; float fraction; }"] }
+false = { run = ["{out}/frame_layout{exe}", "frame"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/frame_layout{exe}", "texts"]
+claims = { status = 0, line = ["{ double delta; double elapsed; double real_delta; uint64_t index; }", "{ double step; uint64_t tick; uint32_t steps; float fraction; }"] }
+false = { run = ["{out}/frame_layout{exe}", "frame"] }
+
+[[case]]
+name = "the header compiles with the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/frame", "-I", "{bridge}/include", "-c", "tests/frame/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/frame", "-c", "tests/frame/layout/alone.c", "-o", "{case}/alone.o"] }

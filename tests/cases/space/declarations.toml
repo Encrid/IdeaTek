@@ -8,7 +8,7 @@ claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/space_probe{
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/space/presets/check.toml"]
+presets = ["{root}/tests/presets/check.toml"]
 [content]
 paths = ["m"]
 [backend.native]
@@ -33,7 +33,7 @@ claims = { status = 0, line = ["loaded: test:mover@1.0.0, native, m/space_mover{
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/space/presets/check.toml"]
+presets = ["{root}/tests/presets/check.toml"]
 [content]
 paths = ["m"]
 [backend.native]
@@ -45,7 +45,7 @@ read = ["ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_pos
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/space/presets/check.toml"]
+presets = ["{root}/tests/presets/check.toml"]
 [content]
 paths = ["m"]
 [backend.native]
@@ -68,7 +68,7 @@ claims = { status = 0, line = ["loaded: test:space@1.0.0, native, m/space_place{
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/space/presets/check.toml"]
+presets = ["{root}/tests/presets/check.toml"]
 [content]
 paths = ["m"]
 [backend.native]
@@ -83,7 +83,7 @@ read = [
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/space/presets/check.toml"]
+presets = ["{root}/tests/presets/check.toml"]
 [content]
 paths = ["m"]
 [backend.native]
@@ -106,7 +106,7 @@ claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/space_reade
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/space/presets/check.toml"]
+presets = ["{root}/tests/presets/check.toml"]
 [content]
 paths = ["m"]
 [backend.native]
@@ -117,7 +117,7 @@ read = ["ideatek:WorldTransform", "ideatek:ideatek_position_t"]
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/space/presets/check.toml"]
+presets = ["{root}/tests/presets/check.toml"]
 [content]
 paths = ["m"]
 [backend.native]
