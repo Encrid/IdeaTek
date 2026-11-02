@@ -1,0 +1,13 @@
+[content.start]
+native = "load"
+
+[content.arrive]
+native = "load"
+
+[module.native]
+work_limit = "none"
+memory_limit = "none"
+init_timeout = "none"
+reload_timeout = "none"
+shutdown_timeout = "none"
+element_limit = "none"

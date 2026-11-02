@@ -1,0 +1,75 @@
+[[case]]
+name = "ideatek_vec3_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "vec3"]
+claims = { status = 0, order = ["size 12", "alignment 4", "x 0", "y 4", "z 8"] }
+false = { run = ["{out}/space_layout{exe}", "position"] }
+
+[[case]]
+name = "ideatek_quat_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "quat"]
+claims = { status = 0, order = ["size 16", "alignment 4", "x 0", "y 4", "z 8", "w 12"] }
+false = { run = ["{out}/space_layout{exe}", "vec3"] }
+
+[[case]]
+name = "ideatek_position_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "position"]
+claims = { status = 0, order = ["size 24", "alignment 8", "x 0", "y 8", "z 16"] }
+false = { run = ["{out}/space_layout{exe}", "vec3"] }
+
+[[case]]
+name = "ideatek_entity_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "entity"]
+claims = { status = 0, order = ["size 8", "alignment 8", "id 0"] }
+false = { run = ["{out}/space_layout{exe}", "parent"] }
+
+[[case]]
+name = "ideatek_transform_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "transform"]
+claims = { status = 0, order = ["size 56", "alignment 8", "position 0", "rotation 24", "scale 40"] }
+false = { run = ["{out}/space_layout{exe}", "world_transform"] }
+
+[[case]]
+name = "ideatek_parent_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "parent"]
+claims = { status = 0, order = ["size 8", "alignment 8", "entity 0"] }
+false = { run = ["{out}/space_layout{exe}", "entity"] }
+
+[[case]]
+name = "ideatek_world_transform_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "world_transform"]
+claims = { status = 0, order = ["size 64", "alignment 8", "origin 0", "basis 24"] }
+false = { run = ["{out}/space_layout{exe}", "transform"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/space_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "{ float x; float y; float z; }",
+    "{ float x; float y; float z; float w; }",
+    "{ double x; double y; double z; }",
+    "{ uint64_t id; }",
+    "{ ideatek_position_t position; ideatek_quat_t rotation; ideatek_vec3_t scale; }",
+    "{ ideatek_entity_t entity; }",
+    "{ ideatek_position_t origin; float basis[9]; }",
+] }
+false = { run = ["{out}/space_layout{exe}", "transform"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/space_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ float x; float y; float z; }",
+    "{ float x; float y; float z; float w; }",
+    "{ double x; double y; double z; }",
+    "{ uint64_t id; }",
+    "{ ideatek_position_t position; ideatek_quat_t rotation; ideatek_vec3_t scale; }",
+    "{ ideatek_entity_t entity; }",
+    "{ ideatek_position_t origin; float basis[9]; }",
+] }
+false = { run = ["{out}/space_layout{exe}", "world_transform"] }
+
+[[case]]
+name = "the header compiles with the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/space", "-I", "{bridge}/include", "-c", "tests/space/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/space", "-c", "tests/space/layout/alone.c", "-o", "{case}/alone.o"] }

@@ -1,0 +1,8 @@
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "space", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Space-{target}.zip", "include/ideatek_space.h", "license",
+    "package proof: BC-IdeaTek-Space ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "space"] }

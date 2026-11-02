@@ -1,0 +1,108 @@
+/*
+** Copyright (C) 2026 Enkrid
+**
+** Under the GNU Affero General Public License, version 3 only: see license.
+*/
+#include <stddef.h>
+#include <stdio.h>
+#include <string.h>
+
+#include <ideatek_space.h>
+
+#define SIZE(type) printf("size %zu\nalignment %zu\n", sizeof(type), \
+    alignof(type))
+#define AT(type, field) printf("%s %zu\n", #field, offsetof(type, field))
+#define TEXT_OF(...) BRIDGE_SCHEMA_TEXT(__VA_ARGS__)
+
+typedef struct {
+    const char *name;
+    void (*show)(void);
+} show_mode_t;
+
+static void show_vec3(void)
+{
+    SIZE(ideatek_vec3_t);
+    AT(ideatek_vec3_t, x);
+    AT(ideatek_vec3_t, y);
+    AT(ideatek_vec3_t, z);
+}
+
+static void show_quat(void)
+{
+    SIZE(ideatek_quat_t);
+    AT(ideatek_quat_t, x);
+    AT(ideatek_quat_t, y);
+    AT(ideatek_quat_t, z);
+    AT(ideatek_quat_t, w);
+}
+
+static void show_position(void)
+{
+    SIZE(ideatek_position_t);
+    AT(ideatek_position_t, x);
+    AT(ideatek_position_t, y);
+    AT(ideatek_position_t, z);
+}
+
+static void show_entity(void)
+{
+    SIZE(ideatek_entity_t);
+    AT(ideatek_entity_t, id);
+}
+
+static void show_transform(void)
+{
+    SIZE(ideatek_transform_t);
+    AT(ideatek_transform_t, position);
+    AT(ideatek_transform_t, rotation);
+    AT(ideatek_transform_t, scale);
+}
+
+static void show_parent(void)
+{
+    SIZE(ideatek_parent_t);
+    AT(ideatek_parent_t, entity);
+}
+
+static void show_world_transform(void)
+{
+    SIZE(ideatek_world_transform_t);
+    AT(ideatek_world_transform_t, origin);
+    AT(ideatek_world_transform_t, basis);
+}
+
+static void show_descriptors(void)
+{
+    printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", ideatek_vec3_t_desc,
+        ideatek_quat_t_desc, ideatek_position_t_desc, ideatek_entity_t_desc,
+        ideatek_transform_t_desc, ideatek_parent_t_desc,
+        ideatek_world_transform_t_desc);
+}
+
+static void show_texts(void)
+{
+    printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", TEXT_OF(IDEATEK_VEC3_FIELDS),
+        TEXT_OF(IDEATEK_QUAT_FIELDS), TEXT_OF(IDEATEK_POSITION_FIELDS),
+        TEXT_OF(IDEATEK_ENTITY_FIELDS), TEXT_OF(IDEATEK_TRANSFORM_FIELDS),
+        TEXT_OF(IDEATEK_PARENT_FIELDS),
+        TEXT_OF(IDEATEK_WORLD_TRANSFORM_FIELDS));
+}
+
+int main(int argc, char **argv)
+{
+    static const show_mode_t MODES[] = {
+        { "vec3", show_vec3 }, { "quat", show_quat },
+        { "position", show_position }, { "entity", show_entity },
+        { "transform", show_transform }, { "parent", show_parent },
+        { "world_transform", show_world_transform },
+        { "descriptors", show_descriptors }, { "texts", show_texts }
+    };
+
+    for (size_t i = 0; argc > 1 && i < sizeof(MODES) / sizeof(MODES[0]); i++)
+        if (!strcmp(argv[1], MODES[i].name)) {
+            MODES[i].show();
+            return (0);
+        }
+    printf("usage: layout <mode>\n");
+    return (2);
+}
