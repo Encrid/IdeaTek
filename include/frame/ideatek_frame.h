@@ -11,13 +11,20 @@
     #include "bridge_schema.h"
 
     #define IDEATEK_FRAME_FIELDS { double delta; double elapsed; \
-        double real_delta; uint64_t index; }
-    #define IDEATEK_TICK_FIELDS { double step; uint64_t tick; \
-        uint32_t steps; float fraction; }
+        double real_delta; double real_elapsed; double scale; \
+        uint64_t index; uint8_t paused; }
+    #define IDEATEK_TICK_FIELDS { double step; double elapsed; \
+        uint64_t tick; uint32_t steps; float fraction; }
+    #define IDEATEK_TIME_REQUEST_FIELDS { double scale; uint32_t rate; \
+        uint8_t paused; }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_frame_t, IDEATEK_FRAME_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_frame_t, IDEATEK_FRAME_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_tick_t, IDEATEK_TICK_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_tick_t, IDEATEK_TICK_FIELDS);
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_time_request_t,
+    IDEATEK_TIME_REQUEST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_time_request_t,
+    IDEATEK_TIME_REQUEST_FIELDS);
 
 #endif
