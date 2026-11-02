@@ -17,31 +17,55 @@ claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/window_layout{exe}", "request"] }
 
 [[case]]
+name = "ideatek_flash_t has the size and the alignment of its Usage"
+run = ["{out}/window_layout{exe}", "flash"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/window_layout{exe}", "display"] }
+
+[[case]]
+name = "ideatek_orientation_t has the size and the alignment of its Usage"
+run = ["{out}/window_layout{exe}", "orientation"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/window_layout{exe}", "video_mode"] }
+
+[[case]]
 name = "ideatek_window_request_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/window_layout{exe}", "request"]
-claims = { status = 0, order = ["size 152", "alignment 4", "title 0", "width 128", "height 132", "x 136", "y 140", "screen 144", "place 148", "mode 149", "resizable 150", "borderless 151"] }
+claims = { status = 0, order = ["size 192", "alignment 8", "title 0", "display 128", "video_mode 136", "x 144", "y 148", "width 152", "height 156", "min_width 160", "min_height 164", "max_width 168", "max_height 172", "flashes 176", "raises 180", "place 184", "mode 185", "flash 186", "resizable 187", "borderless 188", "visible 189", "always_on_top 190"] }
 false = { run = ["{out}/window_layout{exe}", "state"] }
 
 [[case]]
 name = "ideatek_window_state_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/window_layout{exe}", "state"]
-claims = { status = 0, order = ["size 48", "alignment 8", "display 0", "window 8", "width 16", "height 20", "scale 24", "x 28", "y 32", "screen 36", "mode 40", "focused 41", "close_asked 42", "surface 43"] }
+claims = { status = 0, order = ["size 112", "alignment 8", "native_display 0", "native_window 8", "display 16", "video_mode 24", "x 32", "y 36", "width 40", "height 44", "pixel_width 48", "pixel_height 52", "border_top 56", "border_left 60", "border_bottom 64", "border_right 68", "safe_x 72", "safe_y 76", "safe_width 80", "safe_height 84", "display_scale 88", "sdr_white_level 92", "hdr_headroom 96", "mode 100", "surface 101", "focused 102", "mouse_inside 103", "occluded 104", "visible 105", "resizable 106", "borderless 107", "always_on_top 108", "hdr 109", "close_asked 110"] }
+false = { run = ["{out}/window_layout{exe}", "display"] }
+
+[[case]]
+name = "ideatek_display_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/window_layout{exe}", "display"]
+claims = { status = 0, order = ["size 184", "alignment 8", "name 0", "desktop_mode 128", "current_mode 136", "x 144", "y 148", "width 152", "height 156", "usable_x 160", "usable_y 164", "usable_width 168", "usable_height 172", "content_scale 176", "orientation 180", "natural_orientation 181", "hdr 182"] }
+false = { run = ["{out}/window_layout{exe}", "video_mode"] }
+
+[[case]]
+name = "ideatek_video_mode_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/window_layout{exe}", "video_mode"]
+claims = { status = 0, order = ["size 32", "alignment 8", "display 0", "width 8", "height 12", "pixel_density 16", "refresh_numerator 20", "refresh_denominator 24", "order 28"] }
 false = { run = ["{out}/window_layout{exe}", "request"] }
 
 [[case]]
 name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/window_layout{exe}", "descriptors"]
-claims = { status = 0, line = ["uint8_t { IDEATEK_PLACE_SYSTEM = 0, IDEATEK_PLACE_CENTER = 1, IDEATEK_PLACE_AT = 2 }", "uint8_t { IDEATEK_WINDOW_MODE_WINDOWED = 0, IDEATEK_WINDOW_MODE_MINIMIZED = 1, IDEATEK_WINDOW_MODE_MAXIMIZED = 2, IDEATEK_WINDOW_MODE_FULLSCREEN = 3, IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN = 4 }", "uint8_t { IDEATEK_SURFACE_NONE = 0, IDEATEK_SURFACE_WINDOWS = 1, IDEATEK_SURFACE_METAL = 2, IDEATEK_SURFACE_XLIB = 3, IDEATEK_SURFACE_XCB = 4, IDEATEK_SURFACE_WAYLAND = 5, IDEATEK_SURFACE_ANDROID = 6, IDEATEK_SURFACE_WEB = 7 }", "{ char title[128]; uint32_t width; uint32_t height; int32_t x; int32_t y; uint32_t screen; ideatek_place_t place; ideatek_window_mode_t mode; bool resizable; bool borderless; }", "{ uint64_t display; uint64_t window; uint32_t width; uint32_t height; float scale; int32_t x; int32_t y; uint32_t screen; ideatek_window_mode_t mode; bool focused; bool close_asked; ideatek_surface_t surface; }"] }
+claims = { status = 0, line = ["uint8_t { IDEATEK_PLACE_SYSTEM = 0, IDEATEK_PLACE_CENTER = 1, IDEATEK_PLACE_AT = 2 }", "uint8_t { IDEATEK_WINDOW_MODE_WINDOWED = 0, IDEATEK_WINDOW_MODE_MINIMIZED = 1, IDEATEK_WINDOW_MODE_MAXIMIZED = 2, IDEATEK_WINDOW_MODE_FULLSCREEN = 3, IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN = 4 }", "uint8_t { IDEATEK_SURFACE_NONE = 0, IDEATEK_SURFACE_WINDOWS = 1, IDEATEK_SURFACE_METAL = 2, IDEATEK_SURFACE_XLIB = 3, IDEATEK_SURFACE_XCB = 4, IDEATEK_SURFACE_WAYLAND = 5, IDEATEK_SURFACE_ANDROID = 6, IDEATEK_SURFACE_WEB = 7 }", "uint8_t { IDEATEK_FLASH_CANCEL = 0, IDEATEK_FLASH_BRIEFLY = 1, IDEATEK_FLASH_UNTIL_FOCUSED = 2 }", "uint8_t { IDEATEK_ORIENTATION_UNKNOWN = 0, IDEATEK_ORIENTATION_LANDSCAPE = 1, IDEATEK_ORIENTATION_LANDSCAPE_FLIPPED = 2, IDEATEK_ORIENTATION_PORTRAIT = 3, IDEATEK_ORIENTATION_PORTRAIT_FLIPPED = 4 }", "{ char title[128]; ideatek_entity_t display; ideatek_entity_t video_mode; int32_t x; int32_t y; uint32_t width; uint32_t height; uint32_t min_width; uint32_t min_height; uint32_t max_width; uint32_t max_height; uint32_t flashes; uint32_t raises; ideatek_place_t place; ideatek_window_mode_t mode; ideatek_flash_t flash; bool resizable; bool borderless; bool visible; bool always_on_top; }", "{ uint64_t native_display; uint64_t native_window; ideatek_entity_t display; ideatek_entity_t video_mode; int32_t x; int32_t y; uint32_t width; uint32_t height; uint32_t pixel_width; uint32_t pixel_height; int32_t border_top; int32_t border_left; int32_t border_bottom; int32_t border_right; int32_t safe_x; int32_t safe_y; uint32_t safe_width; uint32_t safe_height; float display_scale; float sdr_white_level; float hdr_headroom; ideatek_window_mode_t mode; ideatek_surface_t surface; bool focused; bool mouse_inside; bool occluded; bool visible; bool resizable; bool borderless; bool always_on_top; bool hdr; bool close_asked; }", "{ char name[128]; ideatek_entity_t desktop_mode; ideatek_entity_t current_mode; int32_t x; int32_t y; uint32_t width; uint32_t height; int32_t usable_x; int32_t usable_y; uint32_t usable_width; uint32_t usable_height; float content_scale; ideatek_orientation_t orientation; ideatek_orientation_t natural_orientation; bool hdr; }", "{ ideatek_entity_t display; uint32_t width; uint32_t height; float pixel_density; int32_t refresh_numerator; int32_t refresh_denominator; uint32_t order; }"] }
 false = { run = ["{out}/window_layout{exe}", "texts"] }
 
 [[case]]
 name = "each macro of a text gives the braces of its type and the text between them"
 run = ["{out}/window_layout{exe}", "texts"]
-claims = { status = 0, line = ["{ IDEATEK_PLACE_SYSTEM = 0, IDEATEK_PLACE_CENTER = 1, IDEATEK_PLACE_AT = 2 }", "{ IDEATEK_WINDOW_MODE_WINDOWED = 0, IDEATEK_WINDOW_MODE_MINIMIZED = 1, IDEATEK_WINDOW_MODE_MAXIMIZED = 2, IDEATEK_WINDOW_MODE_FULLSCREEN = 3, IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN = 4 }", "{ IDEATEK_SURFACE_NONE = 0, IDEATEK_SURFACE_WINDOWS = 1, IDEATEK_SURFACE_METAL = 2, IDEATEK_SURFACE_XLIB = 3, IDEATEK_SURFACE_XCB = 4, IDEATEK_SURFACE_WAYLAND = 5, IDEATEK_SURFACE_ANDROID = 6, IDEATEK_SURFACE_WEB = 7 }", "{ char title[128]; uint32_t width; uint32_t height; int32_t x; int32_t y; uint32_t screen; ideatek_place_t place; ideatek_window_mode_t mode; bool resizable; bool borderless; }", "{ uint64_t display; uint64_t window; uint32_t width; uint32_t height; float scale; int32_t x; int32_t y; uint32_t screen; ideatek_window_mode_t mode; bool focused; bool close_asked; ideatek_surface_t surface; }"] }
+claims = { status = 0, line = ["{ IDEATEK_PLACE_SYSTEM = 0, IDEATEK_PLACE_CENTER = 1, IDEATEK_PLACE_AT = 2 }", "{ IDEATEK_WINDOW_MODE_WINDOWED = 0, IDEATEK_WINDOW_MODE_MINIMIZED = 1, IDEATEK_WINDOW_MODE_MAXIMIZED = 2, IDEATEK_WINDOW_MODE_FULLSCREEN = 3, IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN = 4 }", "{ IDEATEK_SURFACE_NONE = 0, IDEATEK_SURFACE_WINDOWS = 1, IDEATEK_SURFACE_METAL = 2, IDEATEK_SURFACE_XLIB = 3, IDEATEK_SURFACE_XCB = 4, IDEATEK_SURFACE_WAYLAND = 5, IDEATEK_SURFACE_ANDROID = 6, IDEATEK_SURFACE_WEB = 7 }", "{ IDEATEK_FLASH_CANCEL = 0, IDEATEK_FLASH_BRIEFLY = 1, IDEATEK_FLASH_UNTIL_FOCUSED = 2 }", "{ IDEATEK_ORIENTATION_UNKNOWN = 0, IDEATEK_ORIENTATION_LANDSCAPE = 1, IDEATEK_ORIENTATION_LANDSCAPE_FLIPPED = 2, IDEATEK_ORIENTATION_PORTRAIT = 3, IDEATEK_ORIENTATION_PORTRAIT_FLIPPED = 4 }", "{ char title[128]; ideatek_entity_t display; ideatek_entity_t video_mode; int32_t x; int32_t y; uint32_t width; uint32_t height; uint32_t min_width; uint32_t min_height; uint32_t max_width; uint32_t max_height; uint32_t flashes; uint32_t raises; ideatek_place_t place; ideatek_window_mode_t mode; ideatek_flash_t flash; bool resizable; bool borderless; bool visible; bool always_on_top; }", "{ uint64_t native_display; uint64_t native_window; ideatek_entity_t display; ideatek_entity_t video_mode; int32_t x; int32_t y; uint32_t width; uint32_t height; uint32_t pixel_width; uint32_t pixel_height; int32_t border_top; int32_t border_left; int32_t border_bottom; int32_t border_right; int32_t safe_x; int32_t safe_y; uint32_t safe_width; uint32_t safe_height; float display_scale; float sdr_white_level; float hdr_headroom; ideatek_window_mode_t mode; ideatek_surface_t surface; bool focused; bool mouse_inside; bool occluded; bool visible; bool resizable; bool borderless; bool always_on_top; bool hdr; bool close_asked; }", "{ char name[128]; ideatek_entity_t desktop_mode; ideatek_entity_t current_mode; int32_t x; int32_t y; uint32_t width; uint32_t height; int32_t usable_x; int32_t usable_y; uint32_t usable_width; uint32_t usable_height; float content_scale; ideatek_orientation_t orientation; ideatek_orientation_t natural_orientation; bool hdr; }", "{ ideatek_entity_t display; uint32_t width; uint32_t height; float pixel_density; int32_t refresh_numerator; int32_t refresh_denominator; uint32_t order; }"] }
 false = { run = ["{out}/window_layout{exe}", "descriptors"] }
 
 [[case]]
-name = "the header compiles with the headers of Bridge and nothing else"
-run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/window", "-I", "{bridge}/include", "-c", "tests/window/layout/alone.c", "-o", "{case}/alone.o"]
+name = "the header compiles with the headers of the space part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/window", "-I", "include/space", "-I", "{bridge}/include", "-c", "tests/window/layout/alone.c", "-o", "{case}/alone.o"]
 claims = { status = 0 }
-false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/window", "-c", "tests/window/layout/alone.c", "-o", "{case}/alone.o"] }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/window", "-I", "{bridge}/include", "-c", "tests/window/layout/alone.c", "-o", "{case}/alone.o"] }
