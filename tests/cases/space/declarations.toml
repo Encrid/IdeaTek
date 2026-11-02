@@ -1,5 +1,5 @@
 [[case]]
-name = "a module declares the seven types, each type after the types of its fields"
+name = "a module declares the 15 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/space_probe{library}"] }
 
@@ -16,7 +16,9 @@ library = "{bb_native}/bridge_native"
 [module."test:probe@1.0.0"]
 read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
-    "ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
+    "ideatek:PreviousWorldTransform", "ideatek:Interpolated", "ideatek:Teleported",
 ]
 '''
 
@@ -24,7 +26,7 @@ read = [
 "{case}/m" = ["space_late"]
 
 [[case]]
-name = "a mover loads with write on ideatek:Transform and ideatek:Parent"
+name = "a mover loads with write on ideatek:Transform, ideatek:Parent, ideatek:Interpolated and ideatek:Teleported"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:mover@1.0.0, native, m/space_mover{library}"] }
 
@@ -39,8 +41,11 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:mover@1.0.0"]
-write = ["ideatek:Transform", "ideatek:Parent"]
-read = ["ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t"]
+write = ["ideatek:Transform", "ideatek:Parent", "ideatek:Interpolated", "ideatek:Teleported"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+]
 '''
 
 [case.false.files]
@@ -51,15 +56,16 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:mover@1.0.0"]
-write = ["ideatek:Parent"]
+write = ["ideatek:Transform", "ideatek:Parent", "ideatek:Interpolated"]
 read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
-    "ideatek:Transform",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:Teleported",
 ]
 '''
 
 [[case]]
-name = "the space module loads with write on ideatek:WorldTransform"
+name = "the space module loads with write on its 7 types and read on ideatek:Interpolated and ideatek:Tick"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:space@1.0.0, native, m/space_place{library}"] }
 
@@ -74,10 +80,13 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:space@1.0.0"]
-write = ["ideatek:WorldTransform"]
+write = ["ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
+    "ideatek:PreviousWorldTransform", "ideatek:Teleported",
+]
 read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
-    "ideatek:Transform", "ideatek:Parent",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:Interpolated", "ideatek:Tick",
 ]
 '''
 
@@ -89,15 +98,19 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:space@1.0.0"]
-write = []
+write = ["ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
+    "ideatek:Teleported",
+]
 read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
-    "ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:Interpolated", "ideatek:Tick",
+    "ideatek:PreviousWorldTransform",
 ]
 '''
 
 [[case]]
-name = "a reader loads with read on ideatek:WorldTransform and ideatek:ideatek_position_t"
+name = "a reader loads with read on the space types"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/space_reader{library}"] }
 
@@ -112,7 +125,12 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:reader@1.0.0"]
-read = ["ideatek:WorldTransform", "ideatek:ideatek_position_t"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling", "ideatek:PreviousWorldTransform",
+    "ideatek:Interpolated",
+]
 '''
 
 [case.false.files]
@@ -123,5 +141,9 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:reader@1.0.0"]
-read = ["ideatek:WorldTransform"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling", "ideatek:PreviousWorldTransform",
+]
 '''

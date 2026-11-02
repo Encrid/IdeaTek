@@ -16,12 +16,12 @@ into = "include"
 [variables]
 space_probe_words = [
     "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
-    "spans=1024", "spawns=none", "changes=256", "persistent=none", "hot_reload=false",
+    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
 ]
 
 space_spawn_words = [
     "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
-    "spans=1024", "spawns=1", "changes=256", "persistent=none", "hot_reload=false",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=none", "hot_reload=false",
 ]
 
 [[artifact]]
@@ -38,7 +38,7 @@ kind = "native_module"
 part = "space"
 test = true
 sources = ["tests/space/probe/probe.c"]
-include = ["include/space"]
+include = ["include/space", "include/frame"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{space_probe_words}"]
 

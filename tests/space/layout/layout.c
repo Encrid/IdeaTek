@@ -50,6 +50,22 @@ static void show_entity(void)
     AT(ideatek_entity_t, id);
 }
 
+static void show_keep(void)
+{
+    SIZE(ideatek_keep_t);
+}
+
+static void show_orphan(void)
+{
+    SIZE(ideatek_orphan_t);
+}
+
+static void show_absolute(void)
+{
+    printf("position %d\nrotation %d\nscale %d\n", IDEATEK_ABSOLUTE_POSITION,
+        IDEATEK_ABSOLUTE_ROTATION, IDEATEK_ABSOLUTE_SCALE);
+}
+
 static void show_transform(void)
 {
     SIZE(ideatek_transform_t);
@@ -62,6 +78,10 @@ static void show_parent(void)
 {
     SIZE(ideatek_parent_t);
     AT(ideatek_parent_t, entity);
+    AT(ideatek_parent_t, order);
+    AT(ideatek_parent_t, keep);
+    AT(ideatek_parent_t, orphan);
+    AT(ideatek_parent_t, absolute);
 }
 
 static void show_world_transform(void)
@@ -71,21 +91,54 @@ static void show_world_transform(void)
     AT(ideatek_world_transform_t, basis);
 }
 
+static void show_children(void)
+{
+    SIZE(ideatek_children_t);
+    AT(ideatek_children_t, first);
+    AT(ideatek_children_t, last);
+    AT(ideatek_children_t, count);
+}
+
+static void show_sibling(void)
+{
+    SIZE(ideatek_sibling_t);
+    AT(ideatek_sibling_t, prev);
+    AT(ideatek_sibling_t, next);
+}
+
+static void show_previous(void)
+{
+    SIZE(ideatek_previous_world_transform_t);
+    AT(ideatek_previous_world_transform_t, world);
+    AT(ideatek_previous_world_transform_t, tick);
+}
+
 static void show_descriptors(void)
 {
-    printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", ideatek_vec3_t_desc,
-        ideatek_quat_t_desc, ideatek_position_t_desc, ideatek_entity_t_desc,
-        ideatek_transform_t_desc, ideatek_parent_t_desc,
-        ideatek_world_transform_t_desc);
+    const char *descriptors[] = { ideatek_vec3_t_desc, ideatek_quat_t_desc,
+        ideatek_position_t_desc, ideatek_entity_t_desc, ideatek_keep_t_desc,
+        ideatek_orphan_t_desc, ideatek_transform_t_desc,
+        ideatek_parent_t_desc, ideatek_world_transform_t_desc,
+        ideatek_children_t_desc, ideatek_sibling_t_desc,
+        ideatek_previous_world_transform_t_desc };
+
+    for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
+        printf("%s\n", descriptors[i]);
 }
 
 static void show_texts(void)
 {
-    printf("%s\n%s\n%s\n%s\n%s\n%s\n%s\n", TEXT_OF(IDEATEK_VEC3_FIELDS),
+    const char *texts[] = { TEXT_OF(IDEATEK_VEC3_FIELDS),
         TEXT_OF(IDEATEK_QUAT_FIELDS), TEXT_OF(IDEATEK_POSITION_FIELDS),
-        TEXT_OF(IDEATEK_ENTITY_FIELDS), TEXT_OF(IDEATEK_TRANSFORM_FIELDS),
+        TEXT_OF(IDEATEK_ENTITY_FIELDS), TEXT_OF(IDEATEK_KEEP_VALUES),
+        TEXT_OF(IDEATEK_ORPHAN_VALUES), TEXT_OF(IDEATEK_TRANSFORM_FIELDS),
         TEXT_OF(IDEATEK_PARENT_FIELDS),
-        TEXT_OF(IDEATEK_WORLD_TRANSFORM_FIELDS));
+        TEXT_OF(IDEATEK_WORLD_TRANSFORM_FIELDS),
+        TEXT_OF(IDEATEK_CHILDREN_FIELDS), TEXT_OF(IDEATEK_SIBLING_FIELDS),
+        TEXT_OF(IDEATEK_PREVIOUS_WORLD_TRANSFORM_FIELDS) };
+
+    for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
+        printf("%s\n", texts[i]);
 }
 
 int main(int argc, char **argv)
@@ -93,9 +146,13 @@ int main(int argc, char **argv)
     static const show_mode_t MODES[] = {
         { "vec3", show_vec3 }, { "quat", show_quat },
         { "position", show_position }, { "entity", show_entity },
-        { "transform", show_transform }, { "parent", show_parent },
+        { "keep", show_keep }, { "orphan", show_orphan },
+        { "absolute", show_absolute }, { "transform", show_transform },
+        { "parent", show_parent },
         { "world_transform", show_world_transform },
-        { "descriptors", show_descriptors }, { "texts", show_texts }
+        { "children", show_children }, { "sibling", show_sibling },
+        { "previous", show_previous }, { "descriptors", show_descriptors },
+        { "texts", show_texts }
     };
 
     for (size_t i = 0; argc > 1 && i < sizeof(MODES) / sizeof(MODES[0]); i++)
