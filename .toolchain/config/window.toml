@@ -1,11 +1,11 @@
 [parts.window]
 name = "BC-IdeaTek-Window"
-uses = []
+uses = ["space"]
 third_party = []
 
 [parts.window.package]
 proof = "tests/window/package/proof.c"
-include = ["{bridge}/include"]
+include = ["{bridge}/include", "{root}/include/space"]
 
 [compose.window]
 part = "window"
@@ -19,7 +19,7 @@ kind = "program"
 part = "window"
 test = true
 sources = ["tests/window/layout/layout.c"]
-include = ["include/window", "{bridge}/include"]
+include = ["include/window", "include/space", "{bridge}/include"]
 
 [[artifact]]
 name = "window_probe"
@@ -27,7 +27,7 @@ kind = "native_module"
 part = "window"
 test = true
 sources = ["tests/window/probe/probe.c"]
-include = ["include/window"]
+include = ["include/window", "include/space"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{space_probe_words}"]
 
@@ -45,7 +45,7 @@ manifest = ["test:game@1.0.0", "{space_spawn_words}"]
 [[artifact.variants]]
 name = "window_module"
 defines = ["ROLE_WINDOW"]
-manifest = ["test:window@1.0.0", "{space_probe_words}"]
+manifest = ["test:window@1.0.0", "{space_spawn_words}"]
 
 [[artifact.variants]]
 name = "window_reader"
