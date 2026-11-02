@@ -1,0 +1,6 @@
+[project]
+name = "IdeaTek"
+
+[test]
+timeout = 600
+copies = 1
