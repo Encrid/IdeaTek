@@ -20,22 +20,39 @@ static const char WHO[] = MANIFEST;
 
 [[maybe_unused]] static void start(const bridge_api_t *api)
 {
-    ideatek_frame_t frame = { .index = 1 };
-    ideatek_tick_t tick = { .step = 1.0 / 60.0 };
+    ideatek_frame_t frame = { .scale = 1.0, .index = 1 };
+    ideatek_tick_t tick = { .step = 1.0 / 64.0 };
+    ideatek_time_request_t request = { .scale = 1.0, .rate = 64 };
 
     BRIDGE_NATIVE_ATTACH(api, 0, DECLARE(api, "ideatek:Frame",
         ideatek_frame_t), frame);
     BRIDGE_NATIVE_ATTACH(api, 0, DECLARE(api, "ideatek:Tick",
         ideatek_tick_t), tick);
+    BRIDGE_NATIVE_ATTACH(api, 0, DECLARE(api, "ideatek:TimeRequest",
+        ideatek_time_request_t), request);
+}
+
+[[maybe_unused]] static void ask(const bridge_api_t *api)
+{
+    ideatek_time_request_t request = { .scale = 0.5, .rate = 128 };
+
+    BRIDGE_NATIVE_ATTACH(api, 0, DECLARE(api, "ideatek:TimeRequest",
+        ideatek_time_request_t), request);
 }
 
 BRIDGE_NATIVE(init)
 {
 #if defined(ROLE_CLOCK)
     start(api);
+#elif defined(ROLE_GAME)
+    ask(api);
+#elif defined(ROLE_READER) || defined(ROLE_TABLE)
+    DECLARE(api, "ideatek:Frame", ideatek_frame_t);
+    DECLARE(api, "ideatek:Tick", ideatek_tick_t);
 #else
     DECLARE(api, "ideatek:Frame", ideatek_frame_t);
     DECLARE(api, "ideatek:Tick", ideatek_tick_t);
+    DECLARE(api, "ideatek:TimeRequest", ideatek_time_request_t);
 #endif
     return (0);
 }

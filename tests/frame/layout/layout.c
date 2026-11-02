@@ -25,33 +25,47 @@ static void show_frame(void)
     AT(ideatek_frame_t, delta);
     AT(ideatek_frame_t, elapsed);
     AT(ideatek_frame_t, real_delta);
+    AT(ideatek_frame_t, real_elapsed);
+    AT(ideatek_frame_t, scale);
     AT(ideatek_frame_t, index);
+    AT(ideatek_frame_t, paused);
 }
 
 static void show_tick(void)
 {
     SIZE(ideatek_tick_t);
     AT(ideatek_tick_t, step);
+    AT(ideatek_tick_t, elapsed);
     AT(ideatek_tick_t, tick);
     AT(ideatek_tick_t, steps);
     AT(ideatek_tick_t, fraction);
 }
 
+static void show_time_request(void)
+{
+    SIZE(ideatek_time_request_t);
+    AT(ideatek_time_request_t, scale);
+    AT(ideatek_time_request_t, rate);
+    AT(ideatek_time_request_t, paused);
+}
+
 static void show_descriptors(void)
 {
-    printf("%s\n%s\n", ideatek_frame_t_desc, ideatek_tick_t_desc);
+    printf("%s\n%s\n%s\n", ideatek_frame_t_desc, ideatek_tick_t_desc,
+        ideatek_time_request_t_desc);
 }
 
 static void show_texts(void)
 {
-    printf("%s\n%s\n", TEXT_OF(IDEATEK_FRAME_FIELDS),
-        TEXT_OF(IDEATEK_TICK_FIELDS));
+    printf("%s\n%s\n%s\n", TEXT_OF(IDEATEK_FRAME_FIELDS),
+        TEXT_OF(IDEATEK_TICK_FIELDS), TEXT_OF(IDEATEK_TIME_REQUEST_FIELDS));
 }
 
 int main(int argc, char **argv)
 {
     static const show_mode_t MODES[] = {
         { "frame", show_frame }, { "tick", show_tick },
+        { "time_request", show_time_request },
         { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 

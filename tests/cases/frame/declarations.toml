@@ -1,5 +1,5 @@
 [[case]]
-name = "a module declares ideatek:Frame and ideatek:Tick"
+name = "a module declares ideatek:Frame, ideatek:Tick and ideatek:TimeRequest"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/frame_probe{library}"] }
 
@@ -14,7 +14,7 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:probe@1.0.0"]
-read = ["ideatek:Frame", "ideatek:Tick"]
+read = ["ideatek:Frame", "ideatek:Tick", "ideatek:TimeRequest"]
 '''
 
 [case.false.files]
@@ -25,11 +25,11 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:probe@1.0.0"]
-read = ["ideatek:Frame"]
+read = ["ideatek:Frame", "ideatek:Tick"]
 '''
 
 [[case]]
-name = "the clock module loads with write on ideatek:Frame and ideatek:Tick, and attaches each singleton"
+name = "the clock module loads with write on its 3 types, and attaches each singleton"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:clock@1.0.0, native, m/frame_clock{library}"] }
 
@@ -44,7 +44,7 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:clock@1.0.0"]
-write = ["ideatek:Frame", "ideatek:Tick"]
+write = ["ideatek:Frame", "ideatek:Tick", "ideatek:TimeRequest"]
 '''
 
 [case.false.files]
@@ -55,8 +55,42 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:clock@1.0.0"]
-write = ["ideatek:Frame"]
-read = ["ideatek:Tick"]
+write = ["ideatek:Frame", "ideatek:Tick"]
+read = ["ideatek:TimeRequest"]
+'''
+
+[[case]]
+name = "a game module loads with write on ideatek:TimeRequest, and writes it, next to the clock module"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["loaded: test:clock@1.0.0, native", "loaded: test:game@1.0.0, native"] }
+
+[case.folders]
+"{case}/m" = ["frame_clock", "frame_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:clock@1.0.0"]
+write = ["ideatek:Frame", "ideatek:Tick", "ideatek:TimeRequest"]
+[module."test:game@1.0.0"]
+write = ["ideatek:TimeRequest"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:clock@1.0.0"]
+write = ["ideatek:Frame", "ideatek:Tick", "ideatek:TimeRequest"]
+[module."test:game@1.0.0"]
+read = ["ideatek:TimeRequest"]
 '''
 
 [[case]]
@@ -75,7 +109,7 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:clock@1.0.0"]
-write = ["ideatek:Frame", "ideatek:Tick"]
+write = ["ideatek:Frame", "ideatek:Tick", "ideatek:TimeRequest"]
 [module."test:reader@1.0.0"]
 read = ["ideatek:Frame", "ideatek:Tick"]
 '''

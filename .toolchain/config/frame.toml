@@ -45,3 +45,8 @@ manifest = ["test:reader@1.0.0", "{space_probe_words}"]
 name = "frame_table"
 defines = ["ROLE_TABLE"]
 manifest = ["test:reader@1.0.0", "{space_probe_words}"]
+
+[[artifact.variants]]
+name = "frame_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{space_probe_words}"]
