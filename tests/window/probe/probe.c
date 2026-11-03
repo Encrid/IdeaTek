@@ -3,6 +3,8 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
+#include <string.h>
+
 #include "bridge_native.h"
 #include "ideatek_window.h"
 
@@ -24,6 +26,9 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_surface_t", ideatek_surface_t);
     ENUM(api, "ideatek:ideatek_flash_t", ideatek_flash_t);
     ENUM(api, "ideatek:ideatek_orientation_t", ideatek_orientation_t);
+    ENUM(api, "ideatek:ideatek_progress_t", ideatek_progress_t);
+    ENUM(api, "ideatek:ideatek_region_t", ideatek_region_t);
+    ENUM(api, "ideatek:ideatek_drop_kind_t", ideatek_drop_kind_t);
 }
 
 [[maybe_unused]] static uint32_t declare_request(const bridge_api_t *api)
@@ -56,6 +61,16 @@ static const char WHO[] = MANIFEST;
     return (TAG(api, "ideatek:PrimaryDisplay"));
 }
 
+[[maybe_unused]] static uint32_t declare_region(const bridge_api_t *api)
+{
+    return (STRUCT(api, "ideatek:WindowRegion", ideatek_window_region_t));
+}
+
+[[maybe_unused]] static uint32_t declare_drop(const bridge_api_t *api)
+{
+    return (STRUCT(api, "ideatek:Drop", ideatek_drop_t));
+}
+
 [[maybe_unused]] static void declare_module(const bridge_api_t *api)
 {
     declare_request(api);
@@ -64,6 +79,8 @@ static const char WHO[] = MANIFEST;
     declare_display(api);
     declare_video_mode(api);
     declare_primary(api);
+    declare_region(api);
+    declare_drop(api);
 }
 
 [[maybe_unused]] static void open_window(const bridge_api_t *api)
@@ -73,10 +90,13 @@ static const char WHO[] = MANIFEST;
         .place = IDEATEK_PLACE_CENTER, .resizable = true, .visible = true
     };
     uint64_t id = api->spawn(api);
+    ideatek_window_region_t region = { .window = { id }, .width = 1280,
+        .height = 32, .role = IDEATEK_REGION_DRAG };
 
     declare_fields(api);
     BRIDGE_NATIVE_ATTACH(api, id, declare_request(api), request);
     api->attach(api, id, declare_main(api), BRIDGE_ZEROED);
+    BRIDGE_NATIVE_ATTACH(api, api->spawn(api), declare_region(api), region);
 }
 
 [[maybe_unused]] static void report(const bridge_api_t *api)
@@ -90,10 +110,18 @@ static const char WHO[] = MANIFEST;
         .pixel_density = 1.0F, .refresh_numerator = 60,
         .refresh_denominator = 1 };
     uint64_t id = api->spawn(api);
+    static const char PATH[] = "probe.txt";
+    uint32_t at = api->alloc(api, sizeof(PATH) - 1);
+    ideatek_drop_t drop = { .window = { id },
+        .data = { .at = at, .len = sizeof(PATH) - 1 },
+        .kind = IDEATEK_DROP_FILE };
 
+    memcpy(api->shared_base + at, PATH, sizeof(PATH) - 1);
     declare_fields(api);
     declare_request(api);
     declare_main(api);
+    declare_region(api);
+    BRIDGE_NATIVE_ATTACH(api, api->spawn(api), declare_drop(api), drop);
     BRIDGE_NATIVE_ATTACH(api, id, declare_display(api), display);
     BRIDGE_NATIVE_ATTACH(api, id, declare_video_mode(api), mode);
     BRIDGE_NATIVE_ATTACH(api, id, declare_state(api), state);
