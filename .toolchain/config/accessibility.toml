@@ -1,0 +1,68 @@
+[parts.accessibility]
+name = "BC-IdeaTek-Accessibility"
+uses = []
+third_party = []
+
+[parts.accessibility.package]
+proof = "tests/accessibility/package/proof.c"
+include = ["{bridge}/include"]
+
+[compose.accessibility]
+part = "accessibility"
+from = "include/accessibility"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+accessibility_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
+]
+
+accessibility_game_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=64", "hot_reload=false",
+]
+
+accessibility_module_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=16", "hot_reload=false",
+]
+
+[[artifact]]
+name = "accessibility_layout"
+kind = "program"
+part = "accessibility"
+test = true
+sources = ["tests/accessibility/layout/layout.c"]
+include = ["include/accessibility", "{bridge}/include"]
+
+[[artifact]]
+name = "accessibility_probe"
+kind = "native_module"
+part = "accessibility"
+test = true
+sources = ["tests/accessibility/probe/probe.c"]
+include = ["include/accessibility"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{accessibility_probe_words}"]
+
+[[artifact.variants]]
+name = "accessibility_late"
+defines = ["ROLE_LATE"]
+manifest = ["test:probe@1.0.0", "{accessibility_probe_words}"]
+
+[[artifact.variants]]
+name = "accessibility_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{accessibility_game_words}"]
+
+[[artifact.variants]]
+name = "accessibility_module"
+defines = ["ROLE_ACCESSIBILITY"]
+manifest = ["test:accessibility@1.0.0", "{accessibility_module_words}"]
+
+[[artifact.variants]]
+name = "accessibility_reader"
+defines = ["ROLE_READER"]
+manifest = ["test:reader@1.0.0", "{accessibility_probe_words}"]
