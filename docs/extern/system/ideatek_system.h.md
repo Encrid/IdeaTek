@@ -16,7 +16,7 @@ Notifications and the tray do not come back, because a game does not use them.
 
 At `init`, the system module spawns 1 entity and attaches `ideatek:SystemState` to it.
 When the system tells a change of the locales, the system module attaches `ideatek:SystemState` again in the same round.
-A reader hears the change with an observer of `BRIDGE_ON_SET`.
+A reader hears the change with an observer of `BRIDGE_ON_ATTACH`.
 
 ## The requests
 
