@@ -10,7 +10,9 @@
 
     #include "bridge_schema.h"
 
-    #define IDEATEK_ENTITY_FIELDS { uint64_t id; }
+    #define IDEATEK_ENTITY_FIELDS { \
+        uint64_t id; \
+    }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_entity_t, IDEATEK_ENTITY_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_entity_t, IDEATEK_ENTITY_FIELDS);
