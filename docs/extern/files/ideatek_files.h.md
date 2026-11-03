@@ -1,14 +1,14 @@
 # include/files/ideatek_files.h
 
-`include/files/ideatek_files.h` gives the types of the files part: the requests of the game on the files, and their results.
+`include/files/ideatek_files.h` gives the types of the files part: the requests of the game on the files, their results, and the changes in a watched folder.
 `readme.md`, *The contracts*, tells the rules of each contract.
 
 ## The roles
 
-- The game writes `ideatek:FileRequest`, and reads `ideatek:FileResult`.
-- The files module writes `ideatek:FileResult`, and reads `ideatek:FileRequest`. A deployment has one files module.
+- The game writes `ideatek:FileRequest`, and reads `ideatek:FileResult` and `ideatek:FileChange`.
+- The files module writes `ideatek:FileResult` and `ideatek:FileChange`, and reads `ideatek:FileRequest`. A deployment has one files module.
 
-Out: the free space, a rename, a copy, the watch of a folder, and the links of files.
+Out: the free space, a rename, a copy, and the links of files.
 Comes back: the free space, with a console or a phone as target; the read of a dropped file, when a game needs it.
 Comes back: a call of Bridge, when a round needs the bytes in the same round.
 
@@ -37,6 +37,7 @@ The game writes the path and the bytes of a write in its share.
 - `IDEATEK_FILE_ACTION_WRITE` puts `data` in place of the whole file. The files module makes each folder of the path that is not there.
 - `IDEATEK_FILE_ACTION_LIST` gives 1 line for each entry of the folder.
 - `IDEATEK_FILE_ACTION_REMOVE` removes the file, or the folder if the folder is empty.
+- `IDEATEK_FILE_ACTION_WATCH` watches the folder: *The watch*.
 
 A write goes to a temporary file first. Then the files module renames the temporary file over the old file, so a failed write keeps the old file.
 A write or a removal in `IDEATEK_STORAGE_CONTENT` gets `IDEATEK_FILE_STATUS_DENIED`.
@@ -44,11 +45,25 @@ A write or a removal in `IDEATEK_STORAGE_CONTENT` gets `IDEATEK_FILE_STATUS_DENI
 A line of a list ends with `\n`. A file gives its name, a space and its size in decimal.
 A folder gives its name and `/`. The files module skips an entry whose name holds `\n`.
 
+## The watch
+
+A watch names a folder of `IDEATEK_STORAGE_CONTENT`. It sees the files in the folder and in each folder below it.
+When the watch starts, the files module attaches `ideatek:FileResult` with `IDEATEK_FILE_STATUS_OK`.
+The entity of a watch stays until the game destroys it.
+In each round with a change, the files module attaches `ideatek:FileChange` to the entity. In the next round, it detaches it.
+
+A watch in `IDEATEK_STORAGE_USER` gets `IDEATEK_FILE_STATUS_DENIED`.
+A storage that is no folder of the OS gets `IDEATEK_FILE_STATUS_UNSUPPORTED`.
+
+A line of `paths` gives 1 changed path, relative to the folder of the storage, and ends with `\n`.
+A rename gives the old path and the new path.
+The paths that do not fit in the rest of the half go in a later round.
+
 ## The bytes of the results
 
 At `init`, the files module takes `read_bytes` bytes of its persistent arena.
 It puts the bytes of the results of a round in one half, and the bytes of the next round in the other half.
-So the bytes of a result stay good until the files module destroys its entity.
+So the bytes of a result stay good until the files module destroys its entity. The bytes of a change stay good until it detaches the change.
 A result whose bytes are more than the rest of the half gets `IDEATEK_FILE_STATUS_TOO_BIG`.
 The `persistent` of its manifest includes `read_bytes`.
 
@@ -93,6 +108,7 @@ Bytes 34 to 39 hold no field.
 | `IDEATEK_FILE_ACTION_WRITE` | 1 | Write a file. |
 | `IDEATEK_FILE_ACTION_LIST` | 2 | List a folder. |
 | `IDEATEK_FILE_ACTION_REMOVE` | 3 | Remove a file or a folder. |
+| `IDEATEK_FILE_ACTION_WATCH` | 4 | Watch a folder. |
 
 ## ideatek:FileResult
 
@@ -118,6 +134,16 @@ Bytes 17 to 23 hold no field.
 | `IDEATEK_FILE_STATUS_TOO_BIG` | 2 | The bytes do not fit in the half: *The bytes of the results*. |
 | `IDEATEK_FILE_STATUS_DENIED` | 3 | The path or the storage does not allow the action. |
 | `IDEATEK_FILE_STATUS_FAILED` | 4 | The OS did not do the action. |
+| `IDEATEK_FILE_STATUS_UNSUPPORTED` | 5 | The storage cannot do the action on this target. |
+
+## ideatek:FileChange
+
+`ideatek:FileChange` gives the paths that changed in a watched folder in this round.
+`ideatek_file_change_t` takes 8 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `paths` | `bridge_text_t` | 0 | The lines of the changed paths: *The watch*. |
 
 ## The C types
 
@@ -128,13 +154,15 @@ Bytes 17 to 23 hold no field.
 | `ideatek:ideatek_file_status_t` | `ideatek_file_status_t` | `ideatek_file_status_t_desc` | `IDEATEK_FILE_STATUS_VALUES` |
 | `ideatek:FileRequest` | `ideatek_file_request_t` | `ideatek_file_request_t_desc` | `IDEATEK_FILE_REQUEST_FIELDS` |
 | `ideatek:FileResult` | `ideatek_file_result_t` | `ideatek_file_result_t_desc` | `IDEATEK_FILE_RESULT_FIELDS` |
+| `ideatek:FileChange` | `ideatek_file_change_t` | `ideatek_file_change_t_desc` | `IDEATEK_FILE_CHANGE_FIELDS` |
 
 ```text
 { IDEATEK_STORAGE_CONTENT = 0, IDEATEK_STORAGE_USER = 1 }
-{ IDEATEK_FILE_ACTION_READ = 0, IDEATEK_FILE_ACTION_WRITE = 1, IDEATEK_FILE_ACTION_LIST = 2, IDEATEK_FILE_ACTION_REMOVE = 3 }
-{ IDEATEK_FILE_STATUS_OK = 0, IDEATEK_FILE_STATUS_NOT_FOUND = 1, IDEATEK_FILE_STATUS_TOO_BIG = 2, IDEATEK_FILE_STATUS_DENIED = 3, IDEATEK_FILE_STATUS_FAILED = 4 }
+{ IDEATEK_FILE_ACTION_READ = 0, IDEATEK_FILE_ACTION_WRITE = 1, IDEATEK_FILE_ACTION_LIST = 2, IDEATEK_FILE_ACTION_REMOVE = 3, IDEATEK_FILE_ACTION_WATCH = 4 }
+{ IDEATEK_FILE_STATUS_OK = 0, IDEATEK_FILE_STATUS_NOT_FOUND = 1, IDEATEK_FILE_STATUS_TOO_BIG = 2, IDEATEK_FILE_STATUS_DENIED = 3, IDEATEK_FILE_STATUS_FAILED = 4, IDEATEK_FILE_STATUS_UNSUPPORTED = 5 }
 { uint64_t offset; uint64_t length; bridge_text_t path; bridge_text_t data; ideatek_storage_t storage; ideatek_file_action_t action; }
 { uint64_t size; bridge_text_t data; ideatek_file_status_t status; }
+{ bridge_text_t paths; }
 ```
 
 ## The declarations
@@ -146,12 +174,13 @@ Bytes 17 to 23 hold no field.
 | `ideatek:ideatek_file_status_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:FileRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:FileResult` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:FileChange` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
-A module declares the three enums before `ideatek:FileRequest` and `ideatek:FileResult`.
+A module declares the three enums before the three structures.
 
 ## The grants
 
 | Role | `write` | `read` |
 | --- | --- | --- |
-| The game | `ideatek:FileRequest` | The three enums and `ideatek:FileResult` |
-| The files module | `ideatek:FileResult` | The three enums and `ideatek:FileRequest` |
+| The game | `ideatek:FileRequest` | The three enums, `ideatek:FileResult` and `ideatek:FileChange` |
+| The files module | `ideatek:FileResult` and `ideatek:FileChange` | The three enums and `ideatek:FileRequest` |
