@@ -44,12 +44,6 @@ static void show_position(void)
     AT(ideatek_position_t, z);
 }
 
-static void show_entity(void)
-{
-    SIZE(ideatek_entity_t);
-    AT(ideatek_entity_t, id);
-}
-
 static void show_keep(void)
 {
     SIZE(ideatek_keep_t);
@@ -116,7 +110,7 @@ static void show_previous(void)
 static void show_descriptors(void)
 {
     const char *descriptors[] = { ideatek_vec3_t_desc, ideatek_quat_t_desc,
-        ideatek_position_t_desc, ideatek_entity_t_desc, ideatek_keep_t_desc,
+        ideatek_position_t_desc, ideatek_keep_t_desc,
         ideatek_orphan_t_desc, ideatek_transform_t_desc,
         ideatek_parent_t_desc, ideatek_world_transform_t_desc,
         ideatek_children_t_desc, ideatek_sibling_t_desc,
@@ -130,7 +124,7 @@ static void show_texts(void)
 {
     const char *texts[] = { TEXT_OF(IDEATEK_VEC3_FIELDS),
         TEXT_OF(IDEATEK_QUAT_FIELDS), TEXT_OF(IDEATEK_POSITION_FIELDS),
-        TEXT_OF(IDEATEK_ENTITY_FIELDS), TEXT_OF(IDEATEK_KEEP_VALUES),
+        TEXT_OF(IDEATEK_KEEP_VALUES),
         TEXT_OF(IDEATEK_ORPHAN_VALUES), TEXT_OF(IDEATEK_TRANSFORM_FIELDS),
         TEXT_OF(IDEATEK_PARENT_FIELDS),
         TEXT_OF(IDEATEK_WORLD_TRANSFORM_FIELDS),
@@ -145,7 +139,7 @@ int main(int argc, char **argv)
 {
     static const show_mode_t MODES[] = {
         { "vec3", show_vec3 }, { "quat", show_quat },
-        { "position", show_position }, { "entity", show_entity },
+        { "position", show_position },
         { "keep", show_keep }, { "orphan", show_orphan },
         { "absolute", show_absolute }, { "transform", show_transform },
         { "parent", show_parent },

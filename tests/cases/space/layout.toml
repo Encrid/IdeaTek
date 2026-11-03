@@ -17,16 +17,10 @@ claims = { status = 0, order = ["size 24", "alignment 8", "x 0", "y 8", "z 16"] 
 false = { run = ["{out}/space_layout{exe}", "vec3"] }
 
 [[case]]
-name = "ideatek_entity_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/space_layout{exe}", "entity"]
-claims = { status = 0, order = ["size 8", "alignment 8", "id 0"] }
-false = { run = ["{out}/space_layout{exe}", "parent"] }
-
-[[case]]
 name = "ideatek_keep_t is 1 byte"
 run = ["{out}/space_layout{exe}", "keep"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
-false = { run = ["{out}/space_layout{exe}", "entity"] }
+false = { run = ["{out}/space_layout{exe}", "parent"] }
 
 [[case]]
 name = "ideatek_orphan_t is 1 byte"
@@ -83,7 +77,6 @@ claims = { status = 0, line = [
     "{ float x; float y; float z; }",
     "{ float x; float y; float z; float w; }",
     "{ double x; double y; double z; }",
-    "{ uint64_t id; }",
     "uint8_t { IDEATEK_KEEP_LOCAL = 0, IDEATEK_KEEP_WORLD = 1 }",
     "uint8_t { IDEATEK_ORPHAN_DESTROY = 0, IDEATEK_ORPHAN_KEEP_WORLD = 1 }",
     "{ ideatek_position_t position; ideatek_quat_t rotation; ideatek_vec3_t scale; }",
@@ -102,7 +95,6 @@ claims = { status = 0, line = [
     "{ float x; float y; float z; }",
     "{ float x; float y; float z; float w; }",
     "{ double x; double y; double z; }",
-    "{ uint64_t id; }",
     "{ IDEATEK_KEEP_LOCAL = 0, IDEATEK_KEEP_WORLD = 1 }",
     "{ IDEATEK_ORPHAN_DESTROY = 0, IDEATEK_ORPHAN_KEEP_WORLD = 1 }",
     "{ ideatek_position_t position; ideatek_quat_t rotation; ideatek_vec3_t scale; }",
@@ -115,7 +107,7 @@ claims = { status = 0, line = [
 false = { run = ["{out}/space_layout{exe}", "descriptors"] }
 
 [[case]]
-name = "the header compiles with the headers of Bridge and nothing else"
-run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/space", "-I", "{bridge}/include", "-c", "tests/space/layout/alone.c", "-o", "{case}/alone.o"]
+name = "the header compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/space", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/space/layout/alone.c", "-o", "{case}/alone.o"]
 claims = { status = 0 }
-false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/space", "-c", "tests/space/layout/alone.c", "-o", "{case}/alone.o"] }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/space", "-I", "include/world", "-c", "tests/space/layout/alone.c", "-o", "{case}/alone.o"] }
