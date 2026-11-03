@@ -25,6 +25,11 @@
         IDEATEK_JOYSTICK_TYPE_THROTTLE = 9 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_joystick_type_t, uint8_t,
+    IDEATEK_JOYSTICK_TYPE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_joystick_type_t, uint8_t,
+    IDEATEK_JOYSTICK_TYPE_VALUES);
+
     #define IDEATEK_HAT_VALUES { \
         IDEATEK_HAT_UP = 0x01, \
         IDEATEK_HAT_RIGHT = 0x02, \
@@ -32,12 +37,20 @@
         IDEATEK_HAT_LEFT = 0x08 \
     }
 
+BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_hat_t, uint8_t, IDEATEK_HAT_VALUES);
+BRIDGE_SCHEMA_BITMASK_DESC(ideatek_hat_t, uint8_t, IDEATEK_HAT_VALUES);
+
     #define IDEATEK_JOYSTICK_EVENT_KIND_VALUES { \
         IDEATEK_JOYSTICK_EVENT_KIND_AXIS = 0, \
         IDEATEK_JOYSTICK_EVENT_KIND_BUTTON = 1, \
         IDEATEK_JOYSTICK_EVENT_KIND_HAT = 2, \
         IDEATEK_JOYSTICK_EVENT_KIND_BALL = 3 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_joystick_event_kind_t, uint8_t,
+    IDEATEK_JOYSTICK_EVENT_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_joystick_event_kind_t, uint8_t,
+    IDEATEK_JOYSTICK_EVENT_KIND_VALUES);
 
     #define IDEATEK_GAMEPAD_TYPE_VALUES { \
         IDEATEK_GAMEPAD_TYPE_UNKNOWN = 0, \
@@ -55,6 +68,11 @@
         IDEATEK_GAMEPAD_TYPE_STEAM = 12 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gamepad_type_t, uint8_t,
+    IDEATEK_GAMEPAD_TYPE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_gamepad_type_t, uint8_t,
+    IDEATEK_GAMEPAD_TYPE_VALUES);
+
     #define IDEATEK_FACE_LABEL_VALUES { \
         IDEATEK_FACE_LABEL_UNKNOWN = 0, \
         IDEATEK_FACE_LABEL_A = 1, \
@@ -66,6 +84,11 @@
         IDEATEK_FACE_LABEL_SQUARE = 7, \
         IDEATEK_FACE_LABEL_TRIANGLE = 8 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_face_label_t, uint8_t,
+    IDEATEK_FACE_LABEL_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_face_label_t, uint8_t,
+    IDEATEK_FACE_LABEL_VALUES);
 
     #define IDEATEK_GAMEPAD_BUTTON_VALUES { \
         IDEATEK_GAMEPAD_BUTTON_SOUTH = 0, \
@@ -96,6 +119,11 @@
         IDEATEK_GAMEPAD_BUTTON_MISC6 = 25 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gamepad_button_t, uint8_t,
+    IDEATEK_GAMEPAD_BUTTON_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_gamepad_button_t, uint8_t,
+    IDEATEK_GAMEPAD_BUTTON_VALUES);
+
     #define IDEATEK_GAMEPAD_AXIS_VALUES { \
         IDEATEK_GAMEPAD_AXIS_LEFTX = 0, \
         IDEATEK_GAMEPAD_AXIS_LEFTY = 1, \
@@ -105,6 +133,11 @@
         IDEATEK_GAMEPAD_AXIS_RIGHT_TRIGGER = 5 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gamepad_axis_t, uint8_t,
+    IDEATEK_GAMEPAD_AXIS_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_gamepad_axis_t, uint8_t,
+    IDEATEK_GAMEPAD_AXIS_VALUES);
+
     #define IDEATEK_CAPSENSE_VALUES { \
         IDEATEK_CAPSENSE_LEFT_STICK = 0, \
         IDEATEK_CAPSENSE_RIGHT_STICK = 1, \
@@ -112,11 +145,19 @@
         IDEATEK_CAPSENSE_RIGHT_GRIP = 3 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_capsense_t, uint8_t, IDEATEK_CAPSENSE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_capsense_t, uint8_t, IDEATEK_CAPSENSE_VALUES);
+
     #define IDEATEK_GAMEPAD_EVENT_KIND_VALUES { \
         IDEATEK_GAMEPAD_EVENT_KIND_AXIS = 0, \
         IDEATEK_GAMEPAD_EVENT_KIND_BUTTON = 1, \
         IDEATEK_GAMEPAD_EVENT_KIND_CAPSENSE = 2 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gamepad_event_kind_t, uint8_t,
+    IDEATEK_GAMEPAD_EVENT_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_gamepad_event_kind_t, uint8_t,
+    IDEATEK_GAMEPAD_EVENT_KIND_VALUES);
 
     #define IDEATEK_JOYSTICK_FIELDS { \
         uint16_t axes; \
@@ -126,11 +167,19 @@
         ideatek_joystick_type_t type; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_joystick_t, IDEATEK_JOYSTICK_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_joystick_t, IDEATEK_JOYSTICK_FIELDS);
+
     #define IDEATEK_JOYSTICK_STATE_FIELDS { \
         uint64_t buttons[2]; \
         int16_t axes[16]; \
         ideatek_hat_t hats[4]; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_joystick_state_t,
+    IDEATEK_JOYSTICK_STATE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_joystick_state_t,
+    IDEATEK_JOYSTICK_STATE_FIELDS);
 
     #define IDEATEK_JOYSTICK_EVENT_FIELDS { \
         ideatek_entity_t joystick; \
@@ -144,10 +193,18 @@
         bool down; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_joystick_event_t,
+    IDEATEK_JOYSTICK_EVENT_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_joystick_event_t,
+    IDEATEK_JOYSTICK_EVENT_FIELDS);
+
     #define IDEATEK_GAMEPAD_FIELDS { \
         ideatek_gamepad_type_t type; \
         ideatek_face_label_t labels[4]; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_t, IDEATEK_GAMEPAD_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gamepad_t, IDEATEK_GAMEPAD_FIELDS);
 
     #define IDEATEK_GAMEPAD_STATE_FIELDS { \
         float left_x; \
@@ -161,6 +218,11 @@
         uint8_t capsense; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_state_t,
+    IDEATEK_GAMEPAD_STATE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gamepad_state_t,
+    IDEATEK_GAMEPAD_STATE_FIELDS);
+
     #define IDEATEK_GAMEPAD_EVENT_FIELDS { \
         ideatek_entity_t gamepad; \
         uint32_t order; \
@@ -169,6 +231,11 @@
         ideatek_gamepad_event_kind_t kind; \
         bool down; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_event_t,
+    IDEATEK_GAMEPAD_EVENT_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gamepad_event_t,
+    IDEATEK_GAMEPAD_EVENT_FIELDS);
 
     #define IDEATEK_JOYSTICK_REQUEST_FIELDS { \
         uint32_t duration_ms; \
@@ -185,60 +252,9 @@
         uint8_t blue; \
     }
 
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_joystick_type_t, uint8_t,
-    IDEATEK_JOYSTICK_TYPE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_joystick_type_t, uint8_t,
-    IDEATEK_JOYSTICK_TYPE_VALUES);
-BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_hat_t, uint8_t, IDEATEK_HAT_VALUES);
-BRIDGE_SCHEMA_BITMASK_DESC(ideatek_hat_t, uint8_t, IDEATEK_HAT_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_joystick_event_kind_t, uint8_t,
-    IDEATEK_JOYSTICK_EVENT_KIND_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_joystick_event_kind_t, uint8_t,
-    IDEATEK_JOYSTICK_EVENT_KIND_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gamepad_type_t, uint8_t,
-    IDEATEK_GAMEPAD_TYPE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_gamepad_type_t, uint8_t,
-    IDEATEK_GAMEPAD_TYPE_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_face_label_t, uint8_t,
-    IDEATEK_FACE_LABEL_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_face_label_t, uint8_t,
-    IDEATEK_FACE_LABEL_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gamepad_button_t, uint8_t,
-    IDEATEK_GAMEPAD_BUTTON_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_gamepad_button_t, uint8_t,
-    IDEATEK_GAMEPAD_BUTTON_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gamepad_axis_t, uint8_t,
-    IDEATEK_GAMEPAD_AXIS_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_gamepad_axis_t, uint8_t,
-    IDEATEK_GAMEPAD_AXIS_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_capsense_t, uint8_t, IDEATEK_CAPSENSE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_capsense_t, uint8_t, IDEATEK_CAPSENSE_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gamepad_event_kind_t, uint8_t,
-    IDEATEK_GAMEPAD_EVENT_KIND_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_gamepad_event_kind_t, uint8_t,
-    IDEATEK_GAMEPAD_EVENT_KIND_VALUES);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_joystick_t, IDEATEK_JOYSTICK_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_joystick_t, IDEATEK_JOYSTICK_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_joystick_state_t,
-    IDEATEK_JOYSTICK_STATE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_joystick_state_t,
-    IDEATEK_JOYSTICK_STATE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_joystick_event_t,
-    IDEATEK_JOYSTICK_EVENT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_joystick_event_t,
-    IDEATEK_JOYSTICK_EVENT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_t, IDEATEK_GAMEPAD_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gamepad_t, IDEATEK_GAMEPAD_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_state_t,
-    IDEATEK_GAMEPAD_STATE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gamepad_state_t,
-    IDEATEK_GAMEPAD_STATE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_event_t,
-    IDEATEK_GAMEPAD_EVENT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gamepad_event_t,
-    IDEATEK_GAMEPAD_EVENT_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_joystick_request_t,
     IDEATEK_JOYSTICK_REQUEST_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_joystick_request_t,
     IDEATEK_JOYSTICK_REQUEST_FIELDS);
+
 #endif

@@ -28,6 +28,11 @@
         IDEATEK_MODIFIER_SCROLL = 0x8000 \
     }
 
+BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_modifier_t, uint16_t,
+    IDEATEK_MODIFIER_VALUES);
+BRIDGE_SCHEMA_BITMASK_DESC(ideatek_modifier_t, uint16_t,
+    IDEATEK_MODIFIER_VALUES);
+
     #define IDEATEK_KEYBOARD_FIELDS { \
         ideatek_entity_t window; \
         uint64_t keys[8]; \
@@ -36,9 +41,15 @@
         bool screen_keyboard; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_keyboard_t, IDEATEK_KEYBOARD_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_keyboard_t, IDEATEK_KEYBOARD_FIELDS);
+
     #define IDEATEK_KEY_LAYOUT_FIELDS { \
         uint32_t key[512]; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_key_layout_t, IDEATEK_KEY_LAYOUT_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_key_layout_t, IDEATEK_KEY_LAYOUT_FIELDS);
 
     #define IDEATEK_KEY_EVENT_FIELDS { \
         ideatek_entity_t keyboard; \
@@ -52,14 +63,7 @@
         bool repeat; \
     }
 
-BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_modifier_t, uint16_t,
-    IDEATEK_MODIFIER_VALUES);
-BRIDGE_SCHEMA_BITMASK_DESC(ideatek_modifier_t, uint16_t,
-    IDEATEK_MODIFIER_VALUES);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_keyboard_t, IDEATEK_KEYBOARD_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_keyboard_t, IDEATEK_KEYBOARD_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_key_layout_t, IDEATEK_KEY_LAYOUT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_key_layout_t, IDEATEK_KEY_LAYOUT_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_key_event_t, IDEATEK_KEY_EVENT_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_key_event_t, IDEATEK_KEY_EVENT_FIELDS);
+
 #endif

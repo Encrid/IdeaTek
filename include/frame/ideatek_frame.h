@@ -21,6 +21,9 @@
         uint8_t paused; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_frame_t, IDEATEK_FRAME_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_frame_t, IDEATEK_FRAME_FIELDS);
+
     #define IDEATEK_TICK_FIELDS { \
         double step; \
         double elapsed; \
@@ -29,6 +32,9 @@
         float fraction; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_tick_t, IDEATEK_TICK_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_tick_t, IDEATEK_TICK_FIELDS);
+
     #define IDEATEK_TIME_REQUEST_FIELDS { \
         double scale; \
         uint32_t rate; \
@@ -36,10 +42,6 @@
         uint8_t paused; \
     }
 
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_frame_t, IDEATEK_FRAME_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_frame_t, IDEATEK_FRAME_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_tick_t, IDEATEK_TICK_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_tick_t, IDEATEK_TICK_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_time_request_t,
     IDEATEK_TIME_REQUEST_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_time_request_t,

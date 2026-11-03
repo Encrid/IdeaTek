@@ -22,6 +22,11 @@
         IDEATEK_SENSOR_TYPE_GYRO_R = 6 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_sensor_type_t, uint8_t,
+    IDEATEK_SENSOR_TYPE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_sensor_type_t, uint8_t,
+    IDEATEK_SENSOR_TYPE_VALUES);
+
     #define IDEATEK_SENSOR_FIELDS { \
         ideatek_entity_t gamepad; \
         int32_t raw_type; \
@@ -29,14 +34,25 @@
         ideatek_sensor_type_t type; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sensor_t, IDEATEK_SENSOR_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sensor_t, IDEATEK_SENSOR_FIELDS);
+
     #define IDEATEK_SENSOR_REQUEST_FIELDS { \
         bool enabled; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sensor_request_t,
+    IDEATEK_SENSOR_REQUEST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sensor_request_t,
+    IDEATEK_SENSOR_REQUEST_FIELDS);
 
     #define IDEATEK_SENSOR_STATE_FIELDS { \
         uint64_t time; \
         float data[6]; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sensor_state_t, IDEATEK_SENSOR_STATE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sensor_state_t, IDEATEK_SENSOR_STATE_FIELDS);
 
     #define IDEATEK_SENSOR_EVENT_FIELDS { \
         uint64_t time; \
@@ -45,18 +61,7 @@
         uint32_t order; \
     }
 
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_sensor_type_t, uint8_t,
-    IDEATEK_SENSOR_TYPE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_sensor_type_t, uint8_t,
-    IDEATEK_SENSOR_TYPE_VALUES);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sensor_t, IDEATEK_SENSOR_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sensor_t, IDEATEK_SENSOR_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sensor_request_t,
-    IDEATEK_SENSOR_REQUEST_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sensor_request_t,
-    IDEATEK_SENSOR_REQUEST_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sensor_state_t, IDEATEK_SENSOR_STATE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sensor_state_t, IDEATEK_SENSOR_STATE_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sensor_event_t, IDEATEK_SENSOR_EVENT_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sensor_event_t, IDEATEK_SENSOR_EVENT_FIELDS);
+
 #endif

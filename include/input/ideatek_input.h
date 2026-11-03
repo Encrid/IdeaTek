@@ -21,6 +21,11 @@
         IDEATEK_DEVICE_KIND_SENSOR = 5 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_device_kind_t, uint8_t,
+    IDEATEK_DEVICE_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_device_kind_t, uint8_t,
+    IDEATEK_DEVICE_KIND_VALUES);
+
     #define IDEATEK_POWER_VALUES { \
         IDEATEK_POWER_UNKNOWN = 0, \
         IDEATEK_POWER_ON_BATTERY = 1, \
@@ -29,11 +34,17 @@
         IDEATEK_POWER_CHARGED = 4 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_power_t, uint8_t, IDEATEK_POWER_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_power_t, uint8_t, IDEATEK_POWER_VALUES);
+
     #define IDEATEK_LINK_VALUES { \
         IDEATEK_LINK_UNKNOWN = 0, \
         IDEATEK_LINK_WIRED = 1, \
         IDEATEK_LINK_WIRELESS = 2 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_link_t, uint8_t, IDEATEK_LINK_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_link_t, uint8_t, IDEATEK_LINK_VALUES);
 
     #define IDEATEK_INPUT_EVENT_KIND_VALUES { \
         IDEATEK_INPUT_EVENT_KIND_CONNECTED = 0, \
@@ -45,6 +56,11 @@
         IDEATEK_INPUT_EVENT_KIND_FOCUS_GAINED = 6, \
         IDEATEK_INPUT_EVENT_KIND_FOCUS_LOST = 7 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_input_event_kind_t, uint8_t,
+    IDEATEK_INPUT_EVENT_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_input_event_kind_t, uint8_t,
+    IDEATEK_INPUT_EVENT_KIND_VALUES);
 
     #define IDEATEK_INPUT_DEVICE_FIELDS { \
         bridge_text_t name; \
@@ -61,9 +77,15 @@
         bool player_led; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_device_t, IDEATEK_INPUT_DEVICE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_device_t, IDEATEK_INPUT_DEVICE_FIELDS);
+
     #define IDEATEK_INPUT_USER_FIELDS { \
         uint32_t user; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_user_t, IDEATEK_INPUT_USER_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_user_t, IDEATEK_INPUT_USER_FIELDS);
 
     #define IDEATEK_DEVICE_STATE_FIELDS { \
         int32_t player_index; \
@@ -71,6 +93,9 @@
         ideatek_power_t power; \
         ideatek_link_t link; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_device_state_t, IDEATEK_DEVICE_STATE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_device_state_t, IDEATEK_DEVICE_STATE_FIELDS);
 
     #define IDEATEK_INPUT_EVENT_FIELDS { \
         ideatek_entity_t device; \
@@ -81,24 +106,7 @@
         ideatek_input_event_kind_t kind; \
     }
 
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_device_kind_t, uint8_t,
-    IDEATEK_DEVICE_KIND_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_device_kind_t, uint8_t,
-    IDEATEK_DEVICE_KIND_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_power_t, uint8_t, IDEATEK_POWER_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_power_t, uint8_t, IDEATEK_POWER_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_link_t, uint8_t, IDEATEK_LINK_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_link_t, uint8_t, IDEATEK_LINK_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_input_event_kind_t, uint8_t,
-    IDEATEK_INPUT_EVENT_KIND_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_input_event_kind_t, uint8_t,
-    IDEATEK_INPUT_EVENT_KIND_VALUES);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_device_t, IDEATEK_INPUT_DEVICE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_device_t, IDEATEK_INPUT_DEVICE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_user_t, IDEATEK_INPUT_USER_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_user_t, IDEATEK_INPUT_USER_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_device_state_t, IDEATEK_DEVICE_STATE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_device_state_t, IDEATEK_DEVICE_STATE_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_event_t, IDEATEK_INPUT_EVENT_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_event_t, IDEATEK_INPUT_EVENT_FIELDS);
+
 #endif

@@ -18,6 +18,9 @@
         IDEATEK_PLACE_AT = 2 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_place_t, uint8_t, IDEATEK_PLACE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_place_t, uint8_t, IDEATEK_PLACE_VALUES);
+
     #define IDEATEK_WINDOW_MODE_VALUES { \
         IDEATEK_WINDOW_MODE_WINDOWED = 0, \
         IDEATEK_WINDOW_MODE_MINIMIZED = 1, \
@@ -25,6 +28,11 @@
         IDEATEK_WINDOW_MODE_FULLSCREEN = 3, \
         IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN = 4 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_window_mode_t, uint8_t,
+    IDEATEK_WINDOW_MODE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_window_mode_t, uint8_t,
+    IDEATEK_WINDOW_MODE_VALUES);
 
     #define IDEATEK_SURFACE_VALUES { \
         IDEATEK_SURFACE_NONE = 0, \
@@ -37,11 +45,17 @@
         IDEATEK_SURFACE_WEB = 7 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_surface_t, uint8_t, IDEATEK_SURFACE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_surface_t, uint8_t, IDEATEK_SURFACE_VALUES);
+
     #define IDEATEK_FLASH_VALUES { \
         IDEATEK_FLASH_CANCEL = 0, \
         IDEATEK_FLASH_BRIEFLY = 1, \
         IDEATEK_FLASH_UNTIL_FOCUSED = 2 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_flash_t, uint8_t, IDEATEK_FLASH_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_flash_t, uint8_t, IDEATEK_FLASH_VALUES);
 
     #define IDEATEK_ORIENTATION_VALUES { \
         IDEATEK_ORIENTATION_UNKNOWN = 0, \
@@ -51,6 +65,11 @@
         IDEATEK_ORIENTATION_PORTRAIT_FLIPPED = 4 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_orientation_t, uint8_t,
+    IDEATEK_ORIENTATION_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_orientation_t, uint8_t,
+    IDEATEK_ORIENTATION_VALUES);
+
     #define IDEATEK_PROGRESS_VALUES { \
         IDEATEK_PROGRESS_NONE = 0, \
         IDEATEK_PROGRESS_INDETERMINATE = 1, \
@@ -58,6 +77,9 @@
         IDEATEK_PROGRESS_PAUSED = 3, \
         IDEATEK_PROGRESS_ERROR = 4 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_progress_t, uint8_t, IDEATEK_PROGRESS_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_progress_t, uint8_t, IDEATEK_PROGRESS_VALUES);
 
     #define IDEATEK_REGION_VALUES { \
         IDEATEK_REGION_NORMAL = 0, \
@@ -72,10 +94,18 @@
         IDEATEK_REGION_RESIZE_LEFT = 9 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_region_t, uint8_t, IDEATEK_REGION_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_region_t, uint8_t, IDEATEK_REGION_VALUES);
+
     #define IDEATEK_DROP_KIND_VALUES { \
         IDEATEK_DROP_FILE = 0, \
         IDEATEK_DROP_TEXT = 1 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_drop_kind_t, uint8_t,
+    IDEATEK_DROP_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_drop_kind_t, uint8_t,
+    IDEATEK_DROP_KIND_VALUES);
 
     #define IDEATEK_WINDOW_REQUEST_FIELDS { \
         char title[128]; \
@@ -107,6 +137,11 @@
         bool transparent; \
         bool focusable; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_window_request_t,
+    IDEATEK_WINDOW_REQUEST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_window_request_t,
+    IDEATEK_WINDOW_REQUEST_FIELDS);
 
     #define IDEATEK_WINDOW_STATE_FIELDS { \
         uint64_t native_display; \
@@ -151,6 +186,11 @@
         bool drop_over; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_window_state_t,
+    IDEATEK_WINDOW_STATE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_window_state_t,
+    IDEATEK_WINDOW_STATE_FIELDS);
+
     #define IDEATEK_DISPLAY_FIELDS { \
         char name[128]; \
         ideatek_entity_t desktop_mode; \
@@ -169,6 +209,9 @@
         bool hdr; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_display_t, IDEATEK_DISPLAY_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_display_t, IDEATEK_DISPLAY_FIELDS);
+
     #define IDEATEK_VIDEO_MODE_FIELDS { \
         ideatek_entity_t display; \
         uint32_t width; \
@@ -179,6 +222,9 @@
         uint32_t order; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_video_mode_t, IDEATEK_VIDEO_MODE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_video_mode_t, IDEATEK_VIDEO_MODE_FIELDS);
+
     #define IDEATEK_WINDOW_REGION_FIELDS { \
         ideatek_entity_t window; \
         int32_t x; \
@@ -188,6 +234,11 @@
         uint32_t order; \
         ideatek_region_t role; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_window_region_t,
+    IDEATEK_WINDOW_REGION_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_window_region_t,
+    IDEATEK_WINDOW_REGION_FIELDS);
 
     #define IDEATEK_DROP_FIELDS { \
         ideatek_entity_t window; \
@@ -200,44 +251,6 @@
         ideatek_drop_kind_t kind; \
     }
 
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_place_t, uint8_t, IDEATEK_PLACE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_place_t, uint8_t, IDEATEK_PLACE_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_window_mode_t, uint8_t,
-    IDEATEK_WINDOW_MODE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_window_mode_t, uint8_t,
-    IDEATEK_WINDOW_MODE_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_surface_t, uint8_t, IDEATEK_SURFACE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_surface_t, uint8_t, IDEATEK_SURFACE_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_flash_t, uint8_t, IDEATEK_FLASH_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_flash_t, uint8_t, IDEATEK_FLASH_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_orientation_t, uint8_t,
-    IDEATEK_ORIENTATION_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_orientation_t, uint8_t,
-    IDEATEK_ORIENTATION_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_progress_t, uint8_t, IDEATEK_PROGRESS_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_progress_t, uint8_t, IDEATEK_PROGRESS_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_region_t, uint8_t, IDEATEK_REGION_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_region_t, uint8_t, IDEATEK_REGION_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_drop_kind_t, uint8_t,
-    IDEATEK_DROP_KIND_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_drop_kind_t, uint8_t,
-    IDEATEK_DROP_KIND_VALUES);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_window_request_t,
-    IDEATEK_WINDOW_REQUEST_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_window_request_t,
-    IDEATEK_WINDOW_REQUEST_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_window_state_t,
-    IDEATEK_WINDOW_STATE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_window_state_t,
-    IDEATEK_WINDOW_STATE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_display_t, IDEATEK_DISPLAY_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_display_t, IDEATEK_DISPLAY_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_video_mode_t, IDEATEK_VIDEO_MODE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_video_mode_t, IDEATEK_VIDEO_MODE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_window_region_t,
-    IDEATEK_WINDOW_REGION_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_window_region_t,
-    IDEATEK_WINDOW_REGION_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_drop_t, IDEATEK_DROP_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_drop_t, IDEATEK_DROP_FIELDS);
 

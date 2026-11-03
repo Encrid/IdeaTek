@@ -24,12 +24,20 @@
         IDEATEK_TEXT_TYPE_NUMBER_PASSWORD_VISIBLE = 8 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_text_type_t, uint8_t, IDEATEK_TEXT_TYPE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_text_type_t, uint8_t, IDEATEK_TEXT_TYPE_VALUES);
+
     #define IDEATEK_CAPITALIZE_VALUES { \
         IDEATEK_CAPITALIZE_NONE = 0, \
         IDEATEK_CAPITALIZE_SENTENCES = 1, \
         IDEATEK_CAPITALIZE_WORDS = 2, \
         IDEATEK_CAPITALIZE_LETTERS = 3 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_capitalize_t, uint8_t,
+    IDEATEK_CAPITALIZE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_capitalize_t, uint8_t,
+    IDEATEK_CAPITALIZE_VALUES);
 
     #define IDEATEK_TEXT_EVENT_KIND_VALUES { \
         IDEATEK_TEXT_EVENT_KIND_COMMIT = 0, \
@@ -38,6 +46,11 @@
         IDEATEK_TEXT_EVENT_KIND_SCREEN_KEYBOARD_SHOWN = 3, \
         IDEATEK_TEXT_EVENT_KIND_SCREEN_KEYBOARD_HIDDEN = 4 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_text_event_kind_t, uint8_t,
+    IDEATEK_TEXT_EVENT_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_text_event_kind_t, uint8_t,
+    IDEATEK_TEXT_EVENT_KIND_VALUES);
 
     #define IDEATEK_TEXT_REQUEST_FIELDS { \
         ideatek_entity_t window; \
@@ -56,6 +69,9 @@
         bool draws_candidates; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_text_request_t, IDEATEK_TEXT_REQUEST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_text_request_t, IDEATEK_TEXT_REQUEST_FIELDS);
+
     #define IDEATEK_TEXT_EVENT_FIELDS { \
         ideatek_entity_t keyboard; \
         ideatek_entity_t window; \
@@ -70,18 +86,7 @@
         bool horizontal; \
     }
 
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_text_type_t, uint8_t, IDEATEK_TEXT_TYPE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_text_type_t, uint8_t, IDEATEK_TEXT_TYPE_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_capitalize_t, uint8_t,
-    IDEATEK_CAPITALIZE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_capitalize_t, uint8_t,
-    IDEATEK_CAPITALIZE_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_text_event_kind_t, uint8_t,
-    IDEATEK_TEXT_EVENT_KIND_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_text_event_kind_t, uint8_t,
-    IDEATEK_TEXT_EVENT_KIND_VALUES);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_text_request_t, IDEATEK_TEXT_REQUEST_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_text_request_t, IDEATEK_TEXT_REQUEST_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_text_event_t, IDEATEK_TEXT_EVENT_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_text_event_t, IDEATEK_TEXT_EVENT_FIELDS);
+
 #endif

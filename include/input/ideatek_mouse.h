@@ -18,12 +18,20 @@
         IDEATEK_SOURCE_PEN = 2 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_source_t, uint8_t, IDEATEK_SOURCE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_source_t, uint8_t, IDEATEK_SOURCE_VALUES);
+
     #define IDEATEK_MOUSE_MODE_VALUES { \
         IDEATEK_MOUSE_MODE_NORMAL = 0, \
         IDEATEK_MOUSE_MODE_HIDDEN = 1, \
         IDEATEK_MOUSE_MODE_CONFINED = 2, \
         IDEATEK_MOUSE_MODE_RELATIVE = 3 \
     }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_mouse_mode_t, uint8_t,
+    IDEATEK_MOUSE_MODE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_mouse_mode_t, uint8_t,
+    IDEATEK_MOUSE_MODE_VALUES);
 
     #define IDEATEK_CURSOR_VALUES { \
         IDEATEK_CURSOR_DEFAULT = 0, \
@@ -62,6 +70,9 @@
         IDEATEK_CURSOR_ZOOM_OUT = 33 \
     }
 
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_cursor_t, uint8_t, IDEATEK_CURSOR_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_cursor_t, uint8_t, IDEATEK_CURSOR_VALUES);
+
     #define IDEATEK_MOUSE_FIELDS { \
         ideatek_entity_t window; \
         float x; \
@@ -71,6 +82,9 @@
         bool cursor_found; \
         bool warp_works; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_t, IDEATEK_MOUSE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_t, IDEATEK_MOUSE_FIELDS);
 
     #define IDEATEK_MOUSE_MOTION_FIELDS { \
         ideatek_entity_t mouse; \
@@ -84,6 +98,9 @@
         ideatek_source_t source; \
     }
 
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_motion_t, IDEATEK_MOUSE_MOTION_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_motion_t, IDEATEK_MOUSE_MOTION_FIELDS);
+
     #define IDEATEK_MOUSE_BUTTON_FIELDS { \
         ideatek_entity_t mouse; \
         ideatek_entity_t window; \
@@ -95,6 +112,9 @@
         ideatek_source_t source; \
         bool down; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_button_t, IDEATEK_MOUSE_BUTTON_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_button_t, IDEATEK_MOUSE_BUTTON_FIELDS);
 
     #define IDEATEK_MOUSE_WHEEL_FIELDS { \
         ideatek_entity_t mouse; \
@@ -108,6 +128,9 @@
         uint32_t order; \
         bool flipped; \
     }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_wheel_t, IDEATEK_MOUSE_WHEEL_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_wheel_t, IDEATEK_MOUSE_WHEEL_FIELDS);
 
     #define IDEATEK_MOUSE_REQUEST_FIELDS { \
         ideatek_entity_t window; \
@@ -125,24 +148,9 @@
         bool custom; \
     }
 
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_source_t, uint8_t, IDEATEK_SOURCE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_source_t, uint8_t, IDEATEK_SOURCE_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_mouse_mode_t, uint8_t,
-    IDEATEK_MOUSE_MODE_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_mouse_mode_t, uint8_t,
-    IDEATEK_MOUSE_MODE_VALUES);
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_cursor_t, uint8_t, IDEATEK_CURSOR_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_cursor_t, uint8_t, IDEATEK_CURSOR_VALUES);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_t, IDEATEK_MOUSE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_t, IDEATEK_MOUSE_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_motion_t, IDEATEK_MOUSE_MOTION_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_motion_t, IDEATEK_MOUSE_MOTION_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_button_t, IDEATEK_MOUSE_BUTTON_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_button_t, IDEATEK_MOUSE_BUTTON_FIELDS);
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_wheel_t, IDEATEK_MOUSE_WHEEL_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_wheel_t, IDEATEK_MOUSE_WHEEL_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_request_t,
     IDEATEK_MOUSE_REQUEST_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_request_t,
     IDEATEK_MOUSE_REQUEST_FIELDS);
+
 #endif
