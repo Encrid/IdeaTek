@@ -1,0 +1,63 @@
+[parts.gpu]
+name = "BC-IdeaTek-Gpu"
+uses = ["world"]
+third_party = []
+
+[parts.gpu.package]
+proof = "tests/gpu/package/proof.c"
+include = ["{bridge}/include", "{root}/include/world"]
+
+[compose.gpu]
+part = "gpu"
+from = "include/gpu"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+gpu_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
+]
+
+gpu_game_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=64", "hot_reload=false",
+]
+
+gpu_module_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=16", "hot_reload=false",
+]
+
+[[artifact]]
+name = "gpu_layout"
+kind = "program"
+part = "gpu"
+test = true
+sources = ["tests/gpu/layout/layout.c"]
+include = ["include/gpu", "include/world", "{bridge}/include"]
+
+[[artifact]]
+name = "gpu_probe"
+kind = "native_module"
+part = "gpu"
+test = true
+sources = ["tests/gpu/probe/probe.c"]
+include = ["include/gpu", "include/world"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{gpu_probe_words}"]
+
+[[artifact.variants]]
+name = "gpu_late"
+defines = ["ROLE_LATE"]
+manifest = ["test:probe@1.0.0", "{gpu_probe_words}"]
+
+[[artifact.variants]]
+name = "gpu_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{gpu_game_words}"]
+
+[[artifact.variants]]
+name = "gpu_module"
+defines = ["ROLE_GPU"]
+manifest = ["test:gpu@1.0.0", "{gpu_module_words}"]
