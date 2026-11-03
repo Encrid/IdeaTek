@@ -1,0 +1,83 @@
+[[case]]
+name = "a module declares the nine types, the field types before the structures"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/audio_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["audio_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_audio_direction_t", "ideatek:ideatek_audio_target_t", "ideatek:ideatek_audio_status_t", "ideatek:AudioRequest", "ideatek:AudioFrames", "ideatek:AudioDevice", "ideatek:AudioRecorded", "ideatek:AudioState"]
+'''
+
+[case.false.folders]
+"{case}/m" = ["audio_late"]
+
+[[case]]
+name = "the game loads with write on ideatek:AudioRequest and ideatek:AudioFrames and read on the rest, and attaches ideatek:AudioRequest"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/audio_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["audio_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:AudioRequest", "ideatek:AudioFrames"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_audio_direction_t", "ideatek:ideatek_audio_target_t", "ideatek:ideatek_audio_status_t", "ideatek:AudioDevice", "ideatek:AudioRecorded", "ideatek:AudioState"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_audio_direction_t", "ideatek:ideatek_audio_target_t", "ideatek:ideatek_audio_status_t", "ideatek:AudioRequest", "ideatek:AudioFrames", "ideatek:AudioDevice", "ideatek:AudioRecorded", "ideatek:AudioState"]
+'''
+
+[[case]]
+name = "the audio module loads with write on its three types and read on the rest, and attaches ideatek:AudioState"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:audio@1.0.0, native, m/audio_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["audio_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:audio@1.0.0"]
+write = ["ideatek:AudioDevice", "ideatek:AudioRecorded", "ideatek:AudioState"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_audio_direction_t", "ideatek:ideatek_audio_target_t", "ideatek:ideatek_audio_status_t", "ideatek:AudioRequest", "ideatek:AudioFrames"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:audio@1.0.0"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_audio_direction_t", "ideatek:ideatek_audio_target_t", "ideatek:ideatek_audio_status_t", "ideatek:AudioRequest", "ideatek:AudioFrames", "ideatek:AudioDevice", "ideatek:AudioRecorded", "ideatek:AudioState"]
+'''
