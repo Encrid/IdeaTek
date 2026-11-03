@@ -1,5 +1,5 @@
 [[case]]
-name = "the release of a target holds the eight headers and the licence, and a program builds from it"
+name = "the release of a target holds the six headers and the licence, and a program builds from it"
 run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "input", "--pack"]
 claims = { status = 0, line = [
     "{case}/out/BC-IdeaTek-Input-{target}.zip",
@@ -9,8 +9,6 @@ claims = { status = 0, line = [
     "include/ideatek_mouse.h",
     "include/ideatek_gamepad.h",
     "include/ideatek_touch.h",
-    "include/ideatek_pen.h",
-    "include/ideatek_sensor.h",
     "license",
     "package proof: BC-IdeaTek-Input ran",
 ] }

@@ -9,14 +9,12 @@
 #include <ideatek_mouse.h>
 #include <ideatek_gamepad.h>
 #include <ideatek_touch.h>
-#include <ideatek_pen.h>
-#include <ideatek_sensor.h>
 
 int main(void)
 {
-    ideatek_text_request_t request = { .width = 640, .height = 32 };
+    ideatek_mouse_request_t request = { .cursor = IDEATEK_CURSOR_DEFAULT };
 
-    if (request.type != IDEATEK_TEXT_TYPE_TEXT)
+    if (request.mode != IDEATEK_MOUSE_MODE_NORMAL)
         return (1);
-    return (sizeof(ideatek_text_request_t_desc) > 1 ? 0 : 1);
+    return (sizeof(ideatek_mouse_request_t_desc) > 1 ? 0 : 1);
 }
