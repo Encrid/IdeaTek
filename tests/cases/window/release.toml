@@ -2,7 +2,8 @@
 name = "the release of a target holds the header and the licence, and a program builds from it"
 run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "window", "--pack"]
 claims = { status = 0, line = [
-    "{case}/out/BC-IdeaTek-Window-{target}.zip", "include/ideatek_window.h", "license",
+    "{case}/out/BC-IdeaTek-Window-{target}.zip", "include/ideatek_clipboard.h",
+    "include/ideatek_window.h", "license",
     "package proof: BC-IdeaTek-Window ran",
 ] }
 false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "window"] }

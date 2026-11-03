@@ -21,12 +21,12 @@ window_probe_words = [
 
 window_spawn_words = [
     "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
-    "spans=4096", "spawns=2", "changes=1024", "persistent=none", "hot_reload=false",
+    "spans=4096", "spawns=2", "changes=1024", "persistent=16", "hot_reload=false",
 ]
 
 window_drop_words = [
     "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
-    "spans=4096", "spawns=2", "changes=1024", "persistent=16", "hot_reload=false",
+    "spans=4096", "spawns=3", "changes=1024", "persistent=32", "hot_reload=false",
 ]
 
 [[artifact]]

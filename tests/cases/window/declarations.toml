@@ -1,5 +1,5 @@
 [[case]]
-name = "a module declares the seventeen types, each field type before the structs that have a field of it"
+name = "a module declares the twelve types, each field type before the structs that have a field of it"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/window_probe{library}"] }
 
@@ -14,14 +14,14 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:probe@1.0.0"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_flash_t", "ideatek:ideatek_orientation_t", "ideatek:ideatek_progress_t", "ideatek:ideatek_region_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:MainWindow", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:PrimaryDisplay", "ideatek:WindowRegion", "ideatek:Drop"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:ClipboardRequest", "ideatek:Paste"]
 '''
 
 [case.false.folders]
 "{case}/m" = ["window_late"]
 
 [[case]]
-name = "the game loads with write on ideatek:WindowRequest, ideatek:MainWindow and ideatek:WindowRegion, and attaches them"
+name = "the game loads with write on ideatek:WindowRequest and ideatek:ClipboardRequest, and attaches them"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/window_game{library}"] }
 
@@ -36,8 +36,8 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
-write = ["ideatek:WindowRequest", "ideatek:MainWindow", "ideatek:WindowRegion"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_flash_t", "ideatek:ideatek_orientation_t", "ideatek:ideatek_progress_t", "ideatek:ideatek_region_t", "ideatek:ideatek_drop_kind_t"]
+write = ["ideatek:WindowRequest", "ideatek:ClipboardRequest"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t"]
 '''
 
 [case.false.files]
@@ -49,11 +49,11 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
 write = ["ideatek:WindowRequest"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_flash_t", "ideatek:ideatek_orientation_t", "ideatek:ideatek_progress_t", "ideatek:ideatek_region_t", "ideatek:ideatek_drop_kind_t", "ideatek:MainWindow"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:ClipboardRequest"]
 '''
 
 [[case]]
-name = "the window module loads with write on its five types and read on the request and the regions, and attaches its five types"
+name = "the window module loads with write on its five types and read on the two requests, and attaches its five types"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:window@1.0.0, native, m/window_module{library}"] }
 
@@ -68,8 +68,8 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:window@1.0.0"]
-write = ["ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:PrimaryDisplay", "ideatek:Drop"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_flash_t", "ideatek:ideatek_orientation_t", "ideatek:ideatek_progress_t", "ideatek:ideatek_region_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:MainWindow", "ideatek:WindowRegion"]
+write = ["ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:Paste"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:ClipboardRequest"]
 '''
 
 [case.false.files]
@@ -80,12 +80,12 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:window@1.0.0"]
-write = ["ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:PrimaryDisplay"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_flash_t", "ideatek:ideatek_orientation_t", "ideatek:ideatek_progress_t", "ideatek:ideatek_region_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:MainWindow", "ideatek:WindowRegion", "ideatek:Drop"]
+write = ["ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:ClipboardRequest", "ideatek:Paste"]
 '''
 
 [[case]]
-name = "a reader loads with read on the seventeen types"
+name = "a reader loads with read on the twelve types"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/window_reader{library}"] }
 
@@ -100,7 +100,7 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:reader@1.0.0"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_flash_t", "ideatek:ideatek_orientation_t", "ideatek:ideatek_progress_t", "ideatek:ideatek_region_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:MainWindow", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:PrimaryDisplay", "ideatek:WindowRegion", "ideatek:Drop"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:ClipboardRequest", "ideatek:Paste"]
 '''
 
 [case.false.files]
@@ -111,5 +111,5 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:reader@1.0.0"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_place_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_flash_t", "ideatek:WindowRequest", "ideatek:MainWindow", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:PrimaryDisplay", "ideatek:WindowRegion", "ideatek:Drop"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:WindowRequest", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:ClipboardRequest", "ideatek:Paste"]
 '''
