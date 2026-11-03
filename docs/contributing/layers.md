@@ -31,6 +31,7 @@ The project holds the contracts of layers 2, 3 and 4.
 | system | 2 |
 | files | 2 |
 | sockets | 2 |
+| audio | 2 |
 | frame | 3 |
 | space | 4 |
 
