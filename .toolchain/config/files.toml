@@ -1,0 +1,63 @@
+[parts.files]
+name = "BC-IdeaTek-Files"
+uses = []
+third_party = []
+
+[parts.files.package]
+proof = "tests/files/package/proof.c"
+include = ["{bridge}/include"]
+
+[compose.files]
+part = "files"
+from = "include/files"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+files_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
+]
+
+files_game_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=64", "hot_reload=false",
+]
+
+files_module_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=16", "hot_reload=false",
+]
+
+[[artifact]]
+name = "files_layout"
+kind = "program"
+part = "files"
+test = true
+sources = ["tests/files/layout/layout.c"]
+include = ["include/files", "{bridge}/include"]
+
+[[artifact]]
+name = "files_probe"
+kind = "native_module"
+part = "files"
+test = true
+sources = ["tests/files/probe/probe.c"]
+include = ["include/files"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{files_probe_words}"]
+
+[[artifact.variants]]
+name = "files_late"
+defines = ["ROLE_LATE"]
+manifest = ["test:probe@1.0.0", "{files_probe_words}"]
+
+[[artifact.variants]]
+name = "files_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{files_game_words}"]
+
+[[artifact.variants]]
+name = "files_module"
+defines = ["ROLE_FILES"]
+manifest = ["test:files@1.0.0", "{files_module_words}"]
