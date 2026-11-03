@@ -10,7 +10,6 @@
 
     #include "bridge_abi.h"
     #include "bridge_schema.h"
-    #include "ideatek_world.h"
 
     #define IDEATEK_MODIFIER_VALUES { \
         IDEATEK_MODIFIER_LSHIFT = 0x0001, \
@@ -34,28 +33,15 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_modifier_t, uint16_t,
     IDEATEK_MODIFIER_VALUES);
 
     #define IDEATEK_KEYBOARD_FIELDS { \
-        ideatek_entity_t window; \
         uint64_t keys[8]; \
         ideatek_modifier_t modifiers; \
-        bool ime; \
-        bool screen_keyboard; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_keyboard_t, IDEATEK_KEYBOARD_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_keyboard_t, IDEATEK_KEYBOARD_FIELDS);
 
-    #define IDEATEK_KEY_LAYOUT_FIELDS { \
-        uint32_t key[512]; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_key_layout_t, IDEATEK_KEY_LAYOUT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_key_layout_t, IDEATEK_KEY_LAYOUT_FIELDS);
-
     #define IDEATEK_KEY_EVENT_FIELDS { \
-        ideatek_entity_t keyboard; \
-        ideatek_entity_t window; \
         uint32_t key; \
-        uint32_t raw; \
         uint32_t order; \
         uint16_t code; \
         ideatek_modifier_t modifiers; \
