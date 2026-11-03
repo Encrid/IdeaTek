@@ -4,3 +4,6 @@ name = "IdeaTek"
 [test]
 timeout = 600
 copies = 1
+
+[check]
+guides = ["layers.md"]

@@ -42,6 +42,7 @@ The documents of `bridge.h` and `bridge_abi.h` of Bridge tell the pairs and what
 | --- | --- |
 | `docs/contributing/needs.md` | The needs that each decision meets. |
 | `docs/contributing/decisions.md` | The steps of a decision. |
+| `docs/contributing/layers.md` | The layers of an engine, and the layers of the project. |
 | `docs/contributing/coding_style.md` | How to write the code. |
 | `docs/contributing/documentation_style.md` | How to write the documents. |
 | `docs/contributing/tests.md` | How to write the tests. |
