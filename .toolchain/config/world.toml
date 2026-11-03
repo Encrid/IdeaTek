@@ -1,0 +1,22 @@
+[parts.world]
+name = "BC-IdeaTek-World"
+uses = []
+third_party = []
+
+[parts.world.package]
+proof = "tests/world/package/proof.c"
+include = ["{bridge}/include"]
+
+[compose.world]
+part = "world"
+from = "include/world"
+headers = ["*.h"]
+into = "include"
+
+[[artifact]]
+name = "world_layout"
+kind = "program"
+part = "world"
+test = true
+sources = ["tests/world/layout/layout.c"]
+include = ["include/world", "{bridge}/include"]
