@@ -53,12 +53,18 @@ static void show_result(void)
     AT(ideatek_file_result_t, status);
 }
 
+static void show_change(void)
+{
+    SIZE(ideatek_file_change_t);
+    AT(ideatek_file_change_t, paths);
+}
+
 static void show_descriptors(void)
 {
     static const char *const DESCRIPTORS[] = {
         ideatek_storage_t_desc, ideatek_file_action_t_desc,
         ideatek_file_status_t_desc, ideatek_file_request_t_desc,
-        ideatek_file_result_t_desc
+        ideatek_file_result_t_desc, ideatek_file_change_t_desc
     };
 
     for (size_t i = 0; i < sizeof(DESCRIPTORS) / sizeof(DESCRIPTORS[0]); i++)
@@ -72,7 +78,8 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_FILE_ACTION_VALUES),
         TEXT_OF(IDEATEK_FILE_STATUS_VALUES),
         TEXT_OF(IDEATEK_FILE_REQUEST_FIELDS),
-        TEXT_OF(IDEATEK_FILE_RESULT_FIELDS)
+        TEXT_OF(IDEATEK_FILE_RESULT_FIELDS),
+        TEXT_OF(IDEATEK_FILE_CHANGE_FIELDS)
     };
 
     for (size_t i = 0; i < sizeof(TEXTS) / sizeof(TEXTS[0]); i++)
@@ -84,8 +91,8 @@ int main(int argc, char **argv)
     static const show_mode_t MODES[] = {
         { "storage", show_storage }, { "action", show_action },
         { "status", show_status }, { "request", show_request },
-        { "result", show_result }, { "descriptors", show_descriptors },
-        { "texts", show_texts }
+        { "result", show_result }, { "change", show_change },
+        { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 
     for (size_t i = 0; argc > 1 && i < sizeof(MODES) / sizeof(MODES[0]); i++)

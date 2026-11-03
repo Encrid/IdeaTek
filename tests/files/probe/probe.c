@@ -33,6 +33,11 @@ static uint32_t declare_result(const bridge_api_t *api)
     return (STRUCT(api, "ideatek:FileResult", ideatek_file_result_t));
 }
 
+static uint32_t declare_change(const bridge_api_t *api)
+{
+    return (STRUCT(api, "ideatek:FileChange", ideatek_file_change_t));
+}
+
 [[maybe_unused]] static void ask(const bridge_api_t *api)
 {
     uint32_t at = api->alloc(api, 9);
@@ -42,16 +47,22 @@ static uint32_t declare_result(const bridge_api_t *api)
     memcpy(api->shared_base + at, "probe.txt", 9);
     declare_lists(api);
     declare_result(api);
+    declare_change(api);
     BRIDGE_NATIVE_ATTACH(api, api->spawn(api), declare_request(api), request);
 }
 
 [[maybe_unused]] static void report(const bridge_api_t *api)
 {
-    ideatek_file_result_t result = { .status = IDEATEK_FILE_STATUS_NOT_FOUND };
+    uint32_t at = api->alloc(api, 10);
+    ideatek_file_result_t result = { .status = IDEATEK_FILE_STATUS_OK };
+    ideatek_file_change_t change = { .paths = { .at = at, .len = 10 } };
+    uint64_t watch = api->spawn(api);
 
+    memcpy(api->shared_base + at, "probe.txt\n", 10);
     declare_lists(api);
     declare_request(api);
-    BRIDGE_NATIVE_ATTACH(api, api->spawn(api), declare_result(api), result);
+    BRIDGE_NATIVE_ATTACH(api, watch, declare_result(api), result);
+    BRIDGE_NATIVE_ATTACH(api, watch, declare_change(api), change);
 }
 
 BRIDGE_NATIVE(init)
@@ -67,6 +78,7 @@ BRIDGE_NATIVE(init)
     declare_lists(api);
     declare_request(api);
     declare_result(api);
+    declare_change(api);
 #endif
     return (0);
 }
