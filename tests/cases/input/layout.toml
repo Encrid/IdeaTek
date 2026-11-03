@@ -1,0 +1,425 @@
+[[case]]
+name = "ideatek_input_device_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "input_device"]
+claims = { status = 0, order = ["size 44", "alignment 4", "name 0", "serial 8", "vendor 16", "product 18", "version 20", "guid 22", "kind 38", "rumble 39", "trigger_rumble 40", "mono_led 41", "rgb_led 42", "player_led 43"] }
+false = { run = ["{out}/input_layout{exe}", "device_kind"] }
+
+[[case]]
+name = "ideatek_device_kind_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "device_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_input_user_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "input_user"]
+claims = { status = 0, order = ["size 4", "alignment 4", "user 0"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_device_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "device_state"]
+claims = { status = 0, order = ["size 12", "alignment 4", "player_index 0", "percent 4", "power 8", "link 9"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_power_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "power"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_link_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "link"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_input_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "input_event"]
+claims = { status = 0, order = ["size 32", "alignment 8", "device 0", "window 8", "user 16", "old_user 20", "order 24", "kind 28"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_input_event_kind_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "input_event_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_keyboard_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "keyboard"]
+claims = { status = 0, order = ["size 80", "alignment 8", "window 0", "keys 8", "modifiers 72", "ime 74", "screen_keyboard 75"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_modifier_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "modifier"]
+claims = { status = 0, order = ["size 2", "alignment 2"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_key_layout_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "key_layout"]
+claims = { status = 0, order = ["size 2048", "alignment 4", "key 0"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_key_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "key_event"]
+claims = { status = 0, order = ["size 40", "alignment 8", "keyboard 0", "window 8", "key 16", "raw 20", "order 24", "code 28", "modifiers 30", "down 32", "repeat 33"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_text_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "text_request"]
+claims = { status = 0, order = ["size 40", "alignment 8", "window 0", "x 8", "y 12", "width 16", "height 20", "cursor 24", "clears 28", "type 32", "capitalize 33", "enabled 34", "autocorrect 35", "multiline 36", "draws_composition 37", "draws_candidates 38"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_text_type_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "text_type"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_capitalize_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "capitalize"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_text_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "text_event"]
+claims = { status = 0, order = ["size 56", "alignment 8", "keyboard 0", "window 8", "text 16", "start 24", "length 28", "index 32", "count 36", "selected 40", "order 44", "kind 48", "horizontal 49"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_text_event_kind_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "text_event_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_mouse_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "mouse"]
+claims = { status = 0, order = ["size 24", "alignment 8", "window 0", "x 8", "y 12", "buttons 16", "relative 20", "cursor_found 21", "warp_works 22"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_mouse_motion_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "mouse_motion"]
+claims = { status = 0, order = ["size 48", "alignment 8", "mouse 0", "window 8", "x 16", "y 20", "rel_x 24", "rel_y 28", "buttons 32", "order 36", "source 40"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_source_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "source"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_mouse_button_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "mouse_button"]
+claims = { status = 0, order = ["size 32", "alignment 8", "mouse 0", "window 8", "x 16", "y 20", "order 24", "button 28", "clicks 29", "source 30", "down 31"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_mouse_wheel_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "mouse_wheel"]
+claims = { status = 0, order = ["size 48", "alignment 8", "mouse 0", "window 8", "x 16", "y 20", "ticks_x 24", "ticks_y 28", "mouse_x 32", "mouse_y 36", "order 40", "flipped 44"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_mouse_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "mouse_request"]
+claims = { status = 0, order = ["size 48", "alignment 8", "window 0", "pixels 8", "width 16", "height 20", "hot_x 24", "hot_y 28", "warp_x 32", "warp_y 36", "warps 40", "mode 44", "cursor 45", "capture 46", "custom 47"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_mouse_mode_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "mouse_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_cursor_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "cursor"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_joystick_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "joystick"]
+claims = { status = 0, order = ["size 10", "alignment 2", "axes 0", "buttons 2", "hats 4", "balls 6", "type 8"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_joystick_type_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "joystick_type"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_joystick_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "joystick_state"]
+claims = { status = 0, order = ["size 56", "alignment 8", "buttons 0", "axes 16", "hats 48"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_hat_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "hat"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_joystick_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "joystick_event"]
+claims = { status = 0, order = ["size 32", "alignment 8", "joystick 0", "order 8", "index 12", "value 16", "rel_x 18", "rel_y 20", "hat 22", "kind 23", "down 24"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_joystick_event_kind_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "joystick_event_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_gamepad_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "gamepad"]
+claims = { status = 0, order = ["size 5", "alignment 1", "type 0", "labels 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_gamepad_type_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "gamepad_type"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_face_label_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "face_label"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_gamepad_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "gamepad_state"]
+claims = { status = 0, order = ["size 56", "alignment 4", "left_x 0", "left_y 4", "right_x 8", "right_y 12", "left_trigger 16", "right_trigger 20", "buttons 24", "pressed 28", "capsense 54"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_gamepad_button_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "gamepad_button"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_gamepad_axis_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "gamepad_axis"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_capsense_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "capsense"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_gamepad_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "gamepad_event"]
+claims = { status = 0, order = ["size 24", "alignment 8", "gamepad 0", "order 8", "value 12", "index 16", "kind 17", "down 18"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_gamepad_event_kind_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "gamepad_event_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_joystick_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "joystick_request"]
+claims = { status = 0, order = ["size 40", "alignment 4", "duration_ms 0", "trigger_duration_ms 4", "rumbles 8", "trigger_rumbles 12", "player_index 16", "low 20", "high 24", "trigger_left 28", "trigger_right 32", "red 36", "green 37", "blue 38"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_finger_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "finger"]
+claims = { status = 0, order = ["size 32", "alignment 8", "id 0", "window 8", "x 16", "y 20", "pressure 24"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_touch_device_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "touch_device"]
+claims = { status = 0, order = ["size 16", "alignment 8", "gamepad 0", "type 8", "pinch 9"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_touch_type_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "touch_type"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_touch_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "touch_state"]
+claims = { status = 0, order = ["size 12", "alignment 4", "fingers 0", "count 8"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_finger_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "finger_event"]
+claims = { status = 0, order = ["size 56", "alignment 8", "finger 0", "touch 8", "window 16", "x 24", "y 28", "dx 32", "dy 36", "pressure 40", "order 44", "kind 48"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_finger_event_kind_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "finger_event_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_pinch_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "pinch_event"]
+claims = { status = 0, order = ["size 24", "alignment 8", "window 0", "scale 8", "order 12", "kind 16"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_pinch_event_kind_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "pinch_event_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_pen_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "pen"]
+claims = { status = 0, order = ["size 1", "alignment 1", "type 0"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_pen_type_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "pen_type"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_pen_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "pen_state"]
+claims = { status = 0, order = ["size 48", "alignment 8", "window 0", "x 8", "y 12", "axes 16", "flags 44"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_pen_axis_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "pen_axis"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_pen_input_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "pen_input"]
+claims = { status = 0, order = ["size 4", "alignment 4"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_pen_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "pen_event"]
+claims = { status = 0, order = ["size 40", "alignment 8", "pen 0", "window 8", "x 16", "y 20", "value 24", "flags 28", "order 32", "button 36", "axis 37", "kind 38", "eraser 39"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_pen_event_kind_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "pen_event_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_sensor_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "sensor"]
+claims = { status = 0, order = ["size 24", "alignment 8", "gamepad 0", "raw_type 8", "rate 12", "type 16"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_sensor_type_t has the size and the alignment of its Usage"
+run = ["{out}/input_layout{exe}", "sensor_type"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_sensor_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "sensor_request"]
+claims = { status = 0, order = ["size 1", "alignment 1", "enabled 0"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_sensor_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "sensor_state"]
+claims = { status = 0, order = ["size 32", "alignment 8", "time 0", "data 8"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "ideatek_sensor_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/input_layout{exe}", "sensor_event"]
+claims = { status = 0, order = ["size 48", "alignment 8", "time 0", "sensor 8", "data 16", "order 40"] }
+false = { run = ["{out}/input_layout{exe}", "input_device"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/input_layout{exe}", "descriptors"]
+claims = { status = 0, line = ["uint8_t { IDEATEK_DEVICE_KIND_KEYBOARD = 0, IDEATEK_DEVICE_KIND_MOUSE = 1, IDEATEK_DEVICE_KIND_JOYSTICK = 2, IDEATEK_DEVICE_KIND_TOUCH = 3, IDEATEK_DEVICE_KIND_PEN = 4, IDEATEK_DEVICE_KIND_SENSOR = 5 }", "uint8_t { IDEATEK_POWER_UNKNOWN = 0, IDEATEK_POWER_ON_BATTERY = 1, IDEATEK_POWER_NO_BATTERY = 2, IDEATEK_POWER_CHARGING = 3, IDEATEK_POWER_CHARGED = 4 }", "uint8_t { IDEATEK_LINK_UNKNOWN = 0, IDEATEK_LINK_WIRED = 1, IDEATEK_LINK_WIRELESS = 2 }", "uint8_t { IDEATEK_INPUT_EVENT_KIND_CONNECTED = 0, IDEATEK_INPUT_EVENT_KIND_DISCONNECTED = 1, IDEATEK_INPUT_EVENT_KIND_POWER = 2, IDEATEK_INPUT_EVENT_KIND_USER = 3, IDEATEK_INPUT_EVENT_KIND_REMAPPED = 4, IDEATEK_INPUT_EVENT_KIND_LAYOUT = 5, IDEATEK_INPUT_EVENT_KIND_FOCUS_GAINED = 6, IDEATEK_INPUT_EVENT_KIND_FOCUS_LOST = 7 }", "uint16_t { IDEATEK_MODIFIER_LSHIFT = 0x0001, IDEATEK_MODIFIER_RSHIFT = 0x0002, IDEATEK_MODIFIER_LEVEL5 = 0x0004, IDEATEK_MODIFIER_LCTRL = 0x0040, IDEATEK_MODIFIER_RCTRL = 0x0080, IDEATEK_MODIFIER_LALT = 0x0100, IDEATEK_MODIFIER_RALT = 0x0200, IDEATEK_MODIFIER_LGUI = 0x0400, IDEATEK_MODIFIER_RGUI = 0x0800, IDEATEK_MODIFIER_NUM = 0x1000, IDEATEK_MODIFIER_CAPS = 0x2000, IDEATEK_MODIFIER_MODE = 0x4000, IDEATEK_MODIFIER_SCROLL = 0x8000 }", "uint8_t { IDEATEK_TEXT_TYPE_TEXT = 0, IDEATEK_TEXT_TYPE_TEXT_NAME = 1, IDEATEK_TEXT_TYPE_TEXT_EMAIL = 2, IDEATEK_TEXT_TYPE_TEXT_USERNAME = 3, IDEATEK_TEXT_TYPE_TEXT_PASSWORD_HIDDEN = 4, IDEATEK_TEXT_TYPE_TEXT_PASSWORD_VISIBLE = 5, IDEATEK_TEXT_TYPE_NUMBER = 6, IDEATEK_TEXT_TYPE_NUMBER_PASSWORD_HIDDEN = 7, IDEATEK_TEXT_TYPE_NUMBER_PASSWORD_VISIBLE = 8 }", "uint8_t { IDEATEK_CAPITALIZE_NONE = 0, IDEATEK_CAPITALIZE_SENTENCES = 1, IDEATEK_CAPITALIZE_WORDS = 2, IDEATEK_CAPITALIZE_LETTERS = 3 }", "uint8_t { IDEATEK_TEXT_EVENT_KIND_COMMIT = 0, IDEATEK_TEXT_EVENT_KIND_COMPOSITION = 1, IDEATEK_TEXT_EVENT_KIND_CANDIDATE = 2, IDEATEK_TEXT_EVENT_KIND_SCREEN_KEYBOARD_SHOWN = 3, IDEATEK_TEXT_EVENT_KIND_SCREEN_KEYBOARD_HIDDEN = 4 }", "uint8_t { IDEATEK_SOURCE_MOUSE = 0, IDEATEK_SOURCE_TOUCH = 1, IDEATEK_SOURCE_PEN = 2 }", "uint8_t { IDEATEK_MOUSE_MODE_NORMAL = 0, IDEATEK_MOUSE_MODE_HIDDEN = 1, IDEATEK_MOUSE_MODE_CONFINED = 2, IDEATEK_MOUSE_MODE_RELATIVE = 3 }", "uint8_t { IDEATEK_CURSOR_DEFAULT = 0, IDEATEK_CURSOR_TEXT = 1, IDEATEK_CURSOR_WAIT = 2, IDEATEK_CURSOR_CROSSHAIR = 3, IDEATEK_CURSOR_PROGRESS = 4, IDEATEK_CURSOR_NWSE_RESIZE = 5, IDEATEK_CURSOR_NESW_RESIZE = 6, IDEATEK_CURSOR_EW_RESIZE = 7, IDEATEK_CURSOR_NS_RESIZE = 8, IDEATEK_CURSOR_MOVE = 9, IDEATEK_CURSOR_NOT_ALLOWED = 10, IDEATEK_CURSOR_POINTER = 11, IDEATEK_CURSOR_NW_RESIZE = 12, IDEATEK_CURSOR_N_RESIZE = 13, IDEATEK_CURSOR_NE_RESIZE = 14, IDEATEK_CURSOR_E_RESIZE = 15, IDEATEK_CURSOR_SE_RESIZE = 16, IDEATEK_CURSOR_S_RESIZE = 17, IDEATEK_CURSOR_SW_RESIZE = 18, IDEATEK_CURSOR_W_RESIZE = 19, IDEATEK_CURSOR_CONTEXT_MENU = 20, IDEATEK_CURSOR_HELP = 21, IDEATEK_CURSOR_CELL = 22, IDEATEK_CURSOR_VERTICAL_TEXT = 23, IDEATEK_CURSOR_ALIAS = 24, IDEATEK_CURSOR_COPY = 25, IDEATEK_CURSOR_NO_DROP = 26, IDEATEK_CURSOR_GRAB = 27, IDEATEK_CURSOR_GRABBING = 28, IDEATEK_CURSOR_COL_RESIZE = 29, IDEATEK_CURSOR_ROW_RESIZE = 30, IDEATEK_CURSOR_ALL_SCROLL = 31, IDEATEK_CURSOR_ZOOM_IN = 32, IDEATEK_CURSOR_ZOOM_OUT = 33 }", "uint8_t { IDEATEK_JOYSTICK_TYPE_UNKNOWN = 0, IDEATEK_JOYSTICK_TYPE_GAMEPAD = 1, IDEATEK_JOYSTICK_TYPE_WHEEL = 2, IDEATEK_JOYSTICK_TYPE_ARCADE_STICK = 3, IDEATEK_JOYSTICK_TYPE_FLIGHT_STICK = 4, IDEATEK_JOYSTICK_TYPE_DANCE_PAD = 5, IDEATEK_JOYSTICK_TYPE_GUITAR = 6, IDEATEK_JOYSTICK_TYPE_DRUM_KIT = 7, IDEATEK_JOYSTICK_TYPE_ARCADE_PAD = 8, IDEATEK_JOYSTICK_TYPE_THROTTLE = 9 }", "uint8_t { IDEATEK_HAT_UP = 0x01, IDEATEK_HAT_RIGHT = 0x02, IDEATEK_HAT_DOWN = 0x04, IDEATEK_HAT_LEFT = 0x08 }", "uint8_t { IDEATEK_JOYSTICK_EVENT_KIND_AXIS = 0, IDEATEK_JOYSTICK_EVENT_KIND_BUTTON = 1, IDEATEK_JOYSTICK_EVENT_KIND_HAT = 2, IDEATEK_JOYSTICK_EVENT_KIND_BALL = 3 }", "uint8_t { IDEATEK_GAMEPAD_TYPE_UNKNOWN = 0, IDEATEK_GAMEPAD_TYPE_STANDARD = 1, IDEATEK_GAMEPAD_TYPE_XBOX360 = 2, IDEATEK_GAMEPAD_TYPE_XBOXONE = 3, IDEATEK_GAMEPAD_TYPE_PS3 = 4, IDEATEK_GAMEPAD_TYPE_PS4 = 5, IDEATEK_GAMEPAD_TYPE_PS5 = 6, IDEATEK_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO = 7, IDEATEK_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT = 8, IDEATEK_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT = 9, IDEATEK_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR = 10, IDEATEK_GAMEPAD_TYPE_GAMECUBE = 11, IDEATEK_GAMEPAD_TYPE_STEAM = 12 }", "uint8_t { IDEATEK_FACE_LABEL_UNKNOWN = 0, IDEATEK_FACE_LABEL_A = 1, IDEATEK_FACE_LABEL_B = 2, IDEATEK_FACE_LABEL_X = 3, IDEATEK_FACE_LABEL_Y = 4, IDEATEK_FACE_LABEL_CROSS = 5, IDEATEK_FACE_LABEL_CIRCLE = 6, IDEATEK_FACE_LABEL_SQUARE = 7, IDEATEK_FACE_LABEL_TRIANGLE = 8 }", "uint8_t { IDEATEK_GAMEPAD_BUTTON_SOUTH = 0, IDEATEK_GAMEPAD_BUTTON_EAST = 1, IDEATEK_GAMEPAD_BUTTON_WEST = 2, IDEATEK_GAMEPAD_BUTTON_NORTH = 3, IDEATEK_GAMEPAD_BUTTON_BACK = 4, IDEATEK_GAMEPAD_BUTTON_GUIDE = 5, IDEATEK_GAMEPAD_BUTTON_START = 6, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 7, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 8, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 9, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 10, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 11, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 12, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 13, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 14, IDEATEK_GAMEPAD_BUTTON_MISC1 = 15, IDEATEK_GAMEPAD_BUTTON_RIGHT_PADDLE1 = 16, IDEATEK_GAMEPAD_BUTTON_LEFT_PADDLE1 = 17, IDEATEK_GAMEPAD_BUTTON_RIGHT_PADDLE2 = 18, IDEATEK_GAMEPAD_BUTTON_LEFT_PADDLE2 = 19, IDEATEK_GAMEPAD_BUTTON_TOUCHPAD = 20, IDEATEK_GAMEPAD_BUTTON_MISC2 = 21, IDEATEK_GAMEPAD_BUTTON_MISC3 = 22, IDEATEK_GAMEPAD_BUTTON_MISC4 = 23, IDEATEK_GAMEPAD_BUTTON_MISC5 = 24, IDEATEK_GAMEPAD_BUTTON_MISC6 = 25 }", "uint8_t { IDEATEK_GAMEPAD_AXIS_LEFTX = 0, IDEATEK_GAMEPAD_AXIS_LEFTY = 1, IDEATEK_GAMEPAD_AXIS_RIGHTX = 2, IDEATEK_GAMEPAD_AXIS_RIGHTY = 3, IDEATEK_GAMEPAD_AXIS_LEFT_TRIGGER = 4, IDEATEK_GAMEPAD_AXIS_RIGHT_TRIGGER = 5 }", "uint8_t { IDEATEK_CAPSENSE_LEFT_STICK = 0, IDEATEK_CAPSENSE_RIGHT_STICK = 1, IDEATEK_CAPSENSE_LEFT_GRIP = 2, IDEATEK_CAPSENSE_RIGHT_GRIP = 3 }", "uint8_t { IDEATEK_GAMEPAD_EVENT_KIND_AXIS = 0, IDEATEK_GAMEPAD_EVENT_KIND_BUTTON = 1, IDEATEK_GAMEPAD_EVENT_KIND_CAPSENSE = 2 }", "uint8_t { IDEATEK_TOUCH_TYPE_DIRECT = 0, IDEATEK_TOUCH_TYPE_INDIRECT_ABSOLUTE = 1, IDEATEK_TOUCH_TYPE_INDIRECT_RELATIVE = 2 }", "uint8_t { IDEATEK_FINGER_EVENT_KIND_DOWN = 0, IDEATEK_FINGER_EVENT_KIND_MOTION = 1, IDEATEK_FINGER_EVENT_KIND_UP = 2, IDEATEK_FINGER_EVENT_KIND_CANCELED = 3 }", "uint8_t { IDEATEK_PINCH_EVENT_KIND_BEGIN = 0, IDEATEK_PINCH_EVENT_KIND_UPDATE = 1, IDEATEK_PINCH_EVENT_KIND_END = 2 }", "uint8_t { IDEATEK_PEN_TYPE_UNKNOWN = 0, IDEATEK_PEN_TYPE_DIRECT = 1, IDEATEK_PEN_TYPE_INDIRECT = 2 }", "uint8_t { IDEATEK_PEN_AXIS_PRESSURE = 0, IDEATEK_PEN_AXIS_XTILT = 1, IDEATEK_PEN_AXIS_YTILT = 2, IDEATEK_PEN_AXIS_DISTANCE = 3, IDEATEK_PEN_AXIS_ROTATION = 4, IDEATEK_PEN_AXIS_SLIDER = 5, IDEATEK_PEN_AXIS_TANGENTIAL_PRESSURE = 6 }", "uint32_t { IDEATEK_PEN_INPUT_DOWN = 0x00000001, IDEATEK_PEN_INPUT_BUTTON_1 = 0x00000002, IDEATEK_PEN_INPUT_BUTTON_2 = 0x00000004, IDEATEK_PEN_INPUT_BUTTON_3 = 0x00000008, IDEATEK_PEN_INPUT_BUTTON_4 = 0x00000010, IDEATEK_PEN_INPUT_BUTTON_5 = 0x00000020, IDEATEK_PEN_INPUT_ERASER_TIP = 0x40000000, IDEATEK_PEN_INPUT_IN_PROXIMITY = 0x80000000 }", "uint8_t { IDEATEK_PEN_EVENT_KIND_PROXIMITY_IN = 0, IDEATEK_PEN_EVENT_KIND_PROXIMITY_OUT = 1, IDEATEK_PEN_EVENT_KIND_TIP_DOWN = 2, IDEATEK_PEN_EVENT_KIND_TIP_UP = 3, IDEATEK_PEN_EVENT_KIND_BUTTON_DOWN = 4, IDEATEK_PEN_EVENT_KIND_BUTTON_UP = 5, IDEATEK_PEN_EVENT_KIND_MOTION = 6, IDEATEK_PEN_EVENT_KIND_AXIS = 7 }", "uint8_t { IDEATEK_SENSOR_TYPE_UNKNOWN = 0, IDEATEK_SENSOR_TYPE_ACCEL = 1, IDEATEK_SENSOR_TYPE_GYRO = 2, IDEATEK_SENSOR_TYPE_ACCEL_L = 3, IDEATEK_SENSOR_TYPE_GYRO_L = 4, IDEATEK_SENSOR_TYPE_ACCEL_R = 5, IDEATEK_SENSOR_TYPE_GYRO_R = 6 }", "{ bridge_text_t name; bridge_text_t serial; uint16_t vendor; uint16_t product; uint16_t version; uint8_t guid[16]; ideatek_device_kind_t kind; bool rumble; bool trigger_rumble; bool mono_led; bool rgb_led; bool player_led; }", "{ uint32_t user; }", "{ int32_t player_index; int32_t percent; ideatek_power_t power; ideatek_link_t link; }", "{ ideatek_entity_t device; ideatek_entity_t window; uint32_t user; uint32_t old_user; uint32_t order; ideatek_input_event_kind_t kind; }", "{ ideatek_entity_t window; uint64_t keys[8]; ideatek_modifier_t modifiers; bool ime; bool screen_keyboard; }", "{ uint32_t key[512]; }", "{ ideatek_entity_t keyboard; ideatek_entity_t window; uint32_t key; uint32_t raw; uint32_t order; uint16_t code; ideatek_modifier_t modifiers; bool down; bool repeat; }", "{ ideatek_entity_t window; int32_t x; int32_t y; uint32_t width; uint32_t height; int32_t cursor; uint32_t clears; ideatek_text_type_t type; ideatek_capitalize_t capitalize; bool enabled; bool autocorrect; bool multiline; bool draws_composition; bool draws_candidates; }", "{ ideatek_entity_t keyboard; ideatek_entity_t window; bridge_text_t text; int32_t start; int32_t length; uint32_t index; uint32_t count; int32_t selected; uint32_t order; ideatek_text_event_kind_t kind; bool horizontal; }", "{ ideatek_entity_t window; float x; float y; uint32_t buttons; bool relative; bool cursor_found; bool warp_works; }", "{ ideatek_entity_t mouse; ideatek_entity_t window; float x; float y; float rel_x; float rel_y; uint32_t buttons; uint32_t order; ideatek_source_t source; }", "{ ideatek_entity_t mouse; ideatek_entity_t window; float x; float y; uint32_t order; uint8_t button; uint8_t clicks; ideatek_source_t source; bool down; }", "{ ideatek_entity_t mouse; ideatek_entity_t window; float x; float y; int32_t ticks_x; int32_t ticks_y; float mouse_x; float mouse_y; uint32_t order; bool flipped; }", "{ ideatek_entity_t window; bridge_text_t pixels; uint32_t width; uint32_t height; int32_t hot_x; int32_t hot_y; float warp_x; float warp_y; uint32_t warps; ideatek_mouse_mode_t mode; ideatek_cursor_t cursor; bool capture; bool custom; }", "{ uint16_t axes; uint16_t buttons; uint16_t hats; uint16_t balls; ideatek_joystick_type_t type; }", "{ uint64_t buttons[2]; int16_t axes[16]; ideatek_hat_t hats[4]; }", "{ ideatek_entity_t joystick; uint32_t order; uint32_t index; int16_t value; int16_t rel_x; int16_t rel_y; ideatek_hat_t hat; ideatek_joystick_event_kind_t kind; bool down; }", "{ ideatek_gamepad_type_t type; ideatek_face_label_t labels[4]; }", "{ float left_x; float left_y; float right_x; float right_y; float left_trigger; float right_trigger; uint32_t buttons; bool pressed[26]; uint8_t capsense; }", "{ ideatek_entity_t gamepad; uint32_t order; float value; uint8_t index; ideatek_gamepad_event_kind_t kind; bool down; }", "{ uint32_t duration_ms; uint32_t trigger_duration_ms; uint32_t rumbles; uint32_t trigger_rumbles; int32_t player_index; float low; float high; float trigger_left; float trigger_right; uint8_t red; uint8_t green; uint8_t blue; }", "{ uint64_t id; ideatek_entity_t window; float x; float y; float pressure; }", "{ ideatek_entity_t gamepad; ideatek_touch_type_t type; bool pinch; }", "{ bridge_text_t fingers; uint32_t count; }", "{ uint64_t finger; ideatek_entity_t touch; ideatek_entity_t window; float x; float y; float dx; float dy; float pressure; uint32_t order; ideatek_finger_event_kind_t kind; }", "{ ideatek_entity_t window; float scale; uint32_t order; ideatek_pinch_event_kind_t kind; }", "{ ideatek_pen_type_t type; }", "{ ideatek_entity_t window; float x; float y; float axes[7]; ideatek_pen_input_t flags; }", "{ ideatek_entity_t pen; ideatek_entity_t window; float x; float y; float value; ideatek_pen_input_t flags; uint32_t order; uint8_t button; ideatek_pen_axis_t axis; ideatek_pen_event_kind_t kind; bool eraser; }", "{ ideatek_entity_t gamepad; int32_t raw_type; float rate; ideatek_sensor_type_t type; }", "{ bool enabled; }", "{ uint64_t time; float data[6]; }", "{ uint64_t time; ideatek_entity_t sensor; float data[6]; uint32_t order; }"] }
+false = { run = ["{out}/input_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/input_layout{exe}", "texts"]
+claims = { status = 0, line = ["{ IDEATEK_DEVICE_KIND_KEYBOARD = 0, IDEATEK_DEVICE_KIND_MOUSE = 1, IDEATEK_DEVICE_KIND_JOYSTICK = 2, IDEATEK_DEVICE_KIND_TOUCH = 3, IDEATEK_DEVICE_KIND_PEN = 4, IDEATEK_DEVICE_KIND_SENSOR = 5 }", "{ IDEATEK_POWER_UNKNOWN = 0, IDEATEK_POWER_ON_BATTERY = 1, IDEATEK_POWER_NO_BATTERY = 2, IDEATEK_POWER_CHARGING = 3, IDEATEK_POWER_CHARGED = 4 }", "{ IDEATEK_LINK_UNKNOWN = 0, IDEATEK_LINK_WIRED = 1, IDEATEK_LINK_WIRELESS = 2 }", "{ IDEATEK_INPUT_EVENT_KIND_CONNECTED = 0, IDEATEK_INPUT_EVENT_KIND_DISCONNECTED = 1, IDEATEK_INPUT_EVENT_KIND_POWER = 2, IDEATEK_INPUT_EVENT_KIND_USER = 3, IDEATEK_INPUT_EVENT_KIND_REMAPPED = 4, IDEATEK_INPUT_EVENT_KIND_LAYOUT = 5, IDEATEK_INPUT_EVENT_KIND_FOCUS_GAINED = 6, IDEATEK_INPUT_EVENT_KIND_FOCUS_LOST = 7 }", "{ IDEATEK_MODIFIER_LSHIFT = 0x0001, IDEATEK_MODIFIER_RSHIFT = 0x0002, IDEATEK_MODIFIER_LEVEL5 = 0x0004, IDEATEK_MODIFIER_LCTRL = 0x0040, IDEATEK_MODIFIER_RCTRL = 0x0080, IDEATEK_MODIFIER_LALT = 0x0100, IDEATEK_MODIFIER_RALT = 0x0200, IDEATEK_MODIFIER_LGUI = 0x0400, IDEATEK_MODIFIER_RGUI = 0x0800, IDEATEK_MODIFIER_NUM = 0x1000, IDEATEK_MODIFIER_CAPS = 0x2000, IDEATEK_MODIFIER_MODE = 0x4000, IDEATEK_MODIFIER_SCROLL = 0x8000 }", "{ IDEATEK_TEXT_TYPE_TEXT = 0, IDEATEK_TEXT_TYPE_TEXT_NAME = 1, IDEATEK_TEXT_TYPE_TEXT_EMAIL = 2, IDEATEK_TEXT_TYPE_TEXT_USERNAME = 3, IDEATEK_TEXT_TYPE_TEXT_PASSWORD_HIDDEN = 4, IDEATEK_TEXT_TYPE_TEXT_PASSWORD_VISIBLE = 5, IDEATEK_TEXT_TYPE_NUMBER = 6, IDEATEK_TEXT_TYPE_NUMBER_PASSWORD_HIDDEN = 7, IDEATEK_TEXT_TYPE_NUMBER_PASSWORD_VISIBLE = 8 }", "{ IDEATEK_CAPITALIZE_NONE = 0, IDEATEK_CAPITALIZE_SENTENCES = 1, IDEATEK_CAPITALIZE_WORDS = 2, IDEATEK_CAPITALIZE_LETTERS = 3 }", "{ IDEATEK_TEXT_EVENT_KIND_COMMIT = 0, IDEATEK_TEXT_EVENT_KIND_COMPOSITION = 1, IDEATEK_TEXT_EVENT_KIND_CANDIDATE = 2, IDEATEK_TEXT_EVENT_KIND_SCREEN_KEYBOARD_SHOWN = 3, IDEATEK_TEXT_EVENT_KIND_SCREEN_KEYBOARD_HIDDEN = 4 }", "{ IDEATEK_SOURCE_MOUSE = 0, IDEATEK_SOURCE_TOUCH = 1, IDEATEK_SOURCE_PEN = 2 }", "{ IDEATEK_MOUSE_MODE_NORMAL = 0, IDEATEK_MOUSE_MODE_HIDDEN = 1, IDEATEK_MOUSE_MODE_CONFINED = 2, IDEATEK_MOUSE_MODE_RELATIVE = 3 }", "{ IDEATEK_CURSOR_DEFAULT = 0, IDEATEK_CURSOR_TEXT = 1, IDEATEK_CURSOR_WAIT = 2, IDEATEK_CURSOR_CROSSHAIR = 3, IDEATEK_CURSOR_PROGRESS = 4, IDEATEK_CURSOR_NWSE_RESIZE = 5, IDEATEK_CURSOR_NESW_RESIZE = 6, IDEATEK_CURSOR_EW_RESIZE = 7, IDEATEK_CURSOR_NS_RESIZE = 8, IDEATEK_CURSOR_MOVE = 9, IDEATEK_CURSOR_NOT_ALLOWED = 10, IDEATEK_CURSOR_POINTER = 11, IDEATEK_CURSOR_NW_RESIZE = 12, IDEATEK_CURSOR_N_RESIZE = 13, IDEATEK_CURSOR_NE_RESIZE = 14, IDEATEK_CURSOR_E_RESIZE = 15, IDEATEK_CURSOR_SE_RESIZE = 16, IDEATEK_CURSOR_S_RESIZE = 17, IDEATEK_CURSOR_SW_RESIZE = 18, IDEATEK_CURSOR_W_RESIZE = 19, IDEATEK_CURSOR_CONTEXT_MENU = 20, IDEATEK_CURSOR_HELP = 21, IDEATEK_CURSOR_CELL = 22, IDEATEK_CURSOR_VERTICAL_TEXT = 23, IDEATEK_CURSOR_ALIAS = 24, IDEATEK_CURSOR_COPY = 25, IDEATEK_CURSOR_NO_DROP = 26, IDEATEK_CURSOR_GRAB = 27, IDEATEK_CURSOR_GRABBING = 28, IDEATEK_CURSOR_COL_RESIZE = 29, IDEATEK_CURSOR_ROW_RESIZE = 30, IDEATEK_CURSOR_ALL_SCROLL = 31, IDEATEK_CURSOR_ZOOM_IN = 32, IDEATEK_CURSOR_ZOOM_OUT = 33 }", "{ IDEATEK_JOYSTICK_TYPE_UNKNOWN = 0, IDEATEK_JOYSTICK_TYPE_GAMEPAD = 1, IDEATEK_JOYSTICK_TYPE_WHEEL = 2, IDEATEK_JOYSTICK_TYPE_ARCADE_STICK = 3, IDEATEK_JOYSTICK_TYPE_FLIGHT_STICK = 4, IDEATEK_JOYSTICK_TYPE_DANCE_PAD = 5, IDEATEK_JOYSTICK_TYPE_GUITAR = 6, IDEATEK_JOYSTICK_TYPE_DRUM_KIT = 7, IDEATEK_JOYSTICK_TYPE_ARCADE_PAD = 8, IDEATEK_JOYSTICK_TYPE_THROTTLE = 9 }", "{ IDEATEK_HAT_UP = 0x01, IDEATEK_HAT_RIGHT = 0x02, IDEATEK_HAT_DOWN = 0x04, IDEATEK_HAT_LEFT = 0x08 }", "{ IDEATEK_JOYSTICK_EVENT_KIND_AXIS = 0, IDEATEK_JOYSTICK_EVENT_KIND_BUTTON = 1, IDEATEK_JOYSTICK_EVENT_KIND_HAT = 2, IDEATEK_JOYSTICK_EVENT_KIND_BALL = 3 }", "{ IDEATEK_GAMEPAD_TYPE_UNKNOWN = 0, IDEATEK_GAMEPAD_TYPE_STANDARD = 1, IDEATEK_GAMEPAD_TYPE_XBOX360 = 2, IDEATEK_GAMEPAD_TYPE_XBOXONE = 3, IDEATEK_GAMEPAD_TYPE_PS3 = 4, IDEATEK_GAMEPAD_TYPE_PS4 = 5, IDEATEK_GAMEPAD_TYPE_PS5 = 6, IDEATEK_GAMEPAD_TYPE_NINTENDO_SWITCH_PRO = 7, IDEATEK_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_LEFT = 8, IDEATEK_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT = 9, IDEATEK_GAMEPAD_TYPE_NINTENDO_SWITCH_JOYCON_PAIR = 10, IDEATEK_GAMEPAD_TYPE_GAMECUBE = 11, IDEATEK_GAMEPAD_TYPE_STEAM = 12 }", "{ IDEATEK_FACE_LABEL_UNKNOWN = 0, IDEATEK_FACE_LABEL_A = 1, IDEATEK_FACE_LABEL_B = 2, IDEATEK_FACE_LABEL_X = 3, IDEATEK_FACE_LABEL_Y = 4, IDEATEK_FACE_LABEL_CROSS = 5, IDEATEK_FACE_LABEL_CIRCLE = 6, IDEATEK_FACE_LABEL_SQUARE = 7, IDEATEK_FACE_LABEL_TRIANGLE = 8 }", "{ IDEATEK_GAMEPAD_BUTTON_SOUTH = 0, IDEATEK_GAMEPAD_BUTTON_EAST = 1, IDEATEK_GAMEPAD_BUTTON_WEST = 2, IDEATEK_GAMEPAD_BUTTON_NORTH = 3, IDEATEK_GAMEPAD_BUTTON_BACK = 4, IDEATEK_GAMEPAD_BUTTON_GUIDE = 5, IDEATEK_GAMEPAD_BUTTON_START = 6, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 7, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 8, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 9, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 10, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 11, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 12, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 13, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 14, IDEATEK_GAMEPAD_BUTTON_MISC1 = 15, IDEATEK_GAMEPAD_BUTTON_RIGHT_PADDLE1 = 16, IDEATEK_GAMEPAD_BUTTON_LEFT_PADDLE1 = 17, IDEATEK_GAMEPAD_BUTTON_RIGHT_PADDLE2 = 18, IDEATEK_GAMEPAD_BUTTON_LEFT_PADDLE2 = 19, IDEATEK_GAMEPAD_BUTTON_TOUCHPAD = 20, IDEATEK_GAMEPAD_BUTTON_MISC2 = 21, IDEATEK_GAMEPAD_BUTTON_MISC3 = 22, IDEATEK_GAMEPAD_BUTTON_MISC4 = 23, IDEATEK_GAMEPAD_BUTTON_MISC5 = 24, IDEATEK_GAMEPAD_BUTTON_MISC6 = 25 }", "{ IDEATEK_GAMEPAD_AXIS_LEFTX = 0, IDEATEK_GAMEPAD_AXIS_LEFTY = 1, IDEATEK_GAMEPAD_AXIS_RIGHTX = 2, IDEATEK_GAMEPAD_AXIS_RIGHTY = 3, IDEATEK_GAMEPAD_AXIS_LEFT_TRIGGER = 4, IDEATEK_GAMEPAD_AXIS_RIGHT_TRIGGER = 5 }", "{ IDEATEK_CAPSENSE_LEFT_STICK = 0, IDEATEK_CAPSENSE_RIGHT_STICK = 1, IDEATEK_CAPSENSE_LEFT_GRIP = 2, IDEATEK_CAPSENSE_RIGHT_GRIP = 3 }", "{ IDEATEK_GAMEPAD_EVENT_KIND_AXIS = 0, IDEATEK_GAMEPAD_EVENT_KIND_BUTTON = 1, IDEATEK_GAMEPAD_EVENT_KIND_CAPSENSE = 2 }", "{ IDEATEK_TOUCH_TYPE_DIRECT = 0, IDEATEK_TOUCH_TYPE_INDIRECT_ABSOLUTE = 1, IDEATEK_TOUCH_TYPE_INDIRECT_RELATIVE = 2 }", "{ IDEATEK_FINGER_EVENT_KIND_DOWN = 0, IDEATEK_FINGER_EVENT_KIND_MOTION = 1, IDEATEK_FINGER_EVENT_KIND_UP = 2, IDEATEK_FINGER_EVENT_KIND_CANCELED = 3 }", "{ IDEATEK_PINCH_EVENT_KIND_BEGIN = 0, IDEATEK_PINCH_EVENT_KIND_UPDATE = 1, IDEATEK_PINCH_EVENT_KIND_END = 2 }", "{ IDEATEK_PEN_TYPE_UNKNOWN = 0, IDEATEK_PEN_TYPE_DIRECT = 1, IDEATEK_PEN_TYPE_INDIRECT = 2 }", "{ IDEATEK_PEN_AXIS_PRESSURE = 0, IDEATEK_PEN_AXIS_XTILT = 1, IDEATEK_PEN_AXIS_YTILT = 2, IDEATEK_PEN_AXIS_DISTANCE = 3, IDEATEK_PEN_AXIS_ROTATION = 4, IDEATEK_PEN_AXIS_SLIDER = 5, IDEATEK_PEN_AXIS_TANGENTIAL_PRESSURE = 6 }", "{ IDEATEK_PEN_INPUT_DOWN = 0x00000001, IDEATEK_PEN_INPUT_BUTTON_1 = 0x00000002, IDEATEK_PEN_INPUT_BUTTON_2 = 0x00000004, IDEATEK_PEN_INPUT_BUTTON_3 = 0x00000008, IDEATEK_PEN_INPUT_BUTTON_4 = 0x00000010, IDEATEK_PEN_INPUT_BUTTON_5 = 0x00000020, IDEATEK_PEN_INPUT_ERASER_TIP = 0x40000000, IDEATEK_PEN_INPUT_IN_PROXIMITY = 0x80000000 }", "{ IDEATEK_PEN_EVENT_KIND_PROXIMITY_IN = 0, IDEATEK_PEN_EVENT_KIND_PROXIMITY_OUT = 1, IDEATEK_PEN_EVENT_KIND_TIP_DOWN = 2, IDEATEK_PEN_EVENT_KIND_TIP_UP = 3, IDEATEK_PEN_EVENT_KIND_BUTTON_DOWN = 4, IDEATEK_PEN_EVENT_KIND_BUTTON_UP = 5, IDEATEK_PEN_EVENT_KIND_MOTION = 6, IDEATEK_PEN_EVENT_KIND_AXIS = 7 }", "{ IDEATEK_SENSOR_TYPE_UNKNOWN = 0, IDEATEK_SENSOR_TYPE_ACCEL = 1, IDEATEK_SENSOR_TYPE_GYRO = 2, IDEATEK_SENSOR_TYPE_ACCEL_L = 3, IDEATEK_SENSOR_TYPE_GYRO_L = 4, IDEATEK_SENSOR_TYPE_ACCEL_R = 5, IDEATEK_SENSOR_TYPE_GYRO_R = 6 }", "{ bridge_text_t name; bridge_text_t serial; uint16_t vendor; uint16_t product; uint16_t version; uint8_t guid[16]; ideatek_device_kind_t kind; bool rumble; bool trigger_rumble; bool mono_led; bool rgb_led; bool player_led; }", "{ uint32_t user; }", "{ int32_t player_index; int32_t percent; ideatek_power_t power; ideatek_link_t link; }", "{ ideatek_entity_t device; ideatek_entity_t window; uint32_t user; uint32_t old_user; uint32_t order; ideatek_input_event_kind_t kind; }", "{ ideatek_entity_t window; uint64_t keys[8]; ideatek_modifier_t modifiers; bool ime; bool screen_keyboard; }", "{ uint32_t key[512]; }", "{ ideatek_entity_t keyboard; ideatek_entity_t window; uint32_t key; uint32_t raw; uint32_t order; uint16_t code; ideatek_modifier_t modifiers; bool down; bool repeat; }", "{ ideatek_entity_t window; int32_t x; int32_t y; uint32_t width; uint32_t height; int32_t cursor; uint32_t clears; ideatek_text_type_t type; ideatek_capitalize_t capitalize; bool enabled; bool autocorrect; bool multiline; bool draws_composition; bool draws_candidates; }", "{ ideatek_entity_t keyboard; ideatek_entity_t window; bridge_text_t text; int32_t start; int32_t length; uint32_t index; uint32_t count; int32_t selected; uint32_t order; ideatek_text_event_kind_t kind; bool horizontal; }", "{ ideatek_entity_t window; float x; float y; uint32_t buttons; bool relative; bool cursor_found; bool warp_works; }", "{ ideatek_entity_t mouse; ideatek_entity_t window; float x; float y; float rel_x; float rel_y; uint32_t buttons; uint32_t order; ideatek_source_t source; }", "{ ideatek_entity_t mouse; ideatek_entity_t window; float x; float y; uint32_t order; uint8_t button; uint8_t clicks; ideatek_source_t source; bool down; }", "{ ideatek_entity_t mouse; ideatek_entity_t window; float x; float y; int32_t ticks_x; int32_t ticks_y; float mouse_x; float mouse_y; uint32_t order; bool flipped; }", "{ ideatek_entity_t window; bridge_text_t pixels; uint32_t width; uint32_t height; int32_t hot_x; int32_t hot_y; float warp_x; float warp_y; uint32_t warps; ideatek_mouse_mode_t mode; ideatek_cursor_t cursor; bool capture; bool custom; }", "{ uint16_t axes; uint16_t buttons; uint16_t hats; uint16_t balls; ideatek_joystick_type_t type; }", "{ uint64_t buttons[2]; int16_t axes[16]; ideatek_hat_t hats[4]; }", "{ ideatek_entity_t joystick; uint32_t order; uint32_t index; int16_t value; int16_t rel_x; int16_t rel_y; ideatek_hat_t hat; ideatek_joystick_event_kind_t kind; bool down; }", "{ ideatek_gamepad_type_t type; ideatek_face_label_t labels[4]; }", "{ float left_x; float left_y; float right_x; float right_y; float left_trigger; float right_trigger; uint32_t buttons; bool pressed[26]; uint8_t capsense; }", "{ ideatek_entity_t gamepad; uint32_t order; float value; uint8_t index; ideatek_gamepad_event_kind_t kind; bool down; }", "{ uint32_t duration_ms; uint32_t trigger_duration_ms; uint32_t rumbles; uint32_t trigger_rumbles; int32_t player_index; float low; float high; float trigger_left; float trigger_right; uint8_t red; uint8_t green; uint8_t blue; }", "{ uint64_t id; ideatek_entity_t window; float x; float y; float pressure; }", "{ ideatek_entity_t gamepad; ideatek_touch_type_t type; bool pinch; }", "{ bridge_text_t fingers; uint32_t count; }", "{ uint64_t finger; ideatek_entity_t touch; ideatek_entity_t window; float x; float y; float dx; float dy; float pressure; uint32_t order; ideatek_finger_event_kind_t kind; }", "{ ideatek_entity_t window; float scale; uint32_t order; ideatek_pinch_event_kind_t kind; }", "{ ideatek_pen_type_t type; }", "{ ideatek_entity_t window; float x; float y; float axes[7]; ideatek_pen_input_t flags; }", "{ ideatek_entity_t pen; ideatek_entity_t window; float x; float y; float value; ideatek_pen_input_t flags; uint32_t order; uint8_t button; ideatek_pen_axis_t axis; ideatek_pen_event_kind_t kind; bool eraser; }", "{ ideatek_entity_t gamepad; int32_t raw_type; float rate; ideatek_sensor_type_t type; }", "{ bool enabled; }", "{ uint64_t time; float data[6]; }", "{ uint64_t time; ideatek_entity_t sensor; float data[6]; uint32_t order; }"] }
+false = { run = ["{out}/input_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "ideatek_input.h compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_input.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_input.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "ideatek_keyboard.h compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_keyboard.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_keyboard.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "ideatek_text.h compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_text.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_text.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "ideatek_mouse.h compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_mouse.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_mouse.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "ideatek_gamepad.h compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_gamepad.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_gamepad.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "ideatek_touch.h compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_touch.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_touch.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "ideatek_pen.h compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_pen.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_pen.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "ideatek_sensor.h compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_sensor.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/input", "-I", "{bridge}/include", "-c", "tests/input/layout/alone_sensor.c", "-o", "{case}/alone.o"] }

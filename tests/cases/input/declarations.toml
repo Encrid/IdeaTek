@@ -1,0 +1,192 @@
+[[case]]
+name = "a module declares the 61 types, each field type before the structs that have a field of it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/input_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["input_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[budget]
+entities = 8192
+tables = 128
+types = 128
+systems = 16
+terms = 16
+modules = 8
+persistent = 4194304
+columns = 16777216
+sparse_sets = "none"
+direct_indexed = "none"
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_device_kind_t", "ideatek:ideatek_power_t", "ideatek:ideatek_link_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_text_type_t", "ideatek:ideatek_capitalize_t", "ideatek:ideatek_text_event_kind_t", "ideatek:ideatek_source_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_joystick_type_t", "ideatek:ideatek_hat_t", "ideatek:ideatek_joystick_event_kind_t", "ideatek:ideatek_gamepad_type_t", "ideatek:ideatek_face_label_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_axis_t", "ideatek:ideatek_capsense_t", "ideatek:ideatek_gamepad_event_kind_t", "ideatek:ideatek_touch_type_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_pinch_event_kind_t", "ideatek:ideatek_pen_type_t", "ideatek:ideatek_pen_axis_t", "ideatek:ideatek_pen_input_t", "ideatek:ideatek_pen_event_kind_t", "ideatek:ideatek_sensor_type_t", "ideatek:InputDevice", "ideatek:InputUser", "ideatek:DeviceState", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyLayout", "ideatek:KeyEvent", "ideatek:TextRequest", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:MouseRequest", "ideatek:Joystick", "ideatek:JoystickState", "ideatek:JoystickEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:JoystickRequest", "ideatek:TouchDevice", "ideatek:TouchState", "ideatek:FingerEvent", "ideatek:PinchEvent", "ideatek:Pen", "ideatek:PenState", "ideatek:PenEvent", "ideatek:Sensor", "ideatek:SensorRequest", "ideatek:SensorState", "ideatek:SensorEvent"]
+'''
+
+[case.false.folders]
+"{case}/m" = ["input_late"]
+
+[[case]]
+name = "the game loads with write on the four requests, and attaches them"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/input_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["input_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[budget]
+entities = 8192
+tables = 128
+types = 128
+systems = 16
+terms = 16
+modules = 8
+persistent = 4194304
+columns = 16777216
+sparse_sets = "none"
+direct_indexed = "none"
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:JoystickRequest", "ideatek:SensorRequest"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_device_kind_t", "ideatek:ideatek_power_t", "ideatek:ideatek_link_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_text_type_t", "ideatek:ideatek_capitalize_t", "ideatek:ideatek_text_event_kind_t", "ideatek:ideatek_source_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_joystick_type_t", "ideatek:ideatek_hat_t", "ideatek:ideatek_joystick_event_kind_t", "ideatek:ideatek_gamepad_type_t", "ideatek:ideatek_face_label_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_axis_t", "ideatek:ideatek_capsense_t", "ideatek:ideatek_gamepad_event_kind_t", "ideatek:ideatek_touch_type_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_pinch_event_kind_t", "ideatek:ideatek_pen_type_t", "ideatek:ideatek_pen_axis_t", "ideatek:ideatek_pen_input_t", "ideatek:ideatek_pen_event_kind_t", "ideatek:ideatek_sensor_type_t"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[budget]
+entities = 8192
+tables = 128
+types = 128
+systems = 16
+terms = 16
+modules = 8
+persistent = 4194304
+columns = 16777216
+sparse_sets = "none"
+direct_indexed = "none"
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:TextRequest"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_device_kind_t", "ideatek:ideatek_power_t", "ideatek:ideatek_link_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_text_type_t", "ideatek:ideatek_capitalize_t", "ideatek:ideatek_text_event_kind_t", "ideatek:ideatek_source_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_joystick_type_t", "ideatek:ideatek_hat_t", "ideatek:ideatek_joystick_event_kind_t", "ideatek:ideatek_gamepad_type_t", "ideatek:ideatek_face_label_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_axis_t", "ideatek:ideatek_capsense_t", "ideatek:ideatek_gamepad_event_kind_t", "ideatek:ideatek_touch_type_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_pinch_event_kind_t", "ideatek:ideatek_pen_type_t", "ideatek:ideatek_pen_axis_t", "ideatek:ideatek_pen_input_t", "ideatek:ideatek_pen_event_kind_t", "ideatek:ideatek_sensor_type_t", "ideatek:MouseRequest", "ideatek:JoystickRequest", "ideatek:SensorRequest"]
+'''
+
+[[case]]
+name = "the input module loads with write on its types and read on the requests, and attaches its types"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:input@1.0.0, native, m/input_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["input_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[budget]
+entities = 8192
+tables = 128
+types = 128
+systems = 16
+terms = 16
+modules = 8
+persistent = 4194304
+columns = 16777216
+sparse_sets = "none"
+direct_indexed = "none"
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:input@1.0.0"]
+write = ["ideatek:InputDevice", "ideatek:InputUser", "ideatek:DeviceState", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyLayout", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:Joystick", "ideatek:JoystickState", "ideatek:JoystickEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:TouchDevice", "ideatek:TouchState", "ideatek:FingerEvent", "ideatek:PinchEvent", "ideatek:Pen", "ideatek:PenState", "ideatek:PenEvent", "ideatek:Sensor", "ideatek:SensorState", "ideatek:SensorEvent"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_device_kind_t", "ideatek:ideatek_power_t", "ideatek:ideatek_link_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_text_type_t", "ideatek:ideatek_capitalize_t", "ideatek:ideatek_text_event_kind_t", "ideatek:ideatek_source_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_joystick_type_t", "ideatek:ideatek_hat_t", "ideatek:ideatek_joystick_event_kind_t", "ideatek:ideatek_gamepad_type_t", "ideatek:ideatek_face_label_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_axis_t", "ideatek:ideatek_capsense_t", "ideatek:ideatek_gamepad_event_kind_t", "ideatek:ideatek_touch_type_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_pinch_event_kind_t", "ideatek:ideatek_pen_type_t", "ideatek:ideatek_pen_axis_t", "ideatek:ideatek_pen_input_t", "ideatek:ideatek_pen_event_kind_t", "ideatek:ideatek_sensor_type_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:JoystickRequest", "ideatek:SensorRequest"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[budget]
+entities = 8192
+tables = 128
+types = 128
+systems = 16
+terms = 16
+modules = 8
+persistent = 4194304
+columns = 16777216
+sparse_sets = "none"
+direct_indexed = "none"
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:input@1.0.0"]
+write = ["ideatek:InputDevice", "ideatek:InputUser", "ideatek:DeviceState", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyLayout", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:Joystick", "ideatek:JoystickState", "ideatek:JoystickEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:TouchDevice", "ideatek:TouchState", "ideatek:FingerEvent", "ideatek:PinchEvent", "ideatek:Pen", "ideatek:PenState", "ideatek:PenEvent", "ideatek:Sensor", "ideatek:SensorState"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_device_kind_t", "ideatek:ideatek_power_t", "ideatek:ideatek_link_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_text_type_t", "ideatek:ideatek_capitalize_t", "ideatek:ideatek_text_event_kind_t", "ideatek:ideatek_source_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_joystick_type_t", "ideatek:ideatek_hat_t", "ideatek:ideatek_joystick_event_kind_t", "ideatek:ideatek_gamepad_type_t", "ideatek:ideatek_face_label_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_axis_t", "ideatek:ideatek_capsense_t", "ideatek:ideatek_gamepad_event_kind_t", "ideatek:ideatek_touch_type_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_pinch_event_kind_t", "ideatek:ideatek_pen_type_t", "ideatek:ideatek_pen_axis_t", "ideatek:ideatek_pen_input_t", "ideatek:ideatek_pen_event_kind_t", "ideatek:ideatek_sensor_type_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:JoystickRequest", "ideatek:SensorRequest", "ideatek:SensorEvent"]
+'''
+
+[[case]]
+name = "a reader loads with read on the 61 types"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/input_reader{library}"] }
+
+[case.folders]
+"{case}/m" = ["input_reader"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[budget]
+entities = 8192
+tables = 128
+types = 128
+systems = 16
+terms = 16
+modules = 8
+persistent = 4194304
+columns = 16777216
+sparse_sets = "none"
+direct_indexed = "none"
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_device_kind_t", "ideatek:ideatek_power_t", "ideatek:ideatek_link_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_text_type_t", "ideatek:ideatek_capitalize_t", "ideatek:ideatek_text_event_kind_t", "ideatek:ideatek_source_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_joystick_type_t", "ideatek:ideatek_hat_t", "ideatek:ideatek_joystick_event_kind_t", "ideatek:ideatek_gamepad_type_t", "ideatek:ideatek_face_label_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_axis_t", "ideatek:ideatek_capsense_t", "ideatek:ideatek_gamepad_event_kind_t", "ideatek:ideatek_touch_type_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_pinch_event_kind_t", "ideatek:ideatek_pen_type_t", "ideatek:ideatek_pen_axis_t", "ideatek:ideatek_pen_input_t", "ideatek:ideatek_pen_event_kind_t", "ideatek:ideatek_sensor_type_t", "ideatek:InputDevice", "ideatek:InputUser", "ideatek:DeviceState", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyLayout", "ideatek:KeyEvent", "ideatek:TextRequest", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:MouseRequest", "ideatek:Joystick", "ideatek:JoystickState", "ideatek:JoystickEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:JoystickRequest", "ideatek:TouchDevice", "ideatek:TouchState", "ideatek:FingerEvent", "ideatek:PinchEvent", "ideatek:Pen", "ideatek:PenState", "ideatek:PenEvent", "ideatek:Sensor", "ideatek:SensorRequest", "ideatek:SensorState", "ideatek:SensorEvent"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[budget]
+entities = 8192
+tables = 128
+types = 128
+systems = 16
+terms = 16
+modules = 8
+persistent = 4194304
+columns = 16777216
+sparse_sets = "none"
+direct_indexed = "none"
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_device_kind_t", "ideatek:ideatek_power_t", "ideatek:InputDevice", "ideatek:InputUser", "ideatek:DeviceState", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyLayout", "ideatek:KeyEvent", "ideatek:TextRequest", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:MouseRequest", "ideatek:Joystick", "ideatek:JoystickState", "ideatek:JoystickEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:JoystickRequest", "ideatek:TouchDevice", "ideatek:TouchState", "ideatek:FingerEvent", "ideatek:PinchEvent", "ideatek:Pen", "ideatek:PenState", "ideatek:PenEvent", "ideatek:Sensor", "ideatek:SensorRequest", "ideatek:SensorState", "ideatek:SensorEvent"]
+'''
