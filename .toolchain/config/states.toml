@@ -1,0 +1,63 @@
+[parts.states]
+name = "BC-IdeaTek-States"
+uses = ["world"]
+third_party = []
+
+[parts.states.package]
+proof = "tests/states/package/proof.c"
+include = ["{bridge}/include", "{root}/include/world"]
+
+[compose.states]
+part = "states"
+from = "include/states"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+states_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
+    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
+]
+
+states_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "states_layout"
+kind = "program"
+part = "states"
+test = true
+sources = ["tests/states/layout/layout.c"]
+include = ["include/states", "include/world", "{bridge}/include"]
+
+[[artifact]]
+name = "states_probe"
+kind = "native_module"
+part = "states"
+test = true
+sources = ["tests/states/probe/probe.c"]
+include = ["include/states", "include/world"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{states_probe_words}"]
+
+[[artifact.variants]]
+name = "states_late"
+defines = ["ROLE_LATE"]
+manifest = ["test:probe@1.0.0", "{states_probe_words}"]
+
+[[artifact.variants]]
+name = "states_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{states_spawn_words}"]
+
+[[artifact.variants]]
+name = "states_other"
+defines = ["ROLE_OTHER"]
+manifest = ["test:other@1.0.0", "{states_spawn_words}"]
+
+[[artifact.variants]]
+name = "states_module"
+defines = ["ROLE_STATES"]
+manifest = ["test:states@1.0.0", "{states_spawn_words}"]

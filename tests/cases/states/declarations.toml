@@ -1,0 +1,120 @@
+[[case]]
+name = "a module declares the 5 types, ideatek:ideatek_entity_t before ideatek:StateScoped"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/states_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["states_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:State", "ideatek:StateRequest", "ideatek:StateChange",
+    "ideatek:StateScoped",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["states_late"]
+
+[[case]]
+name = "the game loads with write on ideatek:State, ideatek:StateRequest and ideatek:StateScoped"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/states_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["states_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:State", "ideatek:StateRequest", "ideatek:StateScoped"]
+read = ["ideatek:ideatek_entity_t", "ideatek:StateChange"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:StateRequest", "ideatek:StateScoped"]
+read = ["ideatek:ideatek_entity_t", "ideatek:State", "ideatek:StateChange"]
+'''
+
+[[case]]
+name = "another module loads with write on ideatek:StateRequest and ideatek:StateScoped"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:other@1.0.0, native, m/states_other{library}"] }
+
+[case.folders]
+"{case}/m" = ["states_other"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:other@1.0.0"]
+write = ["ideatek:StateRequest", "ideatek:StateScoped"]
+read = ["ideatek:ideatek_entity_t", "ideatek:State", "ideatek:StateChange"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:other@1.0.0"]
+write = ["ideatek:StateRequest"]
+read = ["ideatek:ideatek_entity_t", "ideatek:State", "ideatek:StateChange", "ideatek:StateScoped"]
+'''
+
+[[case]]
+name = "the states module loads with write on ideatek:State and ideatek:StateChange"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:states@1.0.0, native, m/states_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["states_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:states@1.0.0"]
+write = ["ideatek:State", "ideatek:StateChange"]
+read = ["ideatek:ideatek_entity_t", "ideatek:StateRequest", "ideatek:StateScoped"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:states@1.0.0"]
+write = ["ideatek:State"]
+read = ["ideatek:ideatek_entity_t", "ideatek:StateRequest", "ideatek:StateChange", "ideatek:StateScoped"]
+'''
