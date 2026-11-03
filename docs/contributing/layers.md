@@ -29,6 +29,7 @@ The project holds the contracts of layers 2, 3 and 4.
 | window | 2 |
 | input | 2 |
 | system | 2 |
+| accessibility | 2 |
 | frame | 3 |
 | space | 4 |
 
