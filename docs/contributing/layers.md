@@ -9,7 +9,7 @@ that place a type on a layer. Each part of the project is on 1 layer.
 | --- | --- | --- |
 | 0 | Platform | The hardware, the operating system and the drivers. |
 | 1 | Foundation | Memory, containers, math, threads, logs, configuration, reflection, serialization, compression and cryptography. |
-| 2 | Platform abstraction | Windows, input devices, audio devices, the GPU device, files, sockets, the time source and the life cycle. |
+| 2 | Platform abstraction | Windows, displays, the clipboard, input devices, audio devices, the GPU device, files, sockets, the system, accessibility, the time source and the life cycle. |
 | 3 | Kernel | The main loop, the time steps, the scheduler, the world model, queries, observers, the load of modules, the states of the application and the resources. |
 | 4 | Engine subsystems | Rendering, the scene, animation, physics, audio, the map of inputs, UI, networking, navigation, effects, scripting, media, XR, persistence and the services of a platform. |
 | 5 | Gameplay foundations | Prefabs, the flow of a game, triggers, abilities, inventory, dialogue, the behavior of non-player characters, camera rigs and the movement of a character. |
@@ -20,6 +20,22 @@ that place a type on a layer. Each part of the project is on 1 layer.
 ## The layers of the project
 
 The project holds the contracts of layers 2, 3 and 4.
+
+## The parts
+
+| Part | Layer |
+| --- | --- |
+| world | 2 |
+| window | 2 |
+| input | 2 |
+| frame | 3 |
+| space | 4 |
+
+The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the
+world model.
+
+The time source of layer 2 is the read and the wait of the OS that the clock module makes. The
+wait is precise and does not busy wait.
 
 ## The rules
 
