@@ -1,0 +1,68 @@
+[parts.system]
+name = "BC-IdeaTek-System"
+uses = []
+third_party = []
+
+[parts.system.package]
+proof = "tests/system/package/proof.c"
+include = ["{bridge}/include"]
+
+[compose.system]
+part = "system"
+from = "include/system"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+system_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
+]
+
+system_game_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=64", "hot_reload=false",
+]
+
+system_module_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=16", "hot_reload=false",
+]
+
+[[artifact]]
+name = "system_layout"
+kind = "program"
+part = "system"
+test = true
+sources = ["tests/system/layout/layout.c"]
+include = ["include/system", "{bridge}/include"]
+
+[[artifact]]
+name = "system_probe"
+kind = "native_module"
+part = "system"
+test = true
+sources = ["tests/system/probe/probe.c"]
+include = ["include/system"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{system_probe_words}"]
+
+[[artifact.variants]]
+name = "system_late"
+defines = ["ROLE_LATE"]
+manifest = ["test:probe@1.0.0", "{system_probe_words}"]
+
+[[artifact.variants]]
+name = "system_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{system_game_words}"]
+
+[[artifact.variants]]
+name = "system_module"
+defines = ["ROLE_SYSTEM"]
+manifest = ["test:system@1.0.0", "{system_module_words}"]
+
+[[artifact.variants]]
+name = "system_reader"
+defines = ["ROLE_READER"]
+manifest = ["test:reader@1.0.0", "{system_probe_words}"]
