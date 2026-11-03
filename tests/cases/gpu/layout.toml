@@ -1,0 +1,107 @@
+[[case]]
+name = "ideatek_gpu_kind_t has the size and the alignment of its Usage"
+run = ["{out}/gpu_layout{exe}", "kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_gpu_api_t has the size and the alignment of its Usage"
+run = ["{out}/gpu_layout{exe}", "api"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_gpu_status_t has the size and the alignment of its Usage"
+run = ["{out}/gpu_layout{exe}", "status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_present_mode_t has the size and the alignment of its Usage"
+run = ["{out}/gpu_layout{exe}", "present_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_image_format_t has the size and the alignment of its Usage"
+run = ["{out}/gpu_layout{exe}", "format"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_color_space_t has the size and the alignment of its Usage"
+run = ["{out}/gpu_layout{exe}", "color_space"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_swapchain_status_t has the size and the alignment of its Usage"
+run = ["{out}/gpu_layout{exe}", "swapchain_status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_gpu_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/gpu_layout{exe}", "gpu"]
+claims = { status = 0, order = ["size 280", "alignment 8", "name 0", "memory_bytes 256", "vendor_id 264", "device_id 268", "kind 272", "ray_query 273", "usable 274"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_gpu_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/gpu_layout{exe}", "request"]
+claims = { status = 0, order = ["size 8", "alignment 8", "gpu 0"] }
+false = { run = ["{out}/gpu_layout{exe}", "device"] }
+
+[[case]]
+name = "ideatek_gpu_device_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/gpu_layout{exe}", "device"]
+claims = { status = 0, order = ["size 16", "alignment 8", "gpu 0", "generation 8", "api 12", "status 13"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_swapchain_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/gpu_layout{exe}", "swapchain_request"]
+claims = { status = 0, order = ["size 2", "alignment 1", "present_mode 0", "hdr 1"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_swapchain_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/gpu_layout{exe}", "swapchain"]
+claims = { status = 0, order = ["size 24", "alignment 8", "frame 0", "width 8", "height 12", "slot 16", "format 20", "color_space 21", "present_mode 22", "status 23"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_vulkan_device_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/gpu_layout{exe}", "vulkan_device"]
+claims = { status = 0, order = ["size 48", "alignment 8", "instance 0", "physical_device 8", "device 16", "queue 24", "timeline 32", "queue_family 40"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_vulkan_swapchain_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/gpu_layout{exe}", "vulkan_swapchain"]
+claims = { status = 0, order = ["size 24", "alignment 8", "image 0", "view 8", "format 16", "color_space 20"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/gpu_layout{exe}", "descriptors"]
+claims = { status = 0, line = ["uint8_t { IDEATEK_GPU_KIND_INTEGRATED = 0, IDEATEK_GPU_KIND_DISCRETE = 1, IDEATEK_GPU_KIND_VIRTUAL = 2, IDEATEK_GPU_KIND_CPU = 3, IDEATEK_GPU_KIND_OTHER = 4 }", "uint8_t { IDEATEK_GPU_API_VULKAN = 0 }", "uint8_t { IDEATEK_GPU_STATUS_NONE = 0, IDEATEK_GPU_STATUS_READY = 1, IDEATEK_GPU_STATUS_LOST = 2 }", "uint8_t { IDEATEK_PRESENT_MODE_VSYNC = 0, IDEATEK_PRESENT_MODE_ADAPTIVE = 1, IDEATEK_PRESENT_MODE_MAILBOX = 2, IDEATEK_PRESENT_MODE_IMMEDIATE = 3 }", "uint8_t { IDEATEK_IMAGE_FORMAT_BGRA8_SRGB = 0, IDEATEK_IMAGE_FORMAT_RGBA8_SRGB = 1, IDEATEK_IMAGE_FORMAT_RGB10A2_UNORM = 2, IDEATEK_IMAGE_FORMAT_BGR10A2_UNORM = 3, IDEATEK_IMAGE_FORMAT_RGBA16_FLOAT = 4 }", "uint8_t { IDEATEK_COLOR_SPACE_SRGB = 0, IDEATEK_COLOR_SPACE_HDR10 = 1, IDEATEK_COLOR_SPACE_EXTENDED_SRGB_LINEAR = 2 }", "uint8_t { IDEATEK_SWAPCHAIN_STATUS_READY = 0, IDEATEK_SWAPCHAIN_STATUS_SKIPPED = 1 }", "{ char name[256]; uint64_t memory_bytes; uint32_t vendor_id; uint32_t device_id; ideatek_gpu_kind_t kind; bool ray_query; bool usable; }", "{ ideatek_entity_t gpu; }", "{ ideatek_entity_t gpu; uint32_t generation; ideatek_gpu_api_t api; ideatek_gpu_status_t status; }", "{ ideatek_present_mode_t present_mode; bool hdr; }", "{ uint64_t frame; uint32_t width; uint32_t height; uint32_t slot; ideatek_image_format_t format; ideatek_color_space_t color_space; ideatek_present_mode_t present_mode; ideatek_swapchain_status_t status; }", "{ uint64_t instance; uint64_t physical_device; uint64_t device; uint64_t queue; uint64_t timeline; uint32_t queue_family; }", "{ uint64_t image; uint64_t view; int32_t format; int32_t color_space; }"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/gpu_layout{exe}", "texts"]
+claims = { status = 0, line = ["{ IDEATEK_GPU_KIND_INTEGRATED = 0, IDEATEK_GPU_KIND_DISCRETE = 1, IDEATEK_GPU_KIND_VIRTUAL = 2, IDEATEK_GPU_KIND_CPU = 3, IDEATEK_GPU_KIND_OTHER = 4 }", "{ IDEATEK_GPU_API_VULKAN = 0 }", "{ IDEATEK_GPU_STATUS_NONE = 0, IDEATEK_GPU_STATUS_READY = 1, IDEATEK_GPU_STATUS_LOST = 2 }", "{ IDEATEK_PRESENT_MODE_VSYNC = 0, IDEATEK_PRESENT_MODE_ADAPTIVE = 1, IDEATEK_PRESENT_MODE_MAILBOX = 2, IDEATEK_PRESENT_MODE_IMMEDIATE = 3 }", "{ IDEATEK_IMAGE_FORMAT_BGRA8_SRGB = 0, IDEATEK_IMAGE_FORMAT_RGBA8_SRGB = 1, IDEATEK_IMAGE_FORMAT_RGB10A2_UNORM = 2, IDEATEK_IMAGE_FORMAT_BGR10A2_UNORM = 3, IDEATEK_IMAGE_FORMAT_RGBA16_FLOAT = 4 }", "{ IDEATEK_COLOR_SPACE_SRGB = 0, IDEATEK_COLOR_SPACE_HDR10 = 1, IDEATEK_COLOR_SPACE_EXTENDED_SRGB_LINEAR = 2 }", "{ IDEATEK_SWAPCHAIN_STATUS_READY = 0, IDEATEK_SWAPCHAIN_STATUS_SKIPPED = 1 }", "{ char name[256]; uint64_t memory_bytes; uint32_t vendor_id; uint32_t device_id; ideatek_gpu_kind_t kind; bool ray_query; bool usable; }", "{ ideatek_entity_t gpu; }", "{ ideatek_entity_t gpu; uint32_t generation; ideatek_gpu_api_t api; ideatek_gpu_status_t status; }", "{ ideatek_present_mode_t present_mode; bool hdr; }", "{ uint64_t frame; uint32_t width; uint32_t height; uint32_t slot; ideatek_image_format_t format; ideatek_color_space_t color_space; ideatek_present_mode_t present_mode; ideatek_swapchain_status_t status; }", "{ uint64_t instance; uint64_t physical_device; uint64_t device; uint64_t queue; uint64_t timeline; uint32_t queue_family; }", "{ uint64_t image; uint64_t view; int32_t format; int32_t color_space; }"] }
+false = { run = ["{out}/gpu_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_gpu.h compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/gpu", "-I", "include/world", "-I", "{bridge}/include", "-c", "tests/gpu/layout/alone_gpu.c", "-o", "{case}/alone_gpu.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/gpu", "-I", "{bridge}/include", "-c", "tests/gpu/layout/alone_gpu.c", "-o", "{case}/alone_gpu.o"] }
+
+[[case]]
+name = "ideatek_vulkan.h compiles with the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/gpu", "-I", "{bridge}/include", "-c", "tests/gpu/layout/alone_vulkan.c", "-o", "{case}/alone_vulkan.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/gpu", "-c", "tests/gpu/layout/alone_vulkan.c", "-o", "{case}/alone_vulkan.o"] }
