@@ -1,11 +1,11 @@
 [parts.space]
 name = "BC-IdeaTek-Space"
-uses = []
+uses = ["world"]
 third_party = []
 
 [parts.space.package]
 proof = "tests/space/package/proof.c"
-include = ["{bridge}/include"]
+include = ["{bridge}/include", "{root}/include/world"]
 
 [compose.space]
 part = "space"
@@ -30,7 +30,7 @@ kind = "program"
 part = "space"
 test = true
 sources = ["tests/space/layout/layout.c"]
-include = ["include/space", "{bridge}/include"]
+include = ["include/space", "include/world", "{bridge}/include"]
 
 [[artifact]]
 name = "space_probe"
@@ -38,7 +38,7 @@ kind = "native_module"
 part = "space"
 test = true
 sources = ["tests/space/probe/probe.c"]
-include = ["include/space", "include/frame"]
+include = ["include/space", "include/world", "include/frame"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{space_probe_words}"]
 
