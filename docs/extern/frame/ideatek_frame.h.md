@@ -29,8 +29,29 @@ In a phase where the clock module writes, a pair of the deployment puts the cloc
 | `time_source` | `"os"` | `"os"` or `"fixed"` | With `"os"`, `real` is the real time since the last round. With `"fixed"`, `real` is `fixed_round` in each round. |
 | `fixed_round` | 0.015625 | more than 0 | The time of each round when `time_source` is `"fixed"`. |
 | `sleeper` | `"clock"` | `"clock"` or `"events"` | The module that waits when `max_rate` limits the rounds. |
+| `smoothing` | `"none"` | `"none"` or `"refresh"` | With `"refresh"`, `real` near a common refresh time of a display becomes that time. |
 
 A test or a recording uses `"fixed"`, so that each run gets the same times.
+
+## The smoothing
+
+With vsync, the display shows each image after the same time, but the read of the real time varies
+from round to round. With `"refresh"`, when `real` is in the range of a row, `real` becomes the
+time of the row. Else `real` does not change.
+
+| Refresh rate | Time | Range |
+| --- | --- | --- |
+| 60 Hz | 16.6667 ms | 1 ms |
+| 72 Hz | 13.8889 ms | 0.25 ms |
+| 75 Hz | 13.3333 ms | 0.25 ms |
+| 85 Hz | 11.7647 ms | 0.25 ms |
+| 90 Hz | 11.1111 ms | 0.25 ms |
+| 100 Hz | 10 ms | 0.5 ms |
+| 120 Hz | 8.3333 ms | 0.5 ms |
+| 144 Hz | 6.9445 ms | 0.5 ms |
+| 240 Hz | 4.1667 ms | 1 ms |
+
+The range is the most difference between `real` and the time of the row.
 
 ## The limit of the rate
 
@@ -41,6 +62,7 @@ Exactly 1 module waits, and `sleeper` tells which module:
 - `"clock"`: the clock module waits at the start of its system, before it reads the real time. It waits until `1 / max_rate` passed since its last start. It does not wait at the first round. This works with no window.
 - `"events"`: the clock module does not wait. It writes `wait`, and the window module waits for the events of the system for at most `wait`. An event ends the wait at once.
 
+`max_rate` is the limit of the frame rate that a settings menu sets. With vsync, the longer wait of `max_rate` and of the display is the wait of the round.
 In a web page, the browser starts each round, and no module waits. There, `max_rate` has no effect.
 A wait takes at most 1 second. A timeout of the system that waits must be longer than 1 second.
 
