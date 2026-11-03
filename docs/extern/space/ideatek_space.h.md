@@ -2,6 +2,7 @@
 
 `include/space/ideatek_space.h` gives the types of the place of an entity in the world: their C types and their descriptors.
 `readme.md`, *The contracts*, tells the rules of each contract.
+Its fields name entities with `ideatek_entity_t` of `include/world/ideatek_world.h`, so the header includes it.
 
 ## The space
 
@@ -53,17 +54,6 @@ The rotation that does not turn is `{ 0, 0, 0, 1 }`.
 | `x` | `double` | 0 | The position on the X axis, in meters. |
 | `y` | `double` | 8 | The position on the Y axis, in meters. |
 | `z` | `double` | 16 | The position on the Z axis, in meters. |
-
-## ideatek:ideatek_entity_t
-
-`ideatek_entity_t` names an entity. It is a struct of 8 bytes, with an alignment of 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `id` | `uint64_t` | 0 | The id of the entity that Bridge gives, or 0 for no entity. |
-
-Bridge never gives the id 0 to an entity.
-An id of a destroyed entity names nothing: the document of `bridge_abi.h` of Bridge tells the generation of an id.
 
 ## ideatek:ideatek_keep_t
 
@@ -237,7 +227,6 @@ A part of a model that other entities follow, for example a hand, is an entity w
 | `ideatek:ideatek_vec3_t` | `ideatek_vec3_t` | `ideatek_vec3_t_desc` | `IDEATEK_VEC3_FIELDS` |
 | `ideatek:ideatek_quat_t` | `ideatek_quat_t` | `ideatek_quat_t_desc` | `IDEATEK_QUAT_FIELDS` |
 | `ideatek:ideatek_position_t` | `ideatek_position_t` | `ideatek_position_t_desc` | `IDEATEK_POSITION_FIELDS` |
-| `ideatek:ideatek_entity_t` | `ideatek_entity_t` | `ideatek_entity_t_desc` | `IDEATEK_ENTITY_FIELDS` |
 | `ideatek:ideatek_keep_t` | `ideatek_keep_t` | `ideatek_keep_t_desc` | `IDEATEK_KEEP_VALUES` |
 | `ideatek:ideatek_orphan_t` | `ideatek_orphan_t` | `ideatek_orphan_t_desc` | `IDEATEK_ORPHAN_VALUES` |
 | `ideatek:ideatek_world_transform_t` | `ideatek_world_transform_t` | `ideatek_world_transform_t_desc` | `IDEATEK_WORLD_TRANSFORM_FIELDS` |
