@@ -34,6 +34,7 @@ The project holds the contracts of layers 2, 3 and 4.
 | audio | 2 |
 | gpu | 2 |
 | frame | 3 |
+| states | 3 |
 | space | 4 |
 
 The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the
