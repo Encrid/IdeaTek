@@ -202,7 +202,7 @@ read = [
 "{case}/m" = ["networking_late"]
 
 [[case]]
-name = "the game loads with write on the session, the replication and the commands"
+name = "the game loads with write on the net session, the replication and the commands"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/networking_game{library}"] }
 

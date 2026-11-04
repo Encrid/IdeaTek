@@ -1,19 +1,19 @@
 # include/engine_subsystems/ideatek_networking.h
 
-`include/engine_subsystems/ideatek_networking.h` gives the types of the networking of a game: sessions, peers, replication, relevance, commands and the network clock.
+`include/engine_subsystems/ideatek_networking.h` gives the types of the networking of a game: net sessions, peers, replication, relevance, commands and the network clock.
 `readme.md`, *The contracts*, tells the rules of each contract.
 The header includes the world part, because its fields name entities.
 
 ## The roles
 
-- The game writes the session, the join data and the answers to the joins.
+- The game writes the net session, the join data and the answers to the joins.
 - The game also writes the replicated entities, the bytes of its modules, the viewers, the relevance and the commands.
-- The net module runs the handshake and the transport over the connections of the sockets part. It writes the peers, the events, the network ids, the bytes that come in, the commands that come in and the state of the session.
+- The net module runs the handshake and the transport over the connections of the sockets part. It writes the peers, the events, the network ids, the bytes that come in, the commands that come in and the state of the net session.
 - The sockets part of layer 2 gives the connections, the encryption, the messages and the statistics. The net module reads them.
 
-## The sessions and the peers
+## The net sessions and the peers
 
-The role of the session tells what the module does. A server listens, a client connects, and a host does both and has a local player.
+The role of the net session tells what the module does. A server listens, a client connects, and a host does both and has a local player.
 The client sends `protocol` and the bytes of `ideatek:NetJoin`. A protocol that differs is refused.
 Else the server spawns `ideatek:NetJoinEvent`, and the game of the server answers with `ideatek:NetAdmit` on the peer.
 
@@ -47,7 +47,7 @@ Each STATE tells `ack`: the last command that the server applied. The prediction
 
 ## The playback and the clock
 
-The tick of the server is the number of its fixed steps since the start of the session. Each STATE carries it.
+The tick of the server is the number of its fixed steps since the start of the net session. Each STATE carries it.
 On a client, the module plays the states at `playback`: the newest tick minus `interp_ratio` intervals of the snapshots. So each module applies the same tick.
 The records of the entities that the client owns come at once, with the kind PREDICTED. A module that writes a place from the network attaches `ideatek:Interpolated` of the space part.
 
@@ -62,7 +62,7 @@ The records of the entities that the client owns come at once, with the kind PRE
 
 ## ideatek:ideatek_net_role_t
 
-`ideatek_net_role_t` tells the role of a session.
+`ideatek_net_role_t` tells the role of a net session.
 `ideatek_net_role_t` is an enum of 1 byte.
 
 | Value | Name | Meaning |
@@ -73,7 +73,7 @@ The records of the entities that the client owns come at once, with the kind PRE
 
 ## ideatek:NetSession
 
-`ideatek:NetSession` starts a session on connections of the sockets part.
+`ideatek:NetSession` starts a net session on connections of the sockets part.
 `ideatek_net_session_t` takes 24 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
@@ -99,12 +99,12 @@ Bytes 21 to 23 hold no field.
 
 ## ideatek:NetPeer
 
-`ideatek:NetPeer` is 1 peer of a session. The net module writes it.
+`ideatek:NetPeer` is 1 peer of a net session. The net module writes it.
 `ideatek_net_peer_t` takes 24 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `session` | `ideatek_entity_t` | 0 | The session. |
+| `session` | `ideatek_entity_t` | 0 | The net session. |
 | `connection` | `ideatek_entity_t` | 8 | The connection. 0 means the local peer of a host. |
 | `id` | `uint32_t` | 16 | The id of the peer. 1 is the server. |
 | `state` | `ideatek_peer_state_t` | 20 | The state. |
@@ -113,7 +113,7 @@ Bytes 21 to 23 hold no field.
 
 ## ideatek:NetJoin
 
-`ideatek:NetJoin` gives the bytes that a client sends with its join, on its session entity.
+`ideatek:NetJoin` gives the bytes that a client sends with its join, on its net session entity.
 `ideatek_net_join_t` takes 8 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Value |
@@ -169,12 +169,12 @@ Bytes 12 to 15 hold no field.
 
 ## ideatek:NetEntity
 
-`ideatek:NetEntity` gives an entity its id in the session. The net module writes it.
+`ideatek:NetEntity` gives an entity its id in the net session. The net module writes it.
 `ideatek_net_entity_t` takes 8 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `net_id` | `uint64_t` | 0 | The id of the entity in the session. |
+| `net_id` | `uint64_t` | 0 | The id of the entity in the net session. |
 
 ## ideatek:ideatek_net_kind_t
 
@@ -361,5 +361,5 @@ Only 1 reference gives a cull distance, so the game chooses it.
 
 | Role | `write` | `read` |
 | --- | --- | --- |
-| The game | The session, the join, the answers, the replicated entities, the bytes out, the viewers, the relevance and the commands | The types of the fields |
+| The game | The net session, the join, the answers, the replicated entities, the bytes out, the viewers, the relevance and the commands | The types of the fields |
 | The net module | `ideatek:NetPeer`, `ideatek:NetJoinEvent`, `ideatek:NetEntity`, `ideatek:NetIn`, `ideatek:NetCommandIn`, `ideatek:NetSessionState` | `ideatek:Tick`, what the game writes, and the field types |
