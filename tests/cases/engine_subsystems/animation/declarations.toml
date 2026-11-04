@@ -1,0 +1,235 @@
+[[case]]
+name = "a module declares the 36 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/animation_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["animation_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_quat_t", "ideatek:ideatek_channel_property_t",
+    "ideatek:ideatek_interpolation_t", "ideatek:ideatek_clip_channel_t",
+    "ideatek:ideatek_clip_event_t", "ideatek:ideatek_repeat_t",
+    "ideatek:ideatek_state_switch_t", "ideatek:ideatek_event_phase_t",
+    "ideatek:ideatek_motion_axes_t", "ideatek:ideatek_axis_t",
+    "ideatek:ideatek_collider_shape_t", "ideatek:Joint", "ideatek:Skin",
+    "ideatek:SkinBinds", "ideatek:MorphWeights", "ideatek:Clip",
+    "ideatek:AnimationTarget", "ideatek:AnimationPlayer", "ideatek:ClipPlay",
+    "ideatek:BlendSpace", "ideatek:BlendPoint", "ideatek:AnimationStates",
+    "ideatek:AnimationState", "ideatek:ClipEvent", "ideatek:RootMotion",
+    "ideatek:RootMotionDelta", "ideatek:PoseModifier", "ideatek:TwoBoneIK",
+    "ideatek:ChainIK", "ideatek:LookAt", "ideatek:CopyTransform",
+    "ideatek:SpringChain", "ideatek:SpringCollider", "ideatek:PlayLink",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["animation_late"]
+
+[[case]]
+name = "an author loads with write on the types that the game writes"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:author@1.0.0, native, m/animation_author{library}"] }
+
+[case.folders]
+"{case}/m" = ["animation_author"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:Joint", "ideatek:Skin", "ideatek:SkinBinds", "ideatek:Clip",
+    "ideatek:AnimationTarget", "ideatek:AnimationPlayer", "ideatek:ClipPlay",
+    "ideatek:BlendSpace", "ideatek:BlendPoint", "ideatek:AnimationStates",
+    "ideatek:AnimationState", "ideatek:RootMotion", "ideatek:PoseModifier",
+    "ideatek:TwoBoneIK", "ideatek:ChainIK", "ideatek:LookAt",
+    "ideatek:CopyTransform", "ideatek:SpringChain", "ideatek:SpringCollider",
+    "ideatek:PlayLink",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_repeat_t", "ideatek:ideatek_state_switch_t",
+    "ideatek:ideatek_motion_axes_t", "ideatek:ideatek_axis_t",
+    "ideatek:ideatek_collider_shape_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:Joint", "ideatek:Skin", "ideatek:SkinBinds", "ideatek:Clip",
+    "ideatek:AnimationTarget", "ideatek:AnimationPlayer", "ideatek:ClipPlay",
+    "ideatek:BlendSpace", "ideatek:BlendPoint", "ideatek:AnimationStates",
+    "ideatek:AnimationState", "ideatek:RootMotion", "ideatek:PoseModifier",
+    "ideatek:TwoBoneIK", "ideatek:ChainIK", "ideatek:LookAt",
+    "ideatek:CopyTransform", "ideatek:SpringChain", "ideatek:SpringCollider",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_repeat_t", "ideatek:ideatek_state_switch_t",
+    "ideatek:ideatek_motion_axes_t", "ideatek:ideatek_axis_t",
+    "ideatek:ideatek_collider_shape_t", "ideatek:PlayLink",
+]
+'''
+
+[[case]]
+name = "the animation module loads with write on the pose, the weights, the delta and the events"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:animator@1.0.0, native, m/animation_animator{library}"] }
+
+[case.folders]
+"{case}/m" = ["animation_animator"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:animator@1.0.0"]
+write = [
+    "ideatek:Transform", "ideatek:MorphWeights", "ideatek:RootMotionDelta",
+    "ideatek:ClipEvent", "ideatek:ClipPlay",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
+    "ideatek:ideatek_repeat_t", "ideatek:ideatek_state_switch_t",
+    "ideatek:ideatek_event_phase_t", "ideatek:ideatek_motion_axes_t",
+    "ideatek:Joint", "ideatek:Clip", "ideatek:AnimationTarget",
+    "ideatek:AnimationPlayer", "ideatek:BlendSpace", "ideatek:BlendPoint",
+    "ideatek:AnimationStates", "ideatek:AnimationState", "ideatek:RootMotion",
+    "ideatek:PlayLink", "ideatek:Frame", "ideatek:State", "ideatek:StateChange",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:animator@1.0.0"]
+write = [
+    "ideatek:Transform", "ideatek:MorphWeights", "ideatek:RootMotionDelta",
+    "ideatek:ClipEvent",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
+    "ideatek:ideatek_repeat_t", "ideatek:ideatek_state_switch_t",
+    "ideatek:ideatek_event_phase_t", "ideatek:ideatek_motion_axes_t",
+    "ideatek:Joint", "ideatek:Clip", "ideatek:AnimationTarget",
+    "ideatek:AnimationPlayer", "ideatek:BlendSpace", "ideatek:BlendPoint",
+    "ideatek:AnimationStates", "ideatek:AnimationState", "ideatek:RootMotion",
+    "ideatek:PlayLink", "ideatek:Frame", "ideatek:State", "ideatek:StateChange",
+    "ideatek:ClipPlay",
+]
+'''
+
+[[case]]
+name = "an IK or a spring module loads with write on the pose and read on its modifiers"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:solver@1.0.0, native, m/animation_solver{library}"] }
+
+[case.folders]
+"{case}/m" = ["animation_solver"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:solver@1.0.0"]
+write = [
+    "ideatek:Transform",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
+    "ideatek:ideatek_motion_axes_t", "ideatek:ideatek_axis_t",
+    "ideatek:ideatek_collider_shape_t", "ideatek:Joint", "ideatek:PoseModifier",
+    "ideatek:TwoBoneIK", "ideatek:ChainIK", "ideatek:LookAt",
+    "ideatek:CopyTransform", "ideatek:SpringChain", "ideatek:SpringCollider",
+    "ideatek:Frame",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:solver@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
+    "ideatek:ideatek_motion_axes_t", "ideatek:ideatek_axis_t",
+    "ideatek:ideatek_collider_shape_t", "ideatek:Joint", "ideatek:PoseModifier",
+    "ideatek:TwoBoneIK", "ideatek:ChainIK", "ideatek:LookAt",
+    "ideatek:CopyTransform", "ideatek:SpringChain", "ideatek:SpringCollider",
+    "ideatek:Frame", "ideatek:Transform",
+]
+'''
+
+[[case]]
+name = "the render module loads with read on the skins and the weights"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:renderer@1.0.0, native, m/animation_renderer{library}"] }
+
+[case.folders]
+"{case}/m" = ["animation_renderer"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:renderer@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:Joint", "ideatek:Skin",
+    "ideatek:SkinBinds", "ideatek:MorphWeights",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:renderer@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:Joint", "ideatek:Skin",
+    "ideatek:SkinBinds",
+]
+'''

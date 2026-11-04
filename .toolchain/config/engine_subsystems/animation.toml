@@ -1,0 +1,68 @@
+[parts.animation]
+name = "BC-IdeaTek-Animation"
+folder = "engine_subsystems/animation"
+uses = ["world", "space", "frame", "states"]
+third_party = []
+
+[parts.animation.package]
+proof = "tests/engine_subsystems/animation/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+
+[compose.animation]
+part = "animation"
+from = "include/engine_subsystems/animation"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+animation_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+animation_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "animation_layout"
+kind = "program"
+part = "animation"
+test = true
+sources = ["tests/engine_subsystems/animation/layout/layout.c"]
+include = ["include/engine_subsystems/animation", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+
+[[artifact]]
+name = "animation_probe"
+kind = "native_module"
+part = "animation"
+test = true
+sources = ["tests/engine_subsystems/animation/probe/probe.c"]
+include = ["include/engine_subsystems/animation", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/kernel/frame", "include/kernel/states"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{animation_probe_words}"]
+
+[[artifact.variants]]
+name = "animation_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "animation_author"
+defines = ["ROLE_AUTHOR"]
+manifest = ["test:author@1.0.0", "{animation_spawn_words}"]
+
+[[artifact.variants]]
+name = "animation_animator"
+defines = ["ROLE_ANIMATOR"]
+manifest = ["test:animator@1.0.0", "{animation_spawn_words}"]
+
+[[artifact.variants]]
+name = "animation_solver"
+defines = ["ROLE_SOLVER"]
+manifest = ["test:solver@1.0.0", "{animation_spawn_words}"]
+
+[[artifact.variants]]
+name = "animation_renderer"
+defines = ["ROLE_RENDERER"]
+manifest = ["test:renderer@1.0.0", "{animation_probe_words}"]
