@@ -119,7 +119,7 @@ false = { run = ["{out}/input_layout{exe}", "gamepad_button"] }
 [[case]]
 name = "ideatek_gamepad_button_t has the size and the alignment of its Usage"
 run = ["{out}/input_layout{exe}", "gamepad_button"]
-claims = { status = 0, order = ["size 2", "alignment 2"] }
+claims = { status = 0, order = ["size 4", "alignment 4"] }
 false = { run = ["{out}/input_layout{exe}", "gamepad"] }
 
 [[case]]
@@ -143,7 +143,7 @@ false = { run = ["{out}/input_layout{exe}", "gamepad_event"] }
 name = "ideatek_gamepad_event_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/input_layout{exe}", "gamepad_event"]
 claims = { status = 0, order = [
-    "size 16", "alignment 8", "gamepad 0", "order 8", "button 12", "down 14",
+    "size 24", "alignment 8", "gamepad 0", "order 8", "button 12", "down 16",
 ] }
 false = { run = ["{out}/input_layout{exe}", "gamepad_request"] }
 
@@ -175,7 +175,7 @@ claims = { status = 0, line = [
     "{ ideatek_mouse_mode_t mode; ideatek_cursor_t cursor; }",
     "uint8_t { IDEATEK_FINGER_EVENT_KIND_BEGAN = 0, IDEATEK_FINGER_EVENT_KIND_MOVED = 1, IDEATEK_FINGER_EVENT_KIND_ENDED = 2, IDEATEK_FINGER_EVENT_KIND_CANCELED = 3 }",
     "{ uint64_t id; float x; float y; uint32_t order; ideatek_finger_event_kind_t kind; }",
-    "uint16_t { IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x0001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x0002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x0004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x0008, IDEATEK_GAMEPAD_BUTTON_BACK = 0x0010, IDEATEK_GAMEPAD_BUTTON_START = 0x0020, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x0040, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x0080, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x0100, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x0200, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x0400, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x0800, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x1000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x2000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x4000 }",
+    "uint32_t { IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x00001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x00002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x00004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x00008, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x00010, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x00020, IDEATEK_GAMEPAD_BUTTON_BACK = 0x00100, IDEATEK_GAMEPAD_BUTTON_START = 0x00200, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x00400, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x00800, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x01000, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x02000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x04000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x08000, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x10000 }",
     "{ char name[128]; }",
     "{ float left_x; float left_y; float right_x; float right_y; float left_trigger; float right_trigger; ideatek_gamepad_button_t buttons; }",
     "{ ideatek_entity_t gamepad; uint32_t order; ideatek_gamepad_button_t button; bool down; }",
@@ -203,7 +203,7 @@ claims = { status = 0, line = [
     "{ ideatek_mouse_mode_t mode; ideatek_cursor_t cursor; }",
     "{ IDEATEK_FINGER_EVENT_KIND_BEGAN = 0, IDEATEK_FINGER_EVENT_KIND_MOVED = 1, IDEATEK_FINGER_EVENT_KIND_ENDED = 2, IDEATEK_FINGER_EVENT_KIND_CANCELED = 3 }",
     "{ uint64_t id; float x; float y; uint32_t order; ideatek_finger_event_kind_t kind; }",
-    "{ IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x0001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x0002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x0004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x0008, IDEATEK_GAMEPAD_BUTTON_BACK = 0x0010, IDEATEK_GAMEPAD_BUTTON_START = 0x0020, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x0040, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x0080, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x0100, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x0200, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x0400, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x0800, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x1000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x2000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x4000 }",
+    "{ IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x00001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x00002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x00004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x00008, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x00010, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x00020, IDEATEK_GAMEPAD_BUTTON_BACK = 0x00100, IDEATEK_GAMEPAD_BUTTON_START = 0x00200, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x00400, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x00800, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x01000, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x02000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x04000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x08000, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x10000 }",
     "{ char name[128]; }",
     "{ float left_x; float left_y; float right_x; float right_y; float left_trigger; float right_trigger; ideatek_gamepad_button_t buttons; }",
     "{ ideatek_entity_t gamepad; uint32_t order; ideatek_gamepad_button_t button; bool down; }",

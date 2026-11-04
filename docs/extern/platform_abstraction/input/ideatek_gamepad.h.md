@@ -41,43 +41,43 @@ Comes back: a model type when a game shows button prompts per model; raw joystic
 | `right_trigger` | `float` | 20 | The right trigger. |
 | `buttons` | `ideatek_gamepad_button_t` | 24 | The buttons that are down. |
 
-Bytes 26 to 27 hold no field.
-
 ### ideatek:ideatek_gamepad_button_t
 
-`ideatek_gamepad_button_t` is a bitmask of `uint16_t`. Its size and its alignment are 2.
+`ideatek_gamepad_button_t` is a bitmask of `uint32_t`. Its size and its alignment are 4.
+
+The bit i is the button i of the standard mapping of the W3C Gamepad specification. The bits 6 and 7 have no constant, because `left_trigger` and `right_trigger` give the triggers.
 
 | Constant | Value | The button |
 | --- | --- | --- |
-| `IDEATEK_GAMEPAD_BUTTON_SOUTH` | 0x0001 | The bottom face button. |
-| `IDEATEK_GAMEPAD_BUTTON_EAST` | 0x0002 | The right face button. |
-| `IDEATEK_GAMEPAD_BUTTON_WEST` | 0x0004 | The left face button. |
-| `IDEATEK_GAMEPAD_BUTTON_NORTH` | 0x0008 | The top face button. |
-| `IDEATEK_GAMEPAD_BUTTON_BACK` | 0x0010 | The back button. |
-| `IDEATEK_GAMEPAD_BUTTON_START` | 0x0020 | The start button. |
-| `IDEATEK_GAMEPAD_BUTTON_GUIDE` | 0x0040 | The guide button. |
-| `IDEATEK_GAMEPAD_BUTTON_LEFT_STICK` | 0x0080 | A push of the left stick. |
-| `IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK` | 0x0100 | A push of the right stick. |
-| `IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER` | 0x0200 | The left shoulder. |
-| `IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER` | 0x0400 | The right shoulder. |
-| `IDEATEK_GAMEPAD_BUTTON_DPAD_UP` | 0x0800 | Up on the pad of directions. |
-| `IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN` | 0x1000 | Down on the pad of directions. |
-| `IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT` | 0x2000 | Left on the pad of directions. |
-| `IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT` | 0x4000 | Right on the pad of directions. |
+| `IDEATEK_GAMEPAD_BUTTON_SOUTH` | 0x00001 | The bottom face button. |
+| `IDEATEK_GAMEPAD_BUTTON_EAST` | 0x00002 | The right face button. |
+| `IDEATEK_GAMEPAD_BUTTON_WEST` | 0x00004 | The left face button. |
+| `IDEATEK_GAMEPAD_BUTTON_NORTH` | 0x00008 | The top face button. |
+| `IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER` | 0x00010 | The left shoulder. |
+| `IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER` | 0x00020 | The right shoulder. |
+| `IDEATEK_GAMEPAD_BUTTON_BACK` | 0x00100 | The back button. |
+| `IDEATEK_GAMEPAD_BUTTON_START` | 0x00200 | The start button. |
+| `IDEATEK_GAMEPAD_BUTTON_LEFT_STICK` | 0x00400 | A push of the left stick. |
+| `IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK` | 0x00800 | A push of the right stick. |
+| `IDEATEK_GAMEPAD_BUTTON_DPAD_UP` | 0x01000 | Up on the pad of directions. |
+| `IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN` | 0x02000 | Down on the pad of directions. |
+| `IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT` | 0x04000 | Left on the pad of directions. |
+| `IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT` | 0x08000 | Right on the pad of directions. |
+| `IDEATEK_GAMEPAD_BUTTON_GUIDE` | 0x10000 | The guide button. |
 
 ## ideatek:GamepadEvent
 
 `ideatek:GamepadEvent` tells that a button of a gamepad goes down or up.
-`ideatek_gamepad_event_t` takes 16 bytes. Its alignment is 8.
+`ideatek_gamepad_event_t` takes 24 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `gamepad` | `ideatek_entity_t` | 0 | The gamepad entity. |
 | `order` | `uint32_t` | 8 | The rank of the event: `docs/extern/platform_abstraction/input/ideatek_input.h.md`, *The events*. |
 | `button` | `ideatek_gamepad_button_t` | 12 | The button, with 1 bit. |
-| `down` | `bool` | 14 | `true` when the button goes down. |
+| `down` | `bool` | 16 | `true` when the button goes down. |
 
-Byte 15 holds no field.
+Bytes 17 to 23 hold no field.
 
 ## ideatek:GamepadRequest
 
@@ -101,7 +101,7 @@ Byte 15 holds no field.
 | `ideatek:GamepadRequest` | `ideatek_gamepad_request_t` | `ideatek_gamepad_request_t_desc` | `IDEATEK_GAMEPAD_REQUEST_FIELDS` |
 
 ```text
-{ IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x0001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x0002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x0004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x0008, IDEATEK_GAMEPAD_BUTTON_BACK = 0x0010, IDEATEK_GAMEPAD_BUTTON_START = 0x0020, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x0040, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x0080, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x0100, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x0200, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x0400, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x0800, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x1000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x2000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x4000 }
+{ IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x00001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x00002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x00004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x00008, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x00010, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x00020, IDEATEK_GAMEPAD_BUTTON_BACK = 0x00100, IDEATEK_GAMEPAD_BUTTON_START = 0x00200, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x00400, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x00800, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x01000, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x02000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x04000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x08000, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x10000 }
 { char name[128]; }
 { float left_x; float left_y; float right_x; float right_y; float left_trigger; float right_trigger; ideatek_gamepad_button_t buttons; }
 { ideatek_entity_t gamepad; uint32_t order; ideatek_gamepad_button_t button; bool down; }
