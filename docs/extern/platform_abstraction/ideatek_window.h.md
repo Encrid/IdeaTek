@@ -109,7 +109,7 @@ The bytes 154 to 159 hold no field, because the size of the type is a multiple o
 
 | Constant | Value | The mode |
 | --- | --- | --- |
-| `IDEATEK_WINDOW_MODE_WINDOWED` | 0 | A window with the size of `width` and `height`. |
+| `IDEATEK_WINDOW_MODE_WINDOWED` | 0 | A window with the size of `width` and `height`. The user can resize the window, and `ideatek:WindowState` then tells the new size. |
 | `IDEATEK_WINDOW_MODE_FULLSCREEN` | 1 | The window fills all the display, with no border. The display keeps its current mode. |
 | `IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN` | 2 | The window fills all the display, and sets the display to `video_mode` while it has the focus. |
 
