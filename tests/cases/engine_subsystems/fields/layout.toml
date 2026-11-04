@@ -1,0 +1,51 @@
+[[case]]
+name = "ideatek_field_shape_t is 1 byte"
+run = ["{out}/fields_layout{exe}", "field_shape"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/fields_layout{exe}", "wind"] }
+
+[[case]]
+name = "ideatek_force_kind_t is 1 byte"
+run = ["{out}/fields_layout{exe}", "force_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/fields_layout{exe}", "wind"] }
+
+[[case]]
+name = "ideatek_wind_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/fields_layout{exe}", "wind"]
+claims = { status = 0, order = ["size 24", "alignment 4", "size 0", "speed 12", "falloff 16", "shape 20"] }
+false = { run = ["{out}/fields_layout{exe}", "force_field"] }
+
+[[case]]
+name = "ideatek_force_field_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/fields_layout{exe}", "force_field"]
+claims = { status = 0, order = ["size 24", "alignment 4", "size 0", "acceleration 12", "falloff 16", "kind 20", "shape 21"] }
+false = { run = ["{out}/fields_layout{exe}", "field_shape"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/fields_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_FIELD_SHAPE_INFINITE = 0, IDEATEK_FIELD_SHAPE_SPHERE = 1, IDEATEK_FIELD_SHAPE_BOX = 2 }",
+    "uint8_t { IDEATEK_FORCE_KIND_ATTRACTOR = 0, IDEATEK_FORCE_KIND_VORTEX = 1 }",
+    "{ ideatek_vec3_t size; float speed; float falloff; ideatek_field_shape_t shape; }",
+    "{ ideatek_vec3_t size; float acceleration; float falloff; ideatek_force_kind_t kind; ideatek_field_shape_t shape; }",
+] }
+false = { run = ["{out}/fields_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/fields_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_FIELD_SHAPE_INFINITE = 0, IDEATEK_FIELD_SHAPE_SPHERE = 1, IDEATEK_FIELD_SHAPE_BOX = 2 }",
+    "{ IDEATEK_FORCE_KIND_ATTRACTOR = 0, IDEATEK_FORCE_KIND_VORTEX = 1 }",
+    "{ ideatek_vec3_t size; float speed; float falloff; ideatek_field_shape_t shape; }",
+    "{ ideatek_vec3_t size; float acceleration; float falloff; ideatek_force_kind_t kind; ideatek_field_shape_t shape; }",
+] }
+false = { run = ["{out}/fields_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the headers of the world and space parts and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/fields", "-I", "include/platform_abstraction/world", "-I", "include/engine_subsystems/space", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/fields/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/fields", "-I", "include/platform_abstraction/world", "-I", "include/engine_subsystems/space", "-c", "tests/engine_subsystems/fields/layout/alone.c", "-o", "{case}/alone.o"] }

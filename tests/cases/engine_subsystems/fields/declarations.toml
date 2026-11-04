@@ -1,0 +1,104 @@
+[[case]]
+name = "a module declares the 5 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/fields_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["fields_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_field_shape_t",
+    "ideatek:ideatek_force_kind_t", "ideatek:Wind", "ideatek:ForceField",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["fields_late"]
+
+[[case]]
+name = "an author loads with write on the wind and the force fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:author@1.0.0, native, m/fields_author{library}"] }
+
+[case.folders]
+"{case}/m" = ["fields_author"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:Wind", "ideatek:ForceField",
+]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_field_shape_t",
+    "ideatek:ideatek_force_kind_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:Wind",
+]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_field_shape_t",
+    "ideatek:ideatek_force_kind_t", "ideatek:ForceField",
+]
+'''
+
+[[case]]
+name = "a reader loads with read on the fields and the place"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/fields_reader{library}"] }
+
+[case.folders]
+"{case}/m" = ["fields_reader"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_position_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:Wind", "ideatek:ForceField", "ideatek:WorldTransform",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_position_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:Wind", "ideatek:ForceField",
+]
+'''
