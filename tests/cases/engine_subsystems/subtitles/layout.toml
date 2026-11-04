@@ -1,0 +1,59 @@
+[[case]]
+name = "ideatek_caption_kind_t is 1 byte"
+run = ["{out}/subtitles_layout{exe}", "caption_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/subtitles_layout{exe}", "sound_caption"] }
+
+[[case]]
+name = "ideatek_sound_caption_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/subtitles_layout{exe}", "sound_caption"]
+claims = { status = 0, order = ["size 40", "alignment 8", "sound 0", "speaker 8", "text 16", "time 24", "duration 28", "priority 32", "kind 36"] }
+false = { run = ["{out}/subtitles_layout{exe}", "subtitle_line"] }
+
+[[case]]
+name = "ideatek_subtitle_line_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/subtitles_layout{exe}", "subtitle_line"]
+claims = { status = 0, order = ["size 32", "alignment 8", "caption 0", "player 8", "start 16", "end 20", "kind 24"] }
+false = { run = ["{out}/subtitles_layout{exe}", "subtitle_flags"] }
+
+[[case]]
+name = "ideatek_subtitle_flags_t is 1 byte"
+run = ["{out}/subtitles_layout{exe}", "subtitle_flags"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/subtitles_layout{exe}", "sound_caption"] }
+
+[[case]]
+name = "ideatek_subtitle_settings_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/subtitles_layout{exe}", "subtitle_settings"]
+claims = { status = 0, order = ["size 1", "alignment 1", "flags 0"] }
+false = { run = ["{out}/subtitles_layout{exe}", "caption_kind"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/subtitles_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_CAPTION_KIND_SPEECH = 0, IDEATEK_CAPTION_KIND_EFFECT = 1 }",
+    "{ ideatek_entity_t sound; bridge_text_t speaker; bridge_text_t text; float time; float duration; int32_t priority; ideatek_caption_kind_t kind; }",
+    "{ ideatek_entity_t caption; ideatek_entity_t player; float start; float end; ideatek_caption_kind_t kind; }",
+    "uint8_t { IDEATEK_SUBTITLE_FLAGS_SPEECH = 0x01, IDEATEK_SUBTITLE_FLAGS_EFFECTS = 0x02 }",
+    "{ ideatek_subtitle_flags_t flags; }",
+] }
+false = { run = ["{out}/subtitles_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/subtitles_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_CAPTION_KIND_SPEECH = 0, IDEATEK_CAPTION_KIND_EFFECT = 1 }",
+    "{ ideatek_entity_t sound; bridge_text_t speaker; bridge_text_t text; float time; float duration; int32_t priority; ideatek_caption_kind_t kind; }",
+    "{ ideatek_entity_t caption; ideatek_entity_t player; float start; float end; ideatek_caption_kind_t kind; }",
+    "{ IDEATEK_SUBTITLE_FLAGS_SPEECH = 0x01, IDEATEK_SUBTITLE_FLAGS_EFFECTS = 0x02 }",
+    "{ ideatek_subtitle_flags_t flags; }",
+] }
+false = { run = ["{out}/subtitles_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the header of the world part and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/subtitles", "-I", "include/platform_abstraction/world", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/subtitles/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/subtitles", "-I", "include/platform_abstraction/world", "-c", "tests/engine_subsystems/subtitles/layout/alone.c", "-o", "{case}/alone.o"] }

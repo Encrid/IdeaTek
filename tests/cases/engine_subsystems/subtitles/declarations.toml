@@ -1,0 +1,110 @@
+[[case]]
+name = "a module declares the 6 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/subtitles_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["subtitles_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_caption_kind_t",
+    "ideatek:ideatek_subtitle_flags_t", "ideatek:SoundCaption",
+    "ideatek:SubtitleLine", "ideatek:SubtitleSettings",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["subtitles_late"]
+
+[[case]]
+name = "the game loads with write on the captions and the setting"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/subtitles_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["subtitles_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:SoundCaption", "ideatek:SubtitleSettings",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_caption_kind_t",
+    "ideatek:ideatek_subtitle_flags_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:SoundCaption",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_caption_kind_t",
+    "ideatek:ideatek_subtitle_flags_t", "ideatek:SubtitleSettings",
+]
+'''
+
+[[case]]
+name = "the subtitle module loads with write on the lines and read on the captions and the players"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/subtitles_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["subtitles_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:SubtitleLine",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_sound_state_t",
+    "ideatek:ideatek_sound_player_flags_t", "ideatek:ideatek_caption_kind_t",
+    "ideatek:ideatek_subtitle_flags_t", "ideatek:SoundCaption",
+    "ideatek:SubtitleSettings", "ideatek:SoundPlayer",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_sound_state_t",
+    "ideatek:ideatek_sound_player_flags_t", "ideatek:ideatek_caption_kind_t",
+    "ideatek:ideatek_subtitle_flags_t", "ideatek:SoundCaption",
+    "ideatek:SubtitleSettings", "ideatek:SoundPlayer", "ideatek:SubtitleLine",
+]
+'''
