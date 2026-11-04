@@ -44,6 +44,7 @@ engine_subsystems/
     space/
     rendering/
     animation/
+    physics/
 ```
 
 The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the
