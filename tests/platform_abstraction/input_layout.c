@@ -63,6 +63,11 @@ static void show_key_event(void)
 static void show_text_request(void)
 {
     SIZE(ideatek_text_request_t);
+    AT(ideatek_text_request_t, x);
+    AT(ideatek_text_request_t, y);
+    AT(ideatek_text_request_t, width);
+    AT(ideatek_text_request_t, height);
+    AT(ideatek_text_request_t, cursor);
     AT(ideatek_text_request_t, screen_keyboard);
 }
 
@@ -110,6 +115,7 @@ static void show_mouse_button(void)
     AT(ideatek_mouse_button_t, order);
     AT(ideatek_mouse_button_t, button);
     AT(ideatek_mouse_button_t, down);
+    AT(ideatek_mouse_button_t, clicks);
 }
 
 static void show_mouse_wheel(void)

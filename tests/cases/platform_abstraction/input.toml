@@ -38,7 +38,7 @@ false = { run = ["{out}/input_layout{exe}", "text_request"] }
 name = "ideatek_text_request_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/input_layout{exe}", "text_request"]
 claims = { status = 0, order = [
-    "size 1", "alignment 1", "screen_keyboard 0",
+    "size 24", "alignment 4", "x 0", "y 4", "width 8", "height 12", "cursor 16", "screen_keyboard 20",
 ] }
 false = { run = ["{out}/input_layout{exe}", "text_event"] }
 
@@ -82,7 +82,7 @@ false = { run = ["{out}/input_layout{exe}", "mouse_button"] }
 name = "ideatek_mouse_button_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/input_layout{exe}", "mouse_button"]
 claims = { status = 0, order = [
-    "size 16", "alignment 4", "x 0", "y 4", "order 8", "button 12", "down 13",
+    "size 16", "alignment 4", "x 0", "y 4", "order 8", "button 12", "down 13", "clicks 14",
 ] }
 false = { run = ["{out}/input_layout{exe}", "mouse_wheel"] }
 
@@ -164,13 +164,13 @@ claims = { status = 0, line = [
     "uint16_t { IDEATEK_MODIFIER_LCTRL = 0x0001, IDEATEK_MODIFIER_LSHIFT = 0x0002, IDEATEK_MODIFIER_LALT = 0x0004, IDEATEK_MODIFIER_LGUI = 0x0008, IDEATEK_MODIFIER_RCTRL = 0x0010, IDEATEK_MODIFIER_RSHIFT = 0x0020, IDEATEK_MODIFIER_RALT = 0x0040, IDEATEK_MODIFIER_RGUI = 0x0080, IDEATEK_MODIFIER_NUM = 0x0100, IDEATEK_MODIFIER_CAPS = 0x0200, IDEATEK_MODIFIER_SCROLL = 0x0400 }",
     "{ uint64_t keys[4]; ideatek_modifier_t modifiers; }",
     "{ uint32_t character; uint32_t key; uint32_t code; uint32_t order; ideatek_modifier_t modifiers; bool down; bool repeat; }",
-    "{ bool screen_keyboard; }",
+    "{ float x; float y; float width; float height; float cursor; bool screen_keyboard; }",
     "{ uint32_t code_point; uint32_t order; }",
-    "uint8_t { IDEATEK_MOUSE_MODE_NORMAL = 0, IDEATEK_MOUSE_MODE_HIDDEN = 1, IDEATEK_MOUSE_MODE_RELATIVE = 2 }",
+    "uint8_t { IDEATEK_MOUSE_MODE_NORMAL = 0, IDEATEK_MOUSE_MODE_HIDDEN = 1, IDEATEK_MOUSE_MODE_RELATIVE = 2, IDEATEK_MOUSE_MODE_CONFINED = 3 }",
     "uint8_t { IDEATEK_CURSOR_DEFAULT = 0, IDEATEK_CURSOR_ARROW = 1, IDEATEK_CURSOR_IBEAM = 2, IDEATEK_CURSOR_CROSSHAIR = 3, IDEATEK_CURSOR_POINTING_HAND = 4, IDEATEK_CURSOR_RESIZE_EW = 5, IDEATEK_CURSOR_RESIZE_NS = 6, IDEATEK_CURSOR_RESIZE_NWSE = 7, IDEATEK_CURSOR_RESIZE_NESW = 8, IDEATEK_CURSOR_RESIZE_ALL = 9, IDEATEK_CURSOR_NOT_ALLOWED = 10 }",
     "{ float x; float y; uint32_t buttons; }",
     "{ float x; float y; float rel_x; float rel_y; uint32_t buttons; uint32_t order; }",
-    "{ float x; float y; uint32_t order; uint8_t button; bool down; }",
+    "{ float x; float y; uint32_t order; uint8_t button; bool down; uint8_t clicks; }",
     "{ float ticks_x; float ticks_y; uint32_t order; }",
     "{ ideatek_mouse_mode_t mode; ideatek_cursor_t cursor; }",
     "uint8_t { IDEATEK_FINGER_EVENT_KIND_BEGAN = 0, IDEATEK_FINGER_EVENT_KIND_MOVED = 1, IDEATEK_FINGER_EVENT_KIND_ENDED = 2, IDEATEK_FINGER_EVENT_KIND_CANCELED = 3 }",
@@ -192,13 +192,13 @@ claims = { status = 0, line = [
     "{ IDEATEK_MODIFIER_LCTRL = 0x0001, IDEATEK_MODIFIER_LSHIFT = 0x0002, IDEATEK_MODIFIER_LALT = 0x0004, IDEATEK_MODIFIER_LGUI = 0x0008, IDEATEK_MODIFIER_RCTRL = 0x0010, IDEATEK_MODIFIER_RSHIFT = 0x0020, IDEATEK_MODIFIER_RALT = 0x0040, IDEATEK_MODIFIER_RGUI = 0x0080, IDEATEK_MODIFIER_NUM = 0x0100, IDEATEK_MODIFIER_CAPS = 0x0200, IDEATEK_MODIFIER_SCROLL = 0x0400 }",
     "{ uint64_t keys[4]; ideatek_modifier_t modifiers; }",
     "{ uint32_t character; uint32_t key; uint32_t code; uint32_t order; ideatek_modifier_t modifiers; bool down; bool repeat; }",
-    "{ bool screen_keyboard; }",
+    "{ float x; float y; float width; float height; float cursor; bool screen_keyboard; }",
     "{ uint32_t code_point; uint32_t order; }",
-    "{ IDEATEK_MOUSE_MODE_NORMAL = 0, IDEATEK_MOUSE_MODE_HIDDEN = 1, IDEATEK_MOUSE_MODE_RELATIVE = 2 }",
+    "{ IDEATEK_MOUSE_MODE_NORMAL = 0, IDEATEK_MOUSE_MODE_HIDDEN = 1, IDEATEK_MOUSE_MODE_RELATIVE = 2, IDEATEK_MOUSE_MODE_CONFINED = 3 }",
     "{ IDEATEK_CURSOR_DEFAULT = 0, IDEATEK_CURSOR_ARROW = 1, IDEATEK_CURSOR_IBEAM = 2, IDEATEK_CURSOR_CROSSHAIR = 3, IDEATEK_CURSOR_POINTING_HAND = 4, IDEATEK_CURSOR_RESIZE_EW = 5, IDEATEK_CURSOR_RESIZE_NS = 6, IDEATEK_CURSOR_RESIZE_NWSE = 7, IDEATEK_CURSOR_RESIZE_NESW = 8, IDEATEK_CURSOR_RESIZE_ALL = 9, IDEATEK_CURSOR_NOT_ALLOWED = 10 }",
     "{ float x; float y; uint32_t buttons; }",
     "{ float x; float y; float rel_x; float rel_y; uint32_t buttons; uint32_t order; }",
-    "{ float x; float y; uint32_t order; uint8_t button; bool down; }",
+    "{ float x; float y; uint32_t order; uint8_t button; bool down; uint8_t clicks; }",
     "{ float ticks_x; float ticks_y; uint32_t order; }",
     "{ ideatek_mouse_mode_t mode; ideatek_cursor_t cursor; }",
     "{ IDEATEK_FINGER_EVENT_KIND_BEGAN = 0, IDEATEK_FINGER_EVENT_KIND_MOVED = 1, IDEATEK_FINGER_EVENT_KIND_ENDED = 2, IDEATEK_FINGER_EVENT_KIND_CANCELED = 3 }",

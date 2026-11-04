@@ -80,8 +80,9 @@ static const char WHO[] = MANIFEST;
 [[maybe_unused]] static void ask(const bridge_api_t *api)
 {
     uint64_t input = api->spawn(api);
-    ideatek_text_request_t text = { .screen_keyboard = true };
-    ideatek_mouse_request_t mouse = { .mode = IDEATEK_MOUSE_MODE_RELATIVE,
+    ideatek_text_request_t text = { .x = 1.0F, .y = 2.0F, .width = 3.0F,
+        .height = 4.0F, .cursor = 1.0F, .screen_keyboard = true };
+    ideatek_mouse_request_t mouse = { .mode = IDEATEK_MOUSE_MODE_CONFINED,
         .cursor = IDEATEK_CURSOR_ARROW };
     ideatek_gamepad_request_t rumble = { .weak = 0.5F, .strong = 0.5F,
         .duration_ms = 100 };
@@ -107,7 +108,7 @@ static const char WHO[] = MANIFEST;
     ideatek_mouse_motion_t motion = { .x = 1.0F, .y = 2.0F, .rel_x = 1.0F,
         .rel_y = 2.0F, .order = 3 };
     ideatek_mouse_button_t button = { .x = 1.0F, .y = 2.0F, .order = 4,
-        .button = 1, .down = true };
+        .button = 1, .down = true, .clicks = 2 };
     ideatek_mouse_wheel_t wheel = { .ticks_y = 1.0F, .order = 5 };
     ideatek_finger_event_t finger = { .id = 1, .x = 1.0F, .y = 2.0F,
         .order = 6, .kind = IDEATEK_FINGER_EVENT_KIND_BEGAN };
