@@ -1,0 +1,63 @@
+[parts.physics]
+name = "BC-IdeaTek-Physics"
+folder = "engine_subsystems/physics"
+uses = ["world", "space", "frame", "rendering"]
+third_party = []
+
+[parts.physics.package]
+proof = "tests/engine_subsystems/physics/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+
+[compose.physics]
+part = "physics"
+from = "include/engine_subsystems/physics"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+physics_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+physics_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "physics_layout"
+kind = "program"
+part = "physics"
+test = true
+sources = ["tests/engine_subsystems/physics/layout/layout.c"]
+include = ["include/engine_subsystems/physics", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+
+[[artifact]]
+name = "physics_probe"
+kind = "native_module"
+part = "physics"
+test = true
+sources = ["tests/engine_subsystems/physics/probe/probe.c"]
+include = ["include/engine_subsystems/physics", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/kernel/frame", "include/engine_subsystems/rendering"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{physics_probe_words}"]
+
+[[artifact.variants]]
+name = "physics_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "physics_author"
+defines = ["ROLE_AUTHOR"]
+manifest = ["test:author@1.0.0", "{physics_spawn_words}"]
+
+[[artifact.variants]]
+name = "physics_physics"
+defines = ["ROLE_PHYSICS"]
+manifest = ["test:physics@1.0.0", "{physics_spawn_words}"]
+
+[[artifact.variants]]
+name = "physics_renderer"
+defines = ["ROLE_RENDERER"]
+manifest = ["test:renderer@1.0.0", "{physics_probe_words}"]
