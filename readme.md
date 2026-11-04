@@ -29,6 +29,7 @@ Each part has a header in `include` and a document in `docs/extern`, which gives
 - Each macro of the text gives the braces of its type and the text between them.
 - A module in another language does not include a header. It states the descriptor of each type with the bytes of the document.
 - Each module that uses a type declares it in its `init`. A module in C gives the C type and the descriptor of the header.
+- A module declares a type after the types of its fields.
 - Bridge compares the descriptors byte for byte. It also refuses a second module that states another kind, storage layout or `on_destroy`.
 - Bridge does not compare `on_unload`, so each module states its own.
 - No module has the namespace `ideatek`. Thus each module needs a grant for each type that it declares, in `read` or `write` of the deployment.

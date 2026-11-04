@@ -346,14 +346,14 @@ An XR module writes it for the view of each eye. A portal or a screen of many di
 | `submesh_count` | `uint32_t` | 24 | The number of sub-meshes. |
 | `lod_count` | `uint32_t` | 28 | The number of levels of each sub-mesh, with level 0. |
 | `target_count` | `uint32_t` | 32 | The number of morph targets. |
-| `revision` | `uint32_t` | 36 | The writer raises it when the bytes change. |
+| `revision` | `uint32_t` | 36 | Raised at each change. |
 | `topology` | `ideatek_topology_t` | 40 | How the indices make primitives. |
 | `index_format` | `ideatek_index_format_t` | 41 | The size of an index. |
 
 Bytes 42 to 43 hold no field.
 
 A mesh can change at each step, for example a cut or a terrain chunk. The writer raises `revision` each time.
-A renderer that cannot read a stream, a format or the number of joint sets writes 1 line in the log for the entity.
+A renderer that cannot read a stream, a format or the number of joint sets logs the entity once.
 
 ## ideatek:MeshInstance
 
@@ -391,7 +391,7 @@ A renderer draws the first type on a material entity that it knows. If it knows 
 Bytes 9 to 15 hold no field.
 
 A camera draws the mesh when `groups` of the mesh and `groups` of the camera share a bit.
-The render module draws only an entity with `ideatek:Visibility`. It writes 1 line in the log for an `ideatek:MeshInstance` without it.
+The render module draws only an entity with `ideatek:Visibility`. It logs each `ideatek:MeshInstance` without it once.
 
 ## ideatek:Affects
 
@@ -402,7 +402,7 @@ The render module draws only an entity with `ideatek:Visibility`. It writes 1 li
 | --- | --- | --- | --- | --- |
 | `groups` | `uint64_t` | 0 | All bits | The render groups that the light or the decal reaches. |
 
-The render module writes 1 line in the log for a light or a decal without it.
+The render module logs each light or decal without it once.
 
 ## ideatek:VisibilityRange
 
@@ -459,14 +459,14 @@ A custom material is another type on the same entity: *ideatek:MeshMaterials*.
 | `height` | `uint32_t` | 16 | The height of level 0. |
 | `depth_or_layers` | `uint32_t` | 20 | The depth of a volume, or the number of layers. |
 | `mip_count` | `uint32_t` | 24 | The number of levels. |
-| `revision` | `uint32_t` | 28 | The writer raises it when the bytes change. |
+| `revision` | `uint32_t` | 28 | Raised at each change. |
 | `dimension` | `ideatek_dimension_t` | 32 | The shape. |
 
 Bytes 33 to 35 hold no field.
 
 A format of 0, a scaled format and a multi-planar format are not allowed.
 Appendix B of KTX 2.0 maps each format to DXGI, Metal and OpenGL.
-A renderer that cannot read the format writes 1 line in the log for the entity. It does not convert the texels.
+A renderer that cannot read the format logs the entity once. It does not convert the texels.
 
 ## ideatek:Sampler
 
@@ -876,8 +876,6 @@ Only 1 reference has a lens flare, so the default strength is 0.
 | `ideatek:ChromaticAberration` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:FilmGrain` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:LensFlare` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-
-A module declares a type after the types of its fields.
 
 ## The grants
 
