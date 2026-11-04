@@ -71,7 +71,7 @@ The numbers are in the order of the machine.
 | `flags` | `ideatek_send_t` | 12 | Only in `ideatek:MessagesOut`: how to send the message. |
 | The bytes | `uint8_t[length]` | 13 out, 12 in | The message. |
 
-A message has at most 524288 bytes, the limit of GameNetworkingSockets.
+The sockets module uses GameNetworkingSockets, so a message has at most 524288 bytes.
 
 ## The bytes of the batches in
 
@@ -103,9 +103,9 @@ With no flag, the message is unreliable: it can be lost, and it can come out of 
 
 | Constant | Value | The flag |
 | --- | --- | --- |
-| `IDEATEK_SEND_NO_NAGLE` | 0x01 | Send the message without a wait for more messages. |
+| `IDEATEK_SEND_RELIABLE` | 0x01 | Send the message again until the peer gets it, in order. |
+| `IDEATEK_SEND_NO_NAGLE` | 0x02 | Send the message without a wait for more messages. |
 | `IDEATEK_SEND_NO_DELAY` | 0x04 | Drop the message if it cannot go now. |
-| `IDEATEK_SEND_RELIABLE` | 0x08 | Send the message again until the peer gets it, in order. |
 
 ## ideatek:ListenRequest
 
@@ -144,7 +144,7 @@ Byte 3 holds no field.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `send_rate` | `uint32_t` | 0 | The bytes per second that the connection sends, 1024 to 268435456. Most games use 262144. |
+| `send_rate` | `uint32_t` | 0 | The bytes per second that the connection sends, 1024 to 268435456, the bounds of GameNetworkingSockets. GameNetworkingSockets starts at 262144. |
 | `reason` | `int32_t` | 4 | With `IDEATEK_CONNECTION_ACTION_CLOSE`: the reason for the peer, 1000 to 1999. |
 | `address` | `ideatek_address_t` | 8 | With `IDEATEK_CONNECTION_ACTION_CONNECT`: the address of the peer. |
 | `action` | `ideatek_connection_action_t` | 26 | The action. |
@@ -263,7 +263,7 @@ Bytes 9 to 11 hold no field.
 
 ```text
 { uint8_t bytes[16]; uint16_t port; }
-{ IDEATEK_SEND_NO_NAGLE = 0x01, IDEATEK_SEND_NO_DELAY = 0x04, IDEATEK_SEND_RELIABLE = 0x08 }
+{ IDEATEK_SEND_RELIABLE = 0x01, IDEATEK_SEND_NO_NAGLE = 0x02, IDEATEK_SEND_NO_DELAY = 0x04 }
 { IDEATEK_LISTEN_STATUS_LISTENING = 0, IDEATEK_LISTEN_STATUS_FAILED = 1 }
 { IDEATEK_CONNECTION_ACTION_CONNECT = 0, IDEATEK_CONNECTION_ACTION_ACCEPT = 1, IDEATEK_CONNECTION_ACTION_CLOSE = 2 }
 { IDEATEK_CONNECTION_STATUS_CONNECTING = 0, IDEATEK_CONNECTION_STATUS_CONNECTED = 1, IDEATEK_CONNECTION_STATUS_CLOSED_BY_PEER = 2, IDEATEK_CONNECTION_STATUS_PROBLEM = 3 }
