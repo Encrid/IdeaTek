@@ -38,7 +38,7 @@ Level 0 of a sub-mesh is the sub-mesh itself. The other levels use the same vert
 
 ## The bytes of a texture
 
-`bytes` of `ideatek:Texture` holds each mip level from level 0, the largest.
+`bytes` of `ideatek:Texture` holds each mip level from `top_mip`, the largest that it holds.
 Each level holds each layer, or each face of a cube in the order +X, -X, +Y, -Y, +Z, -Z.
 The data of a level is packed in rows of texels or of blocks, as the format of Vulkan gives.
 
@@ -47,6 +47,36 @@ The data of a level is packed in rows of texels or of blocks, as the format of V
 The render module chooses for each sub-mesh the coarsest level whose screen error is below its own threshold.
 The threshold is a setting of the render module. `lod_bias` of `ideatek:MeshInstance` multiplies the error.
 `ideatek:VisibilityRange` fades an entity in and out by distance, for a far proxy of a group of meshes.
+
+## The texture slots
+
+A material names each texture with `ideatek_texture_slot_t`: the texture, the set of texture coordinates and a transform.
+The transform first scales the coordinates, then turns them by `rotation`, then moves them by `offset`, as `KHR_texture_transform` of glTF tells.
+A slot whose `texture` is 0 has no texture.
+
+## The extensions of a material
+
+Each extension of a material is a type of its own on the entity of the material, as each `KHR_materials_*` extension of glTF.
+A material with the type gets the effect, and a material without it does not.
+A renderer that does not know a type draws the material without it.
+
+## The baked light
+
+A tool can bake light into probes and lightmaps. The render module uses them for the light that it does not compute.
+A renderer of real-time global illumination can ignore them, or use them where its own light does not reach.
+Each probe and each volume is an entity at a place. Where 2 of them overlap, the one with the higher `priority` wins.
+
+## The streaming of a texture
+
+`bytes` of `ideatek:Texture` holds the levels from `top_mip` to the smallest level. `width` and `height` stay the size of level 0.
+A loader that streams a texture first gives the small levels. It lowers `top_mip` and raises `revision` when a larger level comes.
+The render module draws with the levels that it has.
+
+## The global illumination
+
+`gi_mode` of `ideatek:Visibility` tells how a mesh takes part in the global illumination.
+A renderer can keep the meshes of `IDEATEK_GI_MODE_STATIC` in a cache, because they do not move.
+`IDEATEK_GI_MODE_DISABLED` fits a mesh that must not light the world, for example the weapon of a first-person view.
 
 ## The effects of a camera
 
@@ -188,6 +218,32 @@ The soft body streams hold 1 float for each vertex, as in Jolt.
 | `error` | `float` | 0 | The error of the level, in meters. |
 | `first` | `uint32_t` | 4 | The first index of the level. |
 | `count` | `uint32_t` | 8 | The number of its indices. |
+
+## ideatek:ideatek_texture_slot_t
+
+`ideatek_texture_slot_t` is a texture of a material: *The texture slots*.
+`ideatek_texture_slot_t` takes 32 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_entity_t` | 0 | 0 | The texture entity. 0 means none. |
+| `offset` | `float[2]` | 8 | 0, 0 | The move of the coordinates, on U and V. |
+| `scale` | `float[2]` | 16 | 1, 1 | The scale of the coordinates, on U and V. |
+| `rotation` | `float` | 24 | 0 | The turn of the coordinates, in radians, counter-clockwise. |
+| `texcoord` | `uint8_t` | 28 | 0 | The set of texture coordinates: the `set` of `IDEATEK_SEMANTIC_TEXCOORD`. |
+
+Bytes 29 to 31 hold no field.
+
+## ideatek:ideatek_gi_mode_t
+
+`ideatek_gi_mode_t` tells the part of a mesh in the global illumination: *The global illumination*.
+`ideatek_gi_mode_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_GI_MODE_DYNAMIC` | The mesh takes part, and it can move. |
+| 1 | `IDEATEK_GI_MODE_STATIC` | The mesh takes part, and it does not move. |
+| 2 | `IDEATEK_GI_MODE_DISABLED` | The mesh does not take part. |
 
 ## ideatek:ideatek_alpha_mode_t
 
@@ -393,8 +449,10 @@ A renderer draws the first type on a material entity that it knows. If it knows 
 | --- | --- | --- | --- | --- |
 | `groups` | `uint64_t` | 0 | 1 | The render groups of the mesh. |
 | `cast_shadow` | `ideatek_cast_shadow_t` | 8 | `IDEATEK_CAST_SHADOW_ON` | The shadow of the mesh. |
+| `gi_mode` | `ideatek_gi_mode_t` | 9 | `IDEATEK_GI_MODE_DYNAMIC` | The part of the mesh in the global illumination. |
+| `visible` | `bool` | 10 | `true` | `false` hides the mesh and its shadow, as `KHR_node_visibility` of glTF. |
 
-Bytes 9 to 15 hold no field.
+Bytes 11 to 15 hold no field.
 
 A camera draws the mesh when `groups` of the mesh and `groups` of the camera share a bit.
 The render module draws only an entity with `ideatek:Visibility`. It logs each `ideatek:MeshInstance` without it once.
@@ -426,36 +484,36 @@ The fade is a dither, so the 2 entities of a change never blend their colors.
 
 ## ideatek:Material
 
-`ideatek:Material` is the metallic-roughness material of glTF 2.0 on a resource entity.
-`ideatek_material_t` takes 96 bytes. Its alignment is 8.
+`ideatek:Material` is the metallic-roughness material of glTF on a resource entity.
+`ideatek_material_t` takes 216 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
-| `base_color_texture` | `ideatek_entity_t` | 0 | No default | The texture of the base color. 0 means none. |
-| `metallic_roughness_texture` | `ideatek_entity_t` | 8 | No default | Roughness in G, metallic in B. |
-| `normal_texture` | `ideatek_entity_t` | 16 | No default | The normals, in tangent space. |
-| `occlusion_texture` | `ideatek_entity_t` | 24 | No default | The occlusion, in R. |
-| `emissive_texture` | `ideatek_entity_t` | 32 | No default | The emitted color. |
-| `base_color` | `ideatek_color_t` | 40 | 1, 1, 1, 1 | The base color. |
-| `emissive` | `ideatek_rgb_t` | 56 | 0, 0, 0 | The emitted color. |
-| `metallic` | `float` | 68 | 1 | The metal part, from 0 to 1. |
-| `roughness` | `float` | 72 | 1 | The roughness, from 0 to 1. |
-| `emissive_strength` | `float` | 76 | 1 | The factor of `emissive`. |
-| `normal_scale` | `float` | 80 | 1 | The factor of the X and Y of the normals. |
-| `occlusion_strength` | `float` | 84 | 1 | The strength of the occlusion. |
-| `alpha_cutoff` | `float` | 88 | 0.5 | The alpha limit of `IDEATEK_ALPHA_MODE_MASK`. |
-| `alpha_mode` | `ideatek_alpha_mode_t` | 92 | `IDEATEK_ALPHA_MODE_OPAQUE` | The use of the alpha. |
-| `double_sided` | `bool` | 93 | `false` | `true` if both sides draw. |
+| `base_color_texture` | `ideatek_texture_slot_t` | 0 | No default | The texture of the base color. |
+| `metallic_roughness_texture` | `ideatek_texture_slot_t` | 32 | No default | Roughness in G, metallic in B. |
+| `normal_texture` | `ideatek_texture_slot_t` | 64 | No default | The normals, in tangent space. |
+| `occlusion_texture` | `ideatek_texture_slot_t` | 96 | No default | The occlusion, in R. |
+| `emissive_texture` | `ideatek_texture_slot_t` | 128 | No default | The emitted color. |
+| `base_color` | `ideatek_color_t` | 160 | 1, 1, 1, 1 | The base color. |
+| `emissive` | `ideatek_rgb_t` | 176 | 0, 0, 0 | The emitted color. |
+| `metallic` | `float` | 188 | 1 | The metal part, from 0 to 1. |
+| `roughness` | `float` | 192 | 1 | The roughness, from 0 to 1. |
+| `emissive_strength` | `float` | 196 | 1 | The factor of `emissive`. |
+| `normal_scale` | `float` | 200 | 1 | The factor of the X and Y of the normals. |
+| `occlusion_strength` | `float` | 204 | 1 | The strength of the occlusion. |
+| `alpha_cutoff` | `float` | 208 | 0.5 | The alpha limit of `IDEATEK_ALPHA_MODE_MASK`. |
+| `alpha_mode` | `ideatek_alpha_mode_t` | 212 | `IDEATEK_ALPHA_MODE_OPAQUE` | The use of the alpha. |
+| `double_sided` | `bool` | 213 | `false` | `true` if both sides draw. |
 
-Bytes 94 to 95 hold no field.
+Bytes 214 to 215 hold no field.
 
-The defaults are the defaults of glTF 2.0 and of `KHR_materials_emissive_strength`.
+The defaults are the defaults of glTF 2.1, whose core holds `KHR_materials_emissive_strength`.
 A custom material is another type on the same entity: *ideatek:MeshMaterials*.
 
 ## ideatek:Texture
 
 `ideatek:Texture` is an image on a resource entity.
-`ideatek_texture_t` takes 36 bytes. Its alignment is 4.
+`ideatek_texture_t` takes 40 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
@@ -465,10 +523,11 @@ A custom material is another type on the same entity: *ideatek:MeshMaterials*.
 | `height` | `uint32_t` | 16 | The height of level 0. |
 | `depth_or_layers` | `uint32_t` | 20 | The depth of a volume, or the number of layers. |
 | `mip_count` | `uint32_t` | 24 | The number of levels. |
-| `revision` | `uint32_t` | 28 | Raised at each change. |
-| `dimension` | `ideatek_dimension_t` | 32 | The shape. |
+| `top_mip` | `uint32_t` | 28 | The largest level in `bytes`: *The streaming of a texture*. |
+| `revision` | `uint32_t` | 32 | Raised at each change. |
+| `dimension` | `ideatek_dimension_t` | 36 | The shape. |
 
-Bytes 33 to 35 hold no field.
+Bytes 37 to 39 hold no field.
 
 A format of 0, a scaled format and a multi-planar format are not allowed.
 Appendix B of KTX 2.0 maps each format to DXGI, Metal and OpenGL.
@@ -724,6 +783,118 @@ Bytes 28 to 31 hold no field.
 
 Only 1 reference has a lens flare, so the default strength is 0.
 
+## ideatek:MaterialClearcoat
+
+`ideatek:MaterialClearcoat` adds a clear coat on the material, as `KHR_materials_clearcoat`.
+`ideatek_material_clearcoat_t` takes 104 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_texture_slot_t` | 0 | No default | The strength of the coat, in R. |
+| `roughness_texture` | `ideatek_texture_slot_t` | 32 | No default | The roughness of the coat, in G. |
+| `normal_texture` | `ideatek_texture_slot_t` | 64 | No default | The normals of the coat, in tangent space. |
+| `factor` | `float` | 96 | 0 | The strength of the coat, from 0 to 1. |
+| `roughness` | `float` | 100 | 0 | The roughness of the coat, from 0 to 1. |
+
+## ideatek:MaterialSpecular
+
+`ideatek:MaterialSpecular` sets the specular light, as `KHR_materials_specular` and `KHR_materials_ior`.
+`ideatek_material_specular_t` takes 88 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_texture_slot_t` | 0 | No default | The strength of the specular light, in A. |
+| `color_texture` | `ideatek_texture_slot_t` | 32 | No default | The color of the specular light, in RGB. |
+| `color` | `ideatek_rgb_t` | 64 | 1, 1, 1 | The color of the specular light. |
+| `factor` | `float` | 76 | 1 | The strength of the specular light, from 0 to 1. |
+| `ior` | `float` | 80 | 1.5 | The index of refraction. |
+
+Bytes 84 to 87 hold no field.
+
+## ideatek:MaterialTransmission
+
+`ideatek:MaterialTransmission` lets light go through the material, as `KHR_materials_transmission` and `KHR_materials_volume`.
+`ideatek_material_transmission_t` takes 88 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_texture_slot_t` | 0 | No default | The part of the light that goes through, in R. |
+| `thickness_texture` | `ideatek_texture_slot_t` | 32 | No default | The thickness of the volume, in G. |
+| `attenuation_color` | `ideatek_rgb_t` | 64 | 1, 1, 1 | The color that the light gets at `attenuation_distance`. |
+| `factor` | `float` | 76 | 0 | The part of the light that goes through, from 0 to 1. |
+| `thickness` | `float` | 80 | 0 | The thickness of the volume, in meters. 0 means a thin surface. |
+| `attenuation_distance` | `float` | 84 | 0 | The distance in the volume where the light gets `attenuation_color`. 0 means no attenuation. |
+
+## ideatek:MaterialAnisotropy
+
+`ideatek:MaterialAnisotropy` stretches the highlights along a direction, as `KHR_materials_anisotropy`.
+`ideatek_material_anisotropy_t` takes 40 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_texture_slot_t` | 0 | No default | The direction in RG and the strength in B. |
+| `strength` | `float` | 32 | 0 | The strength, from 0 to 1. |
+| `rotation` | `float` | 36 | 0 | The turn of the direction, in radians. |
+
+## ideatek:MaterialDiffuseTransmission
+
+`ideatek:MaterialDiffuseTransmission` lets light scatter through a thin material, as leaves, as `KHR_materials_diffuse_transmission`.
+`ideatek_material_diffuse_transmission_t` takes 80 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_texture_slot_t` | 0 | No default | The part of the light that scatters through, in A. |
+| `color_texture` | `ideatek_texture_slot_t` | 32 | No default | The color of that light, in RGB. |
+| `color` | `ideatek_rgb_t` | 64 | 1, 1, 1 | The color of that light. |
+| `factor` | `float` | 76 | 0 | The part of the light that scatters through, from 0 to 1. |
+
+## ideatek:MaterialUnlit
+
+`ideatek:MaterialUnlit` is a tag. The material shows its base color, with no light, as `KHR_materials_unlit`.
+
+## ideatek:ReflectionProbe
+
+`ideatek:ReflectionProbe` gives the reflected light in a box: *The baked light*.
+`ideatek_reflection_probe_t` takes 32 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `cube` | `ideatek_entity_t` | 0 | No default | A cube texture of the light around the place, with a level for each roughness. |
+| `half_size` | `ideatek_vec3_t` | 8 | No default | The half extents of the box that the probe lights. |
+| `falloff` | `float` | 20 | 0.25 | The part of the box at its border where the probe fades, from 0 to 1. |
+| `intensity` | `float` | 24 | 1 | The factor of the light of the probe. |
+| `priority` | `int32_t` | 28 | 0 | The rank among the probes that overlap. |
+
+## ideatek:IrradianceVolume
+
+`ideatek:IrradianceVolume` gives the diffuse light in a box, from a grid of probes: *The baked light*.
+`ideatek_irradiance_volume_t` takes 32 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_entity_t` | 0 | No default | A 3D texture of the probes of a grid. |
+| `half_size` | `ideatek_vec3_t` | 8 | No default | The half extents of the box of the grid. |
+| `intensity` | `float` | 20 | 1 | The factor of the light of the volume. |
+| `priority` | `int32_t` | 24 | 0 | The rank among the volumes that overlap. |
+
+Bytes 28 to 31 hold no field.
+
+The texture is 6 times the probes wide on X. The texel (6 i + f, j, k) holds the face f of the probe (i, j, k).
+The faces are in the order +X, -X, +Y, -Y, +Z, -Z. The probes fill the box evenly.
+
+## ideatek:Lightmap
+
+`ideatek:Lightmap` gives the baked light of a drawn mesh. It is on the entity of `ideatek:MeshInstance`.
+`ideatek_lightmap_t` takes 32 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_entity_t` | 0 | No default | The texture of the baked light. |
+| `uv_rect` | `ideatek_rect_t` | 8 | No default | The part of the texture that the mesh uses. |
+| `texcoord` | `uint8_t` | 24 | 1 | The set of texture coordinates of the lightmap. |
+
+Bytes 25 to 31 hold no field.
+
 ## The C types
 
 | Type of Bridge | C type | Descriptor | Macro of the text |
@@ -738,6 +909,8 @@ Only 1 reference has a lens flare, so the default strength is 0.
 | `ideatek:ideatek_mesh_stream_t` | `ideatek_mesh_stream_t` | `ideatek_mesh_stream_t_desc` | `IDEATEK_MESH_STREAM_FIELDS` |
 | `ideatek:ideatek_submesh_t` | `ideatek_submesh_t` | `ideatek_submesh_t_desc` | `IDEATEK_SUBMESH_FIELDS` |
 | `ideatek:ideatek_mesh_lod_t` | `ideatek_mesh_lod_t` | `ideatek_mesh_lod_t_desc` | `IDEATEK_MESH_LOD_FIELDS` |
+| `ideatek:ideatek_texture_slot_t` | `ideatek_texture_slot_t` | `ideatek_texture_slot_t_desc` | `IDEATEK_TEXTURE_SLOT_FIELDS` |
+| `ideatek:ideatek_gi_mode_t` | `ideatek_gi_mode_t` | `ideatek_gi_mode_t_desc` | `IDEATEK_GI_MODE_VALUES` |
 | `ideatek:ideatek_alpha_mode_t` | `ideatek_alpha_mode_t` | `ideatek_alpha_mode_t_desc` | `IDEATEK_ALPHA_MODE_VALUES` |
 | `ideatek:ideatek_dimension_t` | `ideatek_dimension_t` | `ideatek_dimension_t_desc` | `IDEATEK_DIMENSION_VALUES` |
 | `ideatek:ideatek_filter_t` | `ideatek_filter_t` | `ideatek_filter_t_desc` | `IDEATEK_FILTER_VALUES` |
@@ -776,6 +949,14 @@ Only 1 reference has a lens flare, so the default strength is 0.
 | `ideatek:ChromaticAberration` | `ideatek_chromatic_aberration_t` | `ideatek_chromatic_aberration_t_desc` | `IDEATEK_CHROMATIC_ABERRATION_FIELDS` |
 | `ideatek:FilmGrain` | `ideatek_film_grain_t` | `ideatek_film_grain_t_desc` | `IDEATEK_FILM_GRAIN_FIELDS` |
 | `ideatek:LensFlare` | `ideatek_lens_flare_t` | `ideatek_lens_flare_t_desc` | `IDEATEK_LENS_FLARE_FIELDS` |
+| `ideatek:MaterialClearcoat` | `ideatek_material_clearcoat_t` | `ideatek_material_clearcoat_t_desc` | `IDEATEK_MATERIAL_CLEARCOAT_FIELDS` |
+| `ideatek:MaterialSpecular` | `ideatek_material_specular_t` | `ideatek_material_specular_t_desc` | `IDEATEK_MATERIAL_SPECULAR_FIELDS` |
+| `ideatek:MaterialTransmission` | `ideatek_material_transmission_t` | `ideatek_material_transmission_t_desc` | `IDEATEK_MATERIAL_TRANSMISSION_FIELDS` |
+| `ideatek:MaterialAnisotropy` | `ideatek_material_anisotropy_t` | `ideatek_material_anisotropy_t_desc` | `IDEATEK_MATERIAL_ANISOTROPY_FIELDS` |
+| `ideatek:MaterialDiffuseTransmission` | `ideatek_material_diffuse_transmission_t` | `ideatek_material_diffuse_transmission_t_desc` | `IDEATEK_MATERIAL_DIFFUSE_TRANSMISSION_FIELDS` |
+| `ideatek:ReflectionProbe` | `ideatek_reflection_probe_t` | `ideatek_reflection_probe_t_desc` | `IDEATEK_REFLECTION_PROBE_FIELDS` |
+| `ideatek:IrradianceVolume` | `ideatek_irradiance_volume_t` | `ideatek_irradiance_volume_t_desc` | `IDEATEK_IRRADIANCE_VOLUME_FIELDS` |
+| `ideatek:Lightmap` | `ideatek_lightmap_t` | `ideatek_lightmap_t_desc` | `IDEATEK_LIGHTMAP_FIELDS` |
 
 ```text
 { float r; float g; float b; float a; }
@@ -788,6 +969,8 @@ Only 1 reference has a lens flare, so the default strength is 0.
 { uint32_t format; uint32_t offset; uint32_t stride; uint16_t target; ideatek_semantic_t semantic; uint8_t set; }
 { uint32_t first; uint32_t count; }
 { float error; uint32_t first; uint32_t count; }
+{ ideatek_entity_t texture; float offset[2]; float scale[2]; float rotation; uint8_t texcoord; }
+{ IDEATEK_GI_MODE_DYNAMIC = 0, IDEATEK_GI_MODE_STATIC = 1, IDEATEK_GI_MODE_DISABLED = 2 }
 { IDEATEK_ALPHA_MODE_OPAQUE = 0, IDEATEK_ALPHA_MODE_MASK = 1, IDEATEK_ALPHA_MODE_BLEND = 2 }
 { IDEATEK_DIMENSION_2D = 0, IDEATEK_DIMENSION_2D_ARRAY = 1, IDEATEK_DIMENSION_CUBE = 2, IDEATEK_DIMENSION_3D = 3 }
 { IDEATEK_FILTER_NEAREST = 0, IDEATEK_FILTER_LINEAR = 1 }
@@ -803,11 +986,11 @@ Only 1 reference has a lens flare, so the default strength is 0.
 { bridge_text_t bytes; uint32_t vertex_count; uint32_t index_count; uint32_t index_offset; uint32_t stream_count; uint32_t submesh_count; uint32_t lod_count; uint32_t target_count; uint32_t revision; ideatek_topology_t topology; ideatek_index_format_t index_format; }
 { ideatek_entity_t mesh; float lod_bias; }
 { bridge_text_t materials; }
-{ uint64_t groups; ideatek_cast_shadow_t cast_shadow; }
+{ uint64_t groups; ideatek_cast_shadow_t cast_shadow; ideatek_gi_mode_t gi_mode; bool visible; }
 { uint64_t groups; }
 { float begin; float end; float begin_margin; float end_margin; }
-{ ideatek_entity_t base_color_texture; ideatek_entity_t metallic_roughness_texture; ideatek_entity_t normal_texture; ideatek_entity_t occlusion_texture; ideatek_entity_t emissive_texture; ideatek_color_t base_color; ideatek_rgb_t emissive; float metallic; float roughness; float emissive_strength; float normal_scale; float occlusion_strength; float alpha_cutoff; ideatek_alpha_mode_t alpha_mode; bool double_sided; }
-{ bridge_text_t bytes; uint32_t format; uint32_t width; uint32_t height; uint32_t depth_or_layers; uint32_t mip_count; uint32_t revision; ideatek_dimension_t dimension; }
+{ ideatek_texture_slot_t base_color_texture; ideatek_texture_slot_t metallic_roughness_texture; ideatek_texture_slot_t normal_texture; ideatek_texture_slot_t occlusion_texture; ideatek_texture_slot_t emissive_texture; ideatek_color_t base_color; ideatek_rgb_t emissive; float metallic; float roughness; float emissive_strength; float normal_scale; float occlusion_strength; float alpha_cutoff; ideatek_alpha_mode_t alpha_mode; bool double_sided; }
+{ bridge_text_t bytes; uint32_t format; uint32_t width; uint32_t height; uint32_t depth_or_layers; uint32_t mip_count; uint32_t top_mip; uint32_t revision; ideatek_dimension_t dimension; }
 { float max_anisotropy; ideatek_filter_t min_filter; ideatek_filter_t mag_filter; ideatek_filter_t mip_filter; ideatek_wrap_t wrap_u; ideatek_wrap_t wrap_v; ideatek_wrap_t wrap_w; }
 { ideatek_entity_t cookie; ideatek_rgb_t color; float intensity; float range; float source_radius; float inner_cone; float outer_cone; ideatek_light_kind_t kind; bool shadow; }
 { ideatek_entity_t material; ideatek_vec3_t half_size; float normal_fade; int32_t sort_order; }
@@ -826,6 +1009,14 @@ Only 1 reference has a lens flare, so the default strength is 0.
 { float intensity; }
 { float intensity; }
 { ideatek_entity_t bokeh; ideatek_rgb_t tint; float intensity; float threshold; }
+{ ideatek_texture_slot_t texture; ideatek_texture_slot_t roughness_texture; ideatek_texture_slot_t normal_texture; float factor; float roughness; }
+{ ideatek_texture_slot_t texture; ideatek_texture_slot_t color_texture; ideatek_rgb_t color; float factor; float ior; }
+{ ideatek_texture_slot_t texture; ideatek_texture_slot_t thickness_texture; ideatek_rgb_t attenuation_color; float factor; float thickness; float attenuation_distance; }
+{ ideatek_texture_slot_t texture; float strength; float rotation; }
+{ ideatek_texture_slot_t texture; ideatek_texture_slot_t color_texture; ideatek_rgb_t color; float factor; }
+{ ideatek_entity_t cube; ideatek_vec3_t half_size; float falloff; float intensity; int32_t priority; }
+{ ideatek_entity_t texture; ideatek_vec3_t half_size; float intensity; int32_t priority; }
+{ ideatek_entity_t texture; ideatek_rect_t uv_rect; uint8_t texcoord; }
 ```
 
 ## The declarations
@@ -844,6 +1035,8 @@ Only 1 reference has a lens flare, so the default strength is 0.
 | `ideatek:ideatek_mesh_stream_t` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_submesh_t` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_mesh_lod_t` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_texture_slot_t` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_gi_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_alpha_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_dimension_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_filter_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -882,6 +1075,15 @@ Only 1 reference has a lens flare, so the default strength is 0.
 | `ideatek:ChromaticAberration` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:FilmGrain` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:LensFlare` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:MaterialClearcoat` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:MaterialSpecular` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:MaterialTransmission` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:MaterialAnisotropy` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:MaterialDiffuseTransmission` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:MaterialUnlit` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ReflectionProbe` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:IrradianceVolume` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:Lightmap` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
 
