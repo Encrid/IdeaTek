@@ -67,6 +67,10 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_liquid_technique_t", ideatek_liquid_technique_t);
     ENUM(api, "ideatek:ideatek_emitter_shape_t", ideatek_emitter_shape_t);
     MASK(api, "ideatek:ideatek_smoke_flags_t", ideatek_smoke_flags_t);
+    ENUM(api, "ideatek:ideatek_field_shape_t", ideatek_field_shape_t);
+    ENUM(api, "ideatek:ideatek_force_kind_t", ideatek_force_kind_t);
+    ENUM(api, "ideatek:ideatek_field_target_t", ideatek_field_target_t);
+    ENUM(api, "ideatek:ideatek_gravity_mode_t", ideatek_gravity_mode_t);
 }
 
 [[maybe_unused]] static void declare_late(const bridge_api_t *api)
@@ -152,6 +156,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:SmokeEmitter", ideatek_smoke_emitter_t);
     STRUCT(api, "ideatek:SmokeGrid", ideatek_smoke_grid_t);
     STRUCT(api, "ideatek:LagHistory", ideatek_lag_history_t);
+    STRUCT(api, "ideatek:Wind", ideatek_wind_t);
+    STRUCT(api, "ideatek:ForceField", ideatek_force_field_t);
+    STRUCT(api, "ideatek:GravityArea", ideatek_gravity_area_t);
 }
 
 [[maybe_unused]] static void role_author(const bridge_api_t *api)
@@ -198,6 +205,10 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_liquid_technique_t", ideatek_liquid_technique_t);
     ENUM(api, "ideatek:ideatek_emitter_shape_t", ideatek_emitter_shape_t);
     MASK(api, "ideatek:ideatek_smoke_flags_t", ideatek_smoke_flags_t);
+    ENUM(api, "ideatek:ideatek_field_shape_t", ideatek_field_shape_t);
+    ENUM(api, "ideatek:ideatek_force_kind_t", ideatek_force_kind_t);
+    ENUM(api, "ideatek:ideatek_field_target_t", ideatek_field_target_t);
+    ENUM(api, "ideatek:ideatek_gravity_mode_t", ideatek_gravity_mode_t);
     api->attach(api, id, STRUCT(api, "ideatek:Body", ideatek_body_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:Push", ideatek_push_t),
@@ -303,6 +314,12 @@ static const char WHO[] = MANIFEST;
         ideatek_articulation_link_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:ArticulationCommand",
         ideatek_articulation_command_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:Wind", ideatek_wind_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ForceField",
+        ideatek_force_field_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:GravityArea",
+        ideatek_gravity_area_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_physics(const bridge_api_t *api)
@@ -357,6 +374,10 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_liquid_technique_t", ideatek_liquid_technique_t);
     ENUM(api, "ideatek:ideatek_emitter_shape_t", ideatek_emitter_shape_t);
     MASK(api, "ideatek:ideatek_smoke_flags_t", ideatek_smoke_flags_t);
+    ENUM(api, "ideatek:ideatek_field_shape_t", ideatek_field_shape_t);
+    ENUM(api, "ideatek:ideatek_force_kind_t", ideatek_force_kind_t);
+    ENUM(api, "ideatek:ideatek_field_target_t", ideatek_field_target_t);
+    ENUM(api, "ideatek:ideatek_gravity_mode_t", ideatek_gravity_mode_t);
     STRUCT(api, "ideatek:Body", ideatek_body_t);
     STRUCT(api, "ideatek:Push", ideatek_push_t);
     STRUCT(api, "ideatek:Shape", ideatek_shape_t);
@@ -412,6 +433,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:Articulation", ideatek_articulation_t);
     STRUCT(api, "ideatek:ArticulationLink", ideatek_articulation_link_t);
     STRUCT(api, "ideatek:ArticulationCommand", ideatek_articulation_command_t);
+    STRUCT(api, "ideatek:Wind", ideatek_wind_t);
+    STRUCT(api, "ideatek:ForceField", ideatek_force_field_t);
+    STRUCT(api, "ideatek:GravityArea", ideatek_gravity_area_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Tick", ideatek_tick_t, BRIDGE_STRIP,
         BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Transform",

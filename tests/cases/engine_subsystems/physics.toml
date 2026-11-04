@@ -638,6 +638,48 @@ false = { run = ["{out}/physics_layout{exe}", "lag_history"] }
 name = "ideatek_lag_history_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "lag_history"]
 claims = { status = 0, order = ["size 4", "alignment 4", "seconds 0"] }
+false = { run = ["{out}/physics_layout{exe}", "field_shape"] }
+
+[[case]]
+name = "ideatek_field_shape_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "field_shape"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "wind"] }
+
+[[case]]
+name = "ideatek_force_kind_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "force_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "wind"] }
+
+[[case]]
+name = "ideatek_field_target_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "field_target"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "wind"] }
+
+[[case]]
+name = "ideatek_gravity_mode_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "gravity_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "wind"] }
+
+[[case]]
+name = "ideatek_wind_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "wind"]
+claims = { status = 0, order = ["size 40", "alignment 4", "size 0", "inner 12", "speed 16", "gust_min 20", "gust_max 24", "gust_frequency 28", "falloff 32", "shape 36"] }
+false = { run = ["{out}/physics_layout{exe}", "force_field"] }
+
+[[case]]
+name = "ideatek_force_field_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "force_field"]
+claims = { status = 0, order = ["size 40", "alignment 8", "texture 0", "size 8", "inner 20", "acceleration 24", "frequency 28", "falloff 32", "kind 36", "shape 37", "target 38"] }
+false = { run = ["{out}/physics_layout{exe}", "gravity_area"] }
+
+[[case]]
+name = "ideatek_gravity_area_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "gravity_area"]
+claims = { status = 0, order = ["size 32", "alignment 4", "size 0", "gravity 12", "inner 16", "falloff 20", "priority 24", "mode 28", "shape 29", "point 30"] }
 false = { run = ["{out}/physics_layout{exe}", "body_kind"] }
 
 [[case]]
@@ -751,6 +793,13 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float temperature; float fuel; float smoke; float couple_rate; ideatek_emitter_shape_t shape; }",
     "{ ideatek_entity_t texture; }",
     "{ float seconds; }",
+    "uint8_t { IDEATEK_FIELD_SHAPE_INFINITE = 0, IDEATEK_FIELD_SHAPE_SPHERE = 1, IDEATEK_FIELD_SHAPE_BOX = 2, IDEATEK_FIELD_SHAPE_CYLINDER = 3 }",
+    "uint8_t { IDEATEK_FORCE_KIND_ATTRACTOR = 0, IDEATEK_FORCE_KIND_VORTEX = 1, IDEATEK_FORCE_KIND_DIRECTIONAL = 2, IDEATEK_FORCE_KIND_NOISE = 3, IDEATEK_FORCE_KIND_DRAG = 4, IDEATEK_FORCE_KIND_VECTOR_FIELD = 5 }",
+    "uint8_t { IDEATEK_FIELD_TARGET_FORCE = 0, IDEATEK_FIELD_TARGET_VELOCITY = 1, IDEATEK_FIELD_TARGET_STRAIN = 2, IDEATEK_FIELD_TARGET_SLEEP = 3, IDEATEK_FIELD_TARGET_WAKE = 4 }",
+    "uint8_t { IDEATEK_GRAVITY_MODE_REPLACE = 0, IDEATEK_GRAVITY_MODE_ADD = 1 }",
+    "{ ideatek_vec3_t size; float inner; float speed; float gust_min; float gust_max; float gust_frequency; float falloff; ideatek_field_shape_t shape; }",
+    "{ ideatek_entity_t texture; ideatek_vec3_t size; float inner; float acceleration; float frequency; float falloff; ideatek_force_kind_t kind; ideatek_field_shape_t shape; ideatek_field_target_t target; }",
+    "{ ideatek_vec3_t size; float gravity; float inner; float falloff; int32_t priority; ideatek_gravity_mode_t mode; ideatek_field_shape_t shape; bool point; }",
 ] }
 false = { run = ["{out}/physics_layout{exe}", "texts"] }
 
@@ -865,6 +914,13 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float temperature; float fuel; float smoke; float couple_rate; ideatek_emitter_shape_t shape; }",
     "{ ideatek_entity_t texture; }",
     "{ float seconds; }",
+    "{ IDEATEK_FIELD_SHAPE_INFINITE = 0, IDEATEK_FIELD_SHAPE_SPHERE = 1, IDEATEK_FIELD_SHAPE_BOX = 2, IDEATEK_FIELD_SHAPE_CYLINDER = 3 }",
+    "{ IDEATEK_FORCE_KIND_ATTRACTOR = 0, IDEATEK_FORCE_KIND_VORTEX = 1, IDEATEK_FORCE_KIND_DIRECTIONAL = 2, IDEATEK_FORCE_KIND_NOISE = 3, IDEATEK_FORCE_KIND_DRAG = 4, IDEATEK_FORCE_KIND_VECTOR_FIELD = 5 }",
+    "{ IDEATEK_FIELD_TARGET_FORCE = 0, IDEATEK_FIELD_TARGET_VELOCITY = 1, IDEATEK_FIELD_TARGET_STRAIN = 2, IDEATEK_FIELD_TARGET_SLEEP = 3, IDEATEK_FIELD_TARGET_WAKE = 4 }",
+    "{ IDEATEK_GRAVITY_MODE_REPLACE = 0, IDEATEK_GRAVITY_MODE_ADD = 1 }",
+    "{ ideatek_vec3_t size; float inner; float speed; float gust_min; float gust_max; float gust_frequency; float falloff; ideatek_field_shape_t shape; }",
+    "{ ideatek_entity_t texture; ideatek_vec3_t size; float inner; float acceleration; float frequency; float falloff; ideatek_force_kind_t kind; ideatek_field_shape_t shape; ideatek_field_target_t target; }",
+    "{ ideatek_vec3_t size; float gravity; float inner; float falloff; int32_t priority; ideatek_gravity_mode_t mode; ideatek_field_shape_t shape; bool point; }",
 ] }
 false = { run = ["{out}/physics_layout{exe}", "descriptors"] }
 
@@ -875,7 +931,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/physics_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 114 types, each type after the types of its fields"
+name = "a module declares the 121 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/physics_probe{library}"] }
 
@@ -912,6 +968,8 @@ read = [
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
     "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
     "ideatek:Body", "ideatek:KinematicTarget", "ideatek:WakeEvent",
     "ideatek:Motion", "ideatek:Push", "ideatek:Shape", "ideatek:ShapeMaterials",
     "ideatek:PhysicsMaterial", "ideatek:SensorEvent", "ideatek:ContactEvent",
@@ -937,7 +995,8 @@ read = [
     "ideatek:WaterSample", "ideatek:Buoyancy", "ideatek:Liquid",
     "ideatek:LiquidEmitter", "ideatek:LiquidParticles", "ideatek:LiquidFoam",
     "ideatek:SmokeVolume", "ideatek:SmokeEmitter", "ideatek:SmokeGrid",
-    "ideatek:LagHistory",
+    "ideatek:LagHistory", "ideatek:Wind", "ideatek:ForceField",
+    "ideatek:GravityArea",
 ]
 '''
 
@@ -979,7 +1038,8 @@ write = [
     "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
     "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
     "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
-    "ideatek:ArticulationCommand",
+    "ideatek:ArticulationCommand", "ideatek:Wind", "ideatek:ForceField",
+    "ideatek:GravityArea",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -1001,6 +1061,8 @@ read = [
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
     "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
 ]
 '''
 
@@ -1031,6 +1093,7 @@ write = [
     "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
     "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
     "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
+    "ideatek:ArticulationCommand", "ideatek:Wind", "ideatek:ForceField",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -1052,7 +1115,9 @@ read = [
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
     "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
-    "ideatek:ArticulationCommand",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
+    "ideatek:GravityArea",
 ]
 '''
 
@@ -1106,6 +1171,8 @@ read = [
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
     "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
     "ideatek:Body", "ideatek:Push", "ideatek:Shape", "ideatek:PhysicsMaterial",
     "ideatek:Query", "ideatek:BodyJoint", "ideatek:FixedJoint",
     "ideatek:PointJoint", "ideatek:HingeJoint", "ideatek:SliderJoint",
@@ -1124,7 +1191,8 @@ read = [
     "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
     "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
     "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
-    "ideatek:ArticulationCommand", "ideatek:Tick",
+    "ideatek:ArticulationCommand", "ideatek:Wind", "ideatek:ForceField",
+    "ideatek:GravityArea", "ideatek:Tick",
 ]
 '''
 
@@ -1170,6 +1238,8 @@ read = [
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
     "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
     "ideatek:Body", "ideatek:Push", "ideatek:Shape", "ideatek:PhysicsMaterial",
     "ideatek:Query", "ideatek:BodyJoint", "ideatek:FixedJoint",
     "ideatek:PointJoint", "ideatek:HingeJoint", "ideatek:SliderJoint",
@@ -1188,7 +1258,8 @@ read = [
     "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
     "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
     "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
-    "ideatek:ArticulationCommand", "ideatek:Tick", "ideatek:Texture",
+    "ideatek:ArticulationCommand", "ideatek:Wind", "ideatek:ForceField",
+    "ideatek:GravityArea", "ideatek:Tick", "ideatek:Texture",
 ]
 '''
 

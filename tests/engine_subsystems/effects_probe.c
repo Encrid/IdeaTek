@@ -5,7 +5,6 @@
 */
 #include "bridge_native.h"
 #include "ideatek_physics.h"
-#include "ideatek_fields.h"
 #include "ideatek_effects.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -106,6 +105,7 @@ static const char WHO[] = MANIFEST;
     MASK(api, "ideatek:ideatek_shape_flags_t", ideatek_shape_flags_t);
     ENUM(api, "ideatek:ideatek_field_shape_t", ideatek_field_shape_t);
     ENUM(api, "ideatek:ideatek_force_kind_t", ideatek_force_kind_t);
+    ENUM(api, "ideatek:ideatek_field_target_t", ideatek_field_target_t);
     ENUM(api, "ideatek:ideatek_curve_kind_t", ideatek_curve_kind_t);
     ENUM(api, "ideatek:ideatek_emitter_state_t", ideatek_emitter_state_t);
     MASK(api, "ideatek:ideatek_emitter_flags_t", ideatek_emitter_flags_t);
