@@ -8,7 +8,7 @@ The header includes the world part, because its fields name entities.
 
 - The game writes the net session, the join data and the answers to the joins.
 - The game also writes the replicated entities, the bytes of its modules, the viewers, the relevance and the commands.
-- The net module runs the handshake and the transport over the connections of the sockets part. It writes the peers, the events, the network ids, the bytes that come in, the commands that come in and the state of the net session.
+- The net module runs the handshake and the transport over the connections of the sockets part. It writes the peers, the events, the network ids and the state of the net session. It also writes the bytes and the commands that come in.
 - The sockets part of layer 2 gives the connections, the encryption, the messages and the statistics. The net module reads them.
 
 ## The net sessions and the peers
