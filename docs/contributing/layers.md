@@ -50,7 +50,6 @@ engine_subsystems/
     ideatek_animation.h
     ideatek_debug_draw.h
     ideatek_effects.h
-    ideatek_fields.h
     ideatek_input_mapping.h
     ideatek_navigation.h
     ideatek_networking.h

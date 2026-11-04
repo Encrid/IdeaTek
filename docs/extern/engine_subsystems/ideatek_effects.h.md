@@ -43,7 +43,7 @@ No event goes to the game for each particle.
 
 ## The fields
 
-Each particle feels the wind and the force fields of the fields part.
+Each particle feels the wind and the force fields of the physics part.
 
 ## ideatek:ideatek_curve_kind_t
 

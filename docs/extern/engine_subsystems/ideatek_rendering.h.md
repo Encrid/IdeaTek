@@ -656,7 +656,7 @@ The top of the planet is at the origin of the world.
 | `coverage` | `float` | 16 | 0 | The part of the sky with clouds, from 0 to 1. |
 | `density` | `float` | 20 | 0 | The extinction in a cloud, in 1 / m. |
 
-The wind of the fields part moves the coverage.
+The wind of the physics part moves the coverage.
 Only 1 reference has clouds, so each default is 0.
 
 ## ideatek:Exposure

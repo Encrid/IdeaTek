@@ -1,6 +1,6 @@
 # include/engine_subsystems/ideatek_physics.h
 
-`include/engine_subsystems/ideatek_physics.h` gives the types of the physics: bodies, shapes, materials, characters, joints, articulations, vehicles, destruction, soft bodies, ropes, water, liquids, smoke and fire.
+`include/engine_subsystems/ideatek_physics.h` gives the types of the physics: bodies, shapes, materials, characters, joints, articulations, vehicles, destruction, soft bodies, ropes, water, liquids, smoke, fire and fields.
 `readme.md`, *The contracts*, tells the rules of each contract.
 The header includes the headers of the world and space parts, for the entities, the positions, the vectors and the rotations of its fields.
 
@@ -243,7 +243,30 @@ With `IDEATEK_SMOKE_FLAGS_COLLIDE`, the shapes push the smoke. The defaults are 
 
 ## The fields
 
-The physics module reads `ideatek:Wind` and `ideatek:ForceField` of the fields part for each soft body and each rope. A rigid body takes a push instead.
+The wind and the force fields act on the things that the physics module moves, and on the particles of the effects part.
+
+- A wind is a speed of the air. A reader drags its things toward the velocity of the wind, by its own drag.
+- A force field changes the motion of the things in its shape, as its `target` tells.
+- The direction of a wind and of a directional field is -Z of its `ideatek:WorldTransform`. A vortex turns about the Y axis of its entity.
+
+A field acts inside its shape: the whole world, a sphere of radius `size.x`, a box of half extents `size`, or a cylinder along Y.
+The strength is full under the distance `inner` from the center. Past `inner`, it is `(1 - (d - inner) / (size - inner)) ^ falloff`, so a falloff of 0 keeps it constant.
+The fields add where they overlap. A field that fills the world has no falloff.
+
+A gust adds a part of `speed` between `gust_min` and `gust_max`. It changes about `gust_frequency` times in each second.
+`IDEATEK_FORCE_KIND_NOISE` gives a smooth random direction, which changes about `frequency` times in each second and in each meter.
+`IDEATEK_FORCE_KIND_VECTOR_FIELD` reads the acceleration from `texture`: a 3D texture of 3 floats that fills the box of the field.
+
+Soft bodies, ropes, liquids and smoke feel each wind and each force field. A rigid body feels a force field only with a `target` other than `IDEATEK_FIELD_TARGET_FORCE`.
+With `IDEATEK_FIELD_TARGET_VELOCITY`, `acceleration` is a speed in m / s. With `IDEATEK_FIELD_TARGET_STRAIN`, it is a pressure in Pa on the bonds of the destruction.
+The defaults are neutral: a speed and an acceleration of 0, a shape that fills the world, no falloff and no gust. The references do not agree on a size, so the game sets it.
+
+## The gravity areas
+
+An entity with `ideatek:GravityArea` changes the gravity in its shape, for example around a planet or inside a ship.
+With `point`, the gravity pulls to the center of the area. Else it goes along -Y of the entity.
+`IDEATEK_GRAVITY_MODE_REPLACE` takes the place of the setting `gravity`, and `IDEATEK_GRAVITY_MODE_ADD` adds to it.
+Where areas overlap, the replacing area with the highest `priority` wins, and each adding area adds. `inner` and `falloff` act as for a field.
 
 ## The settings
 
@@ -1762,6 +1785,110 @@ Bytes 49 to 55 hold no field.
 
 The default of 0 keeps no history. The game sets the length.
 
+## ideatek:ideatek_field_shape_t
+
+`ideatek_field_shape_t` tells the place where a field acts.
+`ideatek_field_shape_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_FIELD_SHAPE_INFINITE` | The field fills the world. |
+| 1 | `IDEATEK_FIELD_SHAPE_SPHERE` | A sphere of radius `size.x`. |
+| 2 | `IDEATEK_FIELD_SHAPE_BOX` | A box of half extents `size`. |
+| 3 | `IDEATEK_FIELD_SHAPE_CYLINDER` | A cylinder along Y of radius `size.x` and half height `size.y`. |
+
+## ideatek:ideatek_force_kind_t
+
+`ideatek_force_kind_t` tells the kind of a force field.
+`ideatek_force_kind_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_FORCE_KIND_ATTRACTOR` | A pull to the center. A negative acceleration pushes away. |
+| 1 | `IDEATEK_FORCE_KIND_VORTEX` | A turn about the Y axis of the entity. |
+| 2 | `IDEATEK_FORCE_KIND_DIRECTIONAL` | A push along -Z of the entity. |
+| 3 | `IDEATEK_FORCE_KIND_NOISE` | A turbulence: a smooth random direction. |
+| 4 | `IDEATEK_FORCE_KIND_DRAG` | A pull of the speed toward 0. |
+| 5 | `IDEATEK_FORCE_KIND_VECTOR_FIELD` | The direction and the strength from `texture`. |
+
+## ideatek:ideatek_field_target_t
+
+`ideatek_field_target_t` tells what a force field changes, as the targets of the fields of Chaos.
+`ideatek_field_target_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_FIELD_TARGET_FORCE` | The field adds an acceleration. |
+| 1 | `IDEATEK_FIELD_TARGET_VELOCITY` | The field sets a speed. |
+| 2 | `IDEATEK_FIELD_TARGET_STRAIN` | The field loads the bonds of a destructible body. |
+| 3 | `IDEATEK_FIELD_TARGET_SLEEP` | The rigid bodies in the field sleep. |
+| 4 | `IDEATEK_FIELD_TARGET_WAKE` | The rigid bodies in the field wake. |
+
+## ideatek:ideatek_gravity_mode_t
+
+`ideatek_gravity_mode_t` tells how a gravity area applies.
+`ideatek_gravity_mode_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_GRAVITY_MODE_REPLACE` | The area takes the place of the gravity of the world. |
+| 1 | `IDEATEK_GRAVITY_MODE_ADD` | The area adds to the gravity of the world. |
+
+## ideatek:Wind
+
+`ideatek:Wind` is a wind along -Z of its entity: *The fields*.
+`ideatek_wind_t` takes 40 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `size` | `ideatek_vec3_t` | 0 | 0, 0, 0 | The size of the shape. |
+| `inner` | `float` | 12 | 0 | The distance under which the strength is full. |
+| `speed` | `float` | 16 | 0 | The speed of the air, in m / s. |
+| `gust_min` | `float` | 20 | 0 | The lowest gust, as a part of `speed`. |
+| `gust_max` | `float` | 24 | 0 | The highest gust, as a part of `speed`. |
+| `gust_frequency` | `float` | 28 | 0 | The changes of the gust in each second. |
+| `falloff` | `float` | 32 | 0 | The exponent of the falloff. |
+| `shape` | `ideatek_field_shape_t` | 36 | `IDEATEK_FIELD_SHAPE_INFINITE` | The place where it blows. |
+
+Bytes 37 to 39 hold no field.
+
+## ideatek:ForceField
+
+`ideatek:ForceField` pulls, turns or stirs the things in its shape: *The fields*.
+`ideatek_force_field_t` takes 40 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_entity_t` | 0 | 0 | With `IDEATEK_FORCE_KIND_VECTOR_FIELD`: the 3D texture of the vectors. |
+| `size` | `ideatek_vec3_t` | 8 | 0, 0, 0 | The size of the shape. |
+| `inner` | `float` | 20 | 0 | The distance under which the strength is full. |
+| `acceleration` | `float` | 24 | 0 | The strength, in m / s^2. |
+| `frequency` | `float` | 28 | 1 | With `IDEATEK_FORCE_KIND_NOISE`: the changes in each second and in each meter. |
+| `falloff` | `float` | 32 | 0 | The exponent of the falloff. |
+| `kind` | `ideatek_force_kind_t` | 36 | No default | The kind. |
+| `shape` | `ideatek_field_shape_t` | 37 | `IDEATEK_FIELD_SHAPE_INFINITE` | The place where it acts. |
+| `target` | `ideatek_field_target_t` | 38 | `IDEATEK_FIELD_TARGET_FORCE` | What it changes. |
+
+Byte 39 holds no field.
+
+## ideatek:GravityArea
+
+`ideatek:GravityArea` changes the gravity in its shape: *The gravity areas*.
+`ideatek_gravity_area_t` takes 32 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `size` | `ideatek_vec3_t` | 0 | 0, 0, 0 | The size of the shape. |
+| `gravity` | `float` | 12 | 9.81 | The strength of the gravity, in m / s^2. |
+| `inner` | `float` | 16 | 0 | The distance under which the strength is full. |
+| `falloff` | `float` | 20 | 0 | The exponent of the falloff. |
+| `priority` | `int32_t` | 24 | 0 | The rank among the areas that replace. |
+| `mode` | `ideatek_gravity_mode_t` | 28 | `IDEATEK_GRAVITY_MODE_REPLACE` | How the area applies. |
+| `shape` | `ideatek_field_shape_t` | 29 | `IDEATEK_FIELD_SHAPE_SPHERE` | The place where it acts. |
+| `point` | `bool` | 30 | `false` | `true` if the gravity pulls to the center. |
+
+Byte 31 holds no field.
+
 ## The C types
 
 | Type of Bridge | C type | Descriptor | Macro of the text |
@@ -1873,6 +2000,13 @@ The default of 0 keeps no history. The game sets the length.
 | `ideatek:SmokeEmitter` | `ideatek_smoke_emitter_t` | `ideatek_smoke_emitter_t_desc` | `IDEATEK_SMOKE_EMITTER_FIELDS` |
 | `ideatek:SmokeGrid` | `ideatek_smoke_grid_t` | `ideatek_smoke_grid_t_desc` | `IDEATEK_SMOKE_GRID_FIELDS` |
 | `ideatek:LagHistory` | `ideatek_lag_history_t` | `ideatek_lag_history_t_desc` | `IDEATEK_LAG_HISTORY_FIELDS` |
+| `ideatek:ideatek_field_shape_t` | `ideatek_field_shape_t` | `ideatek_field_shape_t_desc` | `IDEATEK_FIELD_SHAPE_VALUES` |
+| `ideatek:ideatek_force_kind_t` | `ideatek_force_kind_t` | `ideatek_force_kind_t_desc` | `IDEATEK_FORCE_KIND_VALUES` |
+| `ideatek:ideatek_field_target_t` | `ideatek_field_target_t` | `ideatek_field_target_t_desc` | `IDEATEK_FIELD_TARGET_VALUES` |
+| `ideatek:ideatek_gravity_mode_t` | `ideatek_gravity_mode_t` | `ideatek_gravity_mode_t_desc` | `IDEATEK_GRAVITY_MODE_VALUES` |
+| `ideatek:Wind` | `ideatek_wind_t` | `ideatek_wind_t_desc` | `IDEATEK_WIND_FIELDS` |
+| `ideatek:ForceField` | `ideatek_force_field_t` | `ideatek_force_field_t_desc` | `IDEATEK_FORCE_FIELD_FIELDS` |
+| `ideatek:GravityArea` | `ideatek_gravity_area_t` | `ideatek_gravity_area_t_desc` | `IDEATEK_GRAVITY_AREA_FIELDS` |
 
 ```text
 { IDEATEK_BODY_KIND_STATIC = 0, IDEATEK_BODY_KIND_KINEMATIC = 1, IDEATEK_BODY_KIND_DYNAMIC = 2 }
@@ -1982,6 +2116,13 @@ The default of 0 keeps no history. The game sets the length.
 { ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float temperature; float fuel; float smoke; float couple_rate; ideatek_emitter_shape_t shape; }
 { ideatek_entity_t texture; }
 { float seconds; }
+{ IDEATEK_FIELD_SHAPE_INFINITE = 0, IDEATEK_FIELD_SHAPE_SPHERE = 1, IDEATEK_FIELD_SHAPE_BOX = 2, IDEATEK_FIELD_SHAPE_CYLINDER = 3 }
+{ IDEATEK_FORCE_KIND_ATTRACTOR = 0, IDEATEK_FORCE_KIND_VORTEX = 1, IDEATEK_FORCE_KIND_DIRECTIONAL = 2, IDEATEK_FORCE_KIND_NOISE = 3, IDEATEK_FORCE_KIND_DRAG = 4, IDEATEK_FORCE_KIND_VECTOR_FIELD = 5 }
+{ IDEATEK_FIELD_TARGET_FORCE = 0, IDEATEK_FIELD_TARGET_VELOCITY = 1, IDEATEK_FIELD_TARGET_STRAIN = 2, IDEATEK_FIELD_TARGET_SLEEP = 3, IDEATEK_FIELD_TARGET_WAKE = 4 }
+{ IDEATEK_GRAVITY_MODE_REPLACE = 0, IDEATEK_GRAVITY_MODE_ADD = 1 }
+{ ideatek_vec3_t size; float inner; float speed; float gust_min; float gust_max; float gust_frequency; float falloff; ideatek_field_shape_t shape; }
+{ ideatek_entity_t texture; ideatek_vec3_t size; float inner; float acceleration; float frequency; float falloff; ideatek_force_kind_t kind; ideatek_field_shape_t shape; ideatek_field_target_t target; }
+{ ideatek_vec3_t size; float gravity; float inner; float falloff; int32_t priority; ideatek_gravity_mode_t mode; ideatek_field_shape_t shape; bool point; }
 ```
 
 ## The declarations
@@ -2029,6 +2170,10 @@ The default of 0 keeps no history. The game sets the length.
 | `ideatek:ideatek_liquid_technique_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_emitter_shape_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_smoke_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_field_shape_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_force_kind_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_field_target_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_gravity_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Body` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:KinematicTarget` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:WakeEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -2102,6 +2247,9 @@ The default of 0 keeps no history. The game sets the length.
 | `ideatek:SmokeEmitter` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SmokeGrid` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:LagHistory` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:Wind` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ForceField` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:GravityArea` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
 
