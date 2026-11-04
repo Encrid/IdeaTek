@@ -11,6 +11,8 @@
 static const char WHO[] = MANIFEST;
 
 #define ENUM(api, name, T) BRIDGE_NATIVE_DECLARE(api, BRIDGE_ENUM, name, T,     BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
+#define MASK(api, name, T) BRIDGE_NATIVE_DECLARE(api, BRIDGE_BITMASK, name, \
+    T, BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
 #define STRUCT(api, name, T) BRIDGE_NATIVE_COMPONENT(api, name, T,     BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
 
 typedef struct {
@@ -28,6 +30,7 @@ static void declare_fields(const bridge_api_t *api)
 {
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     ENUM(api, "ideatek:ideatek_gpu_kind_t", ideatek_gpu_kind_t);
+    MASK(api, "ideatek:ideatek_gpu_feature_t", ideatek_gpu_feature_t);
     ENUM(api, "ideatek:ideatek_gpu_api_t", ideatek_gpu_api_t);
     ENUM(api, "ideatek:ideatek_gpu_status_t", ideatek_gpu_status_t);
     ENUM(api, "ideatek:ideatek_present_mode_t", ideatek_present_mode_t);
@@ -57,7 +60,8 @@ static slots_t declare_structs(const bridge_api_t *api)
 
 [[maybe_unused]] static void ask(const bridge_api_t *api, slots_t slots)
 {
-    ideatek_gpu_request_t request = { 0 };
+    ideatek_gpu_request_t request = {
+        .features = IDEATEK_GPU_FEATURE_RAY_QUERY };
 
     BRIDGE_NATIVE_ATTACH(api, api->spawn(api), slots.request, request);
 }

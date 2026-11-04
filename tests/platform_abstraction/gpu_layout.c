@@ -25,6 +25,11 @@ static void show_kind(void)
     SIZE(ideatek_gpu_kind_t);
 }
 
+static void show_feature(void)
+{
+    SIZE(ideatek_gpu_feature_t);
+}
+
 static void show_api(void)
 {
     SIZE(ideatek_gpu_api_t);
@@ -62,8 +67,8 @@ static void show_gpu(void)
     AT(ideatek_gpu_t, memory_bytes);
     AT(ideatek_gpu_t, vendor_id);
     AT(ideatek_gpu_t, device_id);
+    AT(ideatek_gpu_t, features);
     AT(ideatek_gpu_t, kind);
-    AT(ideatek_gpu_t, ray_query);
     AT(ideatek_gpu_t, usable);
 }
 
@@ -71,6 +76,7 @@ static void show_request(void)
 {
     SIZE(ideatek_gpu_request_t);
     AT(ideatek_gpu_request_t, gpu);
+    AT(ideatek_gpu_request_t, features);
 }
 
 static void show_device(void)
@@ -78,6 +84,7 @@ static void show_device(void)
     SIZE(ideatek_gpu_device_t);
     AT(ideatek_gpu_device_t, gpu);
     AT(ideatek_gpu_device_t, generation);
+    AT(ideatek_gpu_device_t, features);
     AT(ideatek_gpu_device_t, api);
     AT(ideatek_gpu_device_t, status);
 }
@@ -125,7 +132,8 @@ static void show_vulkan_swapchain(void)
 static void show_descriptors(void)
 {
     static const char *const DESCRIPTORS[] = {
-        ideatek_gpu_kind_t_desc, ideatek_gpu_api_t_desc,
+        ideatek_gpu_kind_t_desc, ideatek_gpu_feature_t_desc,
+        ideatek_gpu_api_t_desc,
         ideatek_gpu_status_t_desc, ideatek_present_mode_t_desc,
         ideatek_image_format_t_desc, ideatek_color_space_t_desc,
         ideatek_swapchain_status_t_desc, ideatek_gpu_t_desc,
@@ -142,6 +150,7 @@ static void show_texts(void)
 {
     static const char *const TEXTS[] = {
         TEXT_OF(IDEATEK_GPU_KIND_VALUES),
+        TEXT_OF(IDEATEK_GPU_FEATURE_VALUES),
         TEXT_OF(IDEATEK_GPU_API_VALUES),
         TEXT_OF(IDEATEK_GPU_STATUS_VALUES),
         TEXT_OF(IDEATEK_PRESENT_MODE_VALUES),
@@ -164,7 +173,8 @@ static void show_texts(void)
 int main(int argc, char **argv)
 {
     static const show_mode_t MODES[] = {
-        { "kind", show_kind }, { "api", show_api },
+        { "kind", show_kind }, { "feature", show_feature },
+        { "api", show_api },
         { "status", show_status }, { "present_mode", show_present_mode },
         { "format", show_format }, { "color_space", show_color_space },
         { "swapchain_status", show_swapchain_status }, { "gpu", show_gpu },
