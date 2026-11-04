@@ -75,6 +75,8 @@ The meta file of a path is the file `path.meta` in the same source, in TOML.
 With `meta_check` at `always`, the resources module reads the meta file of each load. With `never`, it reads none.
 With `paths`, it reads the meta files of the paths in `meta_paths` only. A meta file that is not found gives the defaults.
 
+With `always`, each load makes 1 more read. `never` or `paths` removes that read where a missing file costs a request.
+
 | Key | Default | Value |
 | --- | --- | --- |
 | `action` | `load` | `load`, `process` or `ignore`. |
