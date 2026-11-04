@@ -1,0 +1,58 @@
+[parts.xr]
+name = "BC-IdeaTek-Xr"
+folder = "engine_subsystems/xr"
+uses = ["world", "space", "rendering", "input_mapping", "animation"]
+third_party = []
+
+[parts.xr.package]
+proof = "tests/engine_subsystems/xr/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+
+[compose.xr]
+part = "xr"
+from = "include/engine_subsystems/xr"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+xr_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+xr_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "xr_layout"
+kind = "program"
+part = "xr"
+test = true
+sources = ["tests/engine_subsystems/xr/layout/layout.c"]
+include = ["include/engine_subsystems/xr", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+
+[[artifact]]
+name = "xr_probe"
+kind = "native_module"
+part = "xr"
+test = true
+sources = ["tests/engine_subsystems/xr/probe/probe.c"]
+include = ["include/engine_subsystems/xr", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/engine_subsystems/rendering", "include/engine_subsystems/animation", "include/engine_subsystems/input_mapping"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{xr_probe_words}"]
+
+[[artifact.variants]]
+name = "xr_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "xr_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{xr_spawn_words}"]
+
+[[artifact.variants]]
+name = "xr_module"
+defines = ["ROLE_MODULE"]
+manifest = ["test:module@1.0.0", "{xr_spawn_words}"]
