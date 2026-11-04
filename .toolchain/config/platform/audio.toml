@@ -1,0 +1,64 @@
+[parts.audio]
+name = "BC-IdeaTek-Audio"
+folder = "platform/audio"
+uses = ["world"]
+third_party = []
+
+[parts.audio.package]
+proof = "tests/platform/audio/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform/world"]
+
+[compose.audio]
+part = "audio"
+from = "include/platform/audio"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+audio_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
+]
+
+audio_game_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=64", "hot_reload=false",
+]
+
+audio_module_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=16", "hot_reload=false",
+]
+
+[[artifact]]
+name = "audio_layout"
+kind = "program"
+part = "audio"
+test = true
+sources = ["tests/platform/audio/layout/layout.c"]
+include = ["include/platform/audio", "include/platform/world", "{bridge}/include"]
+
+[[artifact]]
+name = "audio_probe"
+kind = "native_module"
+part = "audio"
+test = true
+sources = ["tests/platform/audio/probe/probe.c"]
+include = ["include/platform/audio", "include/platform/world"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{audio_probe_words}"]
+
+[[artifact.variants]]
+name = "audio_late"
+defines = ["ROLE_LATE"]
+manifest = ["test:probe@1.0.0", "{audio_probe_words}"]
+
+[[artifact.variants]]
+name = "audio_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{audio_game_words}"]
+
+[[artifact.variants]]
+name = "audio_module"
+defines = ["ROLE_AUDIO"]
+manifest = ["test:audio@1.0.0", "{audio_module_words}"]

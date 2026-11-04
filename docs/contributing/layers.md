@@ -23,20 +23,20 @@ The project holds the contracts of layers 2, 3 and 4.
 
 ## The parts
 
-| Part | Layer |
-| --- | --- |
-| world | 2 |
-| window | 2 |
-| input | 2 |
-| system | 2 |
-| files | 2 |
-| sockets | 2 |
-| audio | 2 |
-| gpu | 2 |
-| frame | 3 |
-| states | 3 |
-| resources | 3 |
-| space | 4 |
+| Part | Layer | Folder |
+| --- | --- | --- |
+| world | 2 | `platform/world` |
+| window | 2 | `platform/window` |
+| input | 2 | `platform/input` |
+| system | 2 | `platform/system` |
+| files | 2 | `platform/files` |
+| sockets | 2 | `platform/sockets` |
+| audio | 2 | `platform/audio` |
+| gpu | 2 | `platform/gpu` |
+| frame | 3 | `kernel/frame` |
+| states | 3 | `kernel/states` |
+| resources | 3 | `kernel/resources` |
+| space | 4 | `subsystems/space` |
 
 The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the
 world model.

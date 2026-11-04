@@ -1,0 +1,101 @@
+[[case]]
+name = "ideatek_address_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "address"]
+claims = { status = 0, order = ["size 18", "alignment 2", "bytes 0", "port 16"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_send_t has the size and the alignment of its Usage"
+run = ["{out}/sockets_layout{exe}", "send"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_listen_status_t has the size and the alignment of its Usage"
+run = ["{out}/sockets_layout{exe}", "listen_status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_connection_action_t has the size and the alignment of its Usage"
+run = ["{out}/sockets_layout{exe}", "action"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_connection_status_t has the size and the alignment of its Usage"
+run = ["{out}/sockets_layout{exe}", "connection_status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_address_status_t has the size and the alignment of its Usage"
+run = ["{out}/sockets_layout{exe}", "address_status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_listen_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "listen_request"]
+claims = { status = 0, order = ["size 2", "alignment 2", "port 0"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_listen_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "listen_state"]
+claims = { status = 0, order = ["size 4", "alignment 2", "port 0", "status 2"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_connection_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "connection_request"]
+claims = { status = 0, order = ["size 28", "alignment 4", "send_rate 0", "reason 4", "address 8", "action 26", "linger 27"] }
+false = { run = ["{out}/sockets_layout{exe}", "inbound"] }
+
+[[case]]
+name = "ideatek_inbound_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "inbound"]
+claims = { status = 0, order = ["size 8", "alignment 8", "listen 0"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_connection_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "connection_state"]
+claims = { status = 0, order = ["size 64", "alignment 8", "queue_time 0", "end_reason 8", "ping 12", "quality_local 16", "quality_remote 20", "in_bytes 24", "out_bytes 28", "pending_reliable 32", "pending_unreliable 36", "remote 40", "status 58"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_messages_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "messages"]
+claims = { status = 0, order = ["size 8", "alignment 4", "data 0"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_address_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "address_request"]
+claims = { status = 0, order = ["size 8", "alignment 4", "name 0"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_address_result_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "address_result"]
+claims = { status = 0, order = ["size 12", "alignment 4", "addresses 0", "status 8"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/sockets_layout{exe}", "descriptors"]
+claims = { status = 0, line = ["{ uint8_t bytes[16]; uint16_t port; }", "uint8_t { IDEATEK_SEND_NO_NAGLE = 0x01, IDEATEK_SEND_NO_DELAY = 0x04, IDEATEK_SEND_RELIABLE = 0x08 }", "uint8_t { IDEATEK_LISTEN_STATUS_LISTENING = 0, IDEATEK_LISTEN_STATUS_FAILED = 1 }", "uint8_t { IDEATEK_CONNECTION_ACTION_CONNECT = 0, IDEATEK_CONNECTION_ACTION_ACCEPT = 1, IDEATEK_CONNECTION_ACTION_CLOSE = 2 }", "uint8_t { IDEATEK_CONNECTION_STATUS_CONNECTING = 0, IDEATEK_CONNECTION_STATUS_CONNECTED = 1, IDEATEK_CONNECTION_STATUS_CLOSED_BY_PEER = 2, IDEATEK_CONNECTION_STATUS_PROBLEM = 3 }", "uint8_t { IDEATEK_ADDRESS_STATUS_OK = 0, IDEATEK_ADDRESS_STATUS_NOT_FOUND = 1, IDEATEK_ADDRESS_STATUS_FAILED = 2 }", "{ uint16_t port; }", "{ uint16_t port; ideatek_listen_status_t status; }", "{ uint32_t send_rate; int32_t reason; ideatek_address_t address; ideatek_connection_action_t action; bool linger; }", "{ ideatek_entity_t listen; }", "{ int64_t queue_time; int32_t end_reason; int32_t ping; float quality_local; float quality_remote; float in_bytes; float out_bytes; int32_t pending_reliable; int32_t pending_unreliable; ideatek_address_t remote; ideatek_connection_status_t status; }", "{ bridge_text_t data; }", "{ bridge_text_t name; }", "{ bridge_text_t addresses; ideatek_address_status_t status; }"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/sockets_layout{exe}", "texts"]
+claims = { status = 0, line = ["{ uint8_t bytes[16]; uint16_t port; }", "{ IDEATEK_SEND_NO_NAGLE = 0x01, IDEATEK_SEND_NO_DELAY = 0x04, IDEATEK_SEND_RELIABLE = 0x08 }", "{ IDEATEK_LISTEN_STATUS_LISTENING = 0, IDEATEK_LISTEN_STATUS_FAILED = 1 }", "{ IDEATEK_CONNECTION_ACTION_CONNECT = 0, IDEATEK_CONNECTION_ACTION_ACCEPT = 1, IDEATEK_CONNECTION_ACTION_CLOSE = 2 }", "{ IDEATEK_CONNECTION_STATUS_CONNECTING = 0, IDEATEK_CONNECTION_STATUS_CONNECTED = 1, IDEATEK_CONNECTION_STATUS_CLOSED_BY_PEER = 2, IDEATEK_CONNECTION_STATUS_PROBLEM = 3 }", "{ IDEATEK_ADDRESS_STATUS_OK = 0, IDEATEK_ADDRESS_STATUS_NOT_FOUND = 1, IDEATEK_ADDRESS_STATUS_FAILED = 2 }", "{ uint16_t port; }", "{ uint16_t port; ideatek_listen_status_t status; }", "{ uint32_t send_rate; int32_t reason; ideatek_address_t address; ideatek_connection_action_t action; bool linger; }", "{ ideatek_entity_t listen; }", "{ int64_t queue_time; int32_t end_reason; int32_t ping; float quality_local; float quality_remote; float in_bytes; float out_bytes; int32_t pending_reliable; int32_t pending_unreliable; ideatek_address_t remote; ideatek_connection_status_t status; }", "{ bridge_text_t data; }", "{ bridge_text_t name; }", "{ bridge_text_t addresses; ideatek_address_status_t status; }"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+
+[[case]]
+name = "ideatek_sockets.h compiles with the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform/sockets", "-I", "include/platform/world", "-I", "{bridge}/include", "-c", "tests/platform/sockets/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform/sockets", "-I", "include/platform/world", "-c", "tests/platform/sockets/layout/alone.c", "-o", "{case}/alone.o"] }

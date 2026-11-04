@@ -1,0 +1,59 @@
+[[case]]
+name = "ideatek_audio_direction_t has the size and the alignment of its Usage"
+run = ["{out}/audio_layout{exe}", "direction"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/audio_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_audio_target_t has the size and the alignment of its Usage"
+run = ["{out}/audio_layout{exe}", "target"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/audio_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_audio_status_t has the size and the alignment of its Usage"
+run = ["{out}/audio_layout{exe}", "status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/audio_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_audio_device_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/audio_layout{exe}", "device"]
+claims = { status = 0, order = ["size 130", "alignment 1", "name 0", "direction 128", "is_default 129"] }
+false = { run = ["{out}/audio_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_audio_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/audio_layout{exe}", "request"]
+claims = { status = 0, order = ["size 24", "alignment 8", "device 0", "rate 8", "ahead 12", "direction 16", "target 17", "channels 18"] }
+false = { run = ["{out}/audio_layout{exe}", "frames"] }
+
+[[case]]
+name = "ideatek_audio_frames_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/audio_layout{exe}", "frames"]
+claims = { status = 0, order = ["size 24", "alignment 8", "at 0", "frames 8", "data 12"] }
+false = { run = ["{out}/audio_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_audio_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/audio_layout{exe}", "state"]
+claims = { status = 0, order = ["size 32", "alignment 8", "device 0", "dropped 8", "rate 16", "queued 20", "wanted 24", "channels 28", "status 29"] }
+false = { run = ["{out}/audio_layout{exe}", "request"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/audio_layout{exe}", "descriptors"]
+claims = { status = 0, line = ["uint8_t { IDEATEK_AUDIO_DIRECTION_PLAYBACK = 0, IDEATEK_AUDIO_DIRECTION_RECORDING = 1 }", "uint8_t { IDEATEK_AUDIO_TARGET_DEFAULT = 0, IDEATEK_AUDIO_TARGET_CHOSEN = 1 }", "uint8_t { IDEATEK_AUDIO_STATUS_RUNNING = 0, IDEATEK_AUDIO_STATUS_FELL_BACK = 1, IDEATEK_AUDIO_STATUS_NO_DEVICE = 2, IDEATEK_AUDIO_STATUS_SUSPENDED = 3, IDEATEK_AUDIO_STATUS_PENDING = 4, IDEATEK_AUDIO_STATUS_DENIED = 5 }", "{ char name[128]; ideatek_audio_direction_t direction; bool is_default; }", "{ ideatek_entity_t device; uint32_t rate; uint32_t ahead; ideatek_audio_direction_t direction; ideatek_audio_target_t target; uint8_t channels; }", "{ uint64_t at; uint32_t frames; bridge_text_t data; }", "{ ideatek_entity_t device; uint64_t dropped; uint32_t rate; uint32_t queued; uint32_t wanted; uint8_t channels; ideatek_audio_status_t status; }"] }
+false = { run = ["{out}/audio_layout{exe}", "request"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/audio_layout{exe}", "texts"]
+claims = { status = 0, line = ["{ IDEATEK_AUDIO_DIRECTION_PLAYBACK = 0, IDEATEK_AUDIO_DIRECTION_RECORDING = 1 }", "{ IDEATEK_AUDIO_TARGET_DEFAULT = 0, IDEATEK_AUDIO_TARGET_CHOSEN = 1 }", "{ IDEATEK_AUDIO_STATUS_RUNNING = 0, IDEATEK_AUDIO_STATUS_FELL_BACK = 1, IDEATEK_AUDIO_STATUS_NO_DEVICE = 2, IDEATEK_AUDIO_STATUS_SUSPENDED = 3, IDEATEK_AUDIO_STATUS_PENDING = 4, IDEATEK_AUDIO_STATUS_DENIED = 5 }", "{ char name[128]; ideatek_audio_direction_t direction; bool is_default; }", "{ ideatek_entity_t device; uint32_t rate; uint32_t ahead; ideatek_audio_direction_t direction; ideatek_audio_target_t target; uint8_t channels; }", "{ uint64_t at; uint32_t frames; bridge_text_t data; }", "{ ideatek_entity_t device; uint64_t dropped; uint32_t rate; uint32_t queued; uint32_t wanted; uint8_t channels; ideatek_audio_status_t status; }"] }
+false = { run = ["{out}/audio_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_audio.h compiles with the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform/audio", "-I", "include/platform/world", "-I", "{bridge}/include", "-c", "tests/platform/audio/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform/audio", "-I", "include/platform/world", "-c", "tests/platform/audio/layout/alone.c", "-o", "{case}/alone.o"] }
