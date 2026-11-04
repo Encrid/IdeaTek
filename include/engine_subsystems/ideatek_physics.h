@@ -1313,4 +1313,96 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_smoke_grid_t, IDEATEK_SMOKE_GRID_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_lag_history_t, IDEATEK_LAG_HISTORY_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_lag_history_t, IDEATEK_LAG_HISTORY_FIELDS);
 
+    #define IDEATEK_FIELD_SHAPE_VALUES { \
+        IDEATEK_FIELD_SHAPE_INFINITE = 0, \
+        IDEATEK_FIELD_SHAPE_SPHERE = 1, \
+        IDEATEK_FIELD_SHAPE_BOX = 2, \
+        IDEATEK_FIELD_SHAPE_CYLINDER = 3 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_field_shape_t,
+    uint8_t, IDEATEK_FIELD_SHAPE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_field_shape_t,
+    uint8_t, IDEATEK_FIELD_SHAPE_VALUES);
+
+    #define IDEATEK_FORCE_KIND_VALUES { \
+        IDEATEK_FORCE_KIND_ATTRACTOR = 0, \
+        IDEATEK_FORCE_KIND_VORTEX = 1, \
+        IDEATEK_FORCE_KIND_DIRECTIONAL = 2, \
+        IDEATEK_FORCE_KIND_NOISE = 3, \
+        IDEATEK_FORCE_KIND_DRAG = 4, \
+        IDEATEK_FORCE_KIND_VECTOR_FIELD = 5 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_force_kind_t,
+    uint8_t, IDEATEK_FORCE_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_force_kind_t,
+    uint8_t, IDEATEK_FORCE_KIND_VALUES);
+
+    #define IDEATEK_FIELD_TARGET_VALUES { \
+        IDEATEK_FIELD_TARGET_FORCE = 0, \
+        IDEATEK_FIELD_TARGET_VELOCITY = 1, \
+        IDEATEK_FIELD_TARGET_STRAIN = 2, \
+        IDEATEK_FIELD_TARGET_SLEEP = 3, \
+        IDEATEK_FIELD_TARGET_WAKE = 4 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_field_target_t,
+    uint8_t, IDEATEK_FIELD_TARGET_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_field_target_t,
+    uint8_t, IDEATEK_FIELD_TARGET_VALUES);
+
+    #define IDEATEK_GRAVITY_MODE_VALUES { \
+        IDEATEK_GRAVITY_MODE_REPLACE = 0, \
+        IDEATEK_GRAVITY_MODE_ADD = 1 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gravity_mode_t,
+    uint8_t, IDEATEK_GRAVITY_MODE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_gravity_mode_t,
+    uint8_t, IDEATEK_GRAVITY_MODE_VALUES);
+
+    #define IDEATEK_WIND_FIELDS { \
+        ideatek_vec3_t size; \
+        float inner; \
+        float speed; \
+        float gust_min; \
+        float gust_max; \
+        float gust_frequency; \
+        float falloff; \
+        ideatek_field_shape_t shape; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_wind_t, IDEATEK_WIND_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_wind_t, IDEATEK_WIND_FIELDS);
+
+    #define IDEATEK_FORCE_FIELD_FIELDS { \
+        ideatek_entity_t texture; \
+        ideatek_vec3_t size; \
+        float inner; \
+        float acceleration; \
+        float frequency; \
+        float falloff; \
+        ideatek_force_kind_t kind; \
+        ideatek_field_shape_t shape; \
+        ideatek_field_target_t target; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_force_field_t, IDEATEK_FORCE_FIELD_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_force_field_t, IDEATEK_FORCE_FIELD_FIELDS);
+
+    #define IDEATEK_GRAVITY_AREA_FIELDS { \
+        ideatek_vec3_t size; \
+        float gravity; \
+        float inner; \
+        float falloff; \
+        int32_t priority; \
+        ideatek_gravity_mode_t mode; \
+        ideatek_field_shape_t shape; \
+        bool point; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gravity_area_t, IDEATEK_GRAVITY_AREA_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gravity_area_t, IDEATEK_GRAVITY_AREA_FIELDS);
+
 #endif
