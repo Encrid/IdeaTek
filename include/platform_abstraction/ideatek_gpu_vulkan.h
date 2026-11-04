@@ -16,8 +16,12 @@
         uint64_t physical_device; \
         uint64_t device; \
         uint64_t queue; \
+        uint64_t compute_queue; \
+        uint64_t transfer_queue; \
         uint64_t timeline; \
         uint32_t queue_family; \
+        uint32_t compute_family; \
+        uint32_t transfer_family; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_vulkan_device_t,
