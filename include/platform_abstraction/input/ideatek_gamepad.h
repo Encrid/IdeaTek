@@ -36,7 +36,7 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_gamepad_button_t, uint32_t,
     IDEATEK_GAMEPAD_BUTTON_VALUES);
 
     #define IDEATEK_GAMEPAD_FIELDS { \
-        char name[382]; \
+        char name[379]; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_t, IDEATEK_GAMEPAD_FIELDS);
