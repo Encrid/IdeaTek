@@ -133,7 +133,7 @@ The loader puts the new values on the labels that stay, and spawns an entity for
 | `meta_check` | `always` | `always`, `never` or `paths` | The meta files that the resources module reads. |
 | `meta_paths` | `[]` | Paths that the path rule allows. | With `paths`: the paths whose meta file the resources module reads. |
 | `mode` | `unprocessed` | `unprocessed` or `processed` | The files of the default source. |
-| `processed_folder` | `imported_assets/Default` | A path that the path rule allows. | The default source in the mode `processed`. |
+| `processed_folder` | `processed` | A path that the path rule allows. | The default source in the mode `processed`. |
 | `sources` | `[]` | Lines `name=folder` | The named sources. |
 | `load_bytes` | 4194304 | 1 to 1073741824 | The bytes for the bytes of the loads. |
 
