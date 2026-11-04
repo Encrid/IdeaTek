@@ -18,6 +18,14 @@ The first use of the image by a drawer waits on the stage `VK_PIPELINE_STAGE_2_C
 In the last phase, the GPU module puts the image in the layout `VK_IMAGE_LAYOUT_PRESENT_SRC_KHR`.
 That work signals `timeline` with the value `frame`.
 
+## The features
+
+A GPU is usable when it has Vulkan 1.4 and each feature of the milestones Roadmap 2022 and Roadmap 2024 of Khronos.
+The GPU module turns on each feature that Vulkan 1.4 and these 2 milestones require, so each drawer can use it.
+Among them are descriptor indexing, multi-draw indirect, dynamic rendering, synchronization2, buffer device address and push descriptors.
+The 2 features of rays also turn on `VK_KHR_deferred_host_operations`, which `VK_KHR_acceleration_structure` needs.
+With `validation`, the GPU module turns on the layer `VK_LAYER_KHRONOS_validation`. If the layer is not there, the log gets 1 line.
+
 ## The values of Vulkan
 
 | Value of IdeaTek | Value of Vulkan |
@@ -34,9 +42,12 @@ That work signals `timeline` with the value `frame`.
 | `IDEATEK_PRESENT_MODE_ADAPTIVE` | `VK_PRESENT_MODE_FIFO_RELAXED_KHR` |
 | `IDEATEK_PRESENT_MODE_MAILBOX` | `VK_PRESENT_MODE_MAILBOX_KHR` |
 | `IDEATEK_PRESENT_MODE_IMMEDIATE` | `VK_PRESENT_MODE_IMMEDIATE_KHR` |
+| `IDEATEK_GPU_FEATURE_RAY_QUERY` | `VK_KHR_acceleration_structure` and `VK_KHR_ray_query` |
+| `IDEATEK_GPU_FEATURE_RAY_TRACING_PIPELINE` | `VK_KHR_acceleration_structure` and `VK_KHR_ray_tracing_pipeline` |
+| `IDEATEK_GPU_FEATURE_MESH_SHADER` | `VK_EXT_mesh_shader`, with `taskShader` and `meshShader` |
+| `IDEATEK_GPU_FEATURE_DRAW_INDIRECT_COUNT` | `drawIndirectCount` of `VkPhysicalDeviceVulkan12Features` |
 
 `kind` of `ideatek:Gpu` comes from the `VkPhysicalDeviceType` of the GPU, in the same order.
-`ray_query` is `true` when the GPU has the extension `VK_KHR_ray_query`.
 
 ## ideatek:VulkanDevice
 
