@@ -93,6 +93,8 @@ So the bytes of `ideatek:AudioRecorded` stay good for 1 round.
 | `direction` | `ideatek_audio_direction_t` | 128 | The direction of the device. |
 | `is_default` | `bool` | 129 | `true` if the device is the default device of the OS for its direction. |
 
+The OS gives the name of a device as a string with no bound, so the contract sets 128 bytes. The audio module stops a longer name before the first code point that does not fit. A log line tells of the cut.
+
 ### ideatek:ideatek_audio_direction_t
 
 `ideatek_audio_direction_t` is an enum of `uint8_t`. Its size and its alignment are 1.

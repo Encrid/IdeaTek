@@ -98,7 +98,7 @@ Its C type `ideatek_window_request_t` takes 160 bytes, with an alignment of 8.
 
 The bytes 154 to 159 hold no field, because the size of the type is a multiple of 8.
 
-- A title that is longer than 127 bytes is cut before its first UTF-8 character that does not fit. The window module writes 1 line in the log.
+- No OS bounds a title, so 128 bytes is the size of the contract. The window module cuts a longer title at its last whole code point and writes 1 line in the log.
 - If the video mode is dead, or is not a mode of the display, the window module uses `IDEATEK_WINDOW_MODE_FULLSCREEN`. It writes 1 line in the log.
 - If the system refuses the video mode, or has no exclusive mode, the window module also uses `IDEATEK_WINDOW_MODE_FULLSCREEN`. It writes 1 line in the log.
 - If the display of `IDEATEK_DISPLAY_TARGET_CHOSEN` is dead, the window module uses the primary display.
@@ -191,6 +191,7 @@ Its C type `ideatek_display_t` takes 160 bytes, with an alignment of 8.
 | `is_primary` | `bool` | 157 | `true` if the display is the primary display of the system. |
 
 The bytes 158 and 159 hold no field, because the size of the type is a multiple of 8.
+The name of a display has no bound in macOS, so its 128 bytes are the size of the contract. If a name does not fit, the window module keeps the code points that fit whole, and it writes 1 line in the log.
 Some systems do not tell `hdr` for a display: `hdr` of `ideatek:WindowState` is the value to use.
 
 ## ideatek:VideoMode

@@ -83,6 +83,7 @@ A pair also orders each 2 drawers of a phase, and that order is the order of the
 | `usable` | `bool` | 274 | `true` if the GPU module can make a device on the GPU. |
 
 Bytes 275 to 279 hold no field.
+The 256 bytes of `name` are `VK_MAX_PHYSICAL_DEVICE_NAME_SIZE` of Vulkan, so each name of a GPU fits.
 
 ### ideatek:ideatek_gpu_kind_t
 
