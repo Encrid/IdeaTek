@@ -1,0 +1,165 @@
+[[case]]
+name = "a module declares the 35 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/input_mapping_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["input_mapping_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_action_type_t",
+    "ideatek:ideatek_accumulate_t", "ideatek:ideatek_action_state_t",
+    "ideatek:ideatek_action_edges_t", "ideatek:ideatek_input_source_t",
+    "ideatek:ideatek_dead_zone_kind_t", "ideatek:ideatek_axes_t",
+    "ideatek:ideatek_swizzle_t", "ideatek:ideatek_hold_flags_t",
+    "ideatek:ideatek_pulse_flags_t", "ideatek:ideatek_chord_flags_t",
+    "ideatek:ideatek_context_flags_t", "ideatek:ideatek_capture_sources_t",
+    "ideatek:ideatek_device_kind_t", "ideatek:InputAction",
+    "ideatek:InputActionState", "ideatek:InputBinding", "ideatek:InputDeadZone",
+    "ideatek:InputCurve", "ideatek:InputScale", "ideatek:InputNegate",
+    "ideatek:InputSwizzle", "ideatek:InputPressed", "ideatek:InputReleased",
+    "ideatek:InputHold", "ideatek:InputTap", "ideatek:InputPulse",
+    "ideatek:InputChord", "ideatek:InputContext", "ideatek:InputPlayer",
+    "ideatek:InputDevice", "ideatek:InputCapture", "ideatek:InputCaptured",
+    "ideatek:InputLastDevice",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["input_mapping_late"]
+
+[[case]]
+name = "the game loads with write on the actions, the bindings, the contexts, the players and the captures"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/input_mapping_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["input_mapping_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:InputAction", "ideatek:InputBinding", "ideatek:InputDeadZone",
+    "ideatek:InputCurve", "ideatek:InputScale", "ideatek:InputNegate",
+    "ideatek:InputSwizzle", "ideatek:InputPressed", "ideatek:InputReleased",
+    "ideatek:InputHold", "ideatek:InputTap", "ideatek:InputPulse",
+    "ideatek:InputChord", "ideatek:InputContext", "ideatek:InputPlayer",
+    "ideatek:InputDevice", "ideatek:InputCapture",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_action_type_t",
+    "ideatek:ideatek_accumulate_t", "ideatek:ideatek_input_source_t",
+    "ideatek:ideatek_dead_zone_kind_t", "ideatek:ideatek_axes_t",
+    "ideatek:ideatek_swizzle_t", "ideatek:ideatek_hold_flags_t",
+    "ideatek:ideatek_pulse_flags_t", "ideatek:ideatek_chord_flags_t",
+    "ideatek:ideatek_context_flags_t", "ideatek:ideatek_capture_sources_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:InputAction", "ideatek:InputBinding", "ideatek:InputDeadZone",
+    "ideatek:InputCurve", "ideatek:InputScale", "ideatek:InputNegate",
+    "ideatek:InputSwizzle", "ideatek:InputPressed", "ideatek:InputReleased",
+    "ideatek:InputHold", "ideatek:InputTap", "ideatek:InputPulse",
+    "ideatek:InputChord", "ideatek:InputContext", "ideatek:InputPlayer",
+    "ideatek:InputDevice",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_action_type_t",
+    "ideatek:ideatek_accumulate_t", "ideatek:ideatek_input_source_t",
+    "ideatek:ideatek_dead_zone_kind_t", "ideatek:ideatek_axes_t",
+    "ideatek:ideatek_swizzle_t", "ideatek:ideatek_hold_flags_t",
+    "ideatek:ideatek_pulse_flags_t", "ideatek:ideatek_chord_flags_t",
+    "ideatek:ideatek_context_flags_t", "ideatek:ideatek_capture_sources_t",
+    "ideatek:InputCapture",
+]
+'''
+
+[[case]]
+name = "the mapping module loads with write on the states, the captured controls and the last devices"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:mapper@1.0.0, native, m/input_mapping_mapper{library}"] }
+
+[case.folders]
+"{case}/m" = ["input_mapping_mapper"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:mapper@1.0.0"]
+write = [
+    "ideatek:InputActionState", "ideatek:InputCaptured",
+    "ideatek:InputLastDevice",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_action_type_t",
+    "ideatek:ideatek_accumulate_t", "ideatek:ideatek_action_state_t",
+    "ideatek:ideatek_action_edges_t", "ideatek:ideatek_input_source_t",
+    "ideatek:ideatek_dead_zone_kind_t", "ideatek:ideatek_axes_t",
+    "ideatek:ideatek_swizzle_t", "ideatek:ideatek_hold_flags_t",
+    "ideatek:ideatek_pulse_flags_t", "ideatek:ideatek_chord_flags_t",
+    "ideatek:ideatek_context_flags_t", "ideatek:ideatek_capture_sources_t",
+    "ideatek:ideatek_device_kind_t", "ideatek:InputAction",
+    "ideatek:InputBinding", "ideatek:InputDeadZone", "ideatek:InputCurve",
+    "ideatek:InputScale", "ideatek:InputNegate", "ideatek:InputSwizzle",
+    "ideatek:InputPressed", "ideatek:InputReleased", "ideatek:InputHold",
+    "ideatek:InputTap", "ideatek:InputPulse", "ideatek:InputChord",
+    "ideatek:InputContext", "ideatek:InputPlayer", "ideatek:InputDevice",
+    "ideatek:InputCapture", "ideatek:Tick",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:mapper@1.0.0"]
+write = [
+    "ideatek:InputActionState", "ideatek:InputCaptured",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_action_type_t",
+    "ideatek:ideatek_accumulate_t", "ideatek:ideatek_action_state_t",
+    "ideatek:ideatek_action_edges_t", "ideatek:ideatek_input_source_t",
+    "ideatek:ideatek_dead_zone_kind_t", "ideatek:ideatek_axes_t",
+    "ideatek:ideatek_swizzle_t", "ideatek:ideatek_hold_flags_t",
+    "ideatek:ideatek_pulse_flags_t", "ideatek:ideatek_chord_flags_t",
+    "ideatek:ideatek_context_flags_t", "ideatek:ideatek_capture_sources_t",
+    "ideatek:ideatek_device_kind_t", "ideatek:InputAction",
+    "ideatek:InputBinding", "ideatek:InputDeadZone", "ideatek:InputCurve",
+    "ideatek:InputScale", "ideatek:InputNegate", "ideatek:InputSwizzle",
+    "ideatek:InputPressed", "ideatek:InputReleased", "ideatek:InputHold",
+    "ideatek:InputTap", "ideatek:InputPulse", "ideatek:InputChord",
+    "ideatek:InputContext", "ideatek:InputPlayer", "ideatek:InputDevice",
+    "ideatek:InputCapture", "ideatek:Tick", "ideatek:InputLastDevice",
+]
+'''

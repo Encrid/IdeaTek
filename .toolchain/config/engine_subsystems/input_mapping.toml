@@ -1,0 +1,58 @@
+[parts.input_mapping]
+name = "BC-IdeaTek-InputMapping"
+folder = "engine_subsystems/input_mapping"
+uses = ["world", "input", "frame"]
+third_party = []
+
+[parts.input_mapping.package]
+proof = "tests/engine_subsystems/input_mapping/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world"]
+
+[compose.input_mapping]
+part = "input_mapping"
+from = "include/engine_subsystems/input_mapping"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+input_mapping_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+input_mapping_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "input_mapping_layout"
+kind = "program"
+part = "input_mapping"
+test = true
+sources = ["tests/engine_subsystems/input_mapping/layout/layout.c"]
+include = ["include/engine_subsystems/input_mapping", "include/platform_abstraction/world", "{bridge}/include"]
+
+[[artifact]]
+name = "input_mapping_probe"
+kind = "native_module"
+part = "input_mapping"
+test = true
+sources = ["tests/engine_subsystems/input_mapping/probe/probe.c"]
+include = ["include/engine_subsystems/input_mapping", "include/platform_abstraction/world", "include/kernel/frame"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{input_mapping_probe_words}"]
+
+[[artifact.variants]]
+name = "input_mapping_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "input_mapping_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{input_mapping_spawn_words}"]
+
+[[artifact.variants]]
+name = "input_mapping_mapper"
+defines = ["ROLE_MAPPER"]
+manifest = ["test:mapper@1.0.0", "{input_mapping_spawn_words}"]
