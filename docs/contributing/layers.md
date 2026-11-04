@@ -49,6 +49,7 @@ engine_subsystems/
     effects/
     sound/
     input_mapping/
+    ui/
 ```
 
 The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the
