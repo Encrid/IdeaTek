@@ -58,6 +58,7 @@ engine_subsystems/
     xr/
     subtitles/
     debug_draw/
+    terrain/
 ```
 
 The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the
