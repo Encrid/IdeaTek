@@ -5,6 +5,12 @@ claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/physics_layout{exe}", "body"] }
 
 [[case]]
+name = "ideatek_motion_quality_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "motion_quality"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "body"] }
+
+[[case]]
 name = "ideatek_mass_mode_t is 1 byte"
 run = ["{out}/physics_layout{exe}", "mass_mode"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
@@ -25,7 +31,19 @@ false = { run = ["{out}/physics_layout{exe}", "body"] }
 [[case]]
 name = "ideatek_body_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "body"]
-claims = { status = 0, order = ["size 44", "alignment 4", "center_of_mass 0", "inertia 12", "mass 24", "gravity_scale 28", "linear_damping 32", "angular_damping 36", "kind 40", "mass_mode 41", "locked 42", "flags 43"] }
+claims = { status = 0, order = ["size 64", "alignment 4", "center_of_mass 0", "inertia 12", "mass 24", "gravity_scale 28", "linear_damping 32", "angular_damping 36", "max_linear_speed 40", "max_angular_speed 44", "sleep_threshold 48", "inertia_scale 52", "kind 56", "mass_mode 57", "locked 58", "flags 59", "motion_quality 60", "velocity_steps 61", "position_steps 62"] }
+false = { run = ["{out}/physics_layout{exe}", "kinematic_target"] }
+
+[[case]]
+name = "ideatek_kinematic_target_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "kinematic_target"]
+claims = { status = 0, order = ["size 40", "alignment 8", "position 0", "rotation 24"] }
+false = { run = ["{out}/physics_layout{exe}", "wake_event"] }
+
+[[case]]
+name = "ideatek_wake_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "wake_event"]
+claims = { status = 0, order = ["size 16", "alignment 8", "body 0", "order 8", "asleep 12"] }
 false = { run = ["{out}/physics_layout{exe}", "motion"] }
 
 [[case]]
@@ -55,7 +73,13 @@ false = { run = ["{out}/physics_layout{exe}", "shape"] }
 [[case]]
 name = "ideatek_shape_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "shape"]
-claims = { status = 0, order = ["size 64", "alignment 8", "body 0", "material 8", "mesh 16", "categories 24", "touches 32", "size 40", "part 52", "kind 56", "flags 57"] }
+claims = { status = 0, order = ["size 64", "alignment 8", "body 0", "material 8", "source 16", "categories 24", "touches 32", "size 40", "part 52", "kind 56", "flags 57"] }
+false = { run = ["{out}/physics_layout{exe}", "shape_materials"] }
+
+[[case]]
+name = "ideatek_shape_materials_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "shape_materials"]
+claims = { status = 0, order = ["size 16", "alignment 4", "materials 0", "indices 8"] }
 false = { run = ["{out}/physics_layout{exe}", "combine"] }
 
 [[case]]
@@ -109,13 +133,13 @@ false = { run = ["{out}/physics_layout{exe}", "query"] }
 [[case]]
 name = "ideatek_query_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "query"]
-claims = { status = 0, order = ["size 96", "alignment 8", "origin 0", "categories 24", "touches 32", "rotation 40", "translation 56", "size 68", "max 80", "tick 84", "kind 88", "shape 89", "mode 90"] }
+claims = { status = 0, order = ["size 96", "alignment 8", "origin 0", "categories 24", "touches 32", "rotation 40", "translation 56", "size 68", "max 80", "tick 84", "kind 88", "shape 89", "mode 90", "back_faces 91"] }
 false = { run = ["{out}/physics_layout{exe}", "query_hit"] }
 
 [[case]]
 name = "ideatek_query_hit_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "query_hit"]
-claims = { status = 0, order = ["size 64", "alignment 8", "query 0", "shape 8", "point 16", "normal 40", "fraction 52", "order 56"] }
+claims = { status = 0, order = ["size 88", "alignment 8", "query 0", "shape 8", "point 16", "normal 40", "fraction 52", "material 56", "uv 64", "depth 72", "face 76", "sub_shape 80", "order 84"] }
 false = { run = ["{out}/physics_layout{exe}", "joint_flags"] }
 
 [[case]]
@@ -134,18 +158,36 @@ false = { run = ["{out}/physics_layout{exe}", "joint_features"] }
 name = "ideatek_joint_features_t is 1 byte"
 run = ["{out}/physics_layout{exe}", "joint_features"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "joint_drive"] }
+
+[[case]]
+name = "ideatek_drive_mode_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "drive_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "joint_drive"] }
+
+[[case]]
+name = "ideatek_spring_mode_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "spring_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "joint_drive"] }
+
+[[case]]
+name = "ideatek_joint_drive_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "joint_drive"]
+claims = { status = 0, order = ["size 24", "alignment 4", "target 0", "min_force 4", "max_force 8", "spring 12", "damping 16", "mode 20", "spring_mode 21"] }
 false = { run = ["{out}/physics_layout{exe}", "hinge_joint"] }
 
 [[case]]
 name = "ideatek_hinge_joint_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "hinge_joint"]
-claims = { status = 0, order = ["size 28", "alignment 4", "lower 0", "upper 4", "spring_hertz 8", "spring_damping 12", "motor_speed 16", "max_motor_torque 20", "features 24"] }
-false = { run = ["{out}/physics_layout{exe}", "slider_joint"] }
+claims = { status = 0, order = ["size 48", "alignment 4", "lower 0", "upper 4", "limit_hertz 8", "limit_damping 12", "friction 16", "drive 20", "features 44"] }
+false = { run = ["{out}/physics_layout{exe}", "distance_joint"] }
 
 [[case]]
 name = "ideatek_slider_joint_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "slider_joint"]
-claims = { status = 0, order = ["size 28", "alignment 4", "lower 0", "upper 4", "spring_hertz 8", "spring_damping 12", "motor_speed 16", "max_motor_force 20", "features 24"] }
+claims = { status = 0, order = ["size 48", "alignment 4", "lower 0", "upper 4", "limit_hertz 8", "limit_damping 12", "friction 16", "drive 20", "features 44"] }
 false = { run = ["{out}/physics_layout{exe}", "distance_joint"] }
 
 [[case]]
@@ -163,19 +205,217 @@ false = { run = ["{out}/physics_layout{exe}", "six_dof_joint"] }
 [[case]]
 name = "ideatek_six_dof_joint_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "six_dof_joint"]
-claims = { status = 0, order = ["size 48", "alignment 4", "linear_min 0", "linear_max 12", "angular_min 24", "angular_max 36"] }
+claims = { status = 0, order = ["size 64", "alignment 4", "linear_min 0", "linear_max 12", "angular_min 24", "angular_max 36", "drives 48", "friction 56"] }
+false = { run = ["{out}/physics_layout{exe}", "gear_joint"] }
+
+[[case]]
+name = "ideatek_gear_joint_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "gear_joint"]
+claims = { status = 0, order = ["size 24", "alignment 8", "hinge_a 0", "hinge_b 8", "ratio 16"] }
+false = { run = ["{out}/physics_layout{exe}", "rack_and_pinion_joint"] }
+
+[[case]]
+name = "ideatek_rack_and_pinion_joint_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "rack_and_pinion_joint"]
+claims = { status = 0, order = ["size 24", "alignment 8", "hinge 0", "slider 8", "ratio 16"] }
+false = { run = ["{out}/physics_layout{exe}", "pulley_joint"] }
+
+[[case]]
+name = "ideatek_pulley_joint_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "pulley_joint"]
+claims = { status = 0, order = ["size 64", "alignment 8", "fixed_a 0", "fixed_b 24", "ratio 48", "min_length 52", "max_length 56"] }
+false = { run = ["{out}/physics_layout{exe}", "path_rotation"] }
+
+[[case]]
+name = "ideatek_path_rotation_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "path_rotation"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "path_joint"] }
+
+[[case]]
+name = "ideatek_path_joint_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "path_joint"]
+claims = { status = 0, order = ["size 44", "alignment 4", "path 0", "fraction 8", "max_friction 12", "drive 16", "rotation 40", "looping 41"] }
+false = { run = ["{out}/physics_layout{exe}", "cone_joint"] }
+
+[[case]]
+name = "ideatek_cone_joint_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "cone_joint"]
+claims = { status = 0, order = ["size 4", "alignment 4", "half_angle 0"] }
+false = { run = ["{out}/physics_layout{exe}", "motor_joint"] }
+
+[[case]]
+name = "ideatek_motor_joint_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "motor_joint"]
+claims = { status = 0, order = ["size 40", "alignment 4", "linear_velocity 0", "angular_velocity 12", "max_force 24", "max_torque 28", "hertz 32", "damping 36"] }
+false = { run = ["{out}/physics_layout{exe}", "wheel_joint"] }
+
+[[case]]
+name = "ideatek_wheel_joint_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "wheel_joint"]
+claims = { status = 0, order = ["size 48", "alignment 4", "lower 0", "upper 4", "suspension_hertz 8", "suspension_damping 12", "max_steer 16", "steer_target 20", "spin 24"] }
 false = { run = ["{out}/physics_layout{exe}", "body_joint_event"] }
 
 [[case]]
 name = "ideatek_body_joint_event_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "body_joint_event"]
 claims = { status = 0, order = ["size 24", "alignment 8", "joint 0", "force 8", "torque 12", "order 16"] }
+false = { run = ["{out}/physics_layout{exe}", "body_joint_state"] }
+
+[[case]]
+name = "ideatek_body_joint_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "body_joint_state"]
+claims = { status = 0, order = ["size 24", "alignment 4", "force 0", "torque 12"] }
+false = { run = ["{out}/physics_layout{exe}", "articulation_joint"] }
+
+[[case]]
+name = "ideatek_articulation_joint_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "articulation_joint"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "articulation"] }
+
+[[case]]
+name = "ideatek_articulation_flags_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "articulation_flags"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "articulation"] }
+
+[[case]]
+name = "ideatek_articulation_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "articulation"]
+claims = { status = 0, order = ["size 8", "alignment 4", "sleep_threshold 0", "velocity_steps 4", "position_steps 5", "flags 6"] }
+false = { run = ["{out}/physics_layout{exe}", "articulation_link"] }
+
+[[case]]
+name = "ideatek_articulation_link_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "articulation_link"]
+claims = { status = 0, order = ["size 48", "alignment 8", "articulation 0", "parent 8", "limits 16", "drives 24", "friction 32", "max_joint_velocity 36", "motions 40", "joint 46"] }
+false = { run = ["{out}/physics_layout{exe}", "articulation_state"] }
+
+[[case]]
+name = "ideatek_articulation_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "articulation_state"]
+claims = { status = 0, order = ["size 20", "alignment 4", "positions 0", "velocities 8", "count 16"] }
+false = { run = ["{out}/physics_layout{exe}", "ground_state"] }
+
+[[case]]
+name = "ideatek_articulation_command_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "articulation_command"]
+claims = { status = 0, order = ["size 20", "alignment 4", "positions 0", "velocities 8", "count 16"] }
+false = { run = ["{out}/physics_layout{exe}", "ground_state"] }
+
+[[case]]
+name = "ideatek_ground_state_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "ground_state"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "character"] }
+
+[[case]]
+name = "ideatek_non_walkable_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "non_walkable"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "character"] }
+
+[[case]]
+name = "ideatek_character_flags_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "character_flags"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "character"] }
+
+[[case]]
+name = "ideatek_character_collision_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "character_collision"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "character"] }
+
+[[case]]
+name = "ideatek_character_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "character"]
+claims = { status = 0, order = ["size 48", "alignment 4", "up 0", "max_slope 12", "step_up 16", "stick_down 20", "min_step_forward 24", "padding 28", "predictive_distance 32", "mass 36", "max_strength 40", "non_walkable 44", "flags 45"] }
+false = { run = ["{out}/physics_layout{exe}", "character_move"] }
+
+[[case]]
+name = "ideatek_character_move_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "character_move"]
+claims = { status = 0, order = ["size 12", "alignment 4", "velocity 0"] }
+false = { run = ["{out}/physics_layout{exe}", "character_state"] }
+
+[[case]]
+name = "ideatek_character_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "character_state"]
+claims = { status = 0, order = ["size 48", "alignment 8", "ground 0", "ground_material 8", "ground_normal 16", "ground_velocity 28", "ground_state 40", "collision 41"] }
+false = { run = ["{out}/physics_layout{exe}", "snapshot_action"] }
+
+[[case]]
+name = "ideatek_snapshot_action_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "snapshot_action"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "physics_snapshot_request"] }
+
+[[case]]
+name = "ideatek_snapshot_status_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "snapshot_status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "physics_snapshot_request"] }
+
+[[case]]
+name = "ideatek_physics_snapshot_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "physics_snapshot_request"]
+claims = { status = 0, order = ["size 24", "alignment 8", "categories 0", "data 8", "action 16"] }
+false = { run = ["{out}/physics_layout{exe}", "physics_snapshot"] }
+
+[[case]]
+name = "ideatek_physics_snapshot_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "physics_snapshot"]
+claims = { status = 0, order = ["size 12", "alignment 4", "data 0", "status 8"] }
+false = { run = ["{out}/physics_layout{exe}", "vehicle_kind"] }
+
+[[case]]
+name = "ideatek_vehicle_kind_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "vehicle_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "vehicle"] }
+
+[[case]]
+name = "ideatek_wheel_test_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "wheel_test"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "vehicle"] }
+
+[[case]]
+name = "ideatek_transmission_mode_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "transmission_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/physics_layout{exe}", "vehicle"] }
 
 [[case]]
 name = "ideatek_vehicle_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "vehicle"]
-claims = { status = 0, order = ["size 8", "alignment 4", "max_drive_torque 0", "max_pitch_roll 4"] }
+claims = { status = 0, order = ["size 12", "alignment 4", "max_drive_torque 0", "max_pitch_roll 4", "kind 8", "test 9"] }
+false = { run = ["{out}/physics_layout{exe}", "vehicle_engine"] }
+
+[[case]]
+name = "ideatek_vehicle_engine_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "vehicle_engine"]
+claims = { status = 0, order = ["size 28", "alignment 4", "torque_curve 0", "max_torque 8", "min_rpm 12", "max_rpm 16", "inertia 20", "damping 24"] }
+false = { run = ["{out}/physics_layout{exe}", "vehicle_transmission"] }
+
+[[case]]
+name = "ideatek_vehicle_transmission_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "vehicle_transmission"]
+claims = { status = 0, order = ["size 44", "alignment 4", "gears 0", "reverse 8", "shift_up_rpm 16", "shift_down_rpm 20", "switch_time 24", "clutch_release_time 28", "switch_latency 32", "clutch_strength 36", "mode 40"] }
+false = { run = ["{out}/physics_layout{exe}", "vehicle_differential"] }
+
+[[case]]
+name = "ideatek_vehicle_differential_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "vehicle_differential"]
+claims = { status = 0, order = ["size 40", "alignment 8", "vehicle 0", "left 8", "right 16", "ratio 24", "split 28", "limited_slip 32", "engine_torque_ratio 36"] }
+false = { run = ["{out}/physics_layout{exe}", "anti_roll_bar"] }
+
+[[case]]
+name = "ideatek_anti_roll_bar_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "anti_roll_bar"]
+claims = { status = 0, order = ["size 32", "alignment 8", "vehicle 0", "left 8", "right 16", "stiffness 24"] }
 false = { run = ["{out}/physics_layout{exe}", "wheel_flags"] }
 
 [[case]]
@@ -187,19 +427,25 @@ false = { run = ["{out}/physics_layout{exe}", "wheel"] }
 [[case]]
 name = "ideatek_wheel_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "wheel"]
-claims = { status = 0, order = ["size 88", "alignment 8", "vehicle 0", "position 8", "suspension_direction 20", "steering_axis 32", "radius 44", "width 48", "suspension_min 52", "suspension_max 56", "spring_hertz 60", "spring_damping 64", "max_steer 68", "max_brake_torque 72", "max_hand_brake_torque 76", "flags 80"] }
+claims = { status = 0, order = ["size 128", "alignment 8", "vehicle 0", "position 8", "suspension_direction 20", "steering_axis 32", "radius 44", "width 48", "suspension_min 52", "suspension_max 56", "spring_hertz 60", "spring_damping 64", "max_steer 68", "max_brake_torque 72", "max_hand_brake_torque 76", "wheel_up 80", "wheel_forward 92", "longitudinal_friction 104", "lateral_friction 112", "flags 120", "track 121"] }
 false = { run = ["{out}/physics_layout{exe}", "vehicle_input"] }
 
 [[case]]
 name = "ideatek_vehicle_input_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "vehicle_input"]
-claims = { status = 0, order = ["size 16", "alignment 4", "forward 0", "right 4", "brake 8", "hand_brake 12"] }
+claims = { status = 0, order = ["size 32", "alignment 4", "forward 0", "right 4", "brake 8", "hand_brake 12", "clutch 16", "left_ratio 20", "right_ratio 24", "gear 28"] }
 false = { run = ["{out}/physics_layout{exe}", "wheel_state"] }
 
 [[case]]
 name = "ideatek_wheel_state_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "wheel_state"]
-claims = { status = 0, order = ["size 28", "alignment 4", "steer_angle 0", "angle 4", "angular_velocity 8", "suspension_length 12", "longitudinal_slip 16", "lateral_slip 20", "contact 24"] }
+claims = { status = 0, order = ["size 48", "alignment 8", "steer_angle 0", "angle 4", "angular_velocity 8", "suspension_length 12", "longitudinal_slip 16", "lateral_slip 20", "contact_body 24", "contact_material 32", "contact 40", "hit_hard_point 41"] }
+false = { run = ["{out}/physics_layout{exe}", "vehicle_state"] }
+
+[[case]]
+name = "ideatek_vehicle_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "vehicle_state"]
+claims = { status = 0, order = ["size 12", "alignment 4", "rpm 0", "clutch 4", "gear 8"] }
 false = { run = ["{out}/physics_layout{exe}", "pose_drive"] }
 
 [[case]]
@@ -211,19 +457,31 @@ false = { run = ["{out}/physics_layout{exe}", "destructible"] }
 [[case]]
 name = "ideatek_destructible_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "destructible"]
-claims = { status = 0, order = ["size 8", "alignment 8", "interior 0"] }
+claims = { status = 0, order = ["size 16", "alignment 8", "interior 0", "asset 8"] }
+false = { run = ["{out}/physics_layout{exe}", "destructible_asset"] }
+
+[[case]]
+name = "ideatek_destructible_asset_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "destructible_asset"]
+claims = { status = 0, order = ["size 40", "alignment 8", "chunks 0", "bonds 8", "mesh 16", "chunk_count 24", "bond_count 28", "revision 32"] }
+false = { run = ["{out}/physics_layout{exe}", "damage_shape"] }
+
+[[case]]
+name = "ideatek_damage_shape_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "damage_shape"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/physics_layout{exe}", "damage"] }
 
 [[case]]
 name = "ideatek_damage_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "damage"]
-claims = { status = 0, order = ["size 40", "alignment 8", "point 0", "radius 24", "pressure 28", "order 32"] }
+claims = { status = 0, order = ["size 104", "alignment 8", "point 0", "point_b 24", "point_c 48", "normal 72", "min_radius 84", "radius 88", "pressure 92", "order 96", "shape 100"] }
 false = { run = ["{out}/physics_layout{exe}", "break_event"] }
 
 [[case]]
 name = "ideatek_break_event_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "break_event"]
-claims = { status = 0, order = ["size 48", "alignment 8", "body 0", "piece 8", "point 16", "order 40"] }
+claims = { status = 0, order = ["size 64", "alignment 8", "body 0", "piece 8", "point 16", "excess_force 40", "chunks 52", "order 60"] }
 false = { run = ["{out}/physics_layout{exe}", "hidden_joint"] }
 
 [[case]]
@@ -242,12 +500,30 @@ false = { run = ["{out}/physics_layout{exe}", "cut_event"] }
 name = "ideatek_cut_event_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "cut_event"]
 claims = { status = 0, order = ["size 24", "alignment 8", "drawn 0", "piece 8", "order 16"] }
+false = { run = ["{out}/physics_layout{exe}", "bend"] }
+
+[[case]]
+name = "ideatek_bend_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "bend"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "soft_body"] }
+
+[[case]]
+name = "ideatek_lra_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "lra"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/physics_layout{exe}", "soft_body"] }
 
 [[case]]
 name = "ideatek_soft_body_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "soft_body"]
-claims = { status = 0, order = ["size 64", "alignment 8", "source 0", "categories 8", "touches 16", "edge_compliance 24", "shear_compliance 28", "bend_compliance 32", "vertex_mass 36", "linear_damping 40", "friction 44", "gravity_scale 48", "vertex_radius 52", "pressure 56", "restitution 60"] }
+claims = { status = 0, order = ["size 88", "alignment 8", "source 0", "categories 8", "touches 16", "edge_compliance 24", "shear_compliance 28", "bend_compliance 32", "vertex_mass 36", "linear_damping 40", "friction 44", "gravity_scale 48", "vertex_radius 52", "pressure 56", "restitution 60", "volume_compliance 64", "lra_scale 68", "skin_distance_scale 72", "iterations 76", "bend 80", "lra 81", "double_sided 82"] }
+false = { run = ["{out}/physics_layout{exe}", "soft_body_attachment"] }
+
+[[case]]
+name = "ideatek_soft_body_attachment_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "soft_body_attachment"]
+claims = { status = 0, order = ["size 32", "alignment 8", "soft_body 0", "body 8", "offset 16", "vertex 28"] }
 false = { run = ["{out}/physics_layout{exe}", "soft_body_reset"] }
 
 [[case]]
@@ -265,7 +541,7 @@ false = { run = ["{out}/physics_layout{exe}", "rope"] }
 [[case]]
 name = "ideatek_rope_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "rope"]
-claims = { status = 0, order = ["size 88", "alignment 8", "start 0", "end 8", "categories 16", "touches 24", "start_offset 32", "end_offset 44", "length 56", "width 60", "gravity_scale 64", "friction 68", "segments 72", "sides 76", "flags 80"] }
+claims = { status = 0, order = ["size 96", "alignment 8", "start 0", "end 8", "categories 16", "touches 24", "start_offset 32", "end_offset 44", "length 56", "width 60", "gravity_scale 64", "friction 68", "stretch_compliance 72", "bend_compliance 76", "segments 80", "sides 84", "flags 88"] }
 false = { run = ["{out}/physics_layout{exe}", "water"] }
 
 [[case]]
@@ -299,15 +575,63 @@ claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/physics_layout{exe}", "liquid"] }
 
 [[case]]
+name = "ideatek_liquid_technique_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "liquid_technique"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "liquid"] }
+
+[[case]]
+name = "ideatek_emitter_shape_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "emitter_shape"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "liquid"] }
+
+[[case]]
 name = "ideatek_liquid_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "liquid"]
-claims = { status = 0, order = ["size 32", "alignment 8", "categories 0", "touches 8", "density 16", "viscosity 20", "resolution 24", "flags 28"] }
+claims = { status = 0, order = ["size 56", "alignment 8", "categories 0", "touches 8", "density 16", "viscosity 20", "resolution 24", "surface_tension 28", "cohesion 32", "adhesion 36", "vorticity 40", "max_particles 44", "phase 48", "flags 52", "technique 53"] }
 false = { run = ["{out}/physics_layout{exe}", "liquid_emitter"] }
 
 [[case]]
 name = "ideatek_liquid_emitter_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "liquid_emitter"]
-claims = { status = 0, order = ["size 24", "alignment 8", "liquid 0", "velocity 8", "rate 20"] }
+claims = { status = 0, order = ["size 56", "alignment 8", "liquid 0", "velocity 8", "rate 20", "size 24", "start 36", "end 40", "jitter 44", "shape 48"] }
+false = { run = ["{out}/physics_layout{exe}", "liquid_particles"] }
+
+[[case]]
+name = "ideatek_liquid_particles_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "liquid_particles"]
+claims = { status = 0, order = ["size 20", "alignment 4", "positions 0", "velocities 8", "count 16"] }
+false = { run = ["{out}/physics_layout{exe}", "liquid_foam"] }
+
+[[case]]
+name = "ideatek_liquid_foam_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "liquid_foam"]
+claims = { status = 0, order = ["size 20", "alignment 4", "positions 0", "lifetimes 8", "count 16"] }
+false = { run = ["{out}/physics_layout{exe}", "smoke_flags"] }
+
+[[case]]
+name = "ideatek_smoke_flags_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "smoke_flags"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "smoke_volume"] }
+
+[[case]]
+name = "ideatek_smoke_volume_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "smoke_volume"]
+claims = { status = 0, order = ["size 48", "alignment 4", "cell_size 0", "steps_per_second 4", "buoyancy_per_temp 8", "buoyancy_per_smoke 12", "cooling 16", "vorticity 20", "ignition_temp 24", "burn_per_temp 28", "fuel_per_burn 32", "temp_per_burn 36", "smoke_per_burn 40", "flags 44"] }
+false = { run = ["{out}/physics_layout{exe}", "smoke_emitter"] }
+
+[[case]]
+name = "ideatek_smoke_emitter_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "smoke_emitter"]
+claims = { status = 0, order = ["size 56", "alignment 8", "volume 0", "velocity 8", "size 20", "temperature 32", "fuel 36", "smoke 40", "couple_rate 44", "shape 48"] }
+false = { run = ["{out}/physics_layout{exe}", "smoke_grid"] }
+
+[[case]]
+name = "ideatek_smoke_grid_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "smoke_grid"]
+claims = { status = 0, order = ["size 8", "alignment 8", "texture 0"] }
 false = { run = ["{out}/physics_layout{exe}", "lag_history"] }
 
 [[case]]
@@ -321,15 +645,19 @@ name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/physics_layout{exe}", "descriptors"]
 claims = { status = 0, line = [
     "uint8_t { IDEATEK_BODY_KIND_STATIC = 0, IDEATEK_BODY_KIND_KINEMATIC = 1, IDEATEK_BODY_KIND_DYNAMIC = 2 }",
+    "uint8_t { IDEATEK_MOTION_QUALITY_DISCRETE = 0, IDEATEK_MOTION_QUALITY_LINEAR_CAST = 1 }",
     "uint8_t { IDEATEK_MASS_MODE_SHAPES = 0, IDEATEK_MASS_MODE_CUSTOM = 1 }",
     "uint8_t { IDEATEK_LOCKED_X = 0x01, IDEATEK_LOCKED_Y = 0x02, IDEATEK_LOCKED_Z = 0x04, IDEATEK_LOCKED_ROLL = 0x08, IDEATEK_LOCKED_PITCH = 0x10, IDEATEK_LOCKED_YAW = 0x20 }",
-    "uint8_t { IDEATEK_BODY_FLAGS_CAN_SLEEP = 0x01, IDEATEK_BODY_FLAGS_CONTINUOUS = 0x02, IDEATEK_BODY_FLAGS_DESTRUCTIBLE = 0x04 }",
-    "{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; }",
+    "uint8_t { IDEATEK_BODY_FLAGS_CAN_SLEEP = 0x01, IDEATEK_BODY_FLAGS_ENHANCED_EDGES = 0x02, IDEATEK_BODY_FLAGS_DESTRUCTIBLE = 0x04, IDEATEK_BODY_FLAGS_GYROSCOPIC = 0x08 }",
+    "{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; float max_linear_speed; float max_angular_speed; float sleep_threshold; float inertia_scale; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; ideatek_motion_quality_t motion_quality; uint8_t velocity_steps; uint8_t position_steps; }",
+    "{ ideatek_position_t position; ideatek_quat_t rotation; }",
+    "{ ideatek_entity_t body; uint32_t order; bool asleep; }",
     "{ ideatek_vec3_t linear; ideatek_vec3_t angular; bool sleeping; }",
     "{ ideatek_position_t point; ideatek_vec3_t force; ideatek_vec3_t torque; ideatek_vec3_t impulse; ideatek_vec3_t angular_impulse; }",
-    "uint8_t { IDEATEK_SHAPE_KIND_SPHERE = 0, IDEATEK_SHAPE_KIND_BOX = 1, IDEATEK_SHAPE_KIND_CAPSULE = 2, IDEATEK_SHAPE_KIND_CYLINDER = 3, IDEATEK_SHAPE_KIND_CONVEX = 4, IDEATEK_SHAPE_KIND_TRIANGLES = 5, IDEATEK_SHAPE_KIND_PLANE = 6 }",
+    "uint8_t { IDEATEK_SHAPE_KIND_SPHERE = 0, IDEATEK_SHAPE_KIND_BOX = 1, IDEATEK_SHAPE_KIND_CAPSULE = 2, IDEATEK_SHAPE_KIND_CYLINDER = 3, IDEATEK_SHAPE_KIND_CONVEX = 4, IDEATEK_SHAPE_KIND_TRIANGLES = 5, IDEATEK_SHAPE_KIND_PLANE = 6, IDEATEK_SHAPE_KIND_HEIGHT_FIELD = 7 }",
     "uint8_t { IDEATEK_SHAPE_FLAGS_SENSOR = 0x01, IDEATEK_SHAPE_FLAGS_SENSOR_EVENTS = 0x02, IDEATEK_SHAPE_FLAGS_CONTACT_EVENTS = 0x04, IDEATEK_SHAPE_FLAGS_HIT_EVENTS = 0x08 }",
-    "{ ideatek_entity_t body; ideatek_entity_t material; ideatek_entity_t mesh; uint64_t categories; uint64_t touches; ideatek_vec3_t size; uint32_t part; ideatek_shape_kind_t kind; ideatek_shape_flags_t flags; }",
+    "{ ideatek_entity_t body; ideatek_entity_t material; ideatek_entity_t source; uint64_t categories; uint64_t touches; ideatek_vec3_t size; uint32_t part; ideatek_shape_kind_t kind; ideatek_shape_flags_t flags; }",
+    "{ bridge_text_t materials; bridge_text_t indices; }",
     "uint8_t { IDEATEK_COMBINE_AVERAGE = 0, IDEATEK_COMBINE_MIN = 1, IDEATEK_COMBINE_MULTIPLY = 2, IDEATEK_COMBINE_MAX = 3 }",
     "{ float friction; float restitution; float density; float tensile; float compression; float shear; ideatek_combine_t friction_combine; ideatek_combine_t restitution_combine; }",
     "uint8_t { IDEATEK_TOUCH_KIND_BEGAN = 0, IDEATEK_TOUCH_KIND_ENDED = 1 }",
@@ -338,40 +666,90 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t a; ideatek_entity_t b; ideatek_position_t point; ideatek_vec3_t normal; float speed; uint32_t order; }",
     "uint8_t { IDEATEK_QUERY_KIND_RAY = 0, IDEATEK_QUERY_KIND_SHAPE_CAST = 1, IDEATEK_QUERY_KIND_OVERLAP = 2, IDEATEK_QUERY_KIND_WATER = 3 }",
     "uint8_t { IDEATEK_QUERY_MODE_TEST = 0, IDEATEK_QUERY_MODE_CLOSEST = 1, IDEATEK_QUERY_MODE_ALL = 2 }",
-    "{ ideatek_position_t origin; uint64_t categories; uint64_t touches; ideatek_quat_t rotation; ideatek_vec3_t translation; ideatek_vec3_t size; uint32_t max; uint32_t tick; ideatek_query_kind_t kind; ideatek_shape_kind_t shape; ideatek_query_mode_t mode; }",
-    "{ ideatek_entity_t query; ideatek_entity_t shape; ideatek_position_t point; ideatek_vec3_t normal; float fraction; uint32_t order; }",
-    "uint8_t { IDEATEK_JOINT_FLAGS_COLLIDE_CONNECTED = 0x01, IDEATEK_JOINT_FLAGS_BREAKABLE = 0x02 }",
+    "{ ideatek_position_t origin; uint64_t categories; uint64_t touches; ideatek_quat_t rotation; ideatek_vec3_t translation; ideatek_vec3_t size; uint32_t max; uint32_t tick; ideatek_query_kind_t kind; ideatek_shape_kind_t shape; ideatek_query_mode_t mode; bool back_faces; }",
+    "{ ideatek_entity_t query; ideatek_entity_t shape; ideatek_position_t point; ideatek_vec3_t normal; float fraction; ideatek_entity_t material; float uv[2]; float depth; uint32_t face; uint32_t sub_shape; uint32_t order; }",
+    "uint8_t { IDEATEK_JOINT_FLAGS_COLLIDE_CONNECTED = 0x01, IDEATEK_JOINT_FLAGS_BREAKABLE = 0x02, IDEATEK_JOINT_FLAGS_REPORT = 0x04 }",
     "{ ideatek_entity_t a; ideatek_entity_t b; ideatek_quat_t rotation_a; ideatek_quat_t rotation_b; ideatek_vec3_t position_a; ideatek_vec3_t position_b; float force_threshold; float torque_threshold; ideatek_joint_flags_t flags; }",
     "uint8_t { IDEATEK_JOINT_FEATURES_LIMIT = 0x01, IDEATEK_JOINT_FEATURES_SPRING = 0x02, IDEATEK_JOINT_FEATURES_MOTOR = 0x04 }",
-    "{ float lower; float upper; float spring_hertz; float spring_damping; float motor_speed; float max_motor_torque; ideatek_joint_features_t features; }",
-    "{ float lower; float upper; float spring_hertz; float spring_damping; float motor_speed; float max_motor_force; ideatek_joint_features_t features; }",
+    "uint8_t { IDEATEK_DRIVE_MODE_OFF = 0, IDEATEK_DRIVE_MODE_VELOCITY = 1, IDEATEK_DRIVE_MODE_POSITION = 2 }",
+    "uint8_t { IDEATEK_SPRING_MODE_FREQUENCY = 0, IDEATEK_SPRING_MODE_STIFFNESS = 1 }",
+    "{ float target; float min_force; float max_force; float spring; float damping; ideatek_drive_mode_t mode; ideatek_spring_mode_t spring_mode; }",
+    "{ float lower; float upper; float limit_hertz; float limit_damping; float friction; ideatek_joint_drive_t drive; ideatek_joint_features_t features; }",
+    "{ float lower; float upper; float limit_hertz; float limit_damping; float friction; ideatek_joint_drive_t drive; ideatek_joint_features_t features; }",
     "{ float length; float min_length; float max_length; float spring_hertz; float spring_damping; float motor_speed; float max_motor_force; ideatek_joint_features_t features; }",
     "{ float swing_y; float swing_z; float twist_min; float twist_max; }",
-    "{ ideatek_vec3_t linear_min; ideatek_vec3_t linear_max; ideatek_vec3_t angular_min; ideatek_vec3_t angular_max; }",
+    "{ ideatek_vec3_t linear_min; ideatek_vec3_t linear_max; ideatek_vec3_t angular_min; ideatek_vec3_t angular_max; bridge_text_t drives; bridge_text_t friction; }",
+    "{ ideatek_entity_t hinge_a; ideatek_entity_t hinge_b; float ratio; }",
+    "{ ideatek_entity_t hinge; ideatek_entity_t slider; float ratio; }",
+    "{ ideatek_position_t fixed_a; ideatek_position_t fixed_b; float ratio; float min_length; float max_length; }",
+    "uint8_t { IDEATEK_PATH_ROTATION_FREE = 0, IDEATEK_PATH_ROTATION_TANGENT = 1, IDEATEK_PATH_ROTATION_NORMAL = 2, IDEATEK_PATH_ROTATION_BINORMAL = 3, IDEATEK_PATH_ROTATION_PATH = 4, IDEATEK_PATH_ROTATION_FIXED = 5 }",
+    "{ bridge_text_t path; float fraction; float max_friction; ideatek_joint_drive_t drive; ideatek_path_rotation_t rotation; bool looping; }",
+    "{ float half_angle; }",
+    "{ ideatek_vec3_t linear_velocity; ideatek_vec3_t angular_velocity; float max_force; float max_torque; float hertz; float damping; }",
+    "{ float lower; float upper; float suspension_hertz; float suspension_damping; float max_steer; float steer_target; ideatek_joint_drive_t spin; }",
     "{ ideatek_entity_t joint; float force; float torque; uint32_t order; }",
-    "{ float max_drive_torque; float max_pitch_roll; }",
+    "{ ideatek_vec3_t force; ideatek_vec3_t torque; }",
+    "uint8_t { IDEATEK_ARTICULATION_JOINT_FIX = 0, IDEATEK_ARTICULATION_JOINT_PRISMATIC = 1, IDEATEK_ARTICULATION_JOINT_REVOLUTE = 2, IDEATEK_ARTICULATION_JOINT_SPHERICAL = 3 }",
+    "uint8_t { IDEATEK_ARTICULATION_FLAGS_FIX_BASE = 0x01, IDEATEK_ARTICULATION_FLAGS_SELF_COLLISION = 0x02 }",
+    "{ float sleep_threshold; uint8_t velocity_steps; uint8_t position_steps; ideatek_articulation_flags_t flags; }",
+    "{ ideatek_entity_t articulation; ideatek_entity_t parent; bridge_text_t limits; bridge_text_t drives; float friction; float max_joint_velocity; uint8_t motions[6]; ideatek_articulation_joint_t joint; }",
+    "{ bridge_text_t positions; bridge_text_t velocities; uint32_t count; }",
+    "{ bridge_text_t positions; bridge_text_t velocities; uint32_t count; }",
+    "uint8_t { IDEATEK_GROUND_STATE_ON_GROUND = 0, IDEATEK_GROUND_STATE_ON_STEEP_GROUND = 1, IDEATEK_GROUND_STATE_NOT_SUPPORTED = 2, IDEATEK_GROUND_STATE_IN_AIR = 3 }",
+    "uint8_t { IDEATEK_NON_WALKABLE_SLIDE = 0, IDEATEK_NON_WALKABLE_PREVENT_CLIMB = 1 }",
+    "uint8_t { IDEATEK_CHARACTER_FLAGS_INNER_BODY = 0x01, IDEATEK_CHARACTER_FLAGS_CAN_PUSH = 0x02, IDEATEK_CHARACTER_FLAGS_CAN_BE_PUSHED = 0x04 }",
+    "uint8_t { IDEATEK_CHARACTER_COLLISION_SIDES = 0x01, IDEATEK_CHARACTER_COLLISION_UP = 0x02, IDEATEK_CHARACTER_COLLISION_DOWN = 0x04 }",
+    "{ ideatek_vec3_t up; float max_slope; float step_up; float stick_down; float min_step_forward; float padding; float predictive_distance; float mass; float max_strength; ideatek_non_walkable_t non_walkable; ideatek_character_flags_t flags; }",
+    "{ ideatek_vec3_t velocity; }",
+    "{ ideatek_entity_t ground; ideatek_entity_t ground_material; ideatek_vec3_t ground_normal; ideatek_vec3_t ground_velocity; ideatek_ground_state_t ground_state; ideatek_character_collision_t collision; }",
+    "uint8_t { IDEATEK_SNAPSHOT_ACTION_SAVE = 0, IDEATEK_SNAPSHOT_ACTION_RESTORE = 1 }",
+    "uint8_t { IDEATEK_SNAPSHOT_STATUS_OK = 0, IDEATEK_SNAPSHOT_STATUS_TOO_BIG = 1, IDEATEK_SNAPSHOT_STATUS_FAILED = 2 }",
+    "{ uint64_t categories; bridge_text_t data; ideatek_snapshot_action_t action; }",
+    "{ bridge_text_t data; ideatek_snapshot_status_t status; }",
+    "uint8_t { IDEATEK_VEHICLE_KIND_WHEELED = 0, IDEATEK_VEHICLE_KIND_TRACKED = 1, IDEATEK_VEHICLE_KIND_MOTORCYCLE = 2 }",
+    "uint8_t { IDEATEK_WHEEL_TEST_RAY = 0, IDEATEK_WHEEL_TEST_SPHERE = 1, IDEATEK_WHEEL_TEST_CYLINDER = 2 }",
+    "uint8_t { IDEATEK_TRANSMISSION_MODE_AUTO = 0, IDEATEK_TRANSMISSION_MODE_MANUAL = 1 }",
+    "{ float max_drive_torque; float max_pitch_roll; ideatek_vehicle_kind_t kind; ideatek_wheel_test_t test; }",
+    "{ bridge_text_t torque_curve; float max_torque; float min_rpm; float max_rpm; float inertia; float damping; }",
+    "{ bridge_text_t gears; bridge_text_t reverse; float shift_up_rpm; float shift_down_rpm; float switch_time; float clutch_release_time; float switch_latency; float clutch_strength; ideatek_transmission_mode_t mode; }",
+    "{ ideatek_entity_t vehicle; ideatek_entity_t left; ideatek_entity_t right; float ratio; float split; float limited_slip; float engine_torque_ratio; }",
+    "{ ideatek_entity_t vehicle; ideatek_entity_t left; ideatek_entity_t right; float stiffness; }",
     "uint8_t { IDEATEK_WHEEL_FLAGS_DRIVEN = 0x01, IDEATEK_WHEEL_FLAGS_STEERS = 0x02 }",
-    "{ ideatek_entity_t vehicle; ideatek_vec3_t position; ideatek_vec3_t suspension_direction; ideatek_vec3_t steering_axis; float radius; float width; float suspension_min; float suspension_max; float spring_hertz; float spring_damping; float max_steer; float max_brake_torque; float max_hand_brake_torque; ideatek_wheel_flags_t flags; }",
-    "{ float forward; float right; float brake; float hand_brake; }",
-    "{ float steer_angle; float angle; float angular_velocity; float suspension_length; float longitudinal_slip; float lateral_slip; bool contact; }",
+    "{ ideatek_entity_t vehicle; ideatek_vec3_t position; ideatek_vec3_t suspension_direction; ideatek_vec3_t steering_axis; float radius; float width; float suspension_min; float suspension_max; float spring_hertz; float spring_damping; float max_steer; float max_brake_torque; float max_hand_brake_torque; ideatek_vec3_t wheel_up; ideatek_vec3_t wheel_forward; bridge_text_t longitudinal_friction; bridge_text_t lateral_friction; ideatek_wheel_flags_t flags; uint8_t track; }",
+    "{ float forward; float right; float brake; float hand_brake; float clutch; float left_ratio; float right_ratio; int32_t gear; }",
+    "{ float steer_angle; float angle; float angular_velocity; float suspension_length; float longitudinal_slip; float lateral_slip; ideatek_entity_t contact_body; ideatek_entity_t contact_material; bool contact; bool hit_hard_point; }",
+    "{ float rpm; float clutch; int32_t gear; }",
     "{ float position_strength; float orientation_strength; }",
-    "{ ideatek_entity_t interior; }",
-    "{ ideatek_position_t point; float radius; float pressure; uint32_t order; }",
-    "{ ideatek_entity_t body; ideatek_entity_t piece; ideatek_position_t point; uint32_t order; }",
+    "{ ideatek_entity_t interior; ideatek_entity_t asset; }",
+    "{ bridge_text_t chunks; bridge_text_t bonds; ideatek_entity_t mesh; uint32_t chunk_count; uint32_t bond_count; uint32_t revision; }",
+    "uint8_t { IDEATEK_DAMAGE_SHAPE_RADIAL = 0, IDEATEK_DAMAGE_SHAPE_CAPSULE = 1, IDEATEK_DAMAGE_SHAPE_SHEAR = 2, IDEATEK_DAMAGE_SHAPE_TRIANGLE = 3, IDEATEK_DAMAGE_SHAPE_IMPACT = 4 }",
+    "{ ideatek_position_t point; ideatek_position_t point_b; ideatek_position_t point_c; ideatek_vec3_t normal; float min_radius; float radius; float pressure; uint32_t order; ideatek_damage_shape_t shape; }",
+    "{ ideatek_entity_t body; ideatek_entity_t piece; ideatek_position_t point; ideatek_vec3_t excess_force; bridge_text_t chunks; uint32_t order; }",
     "{ ideatek_entity_t cap; }",
     "{ ideatek_entity_t drawn; ideatek_position_t point; ideatek_vec3_t normal; uint32_t order; }",
     "{ ideatek_entity_t drawn; ideatek_entity_t piece; uint32_t order; }",
-    "{ ideatek_entity_t source; uint64_t categories; uint64_t touches; float edge_compliance; float shear_compliance; float bend_compliance; float vertex_mass; float linear_damping; float friction; float gravity_scale; float vertex_radius; float pressure; float restitution; }",
+    "uint8_t { IDEATEK_BEND_NONE = 0, IDEATEK_BEND_DISTANCE = 1, IDEATEK_BEND_DIHEDRAL = 2 }",
+    "uint8_t { IDEATEK_LRA_NONE = 0, IDEATEK_LRA_EUCLIDEAN = 1, IDEATEK_LRA_GEODESIC = 2 }",
+    "{ ideatek_entity_t source; uint64_t categories; uint64_t touches; float edge_compliance; float shear_compliance; float bend_compliance; float vertex_mass; float linear_damping; float friction; float gravity_scale; float vertex_radius; float pressure; float restitution; float volume_compliance; float lra_scale; float skin_distance_scale; uint32_t iterations; ideatek_bend_t bend; ideatek_lra_t lra; bool double_sided; }",
+    "{ ideatek_entity_t soft_body; ideatek_entity_t body; ideatek_vec3_t offset; uint32_t vertex; }",
     "{ ideatek_entity_t body; uint32_t order; }",
     "uint8_t { IDEATEK_ROPE_FLAGS_STIFF = 0x01, IDEATEK_ROPE_FLAGS_COLLIDE = 0x02 }",
-    "{ ideatek_entity_t start; ideatek_entity_t end; uint64_t categories; uint64_t touches; ideatek_vec3_t start_offset; ideatek_vec3_t end_offset; float length; float width; float gravity_scale; float friction; uint32_t segments; uint32_t sides; ideatek_rope_flags_t flags; }",
+    "{ ideatek_entity_t start; ideatek_entity_t end; uint64_t categories; uint64_t touches; ideatek_vec3_t start_offset; ideatek_vec3_t end_offset; float length; float width; float gravity_scale; float friction; float stretch_compliance; float bend_compliance; uint32_t segments; uint32_t sides; ideatek_rope_flags_t flags; }",
     "{ ideatek_vec3_t flow; float density; }",
     "{ ideatek_entity_t water; ideatek_vec3_t direction; float wavelength; float amplitude; float steepness; }",
     "{ ideatek_entity_t query; ideatek_entity_t water; ideatek_position_t point; ideatek_vec3_t normal; ideatek_vec3_t velocity; float depth; uint32_t order; }",
     "{ float linear_drag; float angular_drag; }",
-    "uint8_t { IDEATEK_LIQUID_FLAGS_PUSH_BODIES = 0x01 }",
-    "{ uint64_t categories; uint64_t touches; float density; float viscosity; float resolution; ideatek_liquid_flags_t flags; }",
-    "{ ideatek_entity_t liquid; ideatek_vec3_t velocity; float rate; }",
+    "uint8_t { IDEATEK_LIQUID_FLAGS_PUSH_BODIES = 0x01, IDEATEK_LIQUID_FLAGS_FOAM = 0x02 }",
+    "uint8_t { IDEATEK_LIQUID_TECHNIQUE_SPH = 0, IDEATEK_LIQUID_TECHNIQUE_FLIP = 1, IDEATEK_LIQUID_TECHNIQUE_PBD = 2 }",
+    "uint8_t { IDEATEK_EMITTER_SHAPE_SHAPE = 0, IDEATEK_EMITTER_SHAPE_BOX = 1, IDEATEK_EMITTER_SHAPE_DISC = 2, IDEATEK_EMITTER_SHAPE_POINT = 3 }",
+    "{ uint64_t categories; uint64_t touches; float density; float viscosity; float resolution; float surface_tension; float cohesion; float adhesion; float vorticity; uint32_t max_particles; uint32_t phase; ideatek_liquid_flags_t flags; ideatek_liquid_technique_t technique; }",
+    "{ ideatek_entity_t liquid; ideatek_vec3_t velocity; float rate; ideatek_vec3_t size; float start; float end; float jitter; ideatek_emitter_shape_t shape; }",
+    "{ bridge_text_t positions; bridge_text_t velocities; uint32_t count; }",
+    "{ bridge_text_t positions; bridge_text_t lifetimes; uint32_t count; }",
+    "uint8_t { IDEATEK_SMOKE_FLAGS_COLLIDE = 0x01 }",
+    "{ float cell_size; float steps_per_second; float buoyancy_per_temp; float buoyancy_per_smoke; float cooling; float vorticity; float ignition_temp; float burn_per_temp; float fuel_per_burn; float temp_per_burn; float smoke_per_burn; ideatek_smoke_flags_t flags; }",
+    "{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float temperature; float fuel; float smoke; float couple_rate; ideatek_emitter_shape_t shape; }",
+    "{ ideatek_entity_t texture; }",
     "{ float seconds; }",
 ] }
 false = { run = ["{out}/physics_layout{exe}", "texts"] }
@@ -381,15 +759,19 @@ name = "each macro of a text gives the braces of its type and the text between t
 run = ["{out}/physics_layout{exe}", "texts"]
 claims = { status = 0, line = [
     "{ IDEATEK_BODY_KIND_STATIC = 0, IDEATEK_BODY_KIND_KINEMATIC = 1, IDEATEK_BODY_KIND_DYNAMIC = 2 }",
+    "{ IDEATEK_MOTION_QUALITY_DISCRETE = 0, IDEATEK_MOTION_QUALITY_LINEAR_CAST = 1 }",
     "{ IDEATEK_MASS_MODE_SHAPES = 0, IDEATEK_MASS_MODE_CUSTOM = 1 }",
     "{ IDEATEK_LOCKED_X = 0x01, IDEATEK_LOCKED_Y = 0x02, IDEATEK_LOCKED_Z = 0x04, IDEATEK_LOCKED_ROLL = 0x08, IDEATEK_LOCKED_PITCH = 0x10, IDEATEK_LOCKED_YAW = 0x20 }",
-    "{ IDEATEK_BODY_FLAGS_CAN_SLEEP = 0x01, IDEATEK_BODY_FLAGS_CONTINUOUS = 0x02, IDEATEK_BODY_FLAGS_DESTRUCTIBLE = 0x04 }",
-    "{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; }",
+    "{ IDEATEK_BODY_FLAGS_CAN_SLEEP = 0x01, IDEATEK_BODY_FLAGS_ENHANCED_EDGES = 0x02, IDEATEK_BODY_FLAGS_DESTRUCTIBLE = 0x04, IDEATEK_BODY_FLAGS_GYROSCOPIC = 0x08 }",
+    "{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; float max_linear_speed; float max_angular_speed; float sleep_threshold; float inertia_scale; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; ideatek_motion_quality_t motion_quality; uint8_t velocity_steps; uint8_t position_steps; }",
+    "{ ideatek_position_t position; ideatek_quat_t rotation; }",
+    "{ ideatek_entity_t body; uint32_t order; bool asleep; }",
     "{ ideatek_vec3_t linear; ideatek_vec3_t angular; bool sleeping; }",
     "{ ideatek_position_t point; ideatek_vec3_t force; ideatek_vec3_t torque; ideatek_vec3_t impulse; ideatek_vec3_t angular_impulse; }",
-    "{ IDEATEK_SHAPE_KIND_SPHERE = 0, IDEATEK_SHAPE_KIND_BOX = 1, IDEATEK_SHAPE_KIND_CAPSULE = 2, IDEATEK_SHAPE_KIND_CYLINDER = 3, IDEATEK_SHAPE_KIND_CONVEX = 4, IDEATEK_SHAPE_KIND_TRIANGLES = 5, IDEATEK_SHAPE_KIND_PLANE = 6 }",
+    "{ IDEATEK_SHAPE_KIND_SPHERE = 0, IDEATEK_SHAPE_KIND_BOX = 1, IDEATEK_SHAPE_KIND_CAPSULE = 2, IDEATEK_SHAPE_KIND_CYLINDER = 3, IDEATEK_SHAPE_KIND_CONVEX = 4, IDEATEK_SHAPE_KIND_TRIANGLES = 5, IDEATEK_SHAPE_KIND_PLANE = 6, IDEATEK_SHAPE_KIND_HEIGHT_FIELD = 7 }",
     "{ IDEATEK_SHAPE_FLAGS_SENSOR = 0x01, IDEATEK_SHAPE_FLAGS_SENSOR_EVENTS = 0x02, IDEATEK_SHAPE_FLAGS_CONTACT_EVENTS = 0x04, IDEATEK_SHAPE_FLAGS_HIT_EVENTS = 0x08 }",
-    "{ ideatek_entity_t body; ideatek_entity_t material; ideatek_entity_t mesh; uint64_t categories; uint64_t touches; ideatek_vec3_t size; uint32_t part; ideatek_shape_kind_t kind; ideatek_shape_flags_t flags; }",
+    "{ ideatek_entity_t body; ideatek_entity_t material; ideatek_entity_t source; uint64_t categories; uint64_t touches; ideatek_vec3_t size; uint32_t part; ideatek_shape_kind_t kind; ideatek_shape_flags_t flags; }",
+    "{ bridge_text_t materials; bridge_text_t indices; }",
     "{ IDEATEK_COMBINE_AVERAGE = 0, IDEATEK_COMBINE_MIN = 1, IDEATEK_COMBINE_MULTIPLY = 2, IDEATEK_COMBINE_MAX = 3 }",
     "{ float friction; float restitution; float density; float tensile; float compression; float shear; ideatek_combine_t friction_combine; ideatek_combine_t restitution_combine; }",
     "{ IDEATEK_TOUCH_KIND_BEGAN = 0, IDEATEK_TOUCH_KIND_ENDED = 1 }",
@@ -398,40 +780,90 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t a; ideatek_entity_t b; ideatek_position_t point; ideatek_vec3_t normal; float speed; uint32_t order; }",
     "{ IDEATEK_QUERY_KIND_RAY = 0, IDEATEK_QUERY_KIND_SHAPE_CAST = 1, IDEATEK_QUERY_KIND_OVERLAP = 2, IDEATEK_QUERY_KIND_WATER = 3 }",
     "{ IDEATEK_QUERY_MODE_TEST = 0, IDEATEK_QUERY_MODE_CLOSEST = 1, IDEATEK_QUERY_MODE_ALL = 2 }",
-    "{ ideatek_position_t origin; uint64_t categories; uint64_t touches; ideatek_quat_t rotation; ideatek_vec3_t translation; ideatek_vec3_t size; uint32_t max; uint32_t tick; ideatek_query_kind_t kind; ideatek_shape_kind_t shape; ideatek_query_mode_t mode; }",
-    "{ ideatek_entity_t query; ideatek_entity_t shape; ideatek_position_t point; ideatek_vec3_t normal; float fraction; uint32_t order; }",
-    "{ IDEATEK_JOINT_FLAGS_COLLIDE_CONNECTED = 0x01, IDEATEK_JOINT_FLAGS_BREAKABLE = 0x02 }",
+    "{ ideatek_position_t origin; uint64_t categories; uint64_t touches; ideatek_quat_t rotation; ideatek_vec3_t translation; ideatek_vec3_t size; uint32_t max; uint32_t tick; ideatek_query_kind_t kind; ideatek_shape_kind_t shape; ideatek_query_mode_t mode; bool back_faces; }",
+    "{ ideatek_entity_t query; ideatek_entity_t shape; ideatek_position_t point; ideatek_vec3_t normal; float fraction; ideatek_entity_t material; float uv[2]; float depth; uint32_t face; uint32_t sub_shape; uint32_t order; }",
+    "{ IDEATEK_JOINT_FLAGS_COLLIDE_CONNECTED = 0x01, IDEATEK_JOINT_FLAGS_BREAKABLE = 0x02, IDEATEK_JOINT_FLAGS_REPORT = 0x04 }",
     "{ ideatek_entity_t a; ideatek_entity_t b; ideatek_quat_t rotation_a; ideatek_quat_t rotation_b; ideatek_vec3_t position_a; ideatek_vec3_t position_b; float force_threshold; float torque_threshold; ideatek_joint_flags_t flags; }",
     "{ IDEATEK_JOINT_FEATURES_LIMIT = 0x01, IDEATEK_JOINT_FEATURES_SPRING = 0x02, IDEATEK_JOINT_FEATURES_MOTOR = 0x04 }",
-    "{ float lower; float upper; float spring_hertz; float spring_damping; float motor_speed; float max_motor_torque; ideatek_joint_features_t features; }",
-    "{ float lower; float upper; float spring_hertz; float spring_damping; float motor_speed; float max_motor_force; ideatek_joint_features_t features; }",
+    "{ IDEATEK_DRIVE_MODE_OFF = 0, IDEATEK_DRIVE_MODE_VELOCITY = 1, IDEATEK_DRIVE_MODE_POSITION = 2 }",
+    "{ IDEATEK_SPRING_MODE_FREQUENCY = 0, IDEATEK_SPRING_MODE_STIFFNESS = 1 }",
+    "{ float target; float min_force; float max_force; float spring; float damping; ideatek_drive_mode_t mode; ideatek_spring_mode_t spring_mode; }",
+    "{ float lower; float upper; float limit_hertz; float limit_damping; float friction; ideatek_joint_drive_t drive; ideatek_joint_features_t features; }",
+    "{ float lower; float upper; float limit_hertz; float limit_damping; float friction; ideatek_joint_drive_t drive; ideatek_joint_features_t features; }",
     "{ float length; float min_length; float max_length; float spring_hertz; float spring_damping; float motor_speed; float max_motor_force; ideatek_joint_features_t features; }",
     "{ float swing_y; float swing_z; float twist_min; float twist_max; }",
-    "{ ideatek_vec3_t linear_min; ideatek_vec3_t linear_max; ideatek_vec3_t angular_min; ideatek_vec3_t angular_max; }",
+    "{ ideatek_vec3_t linear_min; ideatek_vec3_t linear_max; ideatek_vec3_t angular_min; ideatek_vec3_t angular_max; bridge_text_t drives; bridge_text_t friction; }",
+    "{ ideatek_entity_t hinge_a; ideatek_entity_t hinge_b; float ratio; }",
+    "{ ideatek_entity_t hinge; ideatek_entity_t slider; float ratio; }",
+    "{ ideatek_position_t fixed_a; ideatek_position_t fixed_b; float ratio; float min_length; float max_length; }",
+    "{ IDEATEK_PATH_ROTATION_FREE = 0, IDEATEK_PATH_ROTATION_TANGENT = 1, IDEATEK_PATH_ROTATION_NORMAL = 2, IDEATEK_PATH_ROTATION_BINORMAL = 3, IDEATEK_PATH_ROTATION_PATH = 4, IDEATEK_PATH_ROTATION_FIXED = 5 }",
+    "{ bridge_text_t path; float fraction; float max_friction; ideatek_joint_drive_t drive; ideatek_path_rotation_t rotation; bool looping; }",
+    "{ float half_angle; }",
+    "{ ideatek_vec3_t linear_velocity; ideatek_vec3_t angular_velocity; float max_force; float max_torque; float hertz; float damping; }",
+    "{ float lower; float upper; float suspension_hertz; float suspension_damping; float max_steer; float steer_target; ideatek_joint_drive_t spin; }",
     "{ ideatek_entity_t joint; float force; float torque; uint32_t order; }",
-    "{ float max_drive_torque; float max_pitch_roll; }",
+    "{ ideatek_vec3_t force; ideatek_vec3_t torque; }",
+    "{ IDEATEK_ARTICULATION_JOINT_FIX = 0, IDEATEK_ARTICULATION_JOINT_PRISMATIC = 1, IDEATEK_ARTICULATION_JOINT_REVOLUTE = 2, IDEATEK_ARTICULATION_JOINT_SPHERICAL = 3 }",
+    "{ IDEATEK_ARTICULATION_FLAGS_FIX_BASE = 0x01, IDEATEK_ARTICULATION_FLAGS_SELF_COLLISION = 0x02 }",
+    "{ float sleep_threshold; uint8_t velocity_steps; uint8_t position_steps; ideatek_articulation_flags_t flags; }",
+    "{ ideatek_entity_t articulation; ideatek_entity_t parent; bridge_text_t limits; bridge_text_t drives; float friction; float max_joint_velocity; uint8_t motions[6]; ideatek_articulation_joint_t joint; }",
+    "{ bridge_text_t positions; bridge_text_t velocities; uint32_t count; }",
+    "{ bridge_text_t positions; bridge_text_t velocities; uint32_t count; }",
+    "{ IDEATEK_GROUND_STATE_ON_GROUND = 0, IDEATEK_GROUND_STATE_ON_STEEP_GROUND = 1, IDEATEK_GROUND_STATE_NOT_SUPPORTED = 2, IDEATEK_GROUND_STATE_IN_AIR = 3 }",
+    "{ IDEATEK_NON_WALKABLE_SLIDE = 0, IDEATEK_NON_WALKABLE_PREVENT_CLIMB = 1 }",
+    "{ IDEATEK_CHARACTER_FLAGS_INNER_BODY = 0x01, IDEATEK_CHARACTER_FLAGS_CAN_PUSH = 0x02, IDEATEK_CHARACTER_FLAGS_CAN_BE_PUSHED = 0x04 }",
+    "{ IDEATEK_CHARACTER_COLLISION_SIDES = 0x01, IDEATEK_CHARACTER_COLLISION_UP = 0x02, IDEATEK_CHARACTER_COLLISION_DOWN = 0x04 }",
+    "{ ideatek_vec3_t up; float max_slope; float step_up; float stick_down; float min_step_forward; float padding; float predictive_distance; float mass; float max_strength; ideatek_non_walkable_t non_walkable; ideatek_character_flags_t flags; }",
+    "{ ideatek_vec3_t velocity; }",
+    "{ ideatek_entity_t ground; ideatek_entity_t ground_material; ideatek_vec3_t ground_normal; ideatek_vec3_t ground_velocity; ideatek_ground_state_t ground_state; ideatek_character_collision_t collision; }",
+    "{ IDEATEK_SNAPSHOT_ACTION_SAVE = 0, IDEATEK_SNAPSHOT_ACTION_RESTORE = 1 }",
+    "{ IDEATEK_SNAPSHOT_STATUS_OK = 0, IDEATEK_SNAPSHOT_STATUS_TOO_BIG = 1, IDEATEK_SNAPSHOT_STATUS_FAILED = 2 }",
+    "{ uint64_t categories; bridge_text_t data; ideatek_snapshot_action_t action; }",
+    "{ bridge_text_t data; ideatek_snapshot_status_t status; }",
+    "{ IDEATEK_VEHICLE_KIND_WHEELED = 0, IDEATEK_VEHICLE_KIND_TRACKED = 1, IDEATEK_VEHICLE_KIND_MOTORCYCLE = 2 }",
+    "{ IDEATEK_WHEEL_TEST_RAY = 0, IDEATEK_WHEEL_TEST_SPHERE = 1, IDEATEK_WHEEL_TEST_CYLINDER = 2 }",
+    "{ IDEATEK_TRANSMISSION_MODE_AUTO = 0, IDEATEK_TRANSMISSION_MODE_MANUAL = 1 }",
+    "{ float max_drive_torque; float max_pitch_roll; ideatek_vehicle_kind_t kind; ideatek_wheel_test_t test; }",
+    "{ bridge_text_t torque_curve; float max_torque; float min_rpm; float max_rpm; float inertia; float damping; }",
+    "{ bridge_text_t gears; bridge_text_t reverse; float shift_up_rpm; float shift_down_rpm; float switch_time; float clutch_release_time; float switch_latency; float clutch_strength; ideatek_transmission_mode_t mode; }",
+    "{ ideatek_entity_t vehicle; ideatek_entity_t left; ideatek_entity_t right; float ratio; float split; float limited_slip; float engine_torque_ratio; }",
+    "{ ideatek_entity_t vehicle; ideatek_entity_t left; ideatek_entity_t right; float stiffness; }",
     "{ IDEATEK_WHEEL_FLAGS_DRIVEN = 0x01, IDEATEK_WHEEL_FLAGS_STEERS = 0x02 }",
-    "{ ideatek_entity_t vehicle; ideatek_vec3_t position; ideatek_vec3_t suspension_direction; ideatek_vec3_t steering_axis; float radius; float width; float suspension_min; float suspension_max; float spring_hertz; float spring_damping; float max_steer; float max_brake_torque; float max_hand_brake_torque; ideatek_wheel_flags_t flags; }",
-    "{ float forward; float right; float brake; float hand_brake; }",
-    "{ float steer_angle; float angle; float angular_velocity; float suspension_length; float longitudinal_slip; float lateral_slip; bool contact; }",
+    "{ ideatek_entity_t vehicle; ideatek_vec3_t position; ideatek_vec3_t suspension_direction; ideatek_vec3_t steering_axis; float radius; float width; float suspension_min; float suspension_max; float spring_hertz; float spring_damping; float max_steer; float max_brake_torque; float max_hand_brake_torque; ideatek_vec3_t wheel_up; ideatek_vec3_t wheel_forward; bridge_text_t longitudinal_friction; bridge_text_t lateral_friction; ideatek_wheel_flags_t flags; uint8_t track; }",
+    "{ float forward; float right; float brake; float hand_brake; float clutch; float left_ratio; float right_ratio; int32_t gear; }",
+    "{ float steer_angle; float angle; float angular_velocity; float suspension_length; float longitudinal_slip; float lateral_slip; ideatek_entity_t contact_body; ideatek_entity_t contact_material; bool contact; bool hit_hard_point; }",
+    "{ float rpm; float clutch; int32_t gear; }",
     "{ float position_strength; float orientation_strength; }",
-    "{ ideatek_entity_t interior; }",
-    "{ ideatek_position_t point; float radius; float pressure; uint32_t order; }",
-    "{ ideatek_entity_t body; ideatek_entity_t piece; ideatek_position_t point; uint32_t order; }",
+    "{ ideatek_entity_t interior; ideatek_entity_t asset; }",
+    "{ bridge_text_t chunks; bridge_text_t bonds; ideatek_entity_t mesh; uint32_t chunk_count; uint32_t bond_count; uint32_t revision; }",
+    "{ IDEATEK_DAMAGE_SHAPE_RADIAL = 0, IDEATEK_DAMAGE_SHAPE_CAPSULE = 1, IDEATEK_DAMAGE_SHAPE_SHEAR = 2, IDEATEK_DAMAGE_SHAPE_TRIANGLE = 3, IDEATEK_DAMAGE_SHAPE_IMPACT = 4 }",
+    "{ ideatek_position_t point; ideatek_position_t point_b; ideatek_position_t point_c; ideatek_vec3_t normal; float min_radius; float radius; float pressure; uint32_t order; ideatek_damage_shape_t shape; }",
+    "{ ideatek_entity_t body; ideatek_entity_t piece; ideatek_position_t point; ideatek_vec3_t excess_force; bridge_text_t chunks; uint32_t order; }",
     "{ ideatek_entity_t cap; }",
     "{ ideatek_entity_t drawn; ideatek_position_t point; ideatek_vec3_t normal; uint32_t order; }",
     "{ ideatek_entity_t drawn; ideatek_entity_t piece; uint32_t order; }",
-    "{ ideatek_entity_t source; uint64_t categories; uint64_t touches; float edge_compliance; float shear_compliance; float bend_compliance; float vertex_mass; float linear_damping; float friction; float gravity_scale; float vertex_radius; float pressure; float restitution; }",
+    "{ IDEATEK_BEND_NONE = 0, IDEATEK_BEND_DISTANCE = 1, IDEATEK_BEND_DIHEDRAL = 2 }",
+    "{ IDEATEK_LRA_NONE = 0, IDEATEK_LRA_EUCLIDEAN = 1, IDEATEK_LRA_GEODESIC = 2 }",
+    "{ ideatek_entity_t source; uint64_t categories; uint64_t touches; float edge_compliance; float shear_compliance; float bend_compliance; float vertex_mass; float linear_damping; float friction; float gravity_scale; float vertex_radius; float pressure; float restitution; float volume_compliance; float lra_scale; float skin_distance_scale; uint32_t iterations; ideatek_bend_t bend; ideatek_lra_t lra; bool double_sided; }",
+    "{ ideatek_entity_t soft_body; ideatek_entity_t body; ideatek_vec3_t offset; uint32_t vertex; }",
     "{ ideatek_entity_t body; uint32_t order; }",
     "{ IDEATEK_ROPE_FLAGS_STIFF = 0x01, IDEATEK_ROPE_FLAGS_COLLIDE = 0x02 }",
-    "{ ideatek_entity_t start; ideatek_entity_t end; uint64_t categories; uint64_t touches; ideatek_vec3_t start_offset; ideatek_vec3_t end_offset; float length; float width; float gravity_scale; float friction; uint32_t segments; uint32_t sides; ideatek_rope_flags_t flags; }",
+    "{ ideatek_entity_t start; ideatek_entity_t end; uint64_t categories; uint64_t touches; ideatek_vec3_t start_offset; ideatek_vec3_t end_offset; float length; float width; float gravity_scale; float friction; float stretch_compliance; float bend_compliance; uint32_t segments; uint32_t sides; ideatek_rope_flags_t flags; }",
     "{ ideatek_vec3_t flow; float density; }",
     "{ ideatek_entity_t water; ideatek_vec3_t direction; float wavelength; float amplitude; float steepness; }",
     "{ ideatek_entity_t query; ideatek_entity_t water; ideatek_position_t point; ideatek_vec3_t normal; ideatek_vec3_t velocity; float depth; uint32_t order; }",
     "{ float linear_drag; float angular_drag; }",
-    "{ IDEATEK_LIQUID_FLAGS_PUSH_BODIES = 0x01 }",
-    "{ uint64_t categories; uint64_t touches; float density; float viscosity; float resolution; ideatek_liquid_flags_t flags; }",
-    "{ ideatek_entity_t liquid; ideatek_vec3_t velocity; float rate; }",
+    "{ IDEATEK_LIQUID_FLAGS_PUSH_BODIES = 0x01, IDEATEK_LIQUID_FLAGS_FOAM = 0x02 }",
+    "{ IDEATEK_LIQUID_TECHNIQUE_SPH = 0, IDEATEK_LIQUID_TECHNIQUE_FLIP = 1, IDEATEK_LIQUID_TECHNIQUE_PBD = 2 }",
+    "{ IDEATEK_EMITTER_SHAPE_SHAPE = 0, IDEATEK_EMITTER_SHAPE_BOX = 1, IDEATEK_EMITTER_SHAPE_DISC = 2, IDEATEK_EMITTER_SHAPE_POINT = 3 }",
+    "{ uint64_t categories; uint64_t touches; float density; float viscosity; float resolution; float surface_tension; float cohesion; float adhesion; float vorticity; uint32_t max_particles; uint32_t phase; ideatek_liquid_flags_t flags; ideatek_liquid_technique_t technique; }",
+    "{ ideatek_entity_t liquid; ideatek_vec3_t velocity; float rate; ideatek_vec3_t size; float start; float end; float jitter; ideatek_emitter_shape_t shape; }",
+    "{ bridge_text_t positions; bridge_text_t velocities; uint32_t count; }",
+    "{ bridge_text_t positions; bridge_text_t lifetimes; uint32_t count; }",
+    "{ IDEATEK_SMOKE_FLAGS_COLLIDE = 0x01 }",
+    "{ float cell_size; float steps_per_second; float buoyancy_per_temp; float buoyancy_per_smoke; float cooling; float vorticity; float ignition_temp; float burn_per_temp; float fuel_per_burn; float temp_per_burn; float smoke_per_burn; ideatek_smoke_flags_t flags; }",
+    "{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float temperature; float fuel; float smoke; float couple_rate; ideatek_emitter_shape_t shape; }",
+    "{ ideatek_entity_t texture; }",
     "{ float seconds; }",
 ] }
 false = { run = ["{out}/physics_layout{exe}", "descriptors"] }
@@ -443,7 +875,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/physics_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 59 types, each type after the types of its fields"
+name = "a module declares the 114 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/physics_probe{library}"] }
 
@@ -461,26 +893,50 @@ library = "{bb_native}/bridge_native"
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
-    "ideatek:ideatek_body_kind_t", "ideatek:ideatek_mass_mode_t",
-    "ideatek:ideatek_locked_t", "ideatek:ideatek_body_flags_t",
-    "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
-    "ideatek:ideatek_combine_t", "ideatek:ideatek_touch_kind_t",
-    "ideatek:ideatek_query_kind_t", "ideatek:ideatek_query_mode_t",
-    "ideatek:ideatek_joint_flags_t", "ideatek:ideatek_joint_features_t",
-    "ideatek:ideatek_wheel_flags_t", "ideatek:ideatek_rope_flags_t",
-    "ideatek:ideatek_liquid_flags_t", "ideatek:Body", "ideatek:Motion",
-    "ideatek:Push", "ideatek:Shape", "ideatek:PhysicsMaterial",
-    "ideatek:SensorEvent", "ideatek:ContactEvent", "ideatek:HitEvent",
-    "ideatek:Query", "ideatek:QueryHit", "ideatek:BodyJoint",
-    "ideatek:FixedJoint", "ideatek:PointJoint", "ideatek:HingeJoint",
-    "ideatek:SliderJoint", "ideatek:DistanceJoint", "ideatek:SwingTwistJoint",
-    "ideatek:SixDofJoint", "ideatek:BodyJointEvent", "ideatek:Vehicle",
-    "ideatek:Wheel", "ideatek:VehicleInput", "ideatek:WheelState",
-    "ideatek:PoseDrive", "ideatek:Destructible", "ideatek:Damage",
+    "ideatek:ideatek_body_kind_t", "ideatek:ideatek_motion_quality_t",
+    "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
+    "ideatek:ideatek_body_flags_t", "ideatek:ideatek_shape_kind_t",
+    "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_combine_t",
+    "ideatek:ideatek_touch_kind_t", "ideatek:ideatek_query_kind_t",
+    "ideatek:ideatek_query_mode_t", "ideatek:ideatek_joint_flags_t",
+    "ideatek:ideatek_joint_features_t", "ideatek:ideatek_drive_mode_t",
+    "ideatek:ideatek_spring_mode_t", "ideatek:ideatek_joint_drive_t",
+    "ideatek:ideatek_path_rotation_t", "ideatek:ideatek_articulation_joint_t",
+    "ideatek:ideatek_articulation_flags_t", "ideatek:ideatek_ground_state_t",
+    "ideatek:ideatek_non_walkable_t", "ideatek:ideatek_character_flags_t",
+    "ideatek:ideatek_character_collision_t",
+    "ideatek:ideatek_snapshot_action_t", "ideatek:ideatek_snapshot_status_t",
+    "ideatek:ideatek_vehicle_kind_t", "ideatek:ideatek_wheel_test_t",
+    "ideatek:ideatek_transmission_mode_t", "ideatek:ideatek_wheel_flags_t",
+    "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
+    "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
+    "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:Body", "ideatek:KinematicTarget", "ideatek:WakeEvent",
+    "ideatek:Motion", "ideatek:Push", "ideatek:Shape", "ideatek:ShapeMaterials",
+    "ideatek:PhysicsMaterial", "ideatek:SensorEvent", "ideatek:ContactEvent",
+    "ideatek:HitEvent", "ideatek:Query", "ideatek:QueryHit",
+    "ideatek:BodyJoint", "ideatek:FixedJoint", "ideatek:PointJoint",
+    "ideatek:HingeJoint", "ideatek:SliderJoint", "ideatek:DistanceJoint",
+    "ideatek:SwingTwistJoint", "ideatek:SixDofJoint", "ideatek:GearJoint",
+    "ideatek:RackAndPinionJoint", "ideatek:PulleyJoint", "ideatek:PathJoint",
+    "ideatek:ConeJoint", "ideatek:MotorJoint", "ideatek:WheelJoint",
+    "ideatek:NoCollideJoint", "ideatek:BodyJointEvent",
+    "ideatek:BodyJointState", "ideatek:Articulation",
+    "ideatek:ArticulationLink", "ideatek:ArticulationState",
+    "ideatek:ArticulationCommand", "ideatek:Character", "ideatek:CharacterMove",
+    "ideatek:CharacterState", "ideatek:PhysicsSnapshotRequest",
+    "ideatek:PhysicsSnapshot", "ideatek:Vehicle", "ideatek:VehicleEngine",
+    "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
+    "ideatek:AntiRollBar", "ideatek:Wheel", "ideatek:VehicleInput",
+    "ideatek:WheelState", "ideatek:VehicleState", "ideatek:PoseDrive",
+    "ideatek:Destructible", "ideatek:DestructibleAsset", "ideatek:Damage",
     "ideatek:BreakEvent", "ideatek:HiddenJoint", "ideatek:Cut",
-    "ideatek:CutEvent", "ideatek:SoftBody", "ideatek:SoftBodyReset",
-    "ideatek:Rope", "ideatek:Water", "ideatek:Wave", "ideatek:WaterSample",
-    "ideatek:Buoyancy", "ideatek:Liquid", "ideatek:LiquidEmitter",
+    "ideatek:CutEvent", "ideatek:SoftBody", "ideatek:SoftBodyAttachment",
+    "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
+    "ideatek:WaterSample", "ideatek:Buoyancy", "ideatek:Liquid",
+    "ideatek:LiquidEmitter", "ideatek:LiquidParticles", "ideatek:LiquidFoam",
+    "ideatek:SmokeVolume", "ideatek:SmokeEmitter", "ideatek:SmokeGrid",
     "ideatek:LagHistory",
 ]
 '''
@@ -514,18 +970,37 @@ write = [
     "ideatek:HiddenJoint", "ideatek:Cut", "ideatek:SoftBody",
     "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
     "ideatek:Buoyancy", "ideatek:Liquid", "ideatek:LiquidEmitter",
-    "ideatek:LagHistory",
+    "ideatek:LagHistory", "ideatek:KinematicTarget", "ideatek:ShapeMaterials",
+    "ideatek:Character", "ideatek:CharacterMove",
+    "ideatek:PhysicsSnapshotRequest", "ideatek:DestructibleAsset",
+    "ideatek:GearJoint", "ideatek:RackAndPinionJoint", "ideatek:PulleyJoint",
+    "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
+    "ideatek:WheelJoint", "ideatek:NoCollideJoint", "ideatek:VehicleEngine",
+    "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
+    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
+    "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
+    "ideatek:ArticulationCommand",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
-    "ideatek:ideatek_body_kind_t", "ideatek:ideatek_mass_mode_t",
-    "ideatek:ideatek_locked_t", "ideatek:ideatek_body_flags_t",
-    "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
-    "ideatek:ideatek_combine_t", "ideatek:ideatek_query_kind_t",
-    "ideatek:ideatek_query_mode_t", "ideatek:ideatek_joint_flags_t",
-    "ideatek:ideatek_joint_features_t", "ideatek:ideatek_wheel_flags_t",
-    "ideatek:ideatek_rope_flags_t", "ideatek:ideatek_liquid_flags_t",
+    "ideatek:ideatek_body_kind_t", "ideatek:ideatek_motion_quality_t",
+    "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
+    "ideatek:ideatek_body_flags_t", "ideatek:ideatek_shape_kind_t",
+    "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_combine_t",
+    "ideatek:ideatek_query_kind_t", "ideatek:ideatek_query_mode_t",
+    "ideatek:ideatek_joint_flags_t", "ideatek:ideatek_joint_features_t",
+    "ideatek:ideatek_drive_mode_t", "ideatek:ideatek_spring_mode_t",
+    "ideatek:ideatek_joint_drive_t", "ideatek:ideatek_path_rotation_t",
+    "ideatek:ideatek_articulation_joint_t",
+    "ideatek:ideatek_articulation_flags_t", "ideatek:ideatek_non_walkable_t",
+    "ideatek:ideatek_character_flags_t", "ideatek:ideatek_snapshot_action_t",
+    "ideatek:ideatek_vehicle_kind_t", "ideatek:ideatek_wheel_test_t",
+    "ideatek:ideatek_transmission_mode_t", "ideatek:ideatek_wheel_flags_t",
+    "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
+    "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
+    "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
 ]
 '''
 
@@ -547,18 +1022,37 @@ write = [
     "ideatek:HiddenJoint", "ideatek:Cut", "ideatek:SoftBody",
     "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
     "ideatek:Buoyancy", "ideatek:Liquid", "ideatek:LiquidEmitter",
+    "ideatek:LagHistory", "ideatek:KinematicTarget", "ideatek:ShapeMaterials",
+    "ideatek:Character", "ideatek:CharacterMove",
+    "ideatek:PhysicsSnapshotRequest", "ideatek:DestructibleAsset",
+    "ideatek:GearJoint", "ideatek:RackAndPinionJoint", "ideatek:PulleyJoint",
+    "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
+    "ideatek:WheelJoint", "ideatek:NoCollideJoint", "ideatek:VehicleEngine",
+    "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
+    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
+    "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
-    "ideatek:ideatek_body_kind_t", "ideatek:ideatek_mass_mode_t",
-    "ideatek:ideatek_locked_t", "ideatek:ideatek_body_flags_t",
-    "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
-    "ideatek:ideatek_combine_t", "ideatek:ideatek_query_kind_t",
-    "ideatek:ideatek_query_mode_t", "ideatek:ideatek_joint_flags_t",
-    "ideatek:ideatek_joint_features_t", "ideatek:ideatek_wheel_flags_t",
-    "ideatek:ideatek_rope_flags_t", "ideatek:ideatek_liquid_flags_t",
-    "ideatek:LagHistory",
+    "ideatek:ideatek_body_kind_t", "ideatek:ideatek_motion_quality_t",
+    "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
+    "ideatek:ideatek_body_flags_t", "ideatek:ideatek_shape_kind_t",
+    "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_combine_t",
+    "ideatek:ideatek_query_kind_t", "ideatek:ideatek_query_mode_t",
+    "ideatek:ideatek_joint_flags_t", "ideatek:ideatek_joint_features_t",
+    "ideatek:ideatek_drive_mode_t", "ideatek:ideatek_spring_mode_t",
+    "ideatek:ideatek_joint_drive_t", "ideatek:ideatek_path_rotation_t",
+    "ideatek:ideatek_articulation_joint_t",
+    "ideatek:ideatek_articulation_flags_t", "ideatek:ideatek_non_walkable_t",
+    "ideatek:ideatek_character_flags_t", "ideatek:ideatek_snapshot_action_t",
+    "ideatek:ideatek_vehicle_kind_t", "ideatek:ideatek_wheel_test_t",
+    "ideatek:ideatek_transmission_mode_t", "ideatek:ideatek_wheel_flags_t",
+    "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
+    "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
+    "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ArticulationCommand",
 ]
 '''
 
@@ -583,29 +1077,54 @@ write = [
     "ideatek:ContactEvent", "ideatek:HitEvent", "ideatek:QueryHit",
     "ideatek:BodyJointEvent", "ideatek:WheelState", "ideatek:BreakEvent",
     "ideatek:CutEvent", "ideatek:WaterSample", "ideatek:Mesh",
-    "ideatek:MeshInstance",
+    "ideatek:MeshInstance", "ideatek:WakeEvent", "ideatek:BodyJointState",
+    "ideatek:CharacterState", "ideatek:PhysicsSnapshot", "ideatek:VehicleState",
+    "ideatek:LiquidParticles", "ideatek:LiquidFoam", "ideatek:SmokeGrid",
+    "ideatek:ArticulationState", "ideatek:Texture",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
     "ideatek:ideatek_topology_t", "ideatek:ideatek_index_format_t",
-    "ideatek:ideatek_body_kind_t", "ideatek:ideatek_mass_mode_t",
+    "ideatek:ideatek_dimension_t", "ideatek:ideatek_body_kind_t",
+    "ideatek:ideatek_motion_quality_t", "ideatek:ideatek_mass_mode_t",
     "ideatek:ideatek_locked_t", "ideatek:ideatek_body_flags_t",
     "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
     "ideatek:ideatek_combine_t", "ideatek:ideatek_touch_kind_t",
     "ideatek:ideatek_query_kind_t", "ideatek:ideatek_query_mode_t",
     "ideatek:ideatek_joint_flags_t", "ideatek:ideatek_joint_features_t",
-    "ideatek:ideatek_wheel_flags_t", "ideatek:ideatek_rope_flags_t",
-    "ideatek:ideatek_liquid_flags_t", "ideatek:Body", "ideatek:Push",
-    "ideatek:Shape", "ideatek:PhysicsMaterial", "ideatek:Query",
-    "ideatek:BodyJoint", "ideatek:FixedJoint", "ideatek:PointJoint",
-    "ideatek:HingeJoint", "ideatek:SliderJoint", "ideatek:DistanceJoint",
-    "ideatek:SwingTwistJoint", "ideatek:SixDofJoint", "ideatek:Vehicle",
-    "ideatek:Wheel", "ideatek:VehicleInput", "ideatek:PoseDrive",
-    "ideatek:Destructible", "ideatek:Damage", "ideatek:HiddenJoint",
-    "ideatek:Cut", "ideatek:SoftBody", "ideatek:SoftBodyReset", "ideatek:Rope",
-    "ideatek:Water", "ideatek:Wave", "ideatek:Buoyancy", "ideatek:Liquid",
-    "ideatek:LiquidEmitter", "ideatek:LagHistory", "ideatek:Tick",
+    "ideatek:ideatek_drive_mode_t", "ideatek:ideatek_spring_mode_t",
+    "ideatek:ideatek_joint_drive_t", "ideatek:ideatek_path_rotation_t",
+    "ideatek:ideatek_articulation_joint_t",
+    "ideatek:ideatek_articulation_flags_t", "ideatek:ideatek_ground_state_t",
+    "ideatek:ideatek_non_walkable_t", "ideatek:ideatek_character_flags_t",
+    "ideatek:ideatek_character_collision_t",
+    "ideatek:ideatek_snapshot_action_t", "ideatek:ideatek_snapshot_status_t",
+    "ideatek:ideatek_vehicle_kind_t", "ideatek:ideatek_wheel_test_t",
+    "ideatek:ideatek_transmission_mode_t", "ideatek:ideatek_wheel_flags_t",
+    "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
+    "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
+    "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:Body", "ideatek:Push", "ideatek:Shape", "ideatek:PhysicsMaterial",
+    "ideatek:Query", "ideatek:BodyJoint", "ideatek:FixedJoint",
+    "ideatek:PointJoint", "ideatek:HingeJoint", "ideatek:SliderJoint",
+    "ideatek:DistanceJoint", "ideatek:SwingTwistJoint", "ideatek:SixDofJoint",
+    "ideatek:Vehicle", "ideatek:Wheel", "ideatek:VehicleInput",
+    "ideatek:PoseDrive", "ideatek:Destructible", "ideatek:Damage",
+    "ideatek:HiddenJoint", "ideatek:Cut", "ideatek:SoftBody",
+    "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
+    "ideatek:Buoyancy", "ideatek:Liquid", "ideatek:LiquidEmitter",
+    "ideatek:LagHistory", "ideatek:KinematicTarget", "ideatek:ShapeMaterials",
+    "ideatek:Character", "ideatek:CharacterMove",
+    "ideatek:PhysicsSnapshotRequest", "ideatek:DestructibleAsset",
+    "ideatek:GearJoint", "ideatek:RackAndPinionJoint", "ideatek:PulleyJoint",
+    "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
+    "ideatek:WheelJoint", "ideatek:NoCollideJoint", "ideatek:VehicleEngine",
+    "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
+    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
+    "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
+    "ideatek:ArticulationCommand", "ideatek:Tick",
 ]
 '''
 
@@ -622,34 +1141,59 @@ write = [
     "ideatek:ContactEvent", "ideatek:HitEvent", "ideatek:QueryHit",
     "ideatek:BodyJointEvent", "ideatek:WheelState", "ideatek:BreakEvent",
     "ideatek:CutEvent", "ideatek:WaterSample", "ideatek:Mesh",
+    "ideatek:MeshInstance", "ideatek:WakeEvent", "ideatek:BodyJointState",
+    "ideatek:CharacterState", "ideatek:PhysicsSnapshot", "ideatek:VehicleState",
+    "ideatek:LiquidParticles", "ideatek:LiquidFoam", "ideatek:SmokeGrid",
+    "ideatek:ArticulationState",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
     "ideatek:ideatek_topology_t", "ideatek:ideatek_index_format_t",
-    "ideatek:ideatek_body_kind_t", "ideatek:ideatek_mass_mode_t",
+    "ideatek:ideatek_dimension_t", "ideatek:ideatek_body_kind_t",
+    "ideatek:ideatek_motion_quality_t", "ideatek:ideatek_mass_mode_t",
     "ideatek:ideatek_locked_t", "ideatek:ideatek_body_flags_t",
     "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
     "ideatek:ideatek_combine_t", "ideatek:ideatek_touch_kind_t",
     "ideatek:ideatek_query_kind_t", "ideatek:ideatek_query_mode_t",
     "ideatek:ideatek_joint_flags_t", "ideatek:ideatek_joint_features_t",
-    "ideatek:ideatek_wheel_flags_t", "ideatek:ideatek_rope_flags_t",
-    "ideatek:ideatek_liquid_flags_t", "ideatek:Body", "ideatek:Push",
-    "ideatek:Shape", "ideatek:PhysicsMaterial", "ideatek:Query",
-    "ideatek:BodyJoint", "ideatek:FixedJoint", "ideatek:PointJoint",
-    "ideatek:HingeJoint", "ideatek:SliderJoint", "ideatek:DistanceJoint",
-    "ideatek:SwingTwistJoint", "ideatek:SixDofJoint", "ideatek:Vehicle",
-    "ideatek:Wheel", "ideatek:VehicleInput", "ideatek:PoseDrive",
-    "ideatek:Destructible", "ideatek:Damage", "ideatek:HiddenJoint",
-    "ideatek:Cut", "ideatek:SoftBody", "ideatek:SoftBodyReset", "ideatek:Rope",
-    "ideatek:Water", "ideatek:Wave", "ideatek:Buoyancy", "ideatek:Liquid",
-    "ideatek:LiquidEmitter", "ideatek:LagHistory", "ideatek:Tick",
-    "ideatek:MeshInstance",
+    "ideatek:ideatek_drive_mode_t", "ideatek:ideatek_spring_mode_t",
+    "ideatek:ideatek_joint_drive_t", "ideatek:ideatek_path_rotation_t",
+    "ideatek:ideatek_articulation_joint_t",
+    "ideatek:ideatek_articulation_flags_t", "ideatek:ideatek_ground_state_t",
+    "ideatek:ideatek_non_walkable_t", "ideatek:ideatek_character_flags_t",
+    "ideatek:ideatek_character_collision_t",
+    "ideatek:ideatek_snapshot_action_t", "ideatek:ideatek_snapshot_status_t",
+    "ideatek:ideatek_vehicle_kind_t", "ideatek:ideatek_wheel_test_t",
+    "ideatek:ideatek_transmission_mode_t", "ideatek:ideatek_wheel_flags_t",
+    "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
+    "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
+    "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:Body", "ideatek:Push", "ideatek:Shape", "ideatek:PhysicsMaterial",
+    "ideatek:Query", "ideatek:BodyJoint", "ideatek:FixedJoint",
+    "ideatek:PointJoint", "ideatek:HingeJoint", "ideatek:SliderJoint",
+    "ideatek:DistanceJoint", "ideatek:SwingTwistJoint", "ideatek:SixDofJoint",
+    "ideatek:Vehicle", "ideatek:Wheel", "ideatek:VehicleInput",
+    "ideatek:PoseDrive", "ideatek:Destructible", "ideatek:Damage",
+    "ideatek:HiddenJoint", "ideatek:Cut", "ideatek:SoftBody",
+    "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
+    "ideatek:Buoyancy", "ideatek:Liquid", "ideatek:LiquidEmitter",
+    "ideatek:LagHistory", "ideatek:KinematicTarget", "ideatek:ShapeMaterials",
+    "ideatek:Character", "ideatek:CharacterMove",
+    "ideatek:PhysicsSnapshotRequest", "ideatek:DestructibleAsset",
+    "ideatek:GearJoint", "ideatek:RackAndPinionJoint", "ideatek:PulleyJoint",
+    "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
+    "ideatek:WheelJoint", "ideatek:NoCollideJoint", "ideatek:VehicleEngine",
+    "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
+    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
+    "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
+    "ideatek:ArticulationCommand", "ideatek:Tick", "ideatek:Texture",
 ]
 '''
 
 [[case]]
-name = "the render module loads with read on the hidden joints and the water"
+name = "the render module loads with read on the hidden joints, the water, the liquids and the smoke"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:renderer@1.0.0, native, m/physics_renderer{library}"] }
 
@@ -666,7 +1210,8 @@ library = "{bb_native}/bridge_native"
 [module."test:renderer@1.0.0"]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t", "ideatek:HiddenJoint",
-    "ideatek:Water", "ideatek:Wave",
+    "ideatek:Water", "ideatek:Wave", "ideatek:LiquidParticles",
+    "ideatek:LiquidFoam", "ideatek:SmokeGrid",
 ]
 '''
 
@@ -680,7 +1225,8 @@ library = "{bb_native}/bridge_native"
 [module."test:renderer@1.0.0"]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t", "ideatek:HiddenJoint",
-    "ideatek:Water",
+    "ideatek:Water", "ideatek:Wave", "ideatek:LiquidParticles",
+    "ideatek:LiquidFoam",
 ]
 '''
 

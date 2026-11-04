@@ -181,11 +181,11 @@ read = [
     "ideatek:ideatek_position_t", "ideatek:ideatek_topology_t",
     "ideatek:ideatek_index_format_t", "ideatek:ideatek_body_kind_t",
     "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
-    "ideatek:ideatek_body_flags_t", "ideatek:ideatek_shape_kind_t",
-    "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_terrain_flags_t",
-    "ideatek:ideatek_terrain_shape_t", "ideatek:ideatek_terrain_op_t",
-    "ideatek:Terrain", "ideatek:TerrainMaterial", "ideatek:TerrainEdit",
-    "ideatek:TerrainFill",
+    "ideatek:ideatek_body_flags_t", "ideatek:ideatek_motion_quality_t",
+    "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
+    "ideatek:ideatek_terrain_flags_t", "ideatek:ideatek_terrain_shape_t",
+    "ideatek:ideatek_terrain_op_t", "ideatek:Terrain",
+    "ideatek:TerrainMaterial", "ideatek:TerrainEdit", "ideatek:TerrainFill",
 ]
 '''
 
@@ -206,11 +206,12 @@ read = [
     "ideatek:ideatek_position_t", "ideatek:ideatek_topology_t",
     "ideatek:ideatek_index_format_t", "ideatek:ideatek_body_kind_t",
     "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
-    "ideatek:ideatek_body_flags_t", "ideatek:ideatek_shape_kind_t",
-    "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_terrain_flags_t",
-    "ideatek:ideatek_terrain_shape_t", "ideatek:ideatek_terrain_op_t",
-    "ideatek:Terrain", "ideatek:TerrainMaterial", "ideatek:TerrainEdit",
-    "ideatek:TerrainFill", "ideatek:Shape",
+    "ideatek:ideatek_body_flags_t", "ideatek:ideatek_motion_quality_t",
+    "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
+    "ideatek:ideatek_terrain_flags_t", "ideatek:ideatek_terrain_shape_t",
+    "ideatek:ideatek_terrain_op_t", "ideatek:Terrain",
+    "ideatek:TerrainMaterial", "ideatek:TerrainEdit", "ideatek:TerrainFill",
+    "ideatek:Shape",
 ]
 '''
 

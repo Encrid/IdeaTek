@@ -27,6 +27,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_quat_t", ideatek_quat_t);
     STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
     ENUM(api, "ideatek:ideatek_body_kind_t", ideatek_body_kind_t);
+    ENUM(api, "ideatek:ideatek_motion_quality_t", ideatek_motion_quality_t);
     ENUM(api, "ideatek:ideatek_mass_mode_t", ideatek_mass_mode_t);
     MASK(api, "ideatek:ideatek_locked_t", ideatek_locked_t);
     MASK(api, "ideatek:ideatek_body_flags_t", ideatek_body_flags_t);
@@ -38,9 +39,34 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_query_mode_t", ideatek_query_mode_t);
     MASK(api, "ideatek:ideatek_joint_flags_t", ideatek_joint_flags_t);
     MASK(api, "ideatek:ideatek_joint_features_t", ideatek_joint_features_t);
+    ENUM(api, "ideatek:ideatek_drive_mode_t", ideatek_drive_mode_t);
+    ENUM(api, "ideatek:ideatek_spring_mode_t", ideatek_spring_mode_t);
+    STRUCT(api, "ideatek:ideatek_joint_drive_t", ideatek_joint_drive_t);
+    ENUM(api, "ideatek:ideatek_path_rotation_t", ideatek_path_rotation_t);
+    ENUM(api, "ideatek:ideatek_articulation_joint_t",
+        ideatek_articulation_joint_t);
+    MASK(api, "ideatek:ideatek_articulation_flags_t",
+        ideatek_articulation_flags_t);
+    ENUM(api, "ideatek:ideatek_ground_state_t", ideatek_ground_state_t);
+    ENUM(api, "ideatek:ideatek_non_walkable_t", ideatek_non_walkable_t);
+    MASK(api, "ideatek:ideatek_character_flags_t", ideatek_character_flags_t);
+    MASK(api, "ideatek:ideatek_character_collision_t",
+        ideatek_character_collision_t);
+    ENUM(api, "ideatek:ideatek_snapshot_action_t", ideatek_snapshot_action_t);
+    ENUM(api, "ideatek:ideatek_snapshot_status_t", ideatek_snapshot_status_t);
+    ENUM(api, "ideatek:ideatek_vehicle_kind_t", ideatek_vehicle_kind_t);
+    ENUM(api, "ideatek:ideatek_wheel_test_t", ideatek_wheel_test_t);
+    ENUM(api, "ideatek:ideatek_transmission_mode_t",
+        ideatek_transmission_mode_t);
     MASK(api, "ideatek:ideatek_wheel_flags_t", ideatek_wheel_flags_t);
+    ENUM(api, "ideatek:ideatek_damage_shape_t", ideatek_damage_shape_t);
+    ENUM(api, "ideatek:ideatek_bend_t", ideatek_bend_t);
+    ENUM(api, "ideatek:ideatek_lra_t", ideatek_lra_t);
     MASK(api, "ideatek:ideatek_rope_flags_t", ideatek_rope_flags_t);
     MASK(api, "ideatek:ideatek_liquid_flags_t", ideatek_liquid_flags_t);
+    ENUM(api, "ideatek:ideatek_liquid_technique_t", ideatek_liquid_technique_t);
+    ENUM(api, "ideatek:ideatek_emitter_shape_t", ideatek_emitter_shape_t);
+    MASK(api, "ideatek:ideatek_smoke_flags_t", ideatek_smoke_flags_t);
 }
 
 [[maybe_unused]] static void declare_late(const bridge_api_t *api)
@@ -53,9 +79,12 @@ static const char WHO[] = MANIFEST;
 {
     declare_fields(api);
     STRUCT(api, "ideatek:Body", ideatek_body_t);
+    STRUCT(api, "ideatek:KinematicTarget", ideatek_kinematic_target_t);
+    STRUCT(api, "ideatek:WakeEvent", ideatek_wake_event_t);
     STRUCT(api, "ideatek:Motion", ideatek_motion_t);
     STRUCT(api, "ideatek:Push", ideatek_push_t);
     STRUCT(api, "ideatek:Shape", ideatek_shape_t);
+    STRUCT(api, "ideatek:ShapeMaterials", ideatek_shape_materials_t);
     STRUCT(api, "ideatek:PhysicsMaterial", ideatek_physics_material_t);
     STRUCT(api, "ideatek:SensorEvent", ideatek_sensor_event_t);
     STRUCT(api, "ideatek:ContactEvent", ideatek_contact_event_t);
@@ -70,19 +99,45 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:DistanceJoint", ideatek_distance_joint_t);
     STRUCT(api, "ideatek:SwingTwistJoint", ideatek_swing_twist_joint_t);
     STRUCT(api, "ideatek:SixDofJoint", ideatek_six_dof_joint_t);
+    STRUCT(api, "ideatek:GearJoint", ideatek_gear_joint_t);
+    STRUCT(api, "ideatek:RackAndPinionJoint", ideatek_rack_and_pinion_joint_t);
+    STRUCT(api, "ideatek:PulleyJoint", ideatek_pulley_joint_t);
+    STRUCT(api, "ideatek:PathJoint", ideatek_path_joint_t);
+    STRUCT(api, "ideatek:ConeJoint", ideatek_cone_joint_t);
+    STRUCT(api, "ideatek:MotorJoint", ideatek_motor_joint_t);
+    STRUCT(api, "ideatek:WheelJoint", ideatek_wheel_joint_t);
+    TAG(api, "ideatek:NoCollideJoint");
     STRUCT(api, "ideatek:BodyJointEvent", ideatek_body_joint_event_t);
+    STRUCT(api, "ideatek:BodyJointState", ideatek_body_joint_state_t);
+    STRUCT(api, "ideatek:Articulation", ideatek_articulation_t);
+    STRUCT(api, "ideatek:ArticulationLink", ideatek_articulation_link_t);
+    STRUCT(api, "ideatek:ArticulationState", ideatek_articulation_state_t);
+    STRUCT(api, "ideatek:ArticulationCommand", ideatek_articulation_command_t);
+    STRUCT(api, "ideatek:Character", ideatek_character_t);
+    STRUCT(api, "ideatek:CharacterMove", ideatek_character_move_t);
+    STRUCT(api, "ideatek:CharacterState", ideatek_character_state_t);
+    STRUCT(api, "ideatek:PhysicsSnapshotRequest",
+        ideatek_physics_snapshot_request_t);
+    STRUCT(api, "ideatek:PhysicsSnapshot", ideatek_physics_snapshot_t);
     STRUCT(api, "ideatek:Vehicle", ideatek_vehicle_t);
+    STRUCT(api, "ideatek:VehicleEngine", ideatek_vehicle_engine_t);
+    STRUCT(api, "ideatek:VehicleTransmission", ideatek_vehicle_transmission_t);
+    STRUCT(api, "ideatek:VehicleDifferential", ideatek_vehicle_differential_t);
+    STRUCT(api, "ideatek:AntiRollBar", ideatek_anti_roll_bar_t);
     STRUCT(api, "ideatek:Wheel", ideatek_wheel_t);
     STRUCT(api, "ideatek:VehicleInput", ideatek_vehicle_input_t);
     STRUCT(api, "ideatek:WheelState", ideatek_wheel_state_t);
+    STRUCT(api, "ideatek:VehicleState", ideatek_vehicle_state_t);
     STRUCT(api, "ideatek:PoseDrive", ideatek_pose_drive_t);
     STRUCT(api, "ideatek:Destructible", ideatek_destructible_t);
+    STRUCT(api, "ideatek:DestructibleAsset", ideatek_destructible_asset_t);
     STRUCT(api, "ideatek:Damage", ideatek_damage_t);
     STRUCT(api, "ideatek:BreakEvent", ideatek_break_event_t);
     STRUCT(api, "ideatek:HiddenJoint", ideatek_hidden_joint_t);
     STRUCT(api, "ideatek:Cut", ideatek_cut_t);
     STRUCT(api, "ideatek:CutEvent", ideatek_cut_event_t);
     STRUCT(api, "ideatek:SoftBody", ideatek_soft_body_t);
+    STRUCT(api, "ideatek:SoftBodyAttachment", ideatek_soft_body_attachment_t);
     STRUCT(api, "ideatek:SoftBodyReset", ideatek_soft_body_reset_t);
     STRUCT(api, "ideatek:Rope", ideatek_rope_t);
     STRUCT(api, "ideatek:Water", ideatek_water_t);
@@ -91,6 +146,11 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:Buoyancy", ideatek_buoyancy_t);
     STRUCT(api, "ideatek:Liquid", ideatek_liquid_t);
     STRUCT(api, "ideatek:LiquidEmitter", ideatek_liquid_emitter_t);
+    STRUCT(api, "ideatek:LiquidParticles", ideatek_liquid_particles_t);
+    STRUCT(api, "ideatek:LiquidFoam", ideatek_liquid_foam_t);
+    STRUCT(api, "ideatek:SmokeVolume", ideatek_smoke_volume_t);
+    STRUCT(api, "ideatek:SmokeEmitter", ideatek_smoke_emitter_t);
+    STRUCT(api, "ideatek:SmokeGrid", ideatek_smoke_grid_t);
     STRUCT(api, "ideatek:LagHistory", ideatek_lag_history_t);
 }
 
@@ -103,6 +163,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_quat_t", ideatek_quat_t);
     STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
     ENUM(api, "ideatek:ideatek_body_kind_t", ideatek_body_kind_t);
+    ENUM(api, "ideatek:ideatek_motion_quality_t", ideatek_motion_quality_t);
     ENUM(api, "ideatek:ideatek_mass_mode_t", ideatek_mass_mode_t);
     MASK(api, "ideatek:ideatek_locked_t", ideatek_locked_t);
     MASK(api, "ideatek:ideatek_body_flags_t", ideatek_body_flags_t);
@@ -113,9 +174,30 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_query_mode_t", ideatek_query_mode_t);
     MASK(api, "ideatek:ideatek_joint_flags_t", ideatek_joint_flags_t);
     MASK(api, "ideatek:ideatek_joint_features_t", ideatek_joint_features_t);
+    ENUM(api, "ideatek:ideatek_drive_mode_t", ideatek_drive_mode_t);
+    ENUM(api, "ideatek:ideatek_spring_mode_t", ideatek_spring_mode_t);
+    STRUCT(api, "ideatek:ideatek_joint_drive_t", ideatek_joint_drive_t);
+    ENUM(api, "ideatek:ideatek_path_rotation_t", ideatek_path_rotation_t);
+    ENUM(api, "ideatek:ideatek_articulation_joint_t",
+        ideatek_articulation_joint_t);
+    MASK(api, "ideatek:ideatek_articulation_flags_t",
+        ideatek_articulation_flags_t);
+    ENUM(api, "ideatek:ideatek_non_walkable_t", ideatek_non_walkable_t);
+    MASK(api, "ideatek:ideatek_character_flags_t", ideatek_character_flags_t);
+    ENUM(api, "ideatek:ideatek_snapshot_action_t", ideatek_snapshot_action_t);
+    ENUM(api, "ideatek:ideatek_vehicle_kind_t", ideatek_vehicle_kind_t);
+    ENUM(api, "ideatek:ideatek_wheel_test_t", ideatek_wheel_test_t);
+    ENUM(api, "ideatek:ideatek_transmission_mode_t",
+        ideatek_transmission_mode_t);
     MASK(api, "ideatek:ideatek_wheel_flags_t", ideatek_wheel_flags_t);
+    ENUM(api, "ideatek:ideatek_damage_shape_t", ideatek_damage_shape_t);
+    ENUM(api, "ideatek:ideatek_bend_t", ideatek_bend_t);
+    ENUM(api, "ideatek:ideatek_lra_t", ideatek_lra_t);
     MASK(api, "ideatek:ideatek_rope_flags_t", ideatek_rope_flags_t);
     MASK(api, "ideatek:ideatek_liquid_flags_t", ideatek_liquid_flags_t);
+    ENUM(api, "ideatek:ideatek_liquid_technique_t", ideatek_liquid_technique_t);
+    ENUM(api, "ideatek:ideatek_emitter_shape_t", ideatek_emitter_shape_t);
+    MASK(api, "ideatek:ideatek_smoke_flags_t", ideatek_smoke_flags_t);
     api->attach(api, id, STRUCT(api, "ideatek:Body", ideatek_body_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:Push", ideatek_push_t),
@@ -174,6 +256,53 @@ static const char WHO[] = MANIFEST;
         ideatek_liquid_emitter_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:LagHistory",
         ideatek_lag_history_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:KinematicTarget",
+        ideatek_kinematic_target_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ShapeMaterials",
+        ideatek_shape_materials_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:Character", ideatek_character_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:CharacterMove",
+        ideatek_character_move_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:PhysicsSnapshotRequest",
+        ideatek_physics_snapshot_request_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:DestructibleAsset",
+        ideatek_destructible_asset_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:GearJoint", ideatek_gear_joint_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:RackAndPinionJoint",
+        ideatek_rack_and_pinion_joint_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:PulleyJoint",
+        ideatek_pulley_joint_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:PathJoint", ideatek_path_joint_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ConeJoint", ideatek_cone_joint_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:MotorJoint",
+        ideatek_motor_joint_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:WheelJoint",
+        ideatek_wheel_joint_t), BRIDGE_ZEROED);
+    api->attach(api, id, TAG(api, "ideatek:NoCollideJoint"), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:VehicleEngine",
+        ideatek_vehicle_engine_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:VehicleTransmission",
+        ideatek_vehicle_transmission_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:VehicleDifferential",
+        ideatek_vehicle_differential_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:AntiRollBar",
+        ideatek_anti_roll_bar_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:SoftBodyAttachment",
+        ideatek_soft_body_attachment_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:SmokeVolume",
+        ideatek_smoke_volume_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:SmokeEmitter",
+        ideatek_smoke_emitter_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:Articulation",
+        ideatek_articulation_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ArticulationLink",
+        ideatek_articulation_link_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ArticulationCommand",
+        ideatek_articulation_command_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_physics(const bridge_api_t *api)
@@ -186,7 +315,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
     ENUM(api, "ideatek:ideatek_topology_t", ideatek_topology_t);
     ENUM(api, "ideatek:ideatek_index_format_t", ideatek_index_format_t);
+    ENUM(api, "ideatek:ideatek_dimension_t", ideatek_dimension_t);
     ENUM(api, "ideatek:ideatek_body_kind_t", ideatek_body_kind_t);
+    ENUM(api, "ideatek:ideatek_motion_quality_t", ideatek_motion_quality_t);
     ENUM(api, "ideatek:ideatek_mass_mode_t", ideatek_mass_mode_t);
     MASK(api, "ideatek:ideatek_locked_t", ideatek_locked_t);
     MASK(api, "ideatek:ideatek_body_flags_t", ideatek_body_flags_t);
@@ -198,9 +329,34 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_query_mode_t", ideatek_query_mode_t);
     MASK(api, "ideatek:ideatek_joint_flags_t", ideatek_joint_flags_t);
     MASK(api, "ideatek:ideatek_joint_features_t", ideatek_joint_features_t);
+    ENUM(api, "ideatek:ideatek_drive_mode_t", ideatek_drive_mode_t);
+    ENUM(api, "ideatek:ideatek_spring_mode_t", ideatek_spring_mode_t);
+    STRUCT(api, "ideatek:ideatek_joint_drive_t", ideatek_joint_drive_t);
+    ENUM(api, "ideatek:ideatek_path_rotation_t", ideatek_path_rotation_t);
+    ENUM(api, "ideatek:ideatek_articulation_joint_t",
+        ideatek_articulation_joint_t);
+    MASK(api, "ideatek:ideatek_articulation_flags_t",
+        ideatek_articulation_flags_t);
+    ENUM(api, "ideatek:ideatek_ground_state_t", ideatek_ground_state_t);
+    ENUM(api, "ideatek:ideatek_non_walkable_t", ideatek_non_walkable_t);
+    MASK(api, "ideatek:ideatek_character_flags_t", ideatek_character_flags_t);
+    MASK(api, "ideatek:ideatek_character_collision_t",
+        ideatek_character_collision_t);
+    ENUM(api, "ideatek:ideatek_snapshot_action_t", ideatek_snapshot_action_t);
+    ENUM(api, "ideatek:ideatek_snapshot_status_t", ideatek_snapshot_status_t);
+    ENUM(api, "ideatek:ideatek_vehicle_kind_t", ideatek_vehicle_kind_t);
+    ENUM(api, "ideatek:ideatek_wheel_test_t", ideatek_wheel_test_t);
+    ENUM(api, "ideatek:ideatek_transmission_mode_t",
+        ideatek_transmission_mode_t);
     MASK(api, "ideatek:ideatek_wheel_flags_t", ideatek_wheel_flags_t);
+    ENUM(api, "ideatek:ideatek_damage_shape_t", ideatek_damage_shape_t);
+    ENUM(api, "ideatek:ideatek_bend_t", ideatek_bend_t);
+    ENUM(api, "ideatek:ideatek_lra_t", ideatek_lra_t);
     MASK(api, "ideatek:ideatek_rope_flags_t", ideatek_rope_flags_t);
     MASK(api, "ideatek:ideatek_liquid_flags_t", ideatek_liquid_flags_t);
+    ENUM(api, "ideatek:ideatek_liquid_technique_t", ideatek_liquid_technique_t);
+    ENUM(api, "ideatek:ideatek_emitter_shape_t", ideatek_emitter_shape_t);
+    MASK(api, "ideatek:ideatek_smoke_flags_t", ideatek_smoke_flags_t);
     STRUCT(api, "ideatek:Body", ideatek_body_t);
     STRUCT(api, "ideatek:Push", ideatek_push_t);
     STRUCT(api, "ideatek:Shape", ideatek_shape_t);
@@ -231,6 +387,31 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:Liquid", ideatek_liquid_t);
     STRUCT(api, "ideatek:LiquidEmitter", ideatek_liquid_emitter_t);
     STRUCT(api, "ideatek:LagHistory", ideatek_lag_history_t);
+    STRUCT(api, "ideatek:KinematicTarget", ideatek_kinematic_target_t);
+    STRUCT(api, "ideatek:ShapeMaterials", ideatek_shape_materials_t);
+    STRUCT(api, "ideatek:Character", ideatek_character_t);
+    STRUCT(api, "ideatek:CharacterMove", ideatek_character_move_t);
+    STRUCT(api, "ideatek:PhysicsSnapshotRequest",
+        ideatek_physics_snapshot_request_t);
+    STRUCT(api, "ideatek:DestructibleAsset", ideatek_destructible_asset_t);
+    STRUCT(api, "ideatek:GearJoint", ideatek_gear_joint_t);
+    STRUCT(api, "ideatek:RackAndPinionJoint", ideatek_rack_and_pinion_joint_t);
+    STRUCT(api, "ideatek:PulleyJoint", ideatek_pulley_joint_t);
+    STRUCT(api, "ideatek:PathJoint", ideatek_path_joint_t);
+    STRUCT(api, "ideatek:ConeJoint", ideatek_cone_joint_t);
+    STRUCT(api, "ideatek:MotorJoint", ideatek_motor_joint_t);
+    STRUCT(api, "ideatek:WheelJoint", ideatek_wheel_joint_t);
+    TAG(api, "ideatek:NoCollideJoint");
+    STRUCT(api, "ideatek:VehicleEngine", ideatek_vehicle_engine_t);
+    STRUCT(api, "ideatek:VehicleTransmission", ideatek_vehicle_transmission_t);
+    STRUCT(api, "ideatek:VehicleDifferential", ideatek_vehicle_differential_t);
+    STRUCT(api, "ideatek:AntiRollBar", ideatek_anti_roll_bar_t);
+    STRUCT(api, "ideatek:SoftBodyAttachment", ideatek_soft_body_attachment_t);
+    STRUCT(api, "ideatek:SmokeVolume", ideatek_smoke_volume_t);
+    STRUCT(api, "ideatek:SmokeEmitter", ideatek_smoke_emitter_t);
+    STRUCT(api, "ideatek:Articulation", ideatek_articulation_t);
+    STRUCT(api, "ideatek:ArticulationLink", ideatek_articulation_link_t);
+    STRUCT(api, "ideatek:ArticulationCommand", ideatek_articulation_command_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Tick", ideatek_tick_t, BRIDGE_STRIP,
         BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Transform",
@@ -262,6 +443,27 @@ static const char WHO[] = MANIFEST;
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:MeshInstance",
         ideatek_mesh_instance_t, BRIDGE_STRIP, BRIDGE_TABLE,
         BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:WakeEvent", ideatek_wake_event_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:BodyJointState",
+        ideatek_body_joint_state_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:CharacterState",
+        ideatek_character_state_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:PhysicsSnapshot",
+        ideatek_physics_snapshot_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:VehicleState",
+        ideatek_vehicle_state_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:LiquidParticles",
+        ideatek_liquid_particles_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:LiquidFoam",
+        ideatek_liquid_foam_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:SmokeGrid", ideatek_smoke_grid_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ArticulationState",
+        ideatek_articulation_state_t), BRIDGE_ZEROED);
+    api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Texture",
+        ideatek_texture_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_renderer(const bridge_api_t *api)
@@ -271,6 +473,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:HiddenJoint", ideatek_hidden_joint_t);
     STRUCT(api, "ideatek:Water", ideatek_water_t);
     STRUCT(api, "ideatek:Wave", ideatek_wave_t);
+    STRUCT(api, "ideatek:LiquidParticles", ideatek_liquid_particles_t);
+    STRUCT(api, "ideatek:LiquidFoam", ideatek_liquid_foam_t);
+    STRUCT(api, "ideatek:SmokeGrid", ideatek_smoke_grid_t);
 }
 
 BRIDGE_NATIVE(init)

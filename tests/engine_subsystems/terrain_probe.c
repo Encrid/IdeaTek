@@ -79,6 +79,7 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_mass_mode_t", ideatek_mass_mode_t);
     MASK(api, "ideatek:ideatek_locked_t", ideatek_locked_t);
     MASK(api, "ideatek:ideatek_body_flags_t", ideatek_body_flags_t);
+    ENUM(api, "ideatek:ideatek_motion_quality_t", ideatek_motion_quality_t);
     ENUM(api, "ideatek:ideatek_shape_kind_t", ideatek_shape_kind_t);
     MASK(api, "ideatek:ideatek_shape_flags_t", ideatek_shape_flags_t);
     MASK(api, "ideatek:ideatek_terrain_flags_t", ideatek_terrain_flags_t);
