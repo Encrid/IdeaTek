@@ -5,26 +5,31 @@
 
 ## The codes of a key
 
-Each key has 2 codes:
+Each key has 3 values:
 
-- `code` is the physical key: its USB usage of the page of keyboards, below 512. The layout does not change it.
-- `key` is the logical key in the layout.
+- `code` is the physical key. The layout and the remaps of the system do not change it.
+- `key` is the logical key: the key after the layout and after the remaps of the system.
+- `character` is the Unicode code point that the layout gives to the key.
 
-The logical key of a character is its Unicode code point.
-Each other logical key is its `code` with the bit 30 set.
-A key with no code point and no USB usage has `key` 0, and the input module does not send it.
+`code` and `key` are usages of the USB HID Usage Tables, with the value `(page << 16) | id`.
+For example, the key A has the value 0x00070004 on the page 0x07.
+The input module sends only keys of the page 0x07 of keyboards, the page 0x0C of consumers and the page 0x01 of the generic desktop.
+`key` is 0 when the system gives no logical key.
+`character` is 0 when the key gives no character.
+A key with no usage on these pages has no event.
 
 ## ideatek:Keyboard
 
 `ideatek:Keyboard` keeps the keys that are down.
-`ideatek_keyboard_t` takes 72 bytes. Its alignment is 8.
+`ideatek_keyboard_t` takes 40 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `keys` | `uint64_t[8]` | 0 | 512 bits: the bit `code % 64` of `keys[code / 64]` is 1 while the key is down. |
-| `modifiers` | `ideatek_modifier_t` | 64 | The modifiers that are on. |
+| `keys` | `uint64_t[4]` | 0 | 256 bits, 1 for each id of the page 0x07: the bit `id % 64` of `keys[id / 64]` is 1 while the key is down. |
+| `modifiers` | `ideatek_modifier_t` | 32 | The modifiers that are on. |
 
-Bytes 66 to 71 hold no field.
+Bytes 34 to 39 hold no field.
+A key of the page 0x0C or of the page 0x01 has events, but no bit in `keys`.
 
 ### ideatek:ideatek_modifier_t
 
@@ -49,18 +54,17 @@ Bytes 66 to 71 hold no field.
 ## ideatek:KeyEvent
 
 `ideatek:KeyEvent` tells that a key goes down or up.
-`ideatek_key_event_t` takes 16 bytes. Its alignment is 4.
+`ideatek_key_event_t` takes 20 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `key` | `uint32_t` | 0 | The logical key. |
-| `order` | `uint32_t` | 4 | The rank of the event: `docs/extern/platform_abstraction/input/ideatek_input.h.md`, *The events*. |
-| `code` | `uint16_t` | 8 | The physical key. |
-| `modifiers` | `ideatek_modifier_t` | 10 | The modifiers at the time of the event. |
-| `down` | `bool` | 12 | `true` when the key goes down. |
-| `repeat` | `bool` | 13 | `true` when the system repeats a key that stays down. |
-
-Bytes 14 and 15 hold no field.
+| `character` | `uint32_t` | 0 | The character of the key. |
+| `key` | `uint32_t` | 4 | The logical key. |
+| `code` | `uint32_t` | 8 | The physical key. |
+| `order` | `uint32_t` | 12 | The rank of the event: `docs/extern/platform_abstraction/input/ideatek_input.h.md`, *The events*. |
+| `modifiers` | `ideatek_modifier_t` | 16 | The modifiers at the time of the event. |
+| `down` | `bool` | 18 | `true` when the key goes down. |
+| `repeat` | `bool` | 19 | `true` when the system repeats a key that stays down. |
 
 ## The C types
 
@@ -72,8 +76,8 @@ Bytes 14 and 15 hold no field.
 
 ```text
 { IDEATEK_MODIFIER_LSHIFT = 0x0001, IDEATEK_MODIFIER_RSHIFT = 0x0002, IDEATEK_MODIFIER_LEVEL5 = 0x0004, IDEATEK_MODIFIER_LCTRL = 0x0040, IDEATEK_MODIFIER_RCTRL = 0x0080, IDEATEK_MODIFIER_LALT = 0x0100, IDEATEK_MODIFIER_RALT = 0x0200, IDEATEK_MODIFIER_LGUI = 0x0400, IDEATEK_MODIFIER_RGUI = 0x0800, IDEATEK_MODIFIER_NUM = 0x1000, IDEATEK_MODIFIER_CAPS = 0x2000, IDEATEK_MODIFIER_MODE = 0x4000, IDEATEK_MODIFIER_SCROLL = 0x8000 }
-{ uint64_t keys[8]; ideatek_modifier_t modifiers; }
-{ uint32_t key; uint32_t order; uint16_t code; ideatek_modifier_t modifiers; bool down; bool repeat; }
+{ uint64_t keys[4]; ideatek_modifier_t modifiers; }
+{ uint32_t character; uint32_t key; uint32_t code; uint32_t order; ideatek_modifier_t modifiers; bool down; bool repeat; }
 ```
 
 ## The declarations

@@ -100,8 +100,8 @@ static const char WHO[] = MANIFEST;
     ideatek_input_event_t focus = { .order = 0,
         .kind = IDEATEK_INPUT_EVENT_KIND_FOCUS_GAINED };
     ideatek_keyboard_t keyboard = { .modifiers = IDEATEK_MODIFIER_NUM };
-    ideatek_key_event_t key = { .key = 'a', .order = 1, .code = 4,
-        .down = true };
+    ideatek_key_event_t key = { .character = 'a', .key = 0x00070004,
+        .code = 0x00070004, .order = 1, .down = true };
     ideatek_text_event_t text = { .code_point = 'a', .order = 2 };
     ideatek_mouse_t mouse = { .x = 1.0F, .y = 2.0F };
     ideatek_mouse_motion_t motion = { .x = 1.0F, .y = 2.0F, .rel_x = 1.0F,

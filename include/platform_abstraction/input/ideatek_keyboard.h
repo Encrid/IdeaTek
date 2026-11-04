@@ -33,7 +33,7 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_modifier_t, uint16_t,
     IDEATEK_MODIFIER_VALUES);
 
     #define IDEATEK_KEYBOARD_FIELDS { \
-        uint64_t keys[8]; \
+        uint64_t keys[4]; \
         ideatek_modifier_t modifiers; \
     }
 
@@ -41,9 +41,10 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_keyboard_t, IDEATEK_KEYBOARD_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_keyboard_t, IDEATEK_KEYBOARD_FIELDS);
 
     #define IDEATEK_KEY_EVENT_FIELDS { \
+        uint32_t character; \
         uint32_t key; \
+        uint32_t code; \
         uint32_t order; \
-        uint16_t code; \
         ideatek_modifier_t modifiers; \
         bool down; \
         bool repeat; \

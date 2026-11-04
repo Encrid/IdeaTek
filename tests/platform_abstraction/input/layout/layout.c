@@ -51,9 +51,10 @@ static void show_keyboard(void)
 static void show_key_event(void)
 {
     SIZE(ideatek_key_event_t);
+    AT(ideatek_key_event_t, character);
     AT(ideatek_key_event_t, key);
-    AT(ideatek_key_event_t, order);
     AT(ideatek_key_event_t, code);
+    AT(ideatek_key_event_t, order);
     AT(ideatek_key_event_t, modifiers);
     AT(ideatek_key_event_t, down);
     AT(ideatek_key_event_t, repeat);
