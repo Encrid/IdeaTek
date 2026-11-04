@@ -11,8 +11,7 @@ The types of this header hold no value of a graphics API. A header of each API h
 - The GPU module writes `ideatek:Gpu`, `ideatek:DefaultGpu`, `ideatek:GpuDevice` and `ideatek:Swapchain`, and the types of its API. A deployment has one GPU module.
 - A drawer reads all the types of the GPU part, and draws with the device. A renderer and the UI are drawers.
 
-Out: a frame rate limit, a render scale, more than 1 queue, more than 1 device, and a GPU in a module of wasm.
-Comes back: more queues, when a measure on a target shows that a drawer waits for the queue.
+Out: a frame rate limit, a render scale, more than 1 device, and a GPU in a module of wasm.
 
 ## The GPUs
 
@@ -60,9 +59,10 @@ In the last phase, the GPU module gives the image to the window.
 When the window has no image in a round, the status is `IDEATEK_SWAPCHAIN_STATUS_SKIPPED`, and no drawer draws to the window.
 A minimized window and a window of size 0 have no image.
 
-All the drawers and the GPU module use 1 queue. No 2 modules give work to the queue at the same time.
+The API gives 3 queues: graphics, async compute and transfer. Each header of an API tells them.
+No 2 modules give work to a queue of the device at the same time, because 2 queues can be 1 queue of the GPU.
 So a pair of the deployment puts the GPU module before each drawer in the first phase, and after each drawer in the last phase.
-A pair also orders each 2 drawers of a phase, and that order is the order of their work on the queue.
+A pair also orders each 2 drawers of a phase, and that order is the order of their work on the queues.
 
 ## The settings of the GPU module
 

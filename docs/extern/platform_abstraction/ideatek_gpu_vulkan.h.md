@@ -8,7 +8,7 @@ The header includes no header of Vulkan. Each handle is a `uint64_t`, and a draw
 
 The GPU module attaches `ideatek:VulkanDevice` to the entity of `ideatek:GpuDevice`, when the status is `IDEATEK_GPU_STATUS_READY`.
 It attaches `ideatek:VulkanSwapchain` to the entity of the window in each round with an image.
-A drawer makes no device and no swapchain. It gives its work to `queue`, and destroys no handle of the GPU module.
+A drawer makes no device and no swapchain. It gives its work to the 3 queues, and destroys no handle of the GPU module.
 
 ## The image of a round
 
@@ -52,18 +52,26 @@ With `validation`, the GPU module turns on the layer `VK_LAYER_KHRONOS_validatio
 ## ideatek:VulkanDevice
 
 `ideatek:VulkanDevice` gives the handles of the device.
-`ideatek_vulkan_device_t` takes 48 bytes. Its alignment is 8.
+`ideatek_vulkan_device_t` takes 72 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `instance` | `uint64_t` | 0 | The `VkInstance`. |
 | `physical_device` | `uint64_t` | 8 | The `VkPhysicalDevice` of the GPU. |
 | `device` | `uint64_t` | 16 | The `VkDevice`. |
-| `queue` | `uint64_t` | 24 | The `VkQueue` that all the drawers use. It can do graphics, compute and transfer. |
-| `timeline` | `uint64_t` | 32 | The `VkSemaphore` of the type timeline: *The image of a round*. |
-| `queue_family` | `uint32_t` | 40 | The index of the family of `queue`. |
+| `queue` | `uint64_t` | 24 | The `VkQueue` of graphics. It can do graphics, compute and transfer. |
+| `compute_queue` | `uint64_t` | 32 | The `VkQueue` of async compute. It can do compute and transfer. |
+| `transfer_queue` | `uint64_t` | 40 | The `VkQueue` of uploads, for the streaming. It can do transfer. |
+| `timeline` | `uint64_t` | 48 | The `VkSemaphore` of the type timeline: *The image of a round*. |
+| `queue_family` | `uint32_t` | 56 | The index of the family of `queue`. |
+| `compute_family` | `uint32_t` | 60 | The index of the family of `compute_queue`. |
+| `transfer_family` | `uint32_t` | 64 | The index of the family of `transfer_queue`. |
 
-Bytes 44 to 47 hold no field.
+Bytes 68 to 71 hold no field.
+The GPU module takes `compute_queue` from a family with compute and no graphics.
+It takes `transfer_queue` from a family with transfer and no graphics and no compute.
+If the GPU has no such family, the handle is `queue`, and the index is `queue_family`.
+A drawer that uses 1 image or 1 buffer on 2 families moves it from one family to the other with a barrier.
 
 ## ideatek:VulkanSwapchain
 
@@ -85,7 +93,7 @@ Bytes 44 to 47 hold no field.
 | `ideatek:VulkanSwapchain` | `ideatek_vulkan_swapchain_t` | `ideatek_vulkan_swapchain_t_desc` | `IDEATEK_VULKAN_SWAPCHAIN_FIELDS` |
 
 ```text
-{ uint64_t instance; uint64_t physical_device; uint64_t device; uint64_t queue; uint64_t timeline; uint32_t queue_family; }
+{ uint64_t instance; uint64_t physical_device; uint64_t device; uint64_t queue; uint64_t compute_queue; uint64_t transfer_queue; uint64_t timeline; uint32_t queue_family; uint32_t compute_family; uint32_t transfer_family; }
 { uint64_t image; uint64_t view; int32_t format; int32_t color_space; }
 ```
 
