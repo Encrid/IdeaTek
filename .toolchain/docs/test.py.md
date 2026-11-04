@@ -25,7 +25,7 @@
 | `verdict(config, values, outputs, group, index, case, broken, copies, counted, failing)` | Runs the copies of one case at the same time, and gives their verdict. |
 | `test(config, values, outputs, groups, broken, said, copies, counted, failing)` | Runs all the groups, and writes each verdict. With `said`, it writes `said.txt`. It gives the names of the cases that failed. |
 | `chosen(groups, text)` | Gives only the cases whose name contains `text`. It stops if no case has it: `no case has <text> in its name`. |
-| `picked(groups, args)` | Gives only the groups of the parts of `--part`, as *Groups* tells, then only the cases of `-k`, with `chosen`. |
+| `picked(config, groups, args)` | Gives only the groups of the parts of `--part`, as *Groups* tells, then only the cases of `-k`, with `chosen`. |
 | `groups_of(config, values, folder)` | Reads and checks the groups of a folder: `tests/cases`, or `.toolchain/tests/cases` of the repository `my_c23_template`. |
 | `changed(args, run, write, prepared)` | Does the steps of a changed run, as *A changed run* tells. It gives the config, the variables, what `write` gave, the artifacts and the groups. |
 | `scoped(args, entries, key, names)` | Gives the exemptions whose `key` matches one of the names, with `*`. With no `--part`, it gives all the exemptions. |
@@ -61,7 +61,9 @@ The message of step 1 is `<target> does not run here: build it, and test it wher
 
 `groups_of` reads each file `**.toml` of its folder, in the order of the paths.
 The name of a group is the path of its file in `tests/cases`, without `.toml`.
-A group is in a part if the name of the group is the part, or begins with the part and a slash.
+
+A group is in a part if its name is the folder of the part, or begins with the folder and a slash.
+The folder of a part is its key `folder`: `.toolchain/docs/project.toml.md`, *[parts]*.
 `picked` stops if no group is in the named parts: `no case group is in the parts <parts>`.
 A file with no case gives no group.
 `groups_of` stops if a case:

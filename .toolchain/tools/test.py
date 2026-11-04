@@ -239,10 +239,11 @@ def chosen(groups, text):
     return [(group, cases) for group, cases in found if cases] or die('no case has %s in its name' % text)
 
 
-def picked(groups, args):
+def picked(config, groups, args):
     if args.part:
+        folders = [config['parts'][part]['folder'] for part in args.part]
         groups = [(group, cases) for group, cases in groups
-                  if any(group == part or group.startswith(part + '/') for part in args.part)] \
+                  if any(group == folder or group.startswith(folder + '/') for folder in folders)] \
             or die('no case group is in the parts %s' % ' '.join(args.part))
     return chosen(groups, args.k) if args.k else groups
 
@@ -256,7 +257,7 @@ def changed(args, run, write, prepared=None):
     if unlinked:
         die('the cases need what is linked: ' + ' '.join(unlinked))
     groups = groups_of(config, values, config.get('test', {}).get('cases', 'tests/cases'))
-    groups = picked(groups, args) if groups else groups
+    groups = picked(config, groups, args) if groups else groups
     return config, values, written, {name: paths[0] for name, paths in made}, groups
 
 
@@ -310,7 +311,7 @@ def main():
     groups = groups_of(config, values, folder)
     if not groups:
         return print('no case: %s holds no case' % folder)
-    groups = picked(groups, args)
+    groups = picked(config, groups, args)
     copies = args.copies or config['test'].get('copies') or die('.toolchain/project.toml: write [test] copies')
     own = not (args.broken or args.toolchain or args.k or args.part)
     rounds = args.rounds or 1

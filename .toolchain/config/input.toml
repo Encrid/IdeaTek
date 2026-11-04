@@ -1,5 +1,6 @@
 [parts.input]
 name = "BC-IdeaTek-Input"
+folder = "input"
 uses = ["world"]
 third_party = []
 

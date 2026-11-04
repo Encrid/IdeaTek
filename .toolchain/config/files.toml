@@ -1,5 +1,6 @@
 [parts.files]
 name = "BC-IdeaTek-Files"
+folder = "files"
 uses = []
 third_party = []
 

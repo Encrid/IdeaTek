@@ -1,5 +1,6 @@
 [parts.resources]
 name = "BC-IdeaTek-Resources"
+folder = "resources"
 uses = ["world", "files"]
 third_party = []
 

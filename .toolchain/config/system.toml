@@ -1,5 +1,6 @@
 [parts.system]
 name = "BC-IdeaTek-System"
+folder = "system"
 uses = []
 third_party = []
 

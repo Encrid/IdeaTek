@@ -1,5 +1,6 @@
 [parts.frame]
 name = "BC-IdeaTek-Frame"
+folder = "frame"
 uses = []
 third_party = []
 

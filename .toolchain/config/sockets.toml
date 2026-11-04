@@ -1,5 +1,6 @@
 [parts.sockets]
 name = "BC-IdeaTek-Sockets"
+folder = "sockets"
 uses = ["world"]
 third_party = []
 

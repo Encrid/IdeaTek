@@ -1,5 +1,6 @@
 [parts.states]
 name = "BC-IdeaTek-States"
+folder = "states"
 uses = ["world"]
 third_party = []
 

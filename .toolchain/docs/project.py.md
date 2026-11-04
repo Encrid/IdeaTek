@@ -50,6 +50,7 @@ If the command is not in the table, `project.py` stops with the message
 | `--debug` | Replaces each variable that `[debug]` names with the value of `[debug]`. |
 | `--out <folder>` | Puts the output into this folder. The default is the folder `build` of the project. |
 | `--set <name>=<value>` | Sets a key of `[variables]` to the value. You can use this option more than one time. |
+| `--leave <name>` | Leaves the file `<name>` out of the deliverable and out of its zip: `.toolchain/docs/build.py.md`, *The deliverable*. It is an option of `build` and `pack`. |
 | `--pack` | Puts the package into a zip file. The command `pack` gives this option to `.toolchain/tools/build.py`. |
 | `--join` | Joins the zips of the targets. The command `join` gives this option to `.toolchain/tools/build.py`. |
 | `--break` | Runs the false variant of each case. It is an option of `test` only. |
@@ -76,7 +77,7 @@ With `--part <part>`, each command acts on that part:
 | --- | --- |
 | `build` | Builds the artifacts of the part, and of each part that the part needs through `uses`. |
 | `pack` | Builds as `build` does. Then it writes the zip of the part, and runs the package proof of the part. |
-| `test` | Builds as `build` does, also the test artifacts. Then it runs only the groups of `tests/cases/<part>`. |
+| `test` | Builds as `build` does, also the test artifacts. Then it runs only the groups of `tests/cases/<folder>`, with the folder of the part: `.toolchain/docs/project.toml.md`, *[parts]*. |
 | `join` | Joins `<build>/<name>-<target>.zip` of each target into `<build>/<name>.zip`, with a folder for each target. |
 
 With `--branches`, with `--leaks`, and for the cases that state `fail`, `test` changes only the sources of the named parts.

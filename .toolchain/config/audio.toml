@@ -1,5 +1,6 @@
 [parts.audio]
 name = "BC-IdeaTek-Audio"
+folder = "audio"
 uses = ["world"]
 third_party = []
 

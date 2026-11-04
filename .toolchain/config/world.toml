@@ -1,5 +1,6 @@
 [parts.world]
 name = "BC-IdeaTek-World"
+folder = "world"
 uses = []
 third_party = []
 
