@@ -23,42 +23,49 @@ The project holds the contracts of layers 2, 3 and 4.
 
 ## The parts
 
-The folder of each layer has the name of the layer in snake_case, and holds the folder of each of
-its parts:
+The folder of each layer has the name of the layer in snake_case, and holds the headers of
+its parts. A part has no folder of its own:
 
 ```text
 platform_abstraction/
-    world/
-    window/
-    input/
-    system/
-    files/
-    sockets/
-    audio/
-    gpu/
+    ideatek_audio.h
+    ideatek_clipboard.h
+    ideatek_files.h
+    ideatek_gamepad.h
+    ideatek_gpu.h
+    ideatek_input.h
+    ideatek_keyboard.h
+    ideatek_mouse.h
+    ideatek_sockets.h
+    ideatek_system.h
+    ideatek_text.h
+    ideatek_touch.h
+    ideatek_vulkan.h
+    ideatek_window.h
+    ideatek_world.h
 kernel/
-    frame/
-    states/
-    resources/
+    ideatek_frame.h
+    ideatek_resources.h
+    ideatek_states.h
 engine_subsystems/
-    space/
-    rendering/
-    animation/
-    physics/
-    fields/
-    effects/
-    sound/
-    input_mapping/
-    ui/
-    navigation/
-    networking/
-    web/
-    persistence/
-    services/
-    xr/
-    subtitles/
-    debug_draw/
-    terrain/
+    ideatek_animation.h
+    ideatek_debug_draw.h
+    ideatek_effects.h
+    ideatek_fields.h
+    ideatek_input_mapping.h
+    ideatek_navigation.h
+    ideatek_networking.h
+    ideatek_persistence.h
+    ideatek_physics.h
+    ideatek_rendering.h
+    ideatek_services.h
+    ideatek_sound.h
+    ideatek_space.h
+    ideatek_subtitles.h
+    ideatek_terrain.h
+    ideatek_ui.h
+    ideatek_web.h
+    ideatek_xr.h
 ```
 
 The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the

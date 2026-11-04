@@ -1,0 +1,165 @@
+[[case]]
+name = "ideatek_system_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/system_layout{exe}", "system_state"]
+claims = { status = 0, order = ["size 8", "alignment 4", "locales 0"] }
+false = { run = ["{out}/system_layout{exe}", "url_request"] }
+
+[[case]]
+name = "ideatek_url_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/system_layout{exe}", "url_request"]
+claims = { status = 0, order = ["size 8", "alignment 4", "url 0"] }
+false = { run = ["{out}/system_layout{exe}", "system_state"] }
+
+[[case]]
+name = "ideatek_message_level_t has the size and the alignment of its Usage"
+run = ["{out}/system_layout{exe}", "message_level"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/system_layout{exe}", "system_state"] }
+
+[[case]]
+name = "ideatek_message_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/system_layout{exe}", "message_request"]
+claims = { status = 0, order = ["size 20", "alignment 4", "title 0", "message 8", "level 16"] }
+false = { run = ["{out}/system_layout{exe}", "system_state"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/system_layout{exe}", "descriptors"]
+claims = { status = 0, line = ["{ bridge_text_t locales; }", "{ bridge_text_t url; }", "uint8_t { IDEATEK_MESSAGE_LEVEL_ERROR = 0, IDEATEK_MESSAGE_LEVEL_WARNING = 1, IDEATEK_MESSAGE_LEVEL_INFORMATION = 2 }", "{ bridge_text_t title; bridge_text_t message; ideatek_message_level_t level; }"] }
+false = { run = ["{out}/system_layout{exe}", "system_state"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/system_layout{exe}", "texts"]
+claims = { status = 0, line = ["{ bridge_text_t locales; }", "{ bridge_text_t url; }", "{ IDEATEK_MESSAGE_LEVEL_ERROR = 0, IDEATEK_MESSAGE_LEVEL_WARNING = 1, IDEATEK_MESSAGE_LEVEL_INFORMATION = 2 }", "{ bridge_text_t title; bridge_text_t message; ideatek_message_level_t level; }"] }
+false = { run = ["{out}/system_layout{exe}", "system_state"] }
+
+[[case]]
+name = "ideatek_system.h compiles with the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/platform_abstraction/system_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-c", "tests/platform_abstraction/system_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the four types, the level before the message request"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/system_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["system_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = ["ideatek:ideatek_message_level_t", "ideatek:SystemState", "ideatek:UrlRequest", "ideatek:MessageRequest"]
+'''
+
+[case.false.folders]
+"{case}/m" = ["system_late"]
+
+[[case]]
+name = "the game loads with write on the two requests, and attaches them"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/system_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["system_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:UrlRequest", "ideatek:MessageRequest"]
+read = ["ideatek:ideatek_message_level_t"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:UrlRequest"]
+read = ["ideatek:ideatek_message_level_t", "ideatek:MessageRequest"]
+'''
+
+[[case]]
+name = "the system module loads with write on ideatek:SystemState and read on the two requests, and attaches ideatek:SystemState"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:system@1.0.0, native, m/system_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["system_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:system@1.0.0"]
+write = ["ideatek:SystemState"]
+read = ["ideatek:ideatek_message_level_t", "ideatek:UrlRequest", "ideatek:MessageRequest"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:system@1.0.0"]
+read = ["ideatek:ideatek_message_level_t", "ideatek:SystemState", "ideatek:UrlRequest", "ideatek:MessageRequest"]
+'''
+
+[[case]]
+name = "a reader loads with read on ideatek:SystemState"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/system_reader{library}"] }
+
+[case.folders]
+"{case}/m" = ["system_reader"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = ["ideatek:SystemState"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = ["ideatek:UrlRequest"]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "system", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-System-{target}.zip", "include/ideatek_system.h", "license",
+    "package proof: BC-IdeaTek-System ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "system"] }

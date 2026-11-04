@@ -1,0 +1,282 @@
+[[case]]
+name = "ideatek_save_action_t is 1 byte"
+run = ["{out}/persistence_layout{exe}", "save_action"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_request"] }
+
+[[case]]
+name = "ideatek_save_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_request"]
+claims = { status = 0, order = ["size 32", "alignment 8", "groups 0", "slot 8", "info 16", "action 24"] }
+false = { run = ["{out}/persistence_layout{exe}", "saved"] }
+
+[[case]]
+name = "ideatek_saved_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "saved"]
+claims = { status = 0, order = ["size 16", "alignment 8", "prefab 0", "groups 8"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_id"] }
+
+[[case]]
+name = "ideatek_save_id_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_id"]
+claims = { status = 0, order = ["size 8", "alignment 8", "id 0"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_participant"] }
+
+[[case]]
+name = "ideatek_save_participant_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_participant"]
+claims = { status = 0, order = ["size 8", "alignment 8", "tag 0"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_chunk"] }
+
+[[case]]
+name = "ideatek_save_chunk_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_chunk"]
+claims = { status = 0, order = ["size 32", "alignment 8", "request 0", "tag 8", "data 16", "version 24"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_ready"] }
+
+[[case]]
+name = "ideatek_save_ready_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_ready"]
+claims = { status = 0, order = ["size 16", "alignment 8", "request 0", "tag 8"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_refuse"] }
+
+[[case]]
+name = "ideatek_save_refuse_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_refuse"]
+claims = { status = 0, order = ["size 24", "alignment 8", "request 0", "tag 8", "reason 16"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_state"] }
+
+[[case]]
+name = "ideatek_save_state_t is 1 byte"
+run = ["{out}/persistence_layout{exe}", "save_state"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_result"] }
+
+[[case]]
+name = "ideatek_save_error_t is 1 byte"
+run = ["{out}/persistence_layout{exe}", "save_error"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_result"] }
+
+[[case]]
+name = "ideatek_save_result_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_result"]
+claims = { status = 0, order = ["size 2", "alignment 1", "state 0", "error 1"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_info"] }
+
+[[case]]
+name = "ideatek_save_info_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_info"]
+claims = { status = 0, order = ["size 56", "alignment 8", "request 0", "time 8", "bytes 16", "groups 24", "slot 32", "info 40", "version 48"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_action"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/persistence_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_SAVE_ACTION_SAVE = 0, IDEATEK_SAVE_ACTION_LOAD = 1, IDEATEK_SAVE_ACTION_INFO = 2, IDEATEK_SAVE_ACTION_LIST = 3, IDEATEK_SAVE_ACTION_REMOVE = 4 }",
+    "{ uint64_t groups; bridge_text_t slot; bridge_text_t info; ideatek_save_action_t action; }",
+    "{ uint64_t prefab; uint64_t groups; }",
+    "{ uint64_t id; }",
+    "{ uint64_t tag; }",
+    "{ ideatek_entity_t request; uint64_t tag; bridge_text_t data; uint32_t version; }",
+    "{ ideatek_entity_t request; uint64_t tag; }",
+    "{ ideatek_entity_t request; uint64_t tag; int32_t reason; }",
+    "uint8_t { IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }",
+    "uint8_t { IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6 }",
+    "{ ideatek_save_state_t state; ideatek_save_error_t error; }",
+    "{ ideatek_entity_t request; int64_t time; uint64_t bytes; uint64_t groups; bridge_text_t slot; bridge_text_t info; uint32_t version; }",
+] }
+false = { run = ["{out}/persistence_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/persistence_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_SAVE_ACTION_SAVE = 0, IDEATEK_SAVE_ACTION_LOAD = 1, IDEATEK_SAVE_ACTION_INFO = 2, IDEATEK_SAVE_ACTION_LIST = 3, IDEATEK_SAVE_ACTION_REMOVE = 4 }",
+    "{ uint64_t groups; bridge_text_t slot; bridge_text_t info; ideatek_save_action_t action; }",
+    "{ uint64_t prefab; uint64_t groups; }",
+    "{ uint64_t id; }",
+    "{ uint64_t tag; }",
+    "{ ideatek_entity_t request; uint64_t tag; bridge_text_t data; uint32_t version; }",
+    "{ ideatek_entity_t request; uint64_t tag; }",
+    "{ ideatek_entity_t request; uint64_t tag; int32_t reason; }",
+    "{ IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }",
+    "{ IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6 }",
+    "{ ideatek_save_state_t state; ideatek_save_error_t error; }",
+    "{ ideatek_entity_t request; int64_t time; uint64_t bytes; uint64_t groups; bridge_text_t slot; bridge_text_t info; uint32_t version; }",
+] }
+false = { run = ["{out}/persistence_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the header of the world part and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/persistence_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/persistence_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the 13 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/persistence_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["persistence_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:ideatek_save_state_t", "ideatek:ideatek_save_error_t",
+    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveId",
+    "ideatek:SaveParticipant", "ideatek:SaveChunk", "ideatek:SaveReady",
+    "ideatek:SaveRefuse", "ideatek:SaveResult", "ideatek:SaveInfo",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["persistence_late"]
+
+[[case]]
+name = "the game loads with write on the requests and the saved entities"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/persistence_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["persistence_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:SaveRequest", "ideatek:Saved",
+]
+read = [
+    "ideatek:ideatek_save_action_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:SaveRequest",
+]
+read = [
+    "ideatek:ideatek_save_action_t", "ideatek:Saved",
+]
+'''
+
+[[case]]
+name = "a participant loads with write on its chunks and its answers"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:participant@1.0.0, native, m/persistence_participant{library}"] }
+
+[case.folders]
+"{case}/m" = ["persistence_participant"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:participant@1.0.0"]
+write = [
+    "ideatek:SaveParticipant", "ideatek:SaveChunk", "ideatek:SaveReady",
+    "ideatek:SaveRefuse",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:SaveRequest", "ideatek:SaveId",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:participant@1.0.0"]
+write = [
+    "ideatek:SaveParticipant", "ideatek:SaveChunk", "ideatek:SaveReady",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:SaveRequest", "ideatek:SaveId", "ideatek:SaveRefuse",
+]
+'''
+
+[[case]]
+name = "the save module loads with write on the ids, the chunks of a load, the results and the heads"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:saver@1.0.0, native, m/persistence_saver{library}"] }
+
+[case.folders]
+"{case}/m" = ["persistence_saver"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:saver@1.0.0"]
+write = [
+    "ideatek:SaveId", "ideatek:SaveChunk", "ideatek:SaveResult",
+    "ideatek:SaveInfo",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:ideatek_save_state_t", "ideatek:ideatek_save_error_t",
+    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveParticipant",
+    "ideatek:SaveReady", "ideatek:SaveRefuse",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:saver@1.0.0"]
+write = [
+    "ideatek:SaveId", "ideatek:SaveChunk", "ideatek:SaveResult",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:ideatek_save_state_t", "ideatek:ideatek_save_error_t",
+    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveParticipant",
+    "ideatek:SaveReady", "ideatek:SaveRefuse", "ideatek:SaveInfo",
+]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "persistence", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Persistence-{target}.zip", "include/ideatek_persistence.h", "license",
+    "package proof: BC-IdeaTek-Persistence ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "persistence"] }

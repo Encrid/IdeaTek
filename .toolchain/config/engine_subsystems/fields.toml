@@ -5,13 +5,13 @@ uses = ["world", "space"]
 third_party = []
 
 [parts.fields.package]
-proof = "tests/engine_subsystems/fields/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+proof = "tests/engine_subsystems/fields_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
 
 [compose.fields]
 part = "fields"
-from = "include/engine_subsystems/fields"
-headers = ["*.h"]
+from = "include/engine_subsystems"
+headers = ["ideatek_fields.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "fields_layout"
 kind = "program"
 part = "fields"
 test = true
-sources = ["tests/engine_subsystems/fields/layout/layout.c"]
-include = ["include/engine_subsystems/fields", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+sources = ["tests/engine_subsystems/fields_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "fields_probe"
 kind = "native_module"
 part = "fields"
 test = true
-sources = ["tests/engine_subsystems/fields/probe/probe.c"]
-include = ["include/engine_subsystems/fields", "include/platform_abstraction/world", "include/engine_subsystems/space"]
+sources = ["tests/engine_subsystems/fields_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{fields_probe_words}"]
 

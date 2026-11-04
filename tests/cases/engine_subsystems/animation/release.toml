@@ -1,8 +1,0 @@
-[[case]]
-name = "the release of a target holds the header and the licence, and a program builds from it"
-run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "animation", "--pack"]
-claims = { status = 0, line = [
-    "{case}/out/BC-IdeaTek-Animation-{target}.zip", "include/ideatek_animation.h", "license",
-    "package proof: BC-IdeaTek-Animation ran",
-] }
-false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "animation"] }

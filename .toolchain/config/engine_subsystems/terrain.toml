@@ -5,13 +5,13 @@ uses = ["world", "space", "rendering", "physics"]
 third_party = []
 
 [parts.terrain.package]
-proof = "tests/engine_subsystems/terrain/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+proof = "tests/engine_subsystems/terrain_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
 
 [compose.terrain]
 part = "terrain"
-from = "include/engine_subsystems/terrain"
-headers = ["*.h"]
+from = "include/engine_subsystems"
+headers = ["ideatek_terrain.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "terrain_layout"
 kind = "program"
 part = "terrain"
 test = true
-sources = ["tests/engine_subsystems/terrain/layout/layout.c"]
-include = ["include/engine_subsystems/terrain", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+sources = ["tests/engine_subsystems/terrain_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "terrain_probe"
 kind = "native_module"
 part = "terrain"
 test = true
-sources = ["tests/engine_subsystems/terrain/probe/probe.c"]
-include = ["include/engine_subsystems/terrain", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/engine_subsystems/rendering", "include/engine_subsystems/physics"]
+sources = ["tests/engine_subsystems/terrain_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{terrain_probe_words}"]
 

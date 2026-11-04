@@ -1,0 +1,344 @@
+[[case]]
+name = "ideatek_curve_kind_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "curve_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "curve"] }
+
+[[case]]
+name = "ideatek_curve_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "curve"]
+claims = { status = 0, order = ["size 20", "alignment 4", "bytes 0", "key_count 8", "revision 12", "kind 16"] }
+false = { run = ["{out}/effects_layout{exe}", "emitter_state"] }
+
+[[case]]
+name = "ideatek_emitter_state_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "emitter_state"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_emitter"] }
+
+[[case]]
+name = "ideatek_emitter_flags_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "emitter_flags"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_emitter"] }
+
+[[case]]
+name = "ideatek_particle_emitter_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_emitter"]
+claims = { status = 0, order = ["size 40", "alignment 4", "rate 0", "burst_interval 4", "lifetime_min 8", "lifetime_max 12", "speed_scale 16", "prewarm 20", "burst 24", "max 28", "seed 32", "state 36", "flags 37"] }
+false = { run = ["{out}/effects_layout{exe}", "emission_shape"] }
+
+[[case]]
+name = "ideatek_emission_shape_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "emission_shape"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_shape"] }
+
+[[case]]
+name = "ideatek_particle_shape_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_shape"]
+claims = { status = 0, order = ["size 24", "alignment 8", "mesh 0", "size 8", "kind 20"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_velocity"] }
+
+[[case]]
+name = "ideatek_particle_velocity_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_velocity"]
+claims = { status = 0, order = ["size 32", "alignment 4", "min 0", "max 12", "radial_min 24", "radial_max 28"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_forces"] }
+
+[[case]]
+name = "ideatek_particle_forces_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_forces"]
+claims = { status = 0, order = ["size 16", "alignment 4", "gravity 0", "drag 12"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_emitter_state"] }
+
+[[case]]
+name = "ideatek_particle_emitter_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_emitter_state"]
+claims = { status = 0, order = ["size 8", "alignment 4", "alive 0", "done 4"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_ended"] }
+
+[[case]]
+name = "ideatek_particle_ended_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_ended"]
+claims = { status = 0, order = ["size 16", "alignment 8", "emitter 0", "order 8"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_kind"] }
+
+[[case]]
+name = "ideatek_particle_kind_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "particle_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_look"] }
+
+[[case]]
+name = "ideatek_particle_align_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "particle_align"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_look"] }
+
+[[case]]
+name = "ideatek_particle_sort_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "particle_sort"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_look"] }
+
+[[case]]
+name = "ideatek_particle_look_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_look"]
+claims = { status = 0, order = ["size 88", "alignment 8", "material 0", "mesh 8", "size_curve 16", "color_curve 24", "color 32", "size_min 48", "size_max 52", "rotation_min 56", "rotation_max 60", "spin_min 64", "spin_max 68", "frame_rate 72", "frames_x 76", "frames_y 80", "kind 84", "align 85", "sort 86"] }
+false = { run = ["{out}/effects_layout{exe}", "collision_source"] }
+
+[[case]]
+name = "ideatek_collision_source_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "collision_source"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_collision"] }
+
+[[case]]
+name = "ideatek_collision_mode_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "collision_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_collision"] }
+
+[[case]]
+name = "ideatek_particle_collision_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_collision"]
+claims = { status = 0, order = ["size 24", "alignment 8", "touches 0", "bounce 8", "friction 12", "radius 16", "source 20", "mode 21"] }
+false = { run = ["{out}/effects_layout{exe}", "spawn_on"] }
+
+[[case]]
+name = "ideatek_spawn_on_t is 1 byte"
+run = ["{out}/effects_layout{exe}", "spawn_on"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_spawn"] }
+
+[[case]]
+name = "ideatek_particle_spawn_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_spawn"]
+claims = { status = 0, order = ["size 24", "alignment 8", "parent 0", "rate 8", "inherit_velocity 12", "count 16", "on 20"] }
+false = { run = ["{out}/effects_layout{exe}", "curve_kind"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/effects_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_CURVE_KIND_FLOAT = 0, IDEATEK_CURVE_KIND_COLOR = 1 }",
+    "{ bridge_text_t bytes; uint32_t key_count; uint32_t revision; ideatek_curve_kind_t kind; }",
+    "uint8_t { IDEATEK_EMITTER_STATE_STOPPED = 0, IDEATEK_EMITTER_STATE_PLAYING = 1, IDEATEK_EMITTER_STATE_PAUSED = 2 }",
+    "uint8_t { IDEATEK_EMITTER_FLAGS_ONE_SHOT = 0x01, IDEATEK_EMITTER_FLAGS_LOCAL = 0x02, IDEATEK_EMITTER_FLAGS_DESTROY_AT_END = 0x04 }",
+    "{ float rate; float burst_interval; float lifetime_min; float lifetime_max; float speed_scale; float prewarm; uint32_t burst; uint32_t max; uint32_t seed; ideatek_emitter_state_t state; ideatek_emitter_flags_t flags; }",
+    "uint8_t { IDEATEK_EMISSION_SHAPE_POINT = 0, IDEATEK_EMISSION_SHAPE_SPHERE = 1, IDEATEK_EMISSION_SHAPE_SPHERE_SURFACE = 2, IDEATEK_EMISSION_SHAPE_BOX = 3, IDEATEK_EMISSION_SHAPE_RING = 4, IDEATEK_EMISSION_SHAPE_MESH = 5 }",
+    "{ ideatek_entity_t mesh; ideatek_vec3_t size; ideatek_emission_shape_t kind; }",
+    "{ ideatek_vec3_t min; ideatek_vec3_t max; float radial_min; float radial_max; }",
+    "{ ideatek_vec3_t gravity; float drag; }",
+    "{ uint32_t alive; bool done; }",
+    "{ ideatek_entity_t emitter; uint32_t order; }",
+    "uint8_t { IDEATEK_PARTICLE_KIND_SPRITE = 0, IDEATEK_PARTICLE_KIND_MESH = 1, IDEATEK_PARTICLE_KIND_RIBBON = 2 }",
+    "uint8_t { IDEATEK_PARTICLE_ALIGN_CAMERA = 0, IDEATEK_PARTICLE_ALIGN_VELOCITY = 1 }",
+    "uint8_t { IDEATEK_PARTICLE_SORT_NONE = 0, IDEATEK_PARTICLE_SORT_DEPTH = 1, IDEATEK_PARTICLE_SORT_AGE = 2 }",
+    "{ ideatek_entity_t material; ideatek_entity_t mesh; ideatek_entity_t size_curve; ideatek_entity_t color_curve; ideatek_color_t color; float size_min; float size_max; float rotation_min; float rotation_max; float spin_min; float spin_max; float frame_rate; uint32_t frames_x; uint32_t frames_y; ideatek_particle_kind_t kind; ideatek_particle_align_t align; ideatek_particle_sort_t sort; }",
+    "uint8_t { IDEATEK_COLLISION_SOURCE_DEPTH = 0, IDEATEK_COLLISION_SOURCE_SHAPES = 1 }",
+    "uint8_t { IDEATEK_COLLISION_MODE_BOUNCE = 0, IDEATEK_COLLISION_MODE_KILL = 1, IDEATEK_COLLISION_MODE_STICK = 2 }",
+    "{ uint64_t touches; float bounce; float friction; float radius; ideatek_collision_source_t source; ideatek_collision_mode_t mode; }",
+    "uint8_t { IDEATEK_SPAWN_ON_START = 0, IDEATEK_SPAWN_ON_END = 1, IDEATEK_SPAWN_ON_COLLISION = 2, IDEATEK_SPAWN_ON_CONSTANT = 3 }",
+    "{ ideatek_entity_t parent; float rate; float inherit_velocity; uint32_t count; ideatek_spawn_on_t on; }",
+] }
+false = { run = ["{out}/effects_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/effects_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_CURVE_KIND_FLOAT = 0, IDEATEK_CURVE_KIND_COLOR = 1 }",
+    "{ bridge_text_t bytes; uint32_t key_count; uint32_t revision; ideatek_curve_kind_t kind; }",
+    "{ IDEATEK_EMITTER_STATE_STOPPED = 0, IDEATEK_EMITTER_STATE_PLAYING = 1, IDEATEK_EMITTER_STATE_PAUSED = 2 }",
+    "{ IDEATEK_EMITTER_FLAGS_ONE_SHOT = 0x01, IDEATEK_EMITTER_FLAGS_LOCAL = 0x02, IDEATEK_EMITTER_FLAGS_DESTROY_AT_END = 0x04 }",
+    "{ float rate; float burst_interval; float lifetime_min; float lifetime_max; float speed_scale; float prewarm; uint32_t burst; uint32_t max; uint32_t seed; ideatek_emitter_state_t state; ideatek_emitter_flags_t flags; }",
+    "{ IDEATEK_EMISSION_SHAPE_POINT = 0, IDEATEK_EMISSION_SHAPE_SPHERE = 1, IDEATEK_EMISSION_SHAPE_SPHERE_SURFACE = 2, IDEATEK_EMISSION_SHAPE_BOX = 3, IDEATEK_EMISSION_SHAPE_RING = 4, IDEATEK_EMISSION_SHAPE_MESH = 5 }",
+    "{ ideatek_entity_t mesh; ideatek_vec3_t size; ideatek_emission_shape_t kind; }",
+    "{ ideatek_vec3_t min; ideatek_vec3_t max; float radial_min; float radial_max; }",
+    "{ ideatek_vec3_t gravity; float drag; }",
+    "{ uint32_t alive; bool done; }",
+    "{ ideatek_entity_t emitter; uint32_t order; }",
+    "{ IDEATEK_PARTICLE_KIND_SPRITE = 0, IDEATEK_PARTICLE_KIND_MESH = 1, IDEATEK_PARTICLE_KIND_RIBBON = 2 }",
+    "{ IDEATEK_PARTICLE_ALIGN_CAMERA = 0, IDEATEK_PARTICLE_ALIGN_VELOCITY = 1 }",
+    "{ IDEATEK_PARTICLE_SORT_NONE = 0, IDEATEK_PARTICLE_SORT_DEPTH = 1, IDEATEK_PARTICLE_SORT_AGE = 2 }",
+    "{ ideatek_entity_t material; ideatek_entity_t mesh; ideatek_entity_t size_curve; ideatek_entity_t color_curve; ideatek_color_t color; float size_min; float size_max; float rotation_min; float rotation_max; float spin_min; float spin_max; float frame_rate; uint32_t frames_x; uint32_t frames_y; ideatek_particle_kind_t kind; ideatek_particle_align_t align; ideatek_particle_sort_t sort; }",
+    "{ IDEATEK_COLLISION_SOURCE_DEPTH = 0, IDEATEK_COLLISION_SOURCE_SHAPES = 1 }",
+    "{ IDEATEK_COLLISION_MODE_BOUNCE = 0, IDEATEK_COLLISION_MODE_KILL = 1, IDEATEK_COLLISION_MODE_STICK = 2 }",
+    "{ uint64_t touches; float bounce; float friction; float radius; ideatek_collision_source_t source; ideatek_collision_mode_t mode; }",
+    "{ IDEATEK_SPAWN_ON_START = 0, IDEATEK_SPAWN_ON_END = 1, IDEATEK_SPAWN_ON_COLLISION = 2, IDEATEK_SPAWN_ON_CONSTANT = 3 }",
+    "{ ideatek_entity_t parent; float rate; float inherit_velocity; uint32_t count; ideatek_spawn_on_t on; }",
+] }
+false = { run = ["{out}/effects_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the headers of the world, space and rendering parts and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/effects_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/effects_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the 23 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/effects_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["effects_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_color_t", "ideatek:ideatek_curve_kind_t",
+    "ideatek:ideatek_emitter_state_t", "ideatek:ideatek_emitter_flags_t",
+    "ideatek:ideatek_emission_shape_t", "ideatek:ideatek_particle_kind_t",
+    "ideatek:ideatek_particle_align_t", "ideatek:ideatek_particle_sort_t",
+    "ideatek:ideatek_collision_source_t", "ideatek:ideatek_collision_mode_t",
+    "ideatek:ideatek_spawn_on_t", "ideatek:Curve", "ideatek:ParticleEmitter",
+    "ideatek:ParticleShape", "ideatek:ParticleVelocity",
+    "ideatek:ParticleForces", "ideatek:ParticleEmitterState",
+    "ideatek:ParticleEnded", "ideatek:ParticleLook",
+    "ideatek:ParticleCollision", "ideatek:ParticleSpawn",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["effects_late"]
+
+[[case]]
+name = "an author loads with write on the curves and the emitters"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:author@1.0.0, native, m/effects_author{library}"] }
+
+[case.folders]
+"{case}/m" = ["effects_author"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
+    "ideatek:ParticleVelocity", "ideatek:ParticleForces",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision", "ideatek:ParticleSpawn",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_color_t", "ideatek:ideatek_curve_kind_t",
+    "ideatek:ideatek_emitter_state_t", "ideatek:ideatek_emitter_flags_t",
+    "ideatek:ideatek_emission_shape_t", "ideatek:ideatek_particle_kind_t",
+    "ideatek:ideatek_particle_align_t", "ideatek:ideatek_particle_sort_t",
+    "ideatek:ideatek_collision_source_t", "ideatek:ideatek_collision_mode_t",
+    "ideatek:ideatek_spawn_on_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
+    "ideatek:ParticleVelocity", "ideatek:ParticleForces",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_color_t", "ideatek:ideatek_curve_kind_t",
+    "ideatek:ideatek_emitter_state_t", "ideatek:ideatek_emitter_flags_t",
+    "ideatek:ideatek_emission_shape_t", "ideatek:ideatek_particle_kind_t",
+    "ideatek:ideatek_particle_align_t", "ideatek:ideatek_particle_sort_t",
+    "ideatek:ideatek_collision_source_t", "ideatek:ideatek_collision_mode_t",
+    "ideatek:ideatek_spawn_on_t", "ideatek:ParticleSpawn",
+]
+'''
+
+[[case]]
+name = "the effects module loads with write on the states and the ends of the emitters"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:effects@1.0.0, native, m/effects_effects{library}"] }
+
+[case.folders]
+"{case}/m" = ["effects_effects"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:effects@1.0.0"]
+write = [
+    "ideatek:ParticleEmitterState", "ideatek:ParticleEnded",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_color_t",
+    "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:ideatek_curve_kind_t", "ideatek:ideatek_emitter_state_t",
+    "ideatek:ideatek_emitter_flags_t", "ideatek:ideatek_emission_shape_t",
+    "ideatek:ideatek_particle_kind_t", "ideatek:ideatek_particle_align_t",
+    "ideatek:ideatek_particle_sort_t", "ideatek:ideatek_collision_source_t",
+    "ideatek:ideatek_collision_mode_t", "ideatek:ideatek_spawn_on_t",
+    "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
+    "ideatek:ParticleVelocity", "ideatek:ParticleForces",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision",
+    "ideatek:ParticleSpawn", "ideatek:WorldTransform", "ideatek:Shape",
+    "ideatek:Wind", "ideatek:ForceField",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:effects@1.0.0"]
+write = [
+    "ideatek:ParticleEmitterState",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_color_t",
+    "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:ideatek_curve_kind_t", "ideatek:ideatek_emitter_state_t",
+    "ideatek:ideatek_emitter_flags_t", "ideatek:ideatek_emission_shape_t",
+    "ideatek:ideatek_particle_kind_t", "ideatek:ideatek_particle_align_t",
+    "ideatek:ideatek_particle_sort_t", "ideatek:ideatek_collision_source_t",
+    "ideatek:ideatek_collision_mode_t", "ideatek:ideatek_spawn_on_t",
+    "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
+    "ideatek:ParticleVelocity", "ideatek:ParticleForces",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision",
+    "ideatek:ParticleSpawn", "ideatek:WorldTransform", "ideatek:Shape",
+    "ideatek:Wind", "ideatek:ForceField", "ideatek:ParticleEnded",
+]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "effects", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Effects-{target}.zip", "include/ideatek_effects.h", "license",
+    "package proof: BC-IdeaTek-Effects ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "effects"] }

@@ -5,13 +5,13 @@ uses = ["world", "space", "frame", "states"]
 third_party = []
 
 [parts.animation.package]
-proof = "tests/engine_subsystems/animation/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+proof = "tests/engine_subsystems/animation_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
 
 [compose.animation]
 part = "animation"
-from = "include/engine_subsystems/animation"
-headers = ["*.h"]
+from = "include/engine_subsystems"
+headers = ["ideatek_animation.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "animation_layout"
 kind = "program"
 part = "animation"
 test = true
-sources = ["tests/engine_subsystems/animation/layout/layout.c"]
-include = ["include/engine_subsystems/animation", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+sources = ["tests/engine_subsystems/animation_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "animation_probe"
 kind = "native_module"
 part = "animation"
 test = true
-sources = ["tests/engine_subsystems/animation/probe/probe.c"]
-include = ["include/engine_subsystems/animation", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/kernel/frame", "include/kernel/states"]
+sources = ["tests/engine_subsystems/animation_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{animation_probe_words}"]
 

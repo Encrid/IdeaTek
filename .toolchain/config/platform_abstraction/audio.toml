@@ -5,13 +5,13 @@ uses = ["world"]
 third_party = []
 
 [parts.audio.package]
-proof = "tests/platform_abstraction/audio/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world"]
+proof = "tests/platform_abstraction/audio_proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction"]
 
 [compose.audio]
 part = "audio"
-from = "include/platform_abstraction/audio"
-headers = ["*.h"]
+from = "include/platform_abstraction"
+headers = ["ideatek_audio.h"]
 into = "include"
 
 [variables]
@@ -35,16 +35,16 @@ name = "audio_layout"
 kind = "program"
 part = "audio"
 test = true
-sources = ["tests/platform_abstraction/audio/layout/layout.c"]
-include = ["include/platform_abstraction/audio", "include/platform_abstraction/world", "{bridge}/include"]
+sources = ["tests/platform_abstraction/audio_layout.c"]
+include = ["include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "audio_probe"
 kind = "native_module"
 part = "audio"
 test = true
-sources = ["tests/platform_abstraction/audio/probe/probe.c"]
-include = ["include/platform_abstraction/audio", "include/platform_abstraction/world"]
+sources = ["tests/platform_abstraction/audio_probe.c"]
+include = ["include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{audio_probe_words}"]
 

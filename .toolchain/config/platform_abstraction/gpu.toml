@@ -5,13 +5,13 @@ uses = ["world"]
 third_party = []
 
 [parts.gpu.package]
-proof = "tests/platform_abstraction/gpu/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world"]
+proof = "tests/platform_abstraction/gpu_proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction"]
 
 [compose.gpu]
 part = "gpu"
-from = "include/platform_abstraction/gpu"
-headers = ["*.h"]
+from = "include/platform_abstraction"
+headers = ["ideatek_gpu.h", "ideatek_vulkan.h"]
 into = "include"
 
 [variables]
@@ -35,16 +35,16 @@ name = "gpu_layout"
 kind = "program"
 part = "gpu"
 test = true
-sources = ["tests/platform_abstraction/gpu/layout/layout.c"]
-include = ["include/platform_abstraction/gpu", "include/platform_abstraction/world", "{bridge}/include"]
+sources = ["tests/platform_abstraction/gpu_layout.c"]
+include = ["include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "gpu_probe"
 kind = "native_module"
 part = "gpu"
 test = true
-sources = ["tests/platform_abstraction/gpu/probe/probe.c"]
-include = ["include/platform_abstraction/gpu", "include/platform_abstraction/world"]
+sources = ["tests/platform_abstraction/gpu_probe.c"]
+include = ["include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{gpu_probe_words}"]
 

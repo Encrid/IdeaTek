@@ -1,0 +1,307 @@
+[[case]]
+name = "ideatek_xr_space_t is 1 byte"
+run = ["{out}/xr_layout{exe}", "xr_space"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_origin"] }
+
+[[case]]
+name = "ideatek_xr_blend_t is 1 byte"
+run = ["{out}/xr_layout{exe}", "xr_blend"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_origin"] }
+
+[[case]]
+name = "ideatek_xr_origin_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_origin"]
+claims = { status = 0, order = ["size 8", "alignment 4", "scale 0", "space 4", "blend 5"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_session_state"] }
+
+[[case]]
+name = "ideatek_xr_session_state_t is 1 byte"
+run = ["{out}/xr_layout{exe}", "xr_session_state"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_session"] }
+
+[[case]]
+name = "ideatek_xr_blends_t is 1 byte"
+run = ["{out}/xr_layout{exe}", "xr_blends"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_session"] }
+
+[[case]]
+name = "ideatek_xr_session_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_session"]
+claims = { status = 0, order = ["size 8", "alignment 4", "refresh 0", "state 4", "blend 5", "blends 6"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_tracker_kind"] }
+
+[[case]]
+name = "ideatek_xr_tracker_kind_t is 1 byte"
+run = ["{out}/xr_layout{exe}", "xr_tracker_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_tracker"] }
+
+[[case]]
+name = "ideatek_xr_hand_t is 1 byte"
+run = ["{out}/xr_layout{exe}", "xr_hand"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_tracker"] }
+
+[[case]]
+name = "ideatek_xr_pose_t is 1 byte"
+run = ["{out}/xr_layout{exe}", "xr_pose"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_tracker"] }
+
+[[case]]
+name = "ideatek_xr_tracker_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_tracker"]
+claims = { status = 0, order = ["size 3", "alignment 1", "kind 0", "hand 1", "pose 2"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_location"] }
+
+[[case]]
+name = "ideatek_xr_location_t is 1 byte"
+run = ["{out}/xr_layout{exe}", "xr_location"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_pose_state"] }
+
+[[case]]
+name = "ideatek_xr_pose_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_pose_state"]
+claims = { status = 0, order = ["size 28", "alignment 4", "linear 0", "angular 12", "flags 24"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_binding_path"] }
+
+[[case]]
+name = "ideatek_xr_binding_path_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_binding_path"]
+claims = { status = 0, order = ["size 16", "alignment 4", "profile 0", "path 8"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_control_state"] }
+
+[[case]]
+name = "ideatek_xr_control_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_control_state"]
+claims = { status = 0, order = ["size 12", "alignment 4", "x 0", "y 4", "active 8"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_hand_record"] }
+
+[[case]]
+name = "ideatek_xr_hand_record_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_hand_record"]
+claims = { status = 0, order = ["size 2", "alignment 1", "hand 0", "active 1"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_joint_state"] }
+
+[[case]]
+name = "ideatek_xr_joint_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_joint_state"]
+claims = { status = 0, order = ["size 8", "alignment 4", "radius 0", "flags 4"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_haptic"] }
+
+[[case]]
+name = "ideatek_xr_haptic_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_haptic"]
+claims = { status = 0, order = ["size 12", "alignment 4", "amplitude 0", "frequency 4", "duration_ms 8"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_play_area"] }
+
+[[case]]
+name = "ideatek_xr_play_area_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/xr_layout{exe}", "xr_play_area"]
+claims = { status = 0, order = ["size 8", "alignment 4", "width 0", "depth 4"] }
+false = { run = ["{out}/xr_layout{exe}", "xr_space"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/xr_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_XR_SPACE_LOCAL = 0, IDEATEK_XR_SPACE_STAGE = 1, IDEATEK_XR_SPACE_LOCAL_FLOOR = 2 }",
+    "uint8_t { IDEATEK_XR_BLEND_OPAQUE = 1, IDEATEK_XR_BLEND_ADDITIVE = 2, IDEATEK_XR_BLEND_ALPHA_BLEND = 3 }",
+    "{ float scale; ideatek_xr_space_t space; ideatek_xr_blend_t blend; }",
+    "uint8_t { IDEATEK_XR_SESSION_STATE_UNKNOWN = 0, IDEATEK_XR_SESSION_STATE_IDLE = 1, IDEATEK_XR_SESSION_STATE_READY = 2, IDEATEK_XR_SESSION_STATE_SYNCHRONIZED = 3, IDEATEK_XR_SESSION_STATE_VISIBLE = 4, IDEATEK_XR_SESSION_STATE_FOCUSED = 5, IDEATEK_XR_SESSION_STATE_STOPPING = 6, IDEATEK_XR_SESSION_STATE_LOSS_PENDING = 7, IDEATEK_XR_SESSION_STATE_EXITING = 8 }",
+    "uint8_t { IDEATEK_XR_BLENDS_OPAQUE = 0x02, IDEATEK_XR_BLENDS_ADDITIVE = 0x04, IDEATEK_XR_BLENDS_ALPHA_BLEND = 0x08 }",
+    "{ float refresh; ideatek_xr_session_state_t state; ideatek_xr_blend_t blend; ideatek_xr_blends_t blends; }",
+    "uint8_t { IDEATEK_XR_TRACKER_KIND_HEAD = 0, IDEATEK_XR_TRACKER_KIND_CONTROLLER = 1, IDEATEK_XR_TRACKER_KIND_TRACKER = 2 }",
+    "uint8_t { IDEATEK_XR_HAND_UNKNOWN = 0, IDEATEK_XR_HAND_LEFT = 1, IDEATEK_XR_HAND_RIGHT = 2 }",
+    "uint8_t { IDEATEK_XR_POSE_GRIP = 0, IDEATEK_XR_POSE_AIM = 1 }",
+    "{ ideatek_xr_tracker_kind_t kind; ideatek_xr_hand_t hand; ideatek_xr_pose_t pose; }",
+    "uint8_t { IDEATEK_XR_LOCATION_ORIENTATION_VALID = 0x01, IDEATEK_XR_LOCATION_POSITION_VALID = 0x02, IDEATEK_XR_LOCATION_ORIENTATION_TRACKED = 0x04, IDEATEK_XR_LOCATION_POSITION_TRACKED = 0x08 }",
+    "{ ideatek_vec3_t linear; ideatek_vec3_t angular; ideatek_xr_location_t flags; }",
+    "{ bridge_text_t profile; bridge_text_t path; }",
+    "{ float x; float y; bool active; }",
+    "{ ideatek_xr_hand_t hand; bool active; }",
+    "{ float radius; ideatek_xr_location_t flags; }",
+    "{ float amplitude; float frequency; uint32_t duration_ms; }",
+    "{ float width; float depth; }",
+] }
+false = { run = ["{out}/xr_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/xr_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_XR_SPACE_LOCAL = 0, IDEATEK_XR_SPACE_STAGE = 1, IDEATEK_XR_SPACE_LOCAL_FLOOR = 2 }",
+    "{ IDEATEK_XR_BLEND_OPAQUE = 1, IDEATEK_XR_BLEND_ADDITIVE = 2, IDEATEK_XR_BLEND_ALPHA_BLEND = 3 }",
+    "{ float scale; ideatek_xr_space_t space; ideatek_xr_blend_t blend; }",
+    "{ IDEATEK_XR_SESSION_STATE_UNKNOWN = 0, IDEATEK_XR_SESSION_STATE_IDLE = 1, IDEATEK_XR_SESSION_STATE_READY = 2, IDEATEK_XR_SESSION_STATE_SYNCHRONIZED = 3, IDEATEK_XR_SESSION_STATE_VISIBLE = 4, IDEATEK_XR_SESSION_STATE_FOCUSED = 5, IDEATEK_XR_SESSION_STATE_STOPPING = 6, IDEATEK_XR_SESSION_STATE_LOSS_PENDING = 7, IDEATEK_XR_SESSION_STATE_EXITING = 8 }",
+    "{ IDEATEK_XR_BLENDS_OPAQUE = 0x02, IDEATEK_XR_BLENDS_ADDITIVE = 0x04, IDEATEK_XR_BLENDS_ALPHA_BLEND = 0x08 }",
+    "{ float refresh; ideatek_xr_session_state_t state; ideatek_xr_blend_t blend; ideatek_xr_blends_t blends; }",
+    "{ IDEATEK_XR_TRACKER_KIND_HEAD = 0, IDEATEK_XR_TRACKER_KIND_CONTROLLER = 1, IDEATEK_XR_TRACKER_KIND_TRACKER = 2 }",
+    "{ IDEATEK_XR_HAND_UNKNOWN = 0, IDEATEK_XR_HAND_LEFT = 1, IDEATEK_XR_HAND_RIGHT = 2 }",
+    "{ IDEATEK_XR_POSE_GRIP = 0, IDEATEK_XR_POSE_AIM = 1 }",
+    "{ ideatek_xr_tracker_kind_t kind; ideatek_xr_hand_t hand; ideatek_xr_pose_t pose; }",
+    "{ IDEATEK_XR_LOCATION_ORIENTATION_VALID = 0x01, IDEATEK_XR_LOCATION_POSITION_VALID = 0x02, IDEATEK_XR_LOCATION_ORIENTATION_TRACKED = 0x04, IDEATEK_XR_LOCATION_POSITION_TRACKED = 0x08 }",
+    "{ ideatek_vec3_t linear; ideatek_vec3_t angular; ideatek_xr_location_t flags; }",
+    "{ bridge_text_t profile; bridge_text_t path; }",
+    "{ float x; float y; bool active; }",
+    "{ ideatek_xr_hand_t hand; bool active; }",
+    "{ float radius; ideatek_xr_location_t flags; }",
+    "{ float amplitude; float frequency; uint32_t duration_ms; }",
+    "{ float width; float depth; }",
+] }
+false = { run = ["{out}/xr_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the headers of the world and space parts and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/xr_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/xr_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the 19 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/xr_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["xr_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_xr_space_t",
+    "ideatek:ideatek_xr_blend_t", "ideatek:ideatek_xr_session_state_t",
+    "ideatek:ideatek_xr_blends_t", "ideatek:ideatek_xr_tracker_kind_t",
+    "ideatek:ideatek_xr_hand_t", "ideatek:ideatek_xr_pose_t",
+    "ideatek:ideatek_xr_location_t", "ideatek:XrOrigin", "ideatek:XrSession",
+    "ideatek:XrTracker", "ideatek:XrPoseState", "ideatek:XrBindingPath",
+    "ideatek:XrControlState", "ideatek:XrHand", "ideatek:XrJointState",
+    "ideatek:XrHaptic", "ideatek:XrPlayArea",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["xr_late"]
+
+[[case]]
+name = "the game loads with write on the origin, the binding paths and the haptics"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/xr_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["xr_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:XrOrigin", "ideatek:XrBindingPath", "ideatek:XrHaptic",
+]
+read = [
+    "ideatek:ideatek_xr_space_t", "ideatek:ideatek_xr_blend_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:XrOrigin", "ideatek:XrBindingPath",
+]
+read = [
+    "ideatek:ideatek_xr_space_t", "ideatek:ideatek_xr_blend_t",
+    "ideatek:XrHaptic",
+]
+'''
+
+[[case]]
+name = "the XR module loads with write on the session, the views, the poses, the controls and the hands"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/xr_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["xr_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:XrSession", "ideatek:XrTracker", "ideatek:XrPoseState",
+    "ideatek:XrControlState", "ideatek:XrHand", "ideatek:XrJointState",
+    "ideatek:XrPlayArea", "ideatek:Transform", "ideatek:Camera",
+    "ideatek:Projection", "ideatek:ProjectionAngles", "ideatek:Joint",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
+    "ideatek:ideatek_rect_t", "ideatek:ideatek_projection_kind_t",
+    "ideatek:ideatek_input_source_t", "ideatek:ideatek_xr_space_t",
+    "ideatek:ideatek_xr_blend_t", "ideatek:ideatek_xr_session_state_t",
+    "ideatek:ideatek_xr_blends_t", "ideatek:ideatek_xr_tracker_kind_t",
+    "ideatek:ideatek_xr_hand_t", "ideatek:ideatek_xr_pose_t",
+    "ideatek:ideatek_xr_location_t", "ideatek:XrOrigin",
+    "ideatek:XrBindingPath", "ideatek:XrHaptic", "ideatek:InputBinding",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:XrSession", "ideatek:XrTracker", "ideatek:XrPoseState",
+    "ideatek:XrControlState", "ideatek:XrHand", "ideatek:XrJointState",
+    "ideatek:XrPlayArea", "ideatek:Transform", "ideatek:Camera",
+    "ideatek:Projection", "ideatek:ProjectionAngles",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
+    "ideatek:ideatek_rect_t", "ideatek:ideatek_projection_kind_t",
+    "ideatek:ideatek_input_source_t", "ideatek:ideatek_xr_space_t",
+    "ideatek:ideatek_xr_blend_t", "ideatek:ideatek_xr_session_state_t",
+    "ideatek:ideatek_xr_blends_t", "ideatek:ideatek_xr_tracker_kind_t",
+    "ideatek:ideatek_xr_hand_t", "ideatek:ideatek_xr_pose_t",
+    "ideatek:ideatek_xr_location_t", "ideatek:XrOrigin",
+    "ideatek:XrBindingPath", "ideatek:XrHaptic", "ideatek:InputBinding",
+    "ideatek:Joint",
+]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "xr", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Xr-{target}.zip", "include/ideatek_xr.h", "license",
+    "package proof: BC-IdeaTek-Xr ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "xr"] }

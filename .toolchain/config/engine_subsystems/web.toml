@@ -5,13 +5,13 @@ uses = []
 third_party = []
 
 [parts.web.package]
-proof = "tests/engine_subsystems/web/package/proof.c"
-include = ["{bridge}/include"]
+proof = "tests/engine_subsystems/web_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems"]
 
 [compose.web]
 part = "web"
-from = "include/engine_subsystems/web"
-headers = ["*.h"]
+from = "include/engine_subsystems"
+headers = ["ideatek_web.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "web_layout"
 kind = "program"
 part = "web"
 test = true
-sources = ["tests/engine_subsystems/web/layout/layout.c"]
-include = ["include/engine_subsystems/web", "{bridge}/include"]
+sources = ["tests/engine_subsystems/web_layout.c"]
+include = ["include/engine_subsystems", "{bridge}/include"]
 
 [[artifact]]
 name = "web_probe"
 kind = "native_module"
 part = "web"
 test = true
-sources = ["tests/engine_subsystems/web/probe/probe.c"]
-include = ["include/engine_subsystems/web"]
+sources = ["tests/engine_subsystems/web_probe.c"]
+include = ["include/engine_subsystems"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{web_probe_words}"]
 

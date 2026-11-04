@@ -38,7 +38,7 @@ A group is a file of cases in `tests/cases`, or in a folder of `tests/cases`.
 The name of a group is the path of the file in `tests/cases`, without `.toml`.
 For example, the name of the group `tests/cases/<folder>/<name>.toml` is `<folder>/<name>`.
 If `tests/cases` holds no case, `test` writes `no case: tests/cases holds no case`.
-In a project with parts, the groups of a part are in `tests/cases/<folder>`, with the folder of the part: `.toolchain/docs/project.toml.md`, *[parts]*.
+In a project with parts, the cases of a part are in the group `tests/cases/<folder>.toml`, or in the folder `tests/cases/<folder>`. `.toolchain/docs/project.toml.md`, *[parts]*, gives the folder of a part.
 
 ## The keys of a case
 

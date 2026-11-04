@@ -5,13 +5,13 @@ uses = ["world", "space", "frame", "rendering"]
 third_party = []
 
 [parts.physics.package]
-proof = "tests/engine_subsystems/physics/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+proof = "tests/engine_subsystems/physics_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
 
 [compose.physics]
 part = "physics"
-from = "include/engine_subsystems/physics"
-headers = ["*.h"]
+from = "include/engine_subsystems"
+headers = ["ideatek_physics.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "physics_layout"
 kind = "program"
 part = "physics"
 test = true
-sources = ["tests/engine_subsystems/physics/layout/layout.c"]
-include = ["include/engine_subsystems/physics", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+sources = ["tests/engine_subsystems/physics_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "physics_probe"
 kind = "native_module"
 part = "physics"
 test = true
-sources = ["tests/engine_subsystems/physics/probe/probe.c"]
-include = ["include/engine_subsystems/physics", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/kernel/frame", "include/engine_subsystems/rendering"]
+sources = ["tests/engine_subsystems/physics_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{physics_probe_words}"]
 

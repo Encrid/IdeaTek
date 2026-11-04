@@ -5,13 +5,13 @@ uses = []
 third_party = []
 
 [parts.frame.package]
-proof = "tests/kernel/frame/package/proof.c"
+proof = "tests/kernel/frame_proof.c"
 include = ["{bridge}/include"]
 
 [compose.frame]
 part = "frame"
-from = "include/kernel/frame"
-headers = ["*.h"]
+from = "include/kernel"
+headers = ["ideatek_frame.h"]
 into = "include"
 
 [[artifact]]
@@ -19,23 +19,23 @@ name = "frame_layout"
 kind = "program"
 part = "frame"
 test = true
-sources = ["tests/kernel/frame/layout/layout.c"]
-include = ["include/kernel/frame", "{bridge}/include"]
+sources = ["tests/kernel/frame_layout.c"]
+include = ["include/kernel", "{bridge}/include"]
 
 [[artifact]]
 name = "frame_timer"
 kind = "program"
 part = "frame"
 test = true
-sources = ["tests/kernel/frame/timer/timer.c"]
+sources = ["tests/kernel/frame_timer.c"]
 
 [[artifact]]
 name = "frame_probe"
 kind = "native_module"
 part = "frame"
 test = true
-sources = ["tests/kernel/frame/probe/probe.c"]
-include = ["include/kernel/frame"]
+sources = ["tests/kernel/frame_probe.c"]
+include = ["include/kernel"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{space_probe_words}"]
 

@@ -5,13 +5,13 @@ uses = []
 third_party = []
 
 [parts.world.package]
-proof = "tests/platform_abstraction/world/package/proof.c"
+proof = "tests/platform_abstraction/world_proof.c"
 include = ["{bridge}/include"]
 
 [compose.world]
 part = "world"
-from = "include/platform_abstraction/world"
-headers = ["*.h"]
+from = "include/platform_abstraction"
+headers = ["ideatek_world.h"]
 into = "include"
 
 [[artifact]]
@@ -19,5 +19,5 @@ name = "world_layout"
 kind = "program"
 part = "world"
 test = true
-sources = ["tests/platform_abstraction/world/layout/layout.c"]
-include = ["include/platform_abstraction/world", "{bridge}/include"]
+sources = ["tests/platform_abstraction/world_layout.c"]
+include = ["include/platform_abstraction", "{bridge}/include"]

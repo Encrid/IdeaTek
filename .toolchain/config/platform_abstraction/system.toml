@@ -5,13 +5,13 @@ uses = []
 third_party = []
 
 [parts.system.package]
-proof = "tests/platform_abstraction/system/package/proof.c"
+proof = "tests/platform_abstraction/system_proof.c"
 include = ["{bridge}/include"]
 
 [compose.system]
 part = "system"
-from = "include/platform_abstraction/system"
-headers = ["*.h"]
+from = "include/platform_abstraction"
+headers = ["ideatek_system.h"]
 into = "include"
 
 [variables]
@@ -35,16 +35,16 @@ name = "system_layout"
 kind = "program"
 part = "system"
 test = true
-sources = ["tests/platform_abstraction/system/layout/layout.c"]
-include = ["include/platform_abstraction/system", "{bridge}/include"]
+sources = ["tests/platform_abstraction/system_layout.c"]
+include = ["include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "system_probe"
 kind = "native_module"
 part = "system"
 test = true
-sources = ["tests/platform_abstraction/system/probe/probe.c"]
-include = ["include/platform_abstraction/system"]
+sources = ["tests/platform_abstraction/system_probe.c"]
+include = ["include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{system_probe_words}"]
 

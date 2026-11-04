@@ -5,13 +5,13 @@ uses = ["world"]
 third_party = []
 
 [parts.states.package]
-proof = "tests/kernel/states/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world"]
+proof = "tests/kernel/states_proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction"]
 
 [compose.states]
 part = "states"
-from = "include/kernel/states"
-headers = ["*.h"]
+from = "include/kernel"
+headers = ["ideatek_states.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "states_layout"
 kind = "program"
 part = "states"
 test = true
-sources = ["tests/kernel/states/layout/layout.c"]
-include = ["include/kernel/states", "include/platform_abstraction/world", "{bridge}/include"]
+sources = ["tests/kernel/states_layout.c"]
+include = ["include/kernel", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "states_probe"
 kind = "native_module"
 part = "states"
 test = true
-sources = ["tests/kernel/states/probe/probe.c"]
-include = ["include/kernel/states", "include/platform_abstraction/world"]
+sources = ["tests/kernel/states_probe.c"]
+include = ["include/kernel", "include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{states_probe_words}"]
 

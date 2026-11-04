@@ -1,0 +1,190 @@
+[[case]]
+name = "ideatek_debug_kind_t is 1 byte"
+run = ["{out}/debug_draw_layout{exe}", "debug_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/debug_draw_layout{exe}", "debug_draw"] }
+
+[[case]]
+name = "ideatek_debug_flags_t is 1 byte"
+run = ["{out}/debug_draw_layout{exe}", "debug_flags"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/debug_draw_layout{exe}", "debug_draw"] }
+
+[[case]]
+name = "ideatek_debug_draw_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/debug_draw_layout{exe}", "debug_draw"]
+claims = { status = 0, order = ["size 16", "alignment 8", "groups 0", "data 8"] }
+false = { run = ["{out}/debug_draw_layout{exe}", "debug_view"] }
+
+[[case]]
+name = "ideatek_debug_view_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/debug_draw_layout{exe}", "debug_view"]
+claims = { status = 0, order = ["size 8", "alignment 8", "groups 0"] }
+false = { run = ["{out}/debug_draw_layout{exe}", "debug_kind"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/debug_draw_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_DEBUG_KIND_LINE = 0, IDEATEK_DEBUG_KIND_POINT = 1, IDEATEK_DEBUG_KIND_BOX = 2, IDEATEK_DEBUG_KIND_SPHERE = 3, IDEATEK_DEBUG_KIND_CAPSULE = 4, IDEATEK_DEBUG_KIND_ARROW = 5, IDEATEK_DEBUG_KIND_AXES = 6, IDEATEK_DEBUG_KIND_TEXT = 7 }",
+    "uint8_t { IDEATEK_DEBUG_FLAGS_ON_TOP = 0x01, IDEATEK_DEBUG_FLAGS_SCREEN = 0x02 }",
+    "{ uint64_t groups; bridge_text_t data; }",
+    "{ uint64_t groups; }",
+] }
+false = { run = ["{out}/debug_draw_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/debug_draw_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_DEBUG_KIND_LINE = 0, IDEATEK_DEBUG_KIND_POINT = 1, IDEATEK_DEBUG_KIND_BOX = 2, IDEATEK_DEBUG_KIND_SPHERE = 3, IDEATEK_DEBUG_KIND_CAPSULE = 4, IDEATEK_DEBUG_KIND_ARROW = 5, IDEATEK_DEBUG_KIND_AXES = 6, IDEATEK_DEBUG_KIND_TEXT = 7 }",
+    "{ IDEATEK_DEBUG_FLAGS_ON_TOP = 0x01, IDEATEK_DEBUG_FLAGS_SCREEN = 0x02 }",
+    "{ uint64_t groups; bridge_text_t data; }",
+    "{ uint64_t groups; }",
+] }
+false = { run = ["{out}/debug_draw_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with its own folder and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/debug_draw_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-c", "tests/engine_subsystems/debug_draw_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the 4 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/debug_draw_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["debug_draw_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_debug_kind_t", "ideatek:ideatek_debug_flags_t",
+    "ideatek:DebugDraw", "ideatek:DebugView",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["debug_draw_late"]
+
+[[case]]
+name = "a module that draws loads with write on its batch and read on the view"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:drawer@1.0.0, native, m/debug_draw_drawer{library}"] }
+
+[case.folders]
+"{case}/m" = ["debug_draw_drawer"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:drawer@1.0.0"]
+write = [
+    "ideatek:DebugDraw",
+]
+read = [
+    "ideatek:DebugView",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:drawer@1.0.0"]
+read = [
+    "ideatek:DebugView", "ideatek:DebugDraw",
+]
+'''
+
+[[case]]
+name = "the game loads with write on the view"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/debug_draw_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["debug_draw_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:DebugView",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+read = [
+    "ideatek:DebugView",
+]
+'''
+
+[[case]]
+name = "the draw module loads with read on the batches and the view"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/debug_draw_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["debug_draw_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+read = [
+    "ideatek:DebugDraw", "ideatek:DebugView",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+read = [
+    "ideatek:DebugDraw",
+]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "debug_draw", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-DebugDraw-{target}.zip", "include/ideatek_debug_draw.h", "license",
+    "package proof: BC-IdeaTek-DebugDraw ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "debug_draw"] }

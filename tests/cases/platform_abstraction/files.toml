@@ -1,0 +1,146 @@
+[[case]]
+name = "ideatek_storage_t has the size and the alignment of its Usage"
+run = ["{out}/files_layout{exe}", "storage"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/files_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_file_action_t has the size and the alignment of its Usage"
+run = ["{out}/files_layout{exe}", "action"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/files_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_file_status_t has the size and the alignment of its Usage"
+run = ["{out}/files_layout{exe}", "status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/files_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_file_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/files_layout{exe}", "request"]
+claims = { status = 0, order = ["size 40", "alignment 8", "offset 0", "length 8", "path 16", "data 24", "storage 32", "action 33"] }
+false = { run = ["{out}/files_layout{exe}", "result"] }
+
+[[case]]
+name = "ideatek_file_result_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/files_layout{exe}", "result"]
+claims = { status = 0, order = ["size 24", "alignment 8", "size 0", "data 8", "status 16"] }
+false = { run = ["{out}/files_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_file_change_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/files_layout{exe}", "change"]
+claims = { status = 0, order = ["size 8", "alignment 4", "paths 0"] }
+false = { run = ["{out}/files_layout{exe}", "result"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/files_layout{exe}", "descriptors"]
+claims = { status = 0, line = ["uint8_t { IDEATEK_STORAGE_CONTENT = 0, IDEATEK_STORAGE_USER = 1 }", "uint8_t { IDEATEK_FILE_ACTION_READ = 0, IDEATEK_FILE_ACTION_WRITE = 1, IDEATEK_FILE_ACTION_LIST = 2, IDEATEK_FILE_ACTION_REMOVE = 3, IDEATEK_FILE_ACTION_WATCH = 4 }", "uint8_t { IDEATEK_FILE_STATUS_OK = 0, IDEATEK_FILE_STATUS_NOT_FOUND = 1, IDEATEK_FILE_STATUS_TOO_BIG = 2, IDEATEK_FILE_STATUS_DENIED = 3, IDEATEK_FILE_STATUS_FAILED = 4, IDEATEK_FILE_STATUS_UNSUPPORTED = 5 }", "{ uint64_t offset; uint64_t length; bridge_text_t path; bridge_text_t data; ideatek_storage_t storage; ideatek_file_action_t action; }", "{ uint64_t size; bridge_text_t data; ideatek_file_status_t status; }", "{ bridge_text_t paths; }"] }
+false = { run = ["{out}/files_layout{exe}", "request"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/files_layout{exe}", "texts"]
+claims = { status = 0, line = ["{ IDEATEK_STORAGE_CONTENT = 0, IDEATEK_STORAGE_USER = 1 }", "{ IDEATEK_FILE_ACTION_READ = 0, IDEATEK_FILE_ACTION_WRITE = 1, IDEATEK_FILE_ACTION_LIST = 2, IDEATEK_FILE_ACTION_REMOVE = 3, IDEATEK_FILE_ACTION_WATCH = 4 }", "{ IDEATEK_FILE_STATUS_OK = 0, IDEATEK_FILE_STATUS_NOT_FOUND = 1, IDEATEK_FILE_STATUS_TOO_BIG = 2, IDEATEK_FILE_STATUS_DENIED = 3, IDEATEK_FILE_STATUS_FAILED = 4, IDEATEK_FILE_STATUS_UNSUPPORTED = 5 }", "{ uint64_t offset; uint64_t length; bridge_text_t path; bridge_text_t data; ideatek_storage_t storage; ideatek_file_action_t action; }", "{ uint64_t size; bridge_text_t data; ideatek_file_status_t status; }", "{ bridge_text_t paths; }"] }
+false = { run = ["{out}/files_layout{exe}", "request"] }
+
+[[case]]
+name = "ideatek_files.h compiles with the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/platform_abstraction/files_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-c", "tests/platform_abstraction/files_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the six types, the lists before the structures"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/files_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["files_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = ["ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileRequest", "ideatek:FileResult", "ideatek:FileChange"]
+'''
+
+[case.false.folders]
+"{case}/m" = ["files_late"]
+
+[[case]]
+name = "the game loads with write on ideatek:FileRequest and read on ideatek:FileResult and ideatek:FileChange, and attaches ideatek:FileRequest"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/files_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["files_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:FileRequest"]
+read = ["ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileResult", "ideatek:FileChange"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+read = ["ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileRequest", "ideatek:FileResult", "ideatek:FileChange"]
+'''
+
+[[case]]
+name = "the files module loads with write on ideatek:FileResult and ideatek:FileChange and read on ideatek:FileRequest, and attaches both"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:files@1.0.0, native, m/files_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["files_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:files@1.0.0"]
+write = ["ideatek:FileResult", "ideatek:FileChange"]
+read = ["ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileRequest"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:files@1.0.0"]
+read = ["ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileRequest", "ideatek:FileResult", "ideatek:FileChange"]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "files", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Files-{target}.zip", "include/ideatek_files.h", "license",
+    "package proof: BC-IdeaTek-Files ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "files"] }

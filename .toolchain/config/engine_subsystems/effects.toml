@@ -5,13 +5,13 @@ uses = ["world", "space", "rendering", "physics", "fields"]
 third_party = []
 
 [parts.effects.package]
-proof = "tests/engine_subsystems/effects/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space", "{root}/include/engine_subsystems/rendering"]
+proof = "tests/engine_subsystems/effects_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
 
 [compose.effects]
 part = "effects"
-from = "include/engine_subsystems/effects"
-headers = ["*.h"]
+from = "include/engine_subsystems"
+headers = ["ideatek_effects.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "effects_layout"
 kind = "program"
 part = "effects"
 test = true
-sources = ["tests/engine_subsystems/effects/layout/layout.c"]
-include = ["include/engine_subsystems/effects", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/engine_subsystems/rendering", "{bridge}/include"]
+sources = ["tests/engine_subsystems/effects_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "effects_probe"
 kind = "native_module"
 part = "effects"
 test = true
-sources = ["tests/engine_subsystems/effects/probe/probe.c"]
-include = ["include/engine_subsystems/effects", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/engine_subsystems/rendering", "include/engine_subsystems/physics", "include/engine_subsystems/fields"]
+sources = ["tests/engine_subsystems/effects_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{effects_probe_words}"]
 

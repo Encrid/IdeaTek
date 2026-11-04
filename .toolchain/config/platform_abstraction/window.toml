@@ -5,13 +5,13 @@ uses = ["world"]
 third_party = []
 
 [parts.window.package]
-proof = "tests/platform_abstraction/window/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world"]
+proof = "tests/platform_abstraction/window_proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction"]
 
 [compose.window]
 part = "window"
-from = "include/platform_abstraction/window"
-headers = ["*.h"]
+from = "include/platform_abstraction"
+headers = ["ideatek_clipboard.h", "ideatek_window.h"]
 into = "include"
 
 [variables]
@@ -35,16 +35,16 @@ name = "window_layout"
 kind = "program"
 part = "window"
 test = true
-sources = ["tests/platform_abstraction/window/layout/layout.c"]
-include = ["include/platform_abstraction/window", "include/platform_abstraction/world", "{bridge}/include"]
+sources = ["tests/platform_abstraction/window_layout.c"]
+include = ["include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "window_probe"
 kind = "native_module"
 part = "window"
 test = true
-sources = ["tests/platform_abstraction/window/probe/probe.c"]
-include = ["include/platform_abstraction/window", "include/platform_abstraction/world"]
+sources = ["tests/platform_abstraction/window_probe.c"]
+include = ["include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{window_probe_words}"]
 

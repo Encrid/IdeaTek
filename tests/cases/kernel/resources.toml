@@ -1,0 +1,266 @@
+[[case]]
+name = "ideatek_load_state_t has the size and the alignment of its Usage"
+run = ["{out}/resources_layout{exe}", "state"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/resources_layout{exe}", "load"] }
+
+[[case]]
+name = "ideatek_resource_error_t has the size and the alignment of its Usage"
+run = ["{out}/resources_layout{exe}", "error"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/resources_layout{exe}", "resource"] }
+
+[[case]]
+name = "ideatek_resource_load_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/resources_layout{exe}", "load"]
+claims = { status = 0, order = [
+    "size 40", "alignment 8", "owner 0", "path 8", "type 16", "settings 24", "reload_owner 32",
+] }
+false = { run = ["{out}/resources_layout{exe}", "bytes"] }
+
+[[case]]
+name = "ideatek_resource_handle_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/resources_layout{exe}", "handle"]
+claims = { status = 0, order = ["size 8", "alignment 8", "resource 0"] }
+false = { run = ["{out}/resources_layout{exe}", "label"] }
+
+[[case]]
+name = "ideatek_resource_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/resources_layout{exe}", "resource"]
+claims = { status = 0, order = [
+    "size 20", "alignment 4", "path 0", "type 8", "state 16", "dependencies 17", "recursive 18",
+    "error 19",
+] }
+false = { run = ["{out}/resources_layout{exe}", "loader"] }
+
+[[case]]
+name = "ideatek_resource_loader_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/resources_layout{exe}", "loader"]
+claims = { status = 0, order = ["size 24", "alignment 4", "name 0", "type 8", "extensions 16"] }
+false = { run = ["{out}/resources_layout{exe}", "bytes"] }
+
+[[case]]
+name = "ideatek_resource_bytes_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/resources_layout{exe}", "bytes"]
+claims = { status = 0, order = ["size 24", "alignment 8", "loader 0", "data 8", "settings 16"] }
+false = { run = ["{out}/resources_layout{exe}", "loader"] }
+
+[[case]]
+name = "ideatek_resource_outcome_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/resources_layout{exe}", "outcome"]
+claims = { status = 0, order = ["size 1", "alignment 1", "error 0"] }
+false = { run = ["{out}/resources_layout{exe}", "state"] }
+
+[[case]]
+name = "ideatek_resource_label_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/resources_layout{exe}", "label"]
+claims = { status = 0, order = ["size 16", "alignment 8", "resource 0", "label 8"] }
+false = { run = ["{out}/resources_layout{exe}", "handle"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/resources_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_LOAD_STATE_NOT_LOADED = 0, IDEATEK_LOAD_STATE_LOADING = 1, IDEATEK_LOAD_STATE_LOADED = 2, IDEATEK_LOAD_STATE_FAILED = 3 }",
+    "uint8_t { IDEATEK_RESOURCE_ERROR_NONE = 0, IDEATEK_RESOURCE_ERROR_NO_LOADER = 1, IDEATEK_RESOURCE_ERROR_TWO_LOADERS = 2, IDEATEK_RESOURCE_ERROR_NOT_FOUND = 3, IDEATEK_RESOURCE_ERROR_READ_FAILED = 4, IDEATEK_RESOURCE_ERROR_LOADER_FAILED = 5, IDEATEK_RESOURCE_ERROR_NO_LABEL = 6, IDEATEK_RESOURCE_ERROR_WRONG_TYPE = 7, IDEATEK_RESOURCE_ERROR_IGNORED = 8, IDEATEK_RESOURCE_ERROR_TOO_BIG = 9 }",
+    "{ ideatek_entity_t owner; bridge_text_t path; bridge_text_t type; bridge_text_t settings; uint8_t reload_owner; }",
+    "{ ideatek_entity_t resource; }",
+    "{ bridge_text_t path; bridge_text_t type; ideatek_load_state_t state; ideatek_load_state_t dependencies; ideatek_load_state_t recursive; ideatek_resource_error_t error; }",
+    "{ bridge_text_t name; bridge_text_t type; bridge_text_t extensions; }",
+    "{ ideatek_entity_t loader; bridge_text_t data; bridge_text_t settings; }",
+    "{ ideatek_resource_error_t error; }",
+    "{ ideatek_entity_t resource; bridge_text_t label; }",
+] }
+false = { run = ["{out}/resources_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/resources_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_LOAD_STATE_NOT_LOADED = 0, IDEATEK_LOAD_STATE_LOADING = 1, IDEATEK_LOAD_STATE_LOADED = 2, IDEATEK_LOAD_STATE_FAILED = 3 }",
+    "{ IDEATEK_RESOURCE_ERROR_NONE = 0, IDEATEK_RESOURCE_ERROR_NO_LOADER = 1, IDEATEK_RESOURCE_ERROR_TWO_LOADERS = 2, IDEATEK_RESOURCE_ERROR_NOT_FOUND = 3, IDEATEK_RESOURCE_ERROR_READ_FAILED = 4, IDEATEK_RESOURCE_ERROR_LOADER_FAILED = 5, IDEATEK_RESOURCE_ERROR_NO_LABEL = 6, IDEATEK_RESOURCE_ERROR_WRONG_TYPE = 7, IDEATEK_RESOURCE_ERROR_IGNORED = 8, IDEATEK_RESOURCE_ERROR_TOO_BIG = 9 }",
+    "{ ideatek_entity_t owner; bridge_text_t path; bridge_text_t type; bridge_text_t settings; uint8_t reload_owner; }",
+    "{ ideatek_entity_t resource; }",
+    "{ bridge_text_t path; bridge_text_t type; ideatek_load_state_t state; ideatek_load_state_t dependencies; ideatek_load_state_t recursive; ideatek_resource_error_t error; }",
+    "{ bridge_text_t name; bridge_text_t type; bridge_text_t extensions; }",
+    "{ ideatek_entity_t loader; bridge_text_t data; bridge_text_t settings; }",
+    "{ ideatek_resource_error_t error; }",
+    "{ ideatek_entity_t resource; bridge_text_t label; }",
+] }
+false = { run = ["{out}/resources_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/kernel/resources_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel", "-I", "include/platform_abstraction", "-c", "tests/kernel/resources_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the 14 types, the 3 types of the fields before the 7 structures"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/resources_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["resources_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
+    "ideatek:ResourceLoad", "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceLoader",
+    "ideatek:ResourceBytes", "ideatek:ResourceOutcome", "ideatek:ResourceLabel",
+    "ideatek:ResourceReload", "ideatek:ResourceModified", "ideatek:ResourceReady",
+    "ideatek:ResourceFailed",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["resources_late"]
+
+[[case]]
+name = "the game loads with write on ideatek:ResourceLoad and ideatek:ResourceReload, and attaches both"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/resources_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["resources_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:ResourceLoad", "ideatek:ResourceReload"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
+    "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceLabel",
+    "ideatek:ResourceModified", "ideatek:ResourceReady", "ideatek:ResourceFailed",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:ResourceLoad"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
+    "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceLabel",
+    "ideatek:ResourceReload", "ideatek:ResourceModified", "ideatek:ResourceReady",
+    "ideatek:ResourceFailed",
+]
+'''
+
+[[case]]
+name = "a loader module loads with write on ideatek:ResourceLoader, ideatek:ResourceOutcome, ideatek:ResourceLabel and ideatek:ResourceLoad"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:loader@1.0.0, native, m/resources_loader{library}"] }
+
+[case.folders]
+"{case}/m" = ["resources_loader"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:loader@1.0.0"]
+write = [
+    "ideatek:ResourceLoad", "ideatek:ResourceLoader", "ideatek:ResourceOutcome",
+    "ideatek:ResourceLabel",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
+    "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceBytes",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:loader@1.0.0"]
+write = ["ideatek:ResourceLoad", "ideatek:ResourceLoader", "ideatek:ResourceLabel"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
+    "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceBytes",
+    "ideatek:ResourceOutcome",
+]
+'''
+
+[[case]]
+name = "the resources module loads with write on ideatek:ResourceHandle, ideatek:Resource, ideatek:ResourceBytes, ideatek:ResourceOutcome, the tags and ideatek:FileRequest"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:resources@1.0.0, native, m/resources_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["resources_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:resources@1.0.0"]
+write = [
+    "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceBytes",
+    "ideatek:ResourceOutcome", "ideatek:ResourceReload", "ideatek:ResourceModified",
+    "ideatek:ResourceReady", "ideatek:ResourceFailed", "ideatek:FileRequest",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
+    "ideatek:ResourceLoad", "ideatek:ResourceLoader", "ideatek:ResourceLabel",
+    "ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t",
+    "ideatek:FileResult", "ideatek:FileChange",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:resources@1.0.0"]
+write = [
+    "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceBytes",
+    "ideatek:ResourceOutcome", "ideatek:ResourceReload", "ideatek:ResourceModified",
+    "ideatek:ResourceReady", "ideatek:ResourceFailed",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
+    "ideatek:ResourceLoad", "ideatek:ResourceLoader", "ideatek:ResourceLabel",
+    "ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t",
+    "ideatek:FileRequest", "ideatek:FileResult", "ideatek:FileChange",
+]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "resources", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Resources-{target}.zip", "include/ideatek_resources.h", "license",
+    "package proof: BC-IdeaTek-Resources ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "resources"] }

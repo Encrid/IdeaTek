@@ -1,0 +1,272 @@
+[[case]]
+name = "ideatek_vec3_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "vec3"]
+claims = { status = 0, order = ["size 12", "alignment 4", "x 0", "y 4", "z 8"] }
+false = { run = ["{out}/space_layout{exe}", "position"] }
+
+[[case]]
+name = "ideatek_quat_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "quat"]
+claims = { status = 0, order = ["size 16", "alignment 4", "x 0", "y 4", "z 8", "w 12"] }
+false = { run = ["{out}/space_layout{exe}", "vec3"] }
+
+[[case]]
+name = "ideatek_position_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "position"]
+claims = { status = 0, order = ["size 24", "alignment 8", "x 0", "y 8", "z 16"] }
+false = { run = ["{out}/space_layout{exe}", "vec3"] }
+
+[[case]]
+name = "ideatek_keep_t is 1 byte"
+run = ["{out}/space_layout{exe}", "keep"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/space_layout{exe}", "parent"] }
+
+[[case]]
+name = "ideatek_orphan_t is 1 byte"
+run = ["{out}/space_layout{exe}", "orphan"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/space_layout{exe}", "sibling"] }
+
+[[case]]
+name = "the bits of absolute are 1 for the position, 2 for the rotation and 4 for the scale"
+run = ["{out}/space_layout{exe}", "absolute"]
+claims = { status = 0, order = ["position 1", "rotation 2", "scale 4"] }
+false = { run = ["{out}/space_layout{exe}", "keep"] }
+
+[[case]]
+name = "ideatek_transform_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "transform"]
+claims = { status = 0, order = ["size 56", "alignment 8", "position 0", "rotation 24", "scale 40"] }
+false = { run = ["{out}/space_layout{exe}", "world_transform"] }
+
+[[case]]
+name = "ideatek_parent_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "parent"]
+claims = { status = 0, order = ["size 16", "alignment 8", "entity 0", "order 8", "keep 12", "orphan 13", "absolute 14"] }
+false = { run = ["{out}/space_layout{exe}", "sibling"] }
+
+[[case]]
+name = "ideatek_world_transform_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "world_transform"]
+claims = { status = 0, order = ["size 64", "alignment 8", "origin 0", "basis 24"] }
+false = { run = ["{out}/space_layout{exe}", "transform"] }
+
+[[case]]
+name = "ideatek_children_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "children"]
+claims = { status = 0, order = ["size 24", "alignment 8", "first 0", "last 8", "count 16"] }
+false = { run = ["{out}/space_layout{exe}", "position"] }
+
+[[case]]
+name = "ideatek_sibling_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "sibling"]
+claims = { status = 0, order = ["size 16", "alignment 8", "prev 0", "next 8"] }
+false = { run = ["{out}/space_layout{exe}", "parent"] }
+
+[[case]]
+name = "ideatek_previous_world_transform_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "previous"]
+claims = { status = 0, order = ["size 72", "alignment 8", "world 0", "tick 64"] }
+false = { run = ["{out}/space_layout{exe}", "world_transform"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/space_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "{ float x; float y; float z; }",
+    "{ float x; float y; float z; float w; }",
+    "{ double x; double y; double z; }",
+    "uint8_t { IDEATEK_KEEP_LOCAL = 0, IDEATEK_KEEP_WORLD = 1 }",
+    "uint8_t { IDEATEK_ORPHAN_DESTROY = 0, IDEATEK_ORPHAN_KEEP_WORLD = 1 }",
+    "{ ideatek_position_t position; ideatek_quat_t rotation; ideatek_vec3_t scale; }",
+    "{ ideatek_entity_t entity; int32_t order; ideatek_keep_t keep; ideatek_orphan_t orphan; uint8_t absolute; }",
+    "{ ideatek_position_t origin; float basis[9]; }",
+    "{ ideatek_entity_t first; ideatek_entity_t last; uint32_t count; }",
+    "{ ideatek_entity_t prev; ideatek_entity_t next; }",
+    "{ ideatek_world_transform_t world; uint64_t tick; }",
+] }
+false = { run = ["{out}/space_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/space_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ float x; float y; float z; }",
+    "{ float x; float y; float z; float w; }",
+    "{ double x; double y; double z; }",
+    "{ IDEATEK_KEEP_LOCAL = 0, IDEATEK_KEEP_WORLD = 1 }",
+    "{ IDEATEK_ORPHAN_DESTROY = 0, IDEATEK_ORPHAN_KEEP_WORLD = 1 }",
+    "{ ideatek_position_t position; ideatek_quat_t rotation; ideatek_vec3_t scale; }",
+    "{ ideatek_entity_t entity; int32_t order; ideatek_keep_t keep; ideatek_orphan_t orphan; uint8_t absolute; }",
+    "{ ideatek_position_t origin; float basis[9]; }",
+    "{ ideatek_entity_t first; ideatek_entity_t last; uint32_t count; }",
+    "{ ideatek_entity_t prev; ideatek_entity_t next; }",
+    "{ ideatek_world_transform_t world; uint64_t tick; }",
+] }
+false = { run = ["{out}/space_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the headers of the world part and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/space_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/space_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the 15 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/space_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["space_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
+    "ideatek:PreviousWorldTransform", "ideatek:Interpolated", "ideatek:Teleported",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["space_late"]
+
+[[case]]
+name = "a mover loads with write on ideatek:Transform, ideatek:Parent, ideatek:Interpolated and ideatek:Teleported"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:mover@1.0.0, native, m/space_mover{library}"] }
+
+[case.folders]
+"{case}/m" = ["space_mover"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:mover@1.0.0"]
+write = ["ideatek:Transform", "ideatek:Parent", "ideatek:Interpolated", "ideatek:Teleported"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:mover@1.0.0"]
+write = ["ideatek:Transform", "ideatek:Parent", "ideatek:Interpolated"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:Teleported",
+]
+'''
+
+[[case]]
+name = "the space module loads with write on its 7 types and read on ideatek:Interpolated and ideatek:Tick"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:space@1.0.0, native, m/space_place{library}"] }
+
+[case.folders]
+"{case}/m" = ["space_place"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:space@1.0.0"]
+write = ["ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
+    "ideatek:PreviousWorldTransform", "ideatek:Teleported",
+]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:Interpolated", "ideatek:Tick",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:space@1.0.0"]
+write = ["ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
+    "ideatek:Teleported",
+]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:Interpolated", "ideatek:Tick",
+    "ideatek:PreviousWorldTransform",
+]
+'''
+
+[[case]]
+name = "a reader loads with read on the space types"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/space_reader{library}"] }
+
+[case.folders]
+"{case}/m" = ["space_reader"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling", "ideatek:PreviousWorldTransform",
+    "ideatek:Interpolated",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling", "ideatek:PreviousWorldTransform",
+]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "space", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Space-{target}.zip", "include/ideatek_space.h", "license",
+    "package proof: BC-IdeaTek-Space ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "space"] }

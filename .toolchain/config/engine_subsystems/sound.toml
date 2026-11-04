@@ -5,13 +5,13 @@ uses = ["world", "space", "audio", "physics"]
 third_party = []
 
 [parts.sound.package]
-proof = "tests/engine_subsystems/sound/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/platform_abstraction/audio"]
+proof = "tests/engine_subsystems/sound_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
 
 [compose.sound]
 part = "sound"
-from = "include/engine_subsystems/sound"
-headers = ["*.h"]
+from = "include/engine_subsystems"
+headers = ["ideatek_sound.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "sound_layout"
 kind = "program"
 part = "sound"
 test = true
-sources = ["tests/engine_subsystems/sound/layout/layout.c"]
-include = ["include/engine_subsystems/sound", "include/platform_abstraction/world", "include/platform_abstraction/audio", "{bridge}/include"]
+sources = ["tests/engine_subsystems/sound_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "sound_probe"
 kind = "native_module"
 part = "sound"
 test = true
-sources = ["tests/engine_subsystems/sound/probe/probe.c"]
-include = ["include/engine_subsystems/sound", "include/platform_abstraction/world", "include/platform_abstraction/audio", "include/engine_subsystems/space", "include/engine_subsystems/physics"]
+sources = ["tests/engine_subsystems/sound_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{sound_probe_words}"]
 

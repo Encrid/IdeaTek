@@ -5,13 +5,13 @@ uses = []
 third_party = []
 
 [parts.debug_draw.package]
-proof = "tests/engine_subsystems/debug_draw/package/proof.c"
-include = ["{bridge}/include"]
+proof = "tests/engine_subsystems/debug_draw_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems"]
 
 [compose.debug_draw]
 part = "debug_draw"
-from = "include/engine_subsystems/debug_draw"
-headers = ["*.h"]
+from = "include/engine_subsystems"
+headers = ["ideatek_debug_draw.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "debug_draw_layout"
 kind = "program"
 part = "debug_draw"
 test = true
-sources = ["tests/engine_subsystems/debug_draw/layout/layout.c"]
-include = ["include/engine_subsystems/debug_draw", "{bridge}/include"]
+sources = ["tests/engine_subsystems/debug_draw_layout.c"]
+include = ["include/engine_subsystems", "{bridge}/include"]
 
 [[artifact]]
 name = "debug_draw_probe"
 kind = "native_module"
 part = "debug_draw"
 test = true
-sources = ["tests/engine_subsystems/debug_draw/probe/probe.c"]
-include = ["include/engine_subsystems/debug_draw"]
+sources = ["tests/engine_subsystems/debug_draw_probe.c"]
+include = ["include/engine_subsystems"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{debug_draw_probe_words}"]
 

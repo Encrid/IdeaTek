@@ -5,13 +5,13 @@ uses = ["world", "space", "rendering", "input_mapping", "animation"]
 third_party = []
 
 [parts.xr.package]
-proof = "tests/engine_subsystems/xr/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+proof = "tests/engine_subsystems/xr_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
 
 [compose.xr]
 part = "xr"
-from = "include/engine_subsystems/xr"
-headers = ["*.h"]
+from = "include/engine_subsystems"
+headers = ["ideatek_xr.h"]
 into = "include"
 
 [variables]
@@ -30,16 +30,16 @@ name = "xr_layout"
 kind = "program"
 part = "xr"
 test = true
-sources = ["tests/engine_subsystems/xr/layout/layout.c"]
-include = ["include/engine_subsystems/xr", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+sources = ["tests/engine_subsystems/xr_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "xr_probe"
 kind = "native_module"
 part = "xr"
 test = true
-sources = ["tests/engine_subsystems/xr/probe/probe.c"]
-include = ["include/engine_subsystems/xr", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/engine_subsystems/rendering", "include/engine_subsystems/animation", "include/engine_subsystems/input_mapping"]
+sources = ["tests/engine_subsystems/xr_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{xr_probe_words}"]
 
