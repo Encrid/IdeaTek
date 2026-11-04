@@ -42,6 +42,15 @@ The game writes the path and the bytes of a write in its share.
 A write goes to a temporary file first. Then the files module renames the temporary file over the old file, so a failed write keeps the old file.
 A write or a removal in `IDEATEK_STORAGE_CONTENT` gets `IDEATEK_FILE_STATUS_DENIED`.
 
+## The order of the requests
+
+The files module starts the waiting request with the highest `priority` first.
+It starts the waiting requests of 1 priority in the order of their rounds.
+A request of a higher priority does not stop a request that has started.
+
+If the game destroys the entity of a request before its result, the files module cancels the request.
+It then gives no result. A write that has started ends, or keeps the old file.
+
 A line of a list ends with `\n`. A file gives its name, a space and its size in decimal.
 A folder gives its name and `/`. The files module skips an entry whose name holds `\n`.
 
@@ -86,8 +95,9 @@ The `persistent` of its manifest includes `read_bytes`.
 | `data` | `bridge_text_t` | 24 | With `IDEATEK_FILE_ACTION_WRITE`: the bytes of the file. |
 | `storage` | `ideatek_storage_t` | 32 | The storage of the path. |
 | `action` | `ideatek_file_action_t` | 33 | The action. |
+| `priority` | `uint8_t` | 34 | The priority: *The order of the requests*. |
 
-Bytes 34 to 39 hold no field.
+Bytes 35 to 39 hold no field.
 
 ### ideatek:ideatek_storage_t
 
@@ -160,7 +170,7 @@ Bytes 17 to 23 hold no field.
 { IDEATEK_STORAGE_CONTENT = 0, IDEATEK_STORAGE_USER = 1 }
 { IDEATEK_FILE_ACTION_READ = 0, IDEATEK_FILE_ACTION_WRITE = 1, IDEATEK_FILE_ACTION_LIST = 2, IDEATEK_FILE_ACTION_REMOVE = 3, IDEATEK_FILE_ACTION_WATCH = 4 }
 { IDEATEK_FILE_STATUS_OK = 0, IDEATEK_FILE_STATUS_NOT_FOUND = 1, IDEATEK_FILE_STATUS_TOO_BIG = 2, IDEATEK_FILE_STATUS_DENIED = 3, IDEATEK_FILE_STATUS_FAILED = 4, IDEATEK_FILE_STATUS_UNSUPPORTED = 5 }
-{ uint64_t offset; uint64_t length; bridge_text_t path; bridge_text_t data; ideatek_storage_t storage; ideatek_file_action_t action; }
+{ uint64_t offset; uint64_t length; bridge_text_t path; bridge_text_t data; ideatek_storage_t storage; ideatek_file_action_t action; uint8_t priority; }
 { uint64_t size; bridge_text_t data; ideatek_file_status_t status; }
 { bridge_text_t paths; }
 ```
