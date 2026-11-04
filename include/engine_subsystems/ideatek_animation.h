@@ -17,7 +17,8 @@
         IDEATEK_CHANNEL_PROPERTY_TRANSLATION = 0, \
         IDEATEK_CHANNEL_PROPERTY_ROTATION = 1, \
         IDEATEK_CHANNEL_PROPERTY_SCALE = 2, \
-        IDEATEK_CHANNEL_PROPERTY_WEIGHTS = 3 \
+        IDEATEK_CHANNEL_PROPERTY_WEIGHTS = 3, \
+        IDEATEK_CHANNEL_PROPERTY_FLOAT = 4 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_channel_property_t,
@@ -36,6 +37,41 @@ BRIDGE_SCHEMA_ENUM_TYPE(ideatek_interpolation_t,
 BRIDGE_SCHEMA_ENUM_DESC(ideatek_interpolation_t,
     uint8_t, IDEATEK_INTERPOLATION_VALUES);
 
+    #define IDEATEK_LAYER_BLEND_VALUES { \
+        IDEATEK_LAYER_BLEND_OVERLAY = 0, \
+        IDEATEK_LAYER_BLEND_ADDITIVE = 1, \
+        IDEATEK_LAYER_BLEND_MODEL_SPACE = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_layer_blend_t,
+    uint8_t, IDEATEK_LAYER_BLEND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_layer_blend_t,
+    uint8_t, IDEATEK_LAYER_BLEND_VALUES);
+
+    #define IDEATEK_CLIP_EVENT_KIND_VALUES { \
+        IDEATEK_CLIP_EVENT_KIND_GENERIC = 0, \
+        IDEATEK_CLIP_EVENT_KIND_SYNC = 1, \
+        IDEATEK_CLIP_EVENT_KIND_WARP = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_clip_event_kind_t,
+    uint8_t, IDEATEK_CLIP_EVENT_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_clip_event_kind_t,
+    uint8_t, IDEATEK_CLIP_EVENT_KIND_VALUES);
+
+    #define IDEATEK_PARAMETER_TYPE_VALUES { \
+        IDEATEK_PARAMETER_TYPE_BOOL = 0, \
+        IDEATEK_PARAMETER_TYPE_ID = 1, \
+        IDEATEK_PARAMETER_TYPE_FLOAT = 2, \
+        IDEATEK_PARAMETER_TYPE_VECTOR = 3, \
+        IDEATEK_PARAMETER_TYPE_TARGET = 4 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_parameter_type_t,
+    uint8_t, IDEATEK_PARAMETER_TYPE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_parameter_type_t,
+    uint8_t, IDEATEK_PARAMETER_TYPE_VALUES);
+
     #define IDEATEK_CLIP_CHANNEL_FIELDS { \
         uint64_t target; \
         uint32_t key_count; \
@@ -53,6 +89,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_clip_channel_t, IDEATEK_CLIP_CHANNEL_FIELDS);
         float time; \
         float duration; \
         float value; \
+        ideatek_clip_event_kind_t kind; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_clip_event_t, IDEATEK_CLIP_EVENT_FIELDS);
@@ -165,6 +202,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_morph_weights_t,
         uint32_t channel_count; \
         uint32_t event_count; \
         uint32_t revision; \
+        bool additive; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_clip_t, IDEATEK_CLIP_FIELDS);
@@ -183,13 +221,17 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_animation_target_t,
     #define IDEATEK_CLIP_PLAY_FIELDS { \
         ideatek_entity_t player; \
         ideatek_entity_t clip; \
+        ideatek_entity_t mask; \
+        uint64_t sync_group; \
         float time; \
         float speed; \
         float weight; \
         float event_weight; \
+        int32_t layer; \
         ideatek_repeat_t repeat; \
         bool paused; \
         bool real_time; \
+        ideatek_layer_blend_t blend; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_clip_play_t, IDEATEK_CLIP_PLAY_FIELDS);
@@ -231,6 +273,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_animation_states_t,
         uint32_t value; \
         float fade; \
         ideatek_state_switch_t when; \
+        bool inertial; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_animation_state_t,
@@ -348,6 +391,89 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_spring_collider_t,
     IDEATEK_SPRING_COLLIDER_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_spring_collider_t,
     IDEATEK_SPRING_COLLIDER_FIELDS);
+
+    #define IDEATEK_BONE_MASK_FIELDS { \
+        bridge_text_t weights; \
+        uint32_t count; \
+        uint32_t revision; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_bone_mask_t, IDEATEK_BONE_MASK_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_bone_mask_t, IDEATEK_BONE_MASK_FIELDS);
+
+    #define IDEATEK_ANIMATION_CURVES_FIELDS { \
+        bridge_text_t values; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_animation_curves_t,
+    IDEATEK_ANIMATION_CURVES_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_animation_curves_t,
+    IDEATEK_ANIMATION_CURVES_FIELDS);
+
+    #define IDEATEK_ANIMATION_PARAMETERS_FIELDS { \
+        bridge_text_t values; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_animation_parameters_t,
+    IDEATEK_ANIMATION_PARAMETERS_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_animation_parameters_t,
+    IDEATEK_ANIMATION_PARAMETERS_FIELDS);
+
+    #define IDEATEK_WARP_TARGETS_FIELDS { \
+        bridge_text_t targets; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_warp_targets_t, IDEATEK_WARP_TARGETS_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_warp_targets_t, IDEATEK_WARP_TARGETS_FIELDS);
+
+    #define IDEATEK_ORIENTATION_WARP_FIELDS { \
+        ideatek_vec3_t direction; \
+        float max_angle; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_orientation_warp_t,
+    IDEATEK_ORIENTATION_WARP_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_orientation_warp_t,
+    IDEATEK_ORIENTATION_WARP_FIELDS);
+
+    #define IDEATEK_ANIMATION_LOD_FIELDS { \
+        uint32_t joint_count; \
+        uint8_t interval; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_animation_lod_t,
+    IDEATEK_ANIMATION_LOD_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_animation_lod_t,
+    IDEATEK_ANIMATION_LOD_FIELDS);
+
+    #define IDEATEK_TRAJECTORY_FIELDS { \
+        bridge_text_t samples; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_trajectory_t, IDEATEK_TRAJECTORY_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_trajectory_t, IDEATEK_TRAJECTORY_FIELDS);
+
+    #define IDEATEK_MOTION_MATCH_FIELDS { \
+        ideatek_entity_t player; \
+        ideatek_entity_t database; \
+        float blend_time; \
+        float search_interval; \
+        bool inertial; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_motion_match_t, IDEATEK_MOTION_MATCH_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_motion_match_t, IDEATEK_MOTION_MATCH_FIELDS);
+
+    #define IDEATEK_INERTIALIZE_FIELDS { \
+        float duration; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_inertialize_t, IDEATEK_INERTIALIZE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_inertialize_t, IDEATEK_INERTIALIZE_FIELDS);
 
     #define IDEATEK_PLAY_LINK_FIELDS { \
         ideatek_entity_t parent; \
