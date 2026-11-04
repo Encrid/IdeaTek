@@ -10,6 +10,8 @@ Its fields use `ideatek_entity_t`, `ideatek_vec3_t` and `ideatek_quat_t`, so the
 - The animation module mixes the plays. It writes `ideatek:Transform` of the joints, `ideatek:MorphWeights`, `ideatek:RootMotionDelta` and `ideatek:ClipEvent`. It also writes `time` of each play.
 - An IK module and a spring module write `ideatek:Transform` of the joints that their modifiers name.
 - The render module reads `ideatek:Joint`, `ideatek:Skin`, `ideatek:SkinBinds` and `ideatek:MorphWeights`.
+- A graph module reads `ideatek:AnimationParameters` and drives the plays: *The graph modules*.
+- A matching module reads `ideatek:Trajectory` and drives the plays: *The motion matching*.
 
 ## The pose
 
@@ -41,11 +43,109 @@ A value of `IDEATEK_CHANNEL_PROPERTY_WEIGHTS` holds all the morph weights of its
 
 ## The mix
 
-The animation module mixes the plays of a player for each target. Each play counts by `weight` divided by the sum of the weights.
+The animation module mixes the plays of a player layer by layer, by rising `layer`.
+In 1 layer, each play counts by `weight` divided by the sum of the weights of the layer. A mask scales the weight of each target.
 It mixes the rotations as a normalized sum of quaternions with their weights. A target with a sum of 0 is not written.
+The weight of a layer is the sum of the weights of its plays, at most 1.
+
+- `IDEATEK_LAYER_BLEND_OVERLAY` blends the pose below toward the mix of the layer, by the weight of the layer.
+- `IDEATEK_LAYER_BLEND_ADDITIVE` adds the offsets of the layer to the pose below, scaled by the weight of the layer.
+- `IDEATEK_LAYER_BLEND_MODEL_SPACE` is an overlay of the rotations in the space of the skeleton, so an aim stays true when the spine turns.
+
+An offset adds to a translation, and multiplies a rotation and a scale. The first layer of a player is always an overlay on the pose of the joints.
+A play of `IDEATEK_LAYER_BLEND_ADDITIVE` plays only a clip with `additive`. Another clip gets 1 line in the log, and the play is skipped.
+The plays of 1 layer have 1 blend. A layer whose plays differ gets 1 line in the log, and it is an overlay.
 
 A play with `IDEATEK_REPEAT_ONCE` stops at its end and stays there.
 A play with `real_time` takes `real_delta` of `ideatek:Frame`. Each other play takes `delta`.
+
+## The bone masks
+
+A bone mask gives a weight from 0 to 1 to each target of a skeleton. A target that the mask does not name has the weight 0.
+A record of `weights` of `ideatek:BoneMask`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `target` | `uint64_t` | 0 | The target id. |
+| `weight` | `float` | 8 | The weight of the target. |
+
+A play with a `mask` of 0 has the weight 1 on each target. For example, a mask of the upper body lets a layer aim while the legs run.
+
+## The sync groups
+
+The plays of 1 player with the same `sync_group`, other than 0, keep the same phase. The play with the highest weight leads.
+The phase of a play is the last event of the kind `IDEATEK_CLIP_EVENT_KIND_SYNC` that it passed. It also holds the part of the time to the next one.
+Each other play of the group takes the time with the same phase in its own clip. A clip with no sync event uses its normalized time.
+
+A foot that touches the ground is a common sync event, so the feet of a walk and of a run stay in step.
+
+## The curves
+
+A channel of `IDEATEK_CHANNEL_PROPERTY_FLOAT` gives 1 float for each key. Its target id is the hash of the name of the curve.
+The animation module mixes the curves of a player as the morph weights. An additive layer adds its curves.
+In each step with a change, it attaches `ideatek:AnimationCurves` to the player. The module that owns a value reads its curve and applies it.
+
+A loader of glTF names each float of `KHR_animation_pointer` by its JSON pointer, for example the intensity of a light.
+
+## The graph modules
+
+A graph module runs a graph of animation, a resource of its own type, for example a graph of Esoterica.
+The game writes `ideatek:AnimationParameters` on the player in each step that a value changes. The graph module reads it.
+The graph module then spawns and writes the plays, the positions of the blend spaces and `ideatek:Inertialize`.
+A record of `values` of `ideatek:AnimationParameters`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `name` | `uint64_t` | 0 | The hash of the name of the parameter. |
+| `id` | `uint64_t` | 8 | With `IDEATEK_PARAMETER_TYPE_ID`, a hash. With `IDEATEK_PARAMETER_TYPE_TARGET`, the `id` of an entity. Else 0. |
+| `value` | `float[3]` | 16 | With `IDEATEK_PARAMETER_TYPE_FLOAT`, the first float. With `IDEATEK_PARAMETER_TYPE_VECTOR`, the 3 floats. With `IDEATEK_PARAMETER_TYPE_BOOL`, 0 or 1 in the first float. |
+| `type` | `ideatek_parameter_type_t` | 28 | The type of the value. |
+
+## The warping
+
+A warp moves the root motion of a play, so the character reaches a place, for example a ledge or a door.
+The game writes `ideatek:WarpTargets` on the player. A record of `targets`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `name` | `uint64_t` | 0 | The hash of the name of the target. |
+| `follow` | `uint64_t` | 8 | The `id` of an entity that the target follows, or 0. |
+| `position` | `double[3]` | 16 | The position in the world, or the offset from `follow`. |
+| `rotation` | `float[4]` | 40 | The rotation in the world, or the offset from `follow`. |
+
+The window of a warp is a clip event of the kind `IDEATEK_CLIP_EVENT_KIND_WARP`, whose name is the name of a target.
+During the window, the animation module bends `ideatek:RootMotionDelta`, so the root reaches the target at the end of the window.
+With `ideatek:OrientationWarp`, it turns the lower body toward `direction`, and the upper body keeps the facing of the clip.
+
+## The level of detail
+
+`ideatek:AnimationLod` on a player makes far characters cheaper. The game or the render module writes it by distance.
+The animation module samples the player once in each `interval` steps, and keeps the pose between.
+With a `joint_count` other than 0, it samples only the joints whose `index` is below `joint_count`. The other joints keep their pose.
+
+## The motion matching
+
+A matching module picks, in each search, the frame of a database whose pose and path best match the character. It then plays that frame.
+The database is a resource of a type of the matching module. IdeaTek gives no format of it.
+The game writes `ideatek:Trajectory` on the player: the path of the character in the past and in the future. A record of `samples`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `time` | `float` | 0 | The seconds from now. A past sample is negative, and a future sample is positive. |
+| `position` | `float[3]` | 4 | The position, relative to the player. |
+| `facing` | `float[4]` | 16 | The rotation of the facing, relative to the player. |
+
+The matching module spawns the plays of the frames that it picks, and fades or inertializes them. The game reads the plays as any other.
+
+## The inertial blend
+
+An inertial blend goes from 1 pose to another and plays only the new pose. It keeps the speed of the old motion.
+A module attaches `ideatek:Inertialize` to a player at a change, for example a new clip.
+In the next step, the animation module keeps the difference between the last pose and the new mix for each target. It also keeps the speed of that difference.
+It adds the difference to the pose, and decays it to 0 over `duration` with a quintic curve.
+
+The curve starts at the speed of the difference, and ends with no speed and no acceleration. Then the animation module detaches `ideatek:Inertialize`.
+An `ideatek:AnimationState` with `inertial` uses an inertial blend of `fade` seconds in place of a fade.
 
 ## The blend spaces
 
@@ -96,6 +196,7 @@ A play with `ideatek:PlayLink` follows its parent play: its time is the parent t
 | 1 | `IDEATEK_CHANNEL_PROPERTY_ROTATION` | The rotation, as a quaternion. |
 | 2 | `IDEATEK_CHANNEL_PROPERTY_SCALE` | The scale. |
 | 3 | `IDEATEK_CHANNEL_PROPERTY_WEIGHTS` | The morph weights. |
+| 4 | `IDEATEK_CHANNEL_PROPERTY_FLOAT` | A curve: *The curves*. |
 
 ## ideatek:ideatek_interpolation_t
 
@@ -107,6 +208,41 @@ A play with `ideatek:PlayLink` follows its parent play: its time is the parent t
 | 0 | `IDEATEK_INTERPOLATION_STEP` | The value of the key before. |
 | 1 | `IDEATEK_INTERPOLATION_LINEAR` | A straight blend of the 2 keys. |
 | 2 | `IDEATEK_INTERPOLATION_CUBIC_SPLINE` | A cubic spline with tangents. |
+
+## ideatek:ideatek_layer_blend_t
+
+`ideatek_layer_blend_t` tells how a layer of plays applies: *The mix*.
+`ideatek_layer_blend_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_LAYER_BLEND_OVERLAY` | The layer replaces the pose below, by its weight. |
+| 1 | `IDEATEK_LAYER_BLEND_ADDITIVE` | The layer adds offsets to the pose below. |
+| 2 | `IDEATEK_LAYER_BLEND_MODEL_SPACE` | The layer replaces the rotations in the space of the skeleton. |
+
+## ideatek:ideatek_clip_event_kind_t
+
+`ideatek_clip_event_kind_t` tells the use of an event of a clip.
+`ideatek_clip_event_kind_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_CLIP_EVENT_KIND_GENERIC` | An event for the game. |
+| 1 | `IDEATEK_CLIP_EVENT_KIND_SYNC` | A mark of the phase: *The sync groups*. |
+| 2 | `IDEATEK_CLIP_EVENT_KIND_WARP` | The window of a warp: *The warping*. |
+
+## ideatek:ideatek_parameter_type_t
+
+`ideatek_parameter_type_t` tells the type of a parameter: *The graph modules*.
+`ideatek_parameter_type_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_PARAMETER_TYPE_BOOL` | A truth value. |
+| 1 | `IDEATEK_PARAMETER_TYPE_ID` | A hash of a name. |
+| 2 | `IDEATEK_PARAMETER_TYPE_FLOAT` | A number. |
+| 3 | `IDEATEK_PARAMETER_TYPE_VECTOR` | 3 numbers. |
+| 4 | `IDEATEK_PARAMETER_TYPE_TARGET` | An entity. |
 
 ## ideatek:ideatek_clip_channel_t
 
@@ -135,8 +271,9 @@ Bytes 22 to 23 hold no field.
 | `time` | `float` | 8 | The time of the start. |
 | `duration` | `float` | 12 | The length. 0 means a point in time. |
 | `value` | `float` | 16 | A value for the game. |
+| `kind` | `ideatek_clip_event_kind_t` | 20 | The use of the event. |
 
-Bytes 20 to 23 hold no field.
+Bytes 21 to 23 hold no field.
 
 ## ideatek:ideatek_repeat_t
 
@@ -262,7 +399,7 @@ An entity with no `ideatek:MorphWeights` has all weights at 0. A count that diff
 ## ideatek:Clip
 
 `ideatek:Clip` is an animation on a resource entity.
-`ideatek_clip_t` takes 24 bytes. Its alignment is 4.
+`ideatek_clip_t` takes 28 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
@@ -271,6 +408,9 @@ An entity with no `ideatek:MorphWeights` has all weights at 0. A count that diff
 | `channel_count` | `uint32_t` | 12 | The number of channels. |
 | `event_count` | `uint32_t` | 16 | The number of events. |
 | `revision` | `uint32_t` | 20 | Raised at each change. |
+| `additive` | `bool` | 24 | `true` if the values are offsets from the reference pose of the clip. |
+
+Bytes 25 to 27 hold no field.
 
 A channel with no target in the player is skipped. The animation module logs the clip once.
 
@@ -291,21 +431,23 @@ A channel with no target in the player is skipped. The animation module logs the
 ## ideatek:ClipPlay
 
 `ideatek:ClipPlay` plays a clip on a player. It is on an entity of its own.
-`ideatek_clip_play_t` takes 40 bytes. Its alignment is 8.
+`ideatek_clip_play_t` takes 56 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
 | `player` | `ideatek_entity_t` | 0 | No default | The player. |
 | `clip` | `ideatek_entity_t` | 8 | No default | The clip. |
-| `time` | `float` | 16 | 0 | The time in the clip. The animation module advances it. |
-| `speed` | `float` | 20 | 1 | The factor of the time. |
-| `weight` | `float` | 24 | 1 | The part of the play in the mix. |
-| `event_weight` | `float` | 28 | 0 | The weight above which the play sends events. |
-| `repeat` | `ideatek_repeat_t` | 32 | `IDEATEK_REPEAT_ONCE` | The end of the clip. |
-| `paused` | `bool` | 33 | `false` | `true` if the time stays. |
-| `real_time` | `bool` | 34 | `false` | `true` if the play takes the real time. |
-
-Bytes 35 to 39 hold no field.
+| `mask` | `ideatek_entity_t` | 16 | 0 | The resource entity of a bone mask, or 0. |
+| `sync_group` | `uint64_t` | 24 | 0 | The hash of the name of a sync group, or 0. |
+| `time` | `float` | 32 | 0 | The time in the clip. The animation module advances it. |
+| `speed` | `float` | 36 | 1 | The factor of the time. |
+| `weight` | `float` | 40 | 1 | The part of the play in the mix. |
+| `event_weight` | `float` | 44 | 0 | The weight above which the play sends events. |
+| `layer` | `int32_t` | 48 | 0 | The layer of the play: *The mix*. |
+| `repeat` | `ideatek_repeat_t` | 52 | `IDEATEK_REPEAT_ONCE` | The end of the clip. |
+| `paused` | `bool` | 53 | `false` | `true` if the time stays. |
+| `real_time` | `bool` | 54 | `false` | `true` if the play takes the real time. |
+| `blend` | `ideatek_layer_blend_t` | 55 | `IDEATEK_LAYER_BLEND_OVERLAY` | How the layer of the play applies. |
 
 The game, or a state machine, spawns a play, writes it, and destroys it. The game writes `time` to seek.
 
@@ -357,8 +499,9 @@ Bytes 18 to 23 hold no field.
 | `value` | `uint32_t` | 16 | The value of the machine for this state. |
 | `fade` | `float` | 20 | The seconds of the fade into this state. |
 | `when` | `ideatek_state_switch_t` | 24 | When the fade starts. |
+| `inertial` | `bool` | 25 | `true` for an inertial blend: *The inertial blend*. |
 
-Bytes 25 to 31 hold no field.
+Bytes 26 to 31 hold no field.
 
 ## ideatek:ClipEvent
 
@@ -499,6 +642,103 @@ The defaults are the defaults of a joint of the `VRMC_springBone` 1.0 schema.
 
 Bytes 17 to 23 hold no field.
 
+## ideatek:BoneMask
+
+`ideatek:BoneMask` gives a weight to each target, on a resource entity.
+`ideatek_bone_mask_t` takes 16 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `weights` | `bridge_text_t` | 0 | The records of the weights: *The bone masks*. |
+| `count` | `uint32_t` | 8 | The number of records. |
+| `revision` | `uint32_t` | 12 | Raised at each change. |
+
+## ideatek:AnimationCurves
+
+`ideatek:AnimationCurves` gives the mixed curves of a player: *The curves*. The animation module writes it.
+`ideatek_animation_curves_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `values` | `bridge_text_t` | 0 | A record of a `uint64_t` hash and a `float` value for each curve, 12 bytes. |
+| `count` | `uint32_t` | 8 | The number of records. |
+
+## ideatek:AnimationParameters
+
+`ideatek:AnimationParameters` gives the values that the game feeds to a graph module, on the player.
+`ideatek_animation_parameters_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `values` | `bridge_text_t` | 0 | The records of the parameters: *The graph modules*. |
+| `count` | `uint32_t` | 8 | The number of records. |
+
+## ideatek:WarpTargets
+
+`ideatek:WarpTargets` gives the places that the warps of a player reach.
+`ideatek_warp_targets_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `targets` | `bridge_text_t` | 0 | The records of the targets: *The warping*. |
+| `count` | `uint32_t` | 8 | The number of records. |
+
+## ideatek:OrientationWarp
+
+`ideatek:OrientationWarp` turns the legs toward the motion: *The warping*.
+`ideatek_orientation_warp_t` takes 16 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `direction` | `ideatek_vec3_t` | 0 | No default | The direction of the motion, in the space of the player. |
+| `max_angle` | `float` | 12 | 1.5708 | The largest turn of the lower body, in radians. |
+
+## ideatek:AnimationLod
+
+`ideatek:AnimationLod` sets the level of detail of a player: *The level of detail*.
+`ideatek_animation_lod_t` takes 8 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `joint_count` | `uint32_t` | 0 | 0 | The joints that the animation module samples. 0 means all. |
+| `interval` | `uint8_t` | 4 | 1 | The steps between 2 samples. 1 samples each step. |
+
+Bytes 5 to 7 hold no field.
+
+## ideatek:Trajectory
+
+`ideatek:Trajectory` gives the path of a character to a matching module.
+`ideatek_trajectory_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `samples` | `bridge_text_t` | 0 | The records of the samples, by rising `time`: *The motion matching*. |
+| `count` | `uint32_t` | 8 | The number of records. |
+
+## ideatek:MotionMatch
+
+`ideatek:MotionMatch` makes a matching module drive a player, on an entity of its own.
+`ideatek_motion_match_t` takes 32 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `player` | `ideatek_entity_t` | 0 | No default | The player. |
+| `database` | `ideatek_entity_t` | 8 | No default | The resource entity of the database. |
+| `blend_time` | `float` | 16 | 0.2 | The seconds of the blend to a new frame. |
+| `search_interval` | `float` | 20 | 0.1 | The seconds between 2 searches. |
+| `inertial` | `bool` | 24 | `true` | `true` for an inertial blend, else a fade. |
+
+Bytes 25 to 31 hold no field.
+
+## ideatek:Inertialize
+
+`ideatek:Inertialize` asks for an inertial blend on a player: *The inertial blend*.
+`ideatek_inertialize_t` takes 4 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `duration` | `float` | 0 | The seconds of the blend. |
+
 ## ideatek:PlayLink
 
 `ideatek:PlayLink` makes a play follow another play: *The scenes*.
@@ -519,6 +759,9 @@ Before `start`, the play has a weight of 0.
 | --- | --- | --- | --- |
 | `ideatek:ideatek_channel_property_t` | `ideatek_channel_property_t` | `ideatek_channel_property_t_desc` | `IDEATEK_CHANNEL_PROPERTY_VALUES` |
 | `ideatek:ideatek_interpolation_t` | `ideatek_interpolation_t` | `ideatek_interpolation_t_desc` | `IDEATEK_INTERPOLATION_VALUES` |
+| `ideatek:ideatek_layer_blend_t` | `ideatek_layer_blend_t` | `ideatek_layer_blend_t_desc` | `IDEATEK_LAYER_BLEND_VALUES` |
+| `ideatek:ideatek_clip_event_kind_t` | `ideatek_clip_event_kind_t` | `ideatek_clip_event_kind_t_desc` | `IDEATEK_CLIP_EVENT_KIND_VALUES` |
+| `ideatek:ideatek_parameter_type_t` | `ideatek_parameter_type_t` | `ideatek_parameter_type_t_desc` | `IDEATEK_PARAMETER_TYPE_VALUES` |
 | `ideatek:ideatek_clip_channel_t` | `ideatek_clip_channel_t` | `ideatek_clip_channel_t_desc` | `IDEATEK_CLIP_CHANNEL_FIELDS` |
 | `ideatek:ideatek_clip_event_t` | `ideatek_clip_event_t` | `ideatek_clip_event_t_desc` | `IDEATEK_CLIP_EVENT_FIELDS` |
 | `ideatek:ideatek_repeat_t` | `ideatek_repeat_t` | `ideatek_repeat_t_desc` | `IDEATEK_REPEAT_VALUES` |
@@ -548,13 +791,25 @@ Before `start`, the play has a weight of 0.
 | `ideatek:CopyTransform` | `ideatek_copy_transform_t` | `ideatek_copy_transform_t_desc` | `IDEATEK_COPY_TRANSFORM_FIELDS` |
 | `ideatek:SpringChain` | `ideatek_spring_chain_t` | `ideatek_spring_chain_t_desc` | `IDEATEK_SPRING_CHAIN_FIELDS` |
 | `ideatek:SpringCollider` | `ideatek_spring_collider_t` | `ideatek_spring_collider_t_desc` | `IDEATEK_SPRING_COLLIDER_FIELDS` |
+| `ideatek:BoneMask` | `ideatek_bone_mask_t` | `ideatek_bone_mask_t_desc` | `IDEATEK_BONE_MASK_FIELDS` |
+| `ideatek:AnimationCurves` | `ideatek_animation_curves_t` | `ideatek_animation_curves_t_desc` | `IDEATEK_ANIMATION_CURVES_FIELDS` |
+| `ideatek:AnimationParameters` | `ideatek_animation_parameters_t` | `ideatek_animation_parameters_t_desc` | `IDEATEK_ANIMATION_PARAMETERS_FIELDS` |
+| `ideatek:WarpTargets` | `ideatek_warp_targets_t` | `ideatek_warp_targets_t_desc` | `IDEATEK_WARP_TARGETS_FIELDS` |
+| `ideatek:OrientationWarp` | `ideatek_orientation_warp_t` | `ideatek_orientation_warp_t_desc` | `IDEATEK_ORIENTATION_WARP_FIELDS` |
+| `ideatek:AnimationLod` | `ideatek_animation_lod_t` | `ideatek_animation_lod_t_desc` | `IDEATEK_ANIMATION_LOD_FIELDS` |
+| `ideatek:Trajectory` | `ideatek_trajectory_t` | `ideatek_trajectory_t_desc` | `IDEATEK_TRAJECTORY_FIELDS` |
+| `ideatek:MotionMatch` | `ideatek_motion_match_t` | `ideatek_motion_match_t_desc` | `IDEATEK_MOTION_MATCH_FIELDS` |
+| `ideatek:Inertialize` | `ideatek_inertialize_t` | `ideatek_inertialize_t_desc` | `IDEATEK_INERTIALIZE_FIELDS` |
 | `ideatek:PlayLink` | `ideatek_play_link_t` | `ideatek_play_link_t_desc` | `IDEATEK_PLAY_LINK_FIELDS` |
 
 ```text
-{ IDEATEK_CHANNEL_PROPERTY_TRANSLATION = 0, IDEATEK_CHANNEL_PROPERTY_ROTATION = 1, IDEATEK_CHANNEL_PROPERTY_SCALE = 2, IDEATEK_CHANNEL_PROPERTY_WEIGHTS = 3 }
+{ IDEATEK_CHANNEL_PROPERTY_TRANSLATION = 0, IDEATEK_CHANNEL_PROPERTY_ROTATION = 1, IDEATEK_CHANNEL_PROPERTY_SCALE = 2, IDEATEK_CHANNEL_PROPERTY_WEIGHTS = 3, IDEATEK_CHANNEL_PROPERTY_FLOAT = 4 }
 { IDEATEK_INTERPOLATION_STEP = 0, IDEATEK_INTERPOLATION_LINEAR = 1, IDEATEK_INTERPOLATION_CUBIC_SPLINE = 2 }
+{ IDEATEK_LAYER_BLEND_OVERLAY = 0, IDEATEK_LAYER_BLEND_ADDITIVE = 1, IDEATEK_LAYER_BLEND_MODEL_SPACE = 2 }
+{ IDEATEK_CLIP_EVENT_KIND_GENERIC = 0, IDEATEK_CLIP_EVENT_KIND_SYNC = 1, IDEATEK_CLIP_EVENT_KIND_WARP = 2 }
+{ IDEATEK_PARAMETER_TYPE_BOOL = 0, IDEATEK_PARAMETER_TYPE_ID = 1, IDEATEK_PARAMETER_TYPE_FLOAT = 2, IDEATEK_PARAMETER_TYPE_VECTOR = 3, IDEATEK_PARAMETER_TYPE_TARGET = 4 }
 { uint64_t target; uint32_t key_count; uint32_t times; uint32_t values; ideatek_channel_property_t property; ideatek_interpolation_t interpolation; }
-{ uint64_t name; float time; float duration; float value; }
+{ uint64_t name; float time; float duration; float value; ideatek_clip_event_kind_t kind; }
 { IDEATEK_REPEAT_ONCE = 0, IDEATEK_REPEAT_LOOP = 1, IDEATEK_REPEAT_PING_PONG = 2 }
 { IDEATEK_STATE_SWITCH_IMMEDIATE = 0, IDEATEK_STATE_SWITCH_AT_END = 1 }
 { IDEATEK_EVENT_PHASE_BEGIN = 0, IDEATEK_EVENT_PHASE_END = 1 }
@@ -565,13 +820,13 @@ Before `start`, the play has a weight of 0.
 { ideatek_entity_t skeleton; ideatek_entity_t binds; }
 { bridge_text_t matrices; uint32_t count; uint32_t revision; }
 { bridge_text_t weights; uint32_t count; }
-{ bridge_text_t bytes; float duration; uint32_t channel_count; uint32_t event_count; uint32_t revision; }
+{ bridge_text_t bytes; float duration; uint32_t channel_count; uint32_t event_count; uint32_t revision; bool additive; }
 { uint64_t id; ideatek_entity_t player; }
-{ ideatek_entity_t player; ideatek_entity_t clip; float time; float speed; float weight; float event_weight; ideatek_repeat_t repeat; bool paused; bool real_time; }
+{ ideatek_entity_t player; ideatek_entity_t clip; ideatek_entity_t mask; uint64_t sync_group; float time; float speed; float weight; float event_weight; int32_t layer; ideatek_repeat_t repeat; bool paused; bool real_time; ideatek_layer_blend_t blend; }
 { ideatek_entity_t player; float x; float y; uint8_t dimensions; bool synced; }
 { ideatek_entity_t space; ideatek_entity_t clip; float x; float y; }
 { ideatek_entity_t player; }
-{ ideatek_entity_t machine; ideatek_entity_t source; uint32_t value; float fade; ideatek_state_switch_t when; }
+{ ideatek_entity_t machine; ideatek_entity_t source; uint32_t value; float fade; ideatek_state_switch_t when; bool inertial; }
 { ideatek_entity_t play; ideatek_entity_t player; uint64_t name; float value; uint32_t order; ideatek_event_phase_t phase; }
 { uint64_t root; ideatek_motion_axes_t axes; }
 { ideatek_quat_t rotation; ideatek_vec3_t translation; }
@@ -582,6 +837,15 @@ Before `start`, the play has a weight of 0.
 { ideatek_entity_t joint; ideatek_entity_t source; ideatek_motion_axes_t axes; }
 { ideatek_entity_t root; ideatek_entity_t end; ideatek_entity_t center; ideatek_vec3_t gravity_direction; float stiffness; float drag; float gravity; float radius; }
 { ideatek_entity_t modifier; float radius; float height; ideatek_collider_shape_t shape; }
+{ bridge_text_t weights; uint32_t count; uint32_t revision; }
+{ bridge_text_t values; uint32_t count; }
+{ bridge_text_t values; uint32_t count; }
+{ bridge_text_t targets; uint32_t count; }
+{ ideatek_vec3_t direction; float max_angle; }
+{ uint32_t joint_count; uint8_t interval; }
+{ bridge_text_t samples; uint32_t count; }
+{ ideatek_entity_t player; ideatek_entity_t database; float blend_time; float search_interval; bool inertial; }
+{ float duration; }
 { ideatek_entity_t parent; float start; }
 ```
 
@@ -594,6 +858,9 @@ Before `start`, the play has a weight of 0.
 | `ideatek:ideatek_quat_t` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_channel_property_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_interpolation_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_layer_blend_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_clip_event_kind_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_parameter_type_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_clip_channel_t` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_clip_event_t` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_repeat_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -624,6 +891,15 @@ Before `start`, the play has a weight of 0.
 | `ideatek:CopyTransform` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SpringChain` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SpringCollider` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:BoneMask` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:AnimationCurves` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:AnimationParameters` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:WarpTargets` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:OrientationWarp` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:AnimationLod` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:Trajectory` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:MotionMatch` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:Inertialize` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:PlayLink` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
@@ -631,6 +907,8 @@ Before `start`, the play has a weight of 0.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | An author | Each type of the part except the 3 that the animation module writes | The types of the fields |
-| The animation module | `ideatek:Transform`, `ideatek:MorphWeights`, `ideatek:RootMotionDelta`, `ideatek:ClipEvent`, `ideatek:ClipPlay` | The plays, the clips, the blend spaces, the states, `ideatek:Frame`, and the types of the fields |
+| The animation module | `ideatek:Transform`, `ideatek:MorphWeights`, `ideatek:RootMotionDelta`, `ideatek:ClipEvent`, `ideatek:AnimationCurves`, `ideatek:Inertialize`, `ideatek:ClipPlay` | The plays, the clips, the blend spaces, the states, the masks, the warps, the levels of detail, `ideatek:Frame`, and the types of the fields |
+| A graph module | `ideatek:BlendSpace`, `ideatek:Inertialize`, `ideatek:ClipPlay` | `ideatek:AnimationParameters`, `ideatek:Clip`, `ideatek:AnimationCurves`, `ideatek:ClipEvent`, `ideatek:Frame`, and the types of the fields |
+| A matching module | `ideatek:Inertialize`, `ideatek:ClipPlay` | `ideatek:MotionMatch`, `ideatek:Trajectory`, `ideatek:Clip`, `ideatek:Joint`, `ideatek:Frame`, and the types of the fields |
 | An IK or a spring module | `ideatek:Transform` | The modifiers, `ideatek:Joint`, `ideatek:Frame`, and the types of the fields |
 | The render module | No type. | `ideatek:Joint`, `ideatek:Skin`, `ideatek:SkinBinds`, `ideatek:MorphWeights`, and the types of the fields |
