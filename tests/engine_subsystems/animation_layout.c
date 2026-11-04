@@ -29,6 +29,21 @@ static void show_interpolation(void)
     SIZE(ideatek_interpolation_t);
 }
 
+static void show_layer_blend(void)
+{
+    SIZE(ideatek_layer_blend_t);
+}
+
+static void show_clip_event_kind(void)
+{
+    SIZE(ideatek_clip_event_kind_t);
+}
+
+static void show_parameter_type(void)
+{
+    SIZE(ideatek_parameter_type_t);
+}
+
 static void show_clip_channel(void)
 {
     SIZE(ideatek_clip_channel_t);
@@ -47,6 +62,7 @@ static void show_clip_event(void)
     AT(ideatek_clip_event_t, time);
     AT(ideatek_clip_event_t, duration);
     AT(ideatek_clip_event_t, value);
+    AT(ideatek_clip_event_t, kind);
 }
 
 static void show_repeat(void)
@@ -116,6 +132,7 @@ static void show_clip(void)
     AT(ideatek_clip_t, channel_count);
     AT(ideatek_clip_t, event_count);
     AT(ideatek_clip_t, revision);
+    AT(ideatek_clip_t, additive);
 }
 
 static void show_animation_target(void)
@@ -130,13 +147,17 @@ static void show_clip_play(void)
     SIZE(ideatek_clip_play_t);
     AT(ideatek_clip_play_t, player);
     AT(ideatek_clip_play_t, clip);
+    AT(ideatek_clip_play_t, mask);
+    AT(ideatek_clip_play_t, sync_group);
     AT(ideatek_clip_play_t, time);
     AT(ideatek_clip_play_t, speed);
     AT(ideatek_clip_play_t, weight);
     AT(ideatek_clip_play_t, event_weight);
+    AT(ideatek_clip_play_t, layer);
     AT(ideatek_clip_play_t, repeat);
     AT(ideatek_clip_play_t, paused);
     AT(ideatek_clip_play_t, real_time);
+    AT(ideatek_clip_play_t, blend);
 }
 
 static void show_blend_space(void)
@@ -172,6 +193,7 @@ static void show_animation_state(void)
     AT(ideatek_animation_state_t, value);
     AT(ideatek_animation_state_t, fade);
     AT(ideatek_animation_state_t, when);
+    AT(ideatek_animation_state_t, inertial);
 }
 
 static void show_clip_event_record(void)
@@ -265,6 +287,72 @@ static void show_spring_collider(void)
     AT(ideatek_spring_collider_t, shape);
 }
 
+static void show_bone_mask(void)
+{
+    SIZE(ideatek_bone_mask_t);
+    AT(ideatek_bone_mask_t, weights);
+    AT(ideatek_bone_mask_t, count);
+    AT(ideatek_bone_mask_t, revision);
+}
+
+static void show_animation_curves(void)
+{
+    SIZE(ideatek_animation_curves_t);
+    AT(ideatek_animation_curves_t, values);
+    AT(ideatek_animation_curves_t, count);
+}
+
+static void show_animation_parameters(void)
+{
+    SIZE(ideatek_animation_parameters_t);
+    AT(ideatek_animation_parameters_t, values);
+    AT(ideatek_animation_parameters_t, count);
+}
+
+static void show_warp_targets(void)
+{
+    SIZE(ideatek_warp_targets_t);
+    AT(ideatek_warp_targets_t, targets);
+    AT(ideatek_warp_targets_t, count);
+}
+
+static void show_orientation_warp(void)
+{
+    SIZE(ideatek_orientation_warp_t);
+    AT(ideatek_orientation_warp_t, direction);
+    AT(ideatek_orientation_warp_t, max_angle);
+}
+
+static void show_animation_lod(void)
+{
+    SIZE(ideatek_animation_lod_t);
+    AT(ideatek_animation_lod_t, joint_count);
+    AT(ideatek_animation_lod_t, interval);
+}
+
+static void show_trajectory(void)
+{
+    SIZE(ideatek_trajectory_t);
+    AT(ideatek_trajectory_t, samples);
+    AT(ideatek_trajectory_t, count);
+}
+
+static void show_motion_match(void)
+{
+    SIZE(ideatek_motion_match_t);
+    AT(ideatek_motion_match_t, player);
+    AT(ideatek_motion_match_t, database);
+    AT(ideatek_motion_match_t, blend_time);
+    AT(ideatek_motion_match_t, search_interval);
+    AT(ideatek_motion_match_t, inertial);
+}
+
+static void show_inertialize(void)
+{
+    SIZE(ideatek_inertialize_t);
+    AT(ideatek_inertialize_t, duration);
+}
+
 static void show_play_link(void)
 {
     SIZE(ideatek_play_link_t);
@@ -276,11 +364,13 @@ static void show_descriptors(void)
 {
     const char *descriptors[] = {
         ideatek_channel_property_t_desc, ideatek_interpolation_t_desc,
-        ideatek_clip_channel_t_desc, ideatek_clip_event_t_desc,
-        ideatek_repeat_t_desc, ideatek_state_switch_t_desc,
-        ideatek_event_phase_t_desc, ideatek_motion_axes_t_desc,
-        ideatek_axis_t_desc, ideatek_collider_shape_t_desc,
-        ideatek_joint_t_desc, ideatek_skin_t_desc, ideatek_skin_binds_t_desc,
+        ideatek_layer_blend_t_desc, ideatek_clip_event_kind_t_desc,
+        ideatek_parameter_type_t_desc, ideatek_clip_channel_t_desc,
+        ideatek_clip_event_t_desc, ideatek_repeat_t_desc,
+        ideatek_state_switch_t_desc, ideatek_event_phase_t_desc,
+        ideatek_motion_axes_t_desc, ideatek_axis_t_desc,
+        ideatek_collider_shape_t_desc, ideatek_joint_t_desc,
+        ideatek_skin_t_desc, ideatek_skin_binds_t_desc,
         ideatek_morph_weights_t_desc, ideatek_clip_t_desc,
         ideatek_animation_target_t_desc, ideatek_clip_play_t_desc,
         ideatek_blend_space_t_desc, ideatek_blend_point_t_desc,
@@ -290,7 +380,11 @@ static void show_descriptors(void)
         ideatek_two_bone_ik_t_desc, ideatek_chain_ik_t_desc,
         ideatek_look_at_t_desc, ideatek_copy_transform_t_desc,
         ideatek_spring_chain_t_desc, ideatek_spring_collider_t_desc,
-        ideatek_play_link_t_desc };
+        ideatek_bone_mask_t_desc, ideatek_animation_curves_t_desc,
+        ideatek_animation_parameters_t_desc, ideatek_warp_targets_t_desc,
+        ideatek_orientation_warp_t_desc, ideatek_animation_lod_t_desc,
+        ideatek_trajectory_t_desc, ideatek_motion_match_t_desc,
+        ideatek_inertialize_t_desc, ideatek_play_link_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -301,6 +395,9 @@ static void show_texts(void)
     const char *texts[] = {
         TEXT_OF(IDEATEK_CHANNEL_PROPERTY_VALUES),
         TEXT_OF(IDEATEK_INTERPOLATION_VALUES),
+        TEXT_OF(IDEATEK_LAYER_BLEND_VALUES),
+        TEXT_OF(IDEATEK_CLIP_EVENT_KIND_VALUES),
+        TEXT_OF(IDEATEK_PARAMETER_TYPE_VALUES),
         TEXT_OF(IDEATEK_CLIP_CHANNEL_FIELDS),
         TEXT_OF(IDEATEK_CLIP_EVENT_FIELDS), TEXT_OF(IDEATEK_REPEAT_VALUES),
         TEXT_OF(IDEATEK_STATE_SWITCH_VALUES),
@@ -322,7 +419,15 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_LOOK_AT_FIELDS), TEXT_OF(IDEATEK_COPY_TRANSFORM_FIELDS),
         TEXT_OF(IDEATEK_SPRING_CHAIN_FIELDS),
         TEXT_OF(IDEATEK_SPRING_COLLIDER_FIELDS),
-        TEXT_OF(IDEATEK_PLAY_LINK_FIELDS) };
+        TEXT_OF(IDEATEK_BONE_MASK_FIELDS),
+        TEXT_OF(IDEATEK_ANIMATION_CURVES_FIELDS),
+        TEXT_OF(IDEATEK_ANIMATION_PARAMETERS_FIELDS),
+        TEXT_OF(IDEATEK_WARP_TARGETS_FIELDS),
+        TEXT_OF(IDEATEK_ORIENTATION_WARP_FIELDS),
+        TEXT_OF(IDEATEK_ANIMATION_LOD_FIELDS),
+        TEXT_OF(IDEATEK_TRAJECTORY_FIELDS),
+        TEXT_OF(IDEATEK_MOTION_MATCH_FIELDS),
+        TEXT_OF(IDEATEK_INERTIALIZE_FIELDS), TEXT_OF(IDEATEK_PLAY_LINK_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -333,6 +438,9 @@ int main(int argc, char **argv)
     static const show_mode_t MODES[] = {
         { "channel_property", show_channel_property },
         { "interpolation", show_interpolation },
+        { "layer_blend", show_layer_blend },
+        { "clip_event_kind", show_clip_event_kind },
+        { "parameter_type", show_parameter_type },
         { "clip_channel", show_clip_channel },
         { "clip_event", show_clip_event }, { "repeat", show_repeat },
         { "state_switch", show_state_switch },
@@ -354,8 +462,16 @@ int main(int argc, char **argv)
         { "look_at", show_look_at }, { "copy_transform", show_copy_transform },
         { "spring_chain", show_spring_chain },
         { "spring_collider", show_spring_collider },
-        { "play_link", show_play_link }, { "descriptors", show_descriptors },
-        { "texts", show_texts }
+        { "bone_mask", show_bone_mask },
+        { "animation_curves", show_animation_curves },
+        { "animation_parameters", show_animation_parameters },
+        { "warp_targets", show_warp_targets },
+        { "orientation_warp", show_orientation_warp },
+        { "animation_lod", show_animation_lod },
+        { "trajectory", show_trajectory },
+        { "motion_match", show_motion_match },
+        { "inertialize", show_inertialize }, { "play_link", show_play_link },
+        { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 
     for (size_t i = 0; argc > 1 && i < sizeof(MODES) / sizeof(MODES[0]); i++)

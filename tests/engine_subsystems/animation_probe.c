@@ -27,6 +27,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_quat_t", ideatek_quat_t);
     ENUM(api, "ideatek:ideatek_channel_property_t", ideatek_channel_property_t);
     ENUM(api, "ideatek:ideatek_interpolation_t", ideatek_interpolation_t);
+    ENUM(api, "ideatek:ideatek_layer_blend_t", ideatek_layer_blend_t);
+    ENUM(api, "ideatek:ideatek_clip_event_kind_t", ideatek_clip_event_kind_t);
+    ENUM(api, "ideatek:ideatek_parameter_type_t", ideatek_parameter_type_t);
     STRUCT(api, "ideatek:ideatek_clip_channel_t", ideatek_clip_channel_t);
     STRUCT(api, "ideatek:ideatek_clip_event_t", ideatek_clip_event_t);
     ENUM(api, "ideatek:ideatek_repeat_t", ideatek_repeat_t);
@@ -68,6 +71,15 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:CopyTransform", ideatek_copy_transform_t);
     STRUCT(api, "ideatek:SpringChain", ideatek_spring_chain_t);
     STRUCT(api, "ideatek:SpringCollider", ideatek_spring_collider_t);
+    STRUCT(api, "ideatek:BoneMask", ideatek_bone_mask_t);
+    STRUCT(api, "ideatek:AnimationCurves", ideatek_animation_curves_t);
+    STRUCT(api, "ideatek:AnimationParameters", ideatek_animation_parameters_t);
+    STRUCT(api, "ideatek:WarpTargets", ideatek_warp_targets_t);
+    STRUCT(api, "ideatek:OrientationWarp", ideatek_orientation_warp_t);
+    STRUCT(api, "ideatek:AnimationLod", ideatek_animation_lod_t);
+    STRUCT(api, "ideatek:Trajectory", ideatek_trajectory_t);
+    STRUCT(api, "ideatek:MotionMatch", ideatek_motion_match_t);
+    STRUCT(api, "ideatek:Inertialize", ideatek_inertialize_t);
     STRUCT(api, "ideatek:PlayLink", ideatek_play_link_t);
 }
 
@@ -77,6 +89,7 @@ static const char WHO[] = MANIFEST;
 
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     STRUCT(api, "ideatek:ideatek_vec3_t", ideatek_vec3_t);
+    ENUM(api, "ideatek:ideatek_layer_blend_t", ideatek_layer_blend_t);
     ENUM(api, "ideatek:ideatek_repeat_t", ideatek_repeat_t);
     ENUM(api, "ideatek:ideatek_state_switch_t", ideatek_state_switch_t);
     MASK(api, "ideatek:ideatek_motion_axes_t", ideatek_motion_axes_t);
@@ -121,6 +134,20 @@ static const char WHO[] = MANIFEST;
         ideatek_spring_collider_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:PlayLink", ideatek_play_link_t),
         BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:BoneMask", ideatek_bone_mask_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:AnimationParameters",
+        ideatek_animation_parameters_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:WarpTargets",
+        ideatek_warp_targets_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:OrientationWarp",
+        ideatek_orientation_warp_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:AnimationLod",
+        ideatek_animation_lod_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:Trajectory",
+        ideatek_trajectory_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:MotionMatch",
+        ideatek_motion_match_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_animator(const bridge_api_t *api)
@@ -131,6 +158,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_vec3_t", ideatek_vec3_t);
     STRUCT(api, "ideatek:ideatek_quat_t", ideatek_quat_t);
     STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
+    ENUM(api, "ideatek:ideatek_layer_blend_t", ideatek_layer_blend_t);
     ENUM(api, "ideatek:ideatek_repeat_t", ideatek_repeat_t);
     ENUM(api, "ideatek:ideatek_state_switch_t", ideatek_state_switch_t);
     ENUM(api, "ideatek:ideatek_event_phase_t", ideatek_event_phase_t);
@@ -145,6 +173,10 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:AnimationState", ideatek_animation_state_t);
     STRUCT(api, "ideatek:RootMotion", ideatek_root_motion_t);
     STRUCT(api, "ideatek:PlayLink", ideatek_play_link_t);
+    STRUCT(api, "ideatek:BoneMask", ideatek_bone_mask_t);
+    STRUCT(api, "ideatek:WarpTargets", ideatek_warp_targets_t);
+    STRUCT(api, "ideatek:OrientationWarp", ideatek_orientation_warp_t);
+    STRUCT(api, "ideatek:AnimationLod", ideatek_animation_lod_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Frame", ideatek_frame_t, BRIDGE_STRIP,
         BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:State", ideatek_state_t, BRIDGE_STRIP,
@@ -160,6 +192,51 @@ static const char WHO[] = MANIFEST;
         ideatek_root_motion_delta_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:ClipEvent",
         ideatek_clip_event_record_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:AnimationCurves",
+        ideatek_animation_curves_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:Inertialize",
+        ideatek_inertialize_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ClipPlay", ideatek_clip_play_t),
+        BRIDGE_ZEROED);
+}
+
+[[maybe_unused]] static void role_graph(const bridge_api_t *api)
+{
+    uint64_t id = api->spawn(api);
+
+    STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
+    ENUM(api, "ideatek:ideatek_layer_blend_t", ideatek_layer_blend_t);
+    ENUM(api, "ideatek:ideatek_repeat_t", ideatek_repeat_t);
+    ENUM(api, "ideatek:ideatek_event_phase_t", ideatek_event_phase_t);
+    STRUCT(api, "ideatek:AnimationParameters", ideatek_animation_parameters_t);
+    STRUCT(api, "ideatek:Clip", ideatek_clip_t);
+    STRUCT(api, "ideatek:AnimationCurves", ideatek_animation_curves_t);
+    STRUCT(api, "ideatek:ClipEvent", ideatek_clip_event_record_t);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:Frame", ideatek_frame_t, BRIDGE_STRIP,
+        BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
+    api->attach(api, id, STRUCT(api, "ideatek:BlendSpace",
+        ideatek_blend_space_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:Inertialize",
+        ideatek_inertialize_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ClipPlay", ideatek_clip_play_t),
+        BRIDGE_ZEROED);
+}
+
+[[maybe_unused]] static void role_matcher(const bridge_api_t *api)
+{
+    uint64_t id = api->spawn(api);
+
+    STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
+    ENUM(api, "ideatek:ideatek_layer_blend_t", ideatek_layer_blend_t);
+    ENUM(api, "ideatek:ideatek_repeat_t", ideatek_repeat_t);
+    STRUCT(api, "ideatek:MotionMatch", ideatek_motion_match_t);
+    STRUCT(api, "ideatek:Trajectory", ideatek_trajectory_t);
+    STRUCT(api, "ideatek:Clip", ideatek_clip_t);
+    STRUCT(api, "ideatek:Joint", ideatek_joint_t);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:Frame", ideatek_frame_t, BRIDGE_STRIP,
+        BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
+    api->attach(api, id, STRUCT(api, "ideatek:Inertialize",
+        ideatek_inertialize_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:ClipPlay", ideatek_clip_play_t),
         BRIDGE_ZEROED);
 }
@@ -207,6 +284,10 @@ BRIDGE_NATIVE(init)
     role_author(api);
 #elif defined(ROLE_ANIMATOR)
     role_animator(api);
+#elif defined(ROLE_GRAPH)
+    role_graph(api);
+#elif defined(ROLE_MATCHER)
+    role_matcher(api);
 #elif defined(ROLE_SOLVER)
     role_solver(api);
 #elif defined(ROLE_RENDERER)

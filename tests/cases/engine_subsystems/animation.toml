@@ -11,6 +11,24 @@ claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/animation_layout{exe}", "clip_channel"] }
 
 [[case]]
+name = "ideatek_layer_blend_t is 1 byte"
+run = ["{out}/animation_layout{exe}", "layer_blend"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/animation_layout{exe}", "clip_channel"] }
+
+[[case]]
+name = "ideatek_clip_event_kind_t is 1 byte"
+run = ["{out}/animation_layout{exe}", "clip_event_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/animation_layout{exe}", "clip_channel"] }
+
+[[case]]
+name = "ideatek_parameter_type_t is 1 byte"
+run = ["{out}/animation_layout{exe}", "parameter_type"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/animation_layout{exe}", "clip_channel"] }
+
+[[case]]
 name = "ideatek_clip_channel_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/animation_layout{exe}", "clip_channel"]
 claims = { status = 0, order = ["size 24", "alignment 8", "target 0", "key_count 8", "times 12", "values 16", "property 20", "interpolation 21"] }
@@ -19,7 +37,7 @@ false = { run = ["{out}/animation_layout{exe}", "clip_event"] }
 [[case]]
 name = "ideatek_clip_event_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/animation_layout{exe}", "clip_event"]
-claims = { status = 0, order = ["size 24", "alignment 8", "name 0", "time 8", "duration 12", "value 16"] }
+claims = { status = 0, order = ["size 24", "alignment 8", "name 0", "time 8", "duration 12", "value 16", "kind 20"] }
 false = { run = ["{out}/animation_layout{exe}", "repeat"] }
 
 [[case]]
@@ -85,7 +103,7 @@ false = { run = ["{out}/animation_layout{exe}", "clip"] }
 [[case]]
 name = "ideatek_clip_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/animation_layout{exe}", "clip"]
-claims = { status = 0, order = ["size 24", "alignment 4", "bytes 0", "duration 8", "channel_count 12", "event_count 16", "revision 20"] }
+claims = { status = 0, order = ["size 28", "alignment 4", "bytes 0", "duration 8", "channel_count 12", "event_count 16", "revision 20", "additive 24"] }
 false = { run = ["{out}/animation_layout{exe}", "animation_target"] }
 
 [[case]]
@@ -97,7 +115,7 @@ false = { run = ["{out}/animation_layout{exe}", "clip_play"] }
 [[case]]
 name = "ideatek_clip_play_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/animation_layout{exe}", "clip_play"]
-claims = { status = 0, order = ["size 40", "alignment 8", "player 0", "clip 8", "time 16", "speed 20", "weight 24", "event_weight 28", "repeat 32", "paused 33", "real_time 34"] }
+claims = { status = 0, order = ["size 56", "alignment 8", "player 0", "clip 8", "mask 16", "sync_group 24", "time 32", "speed 36", "weight 40", "event_weight 44", "layer 48", "repeat 52", "paused 53", "real_time 54", "blend 55"] }
 false = { run = ["{out}/animation_layout{exe}", "blend_space"] }
 
 [[case]]
@@ -121,7 +139,7 @@ false = { run = ["{out}/animation_layout{exe}", "animation_state"] }
 [[case]]
 name = "ideatek_animation_state_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/animation_layout{exe}", "animation_state"]
-claims = { status = 0, order = ["size 32", "alignment 8", "machine 0", "source 8", "value 16", "fade 20", "when 24"] }
+claims = { status = 0, order = ["size 32", "alignment 8", "machine 0", "source 8", "value 16", "fade 20", "when 24", "inertial 25"] }
 false = { run = ["{out}/animation_layout{exe}", "clip_event_record"] }
 
 [[case]]
@@ -182,6 +200,60 @@ false = { run = ["{out}/animation_layout{exe}", "spring_collider"] }
 name = "ideatek_spring_collider_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/animation_layout{exe}", "spring_collider"]
 claims = { status = 0, order = ["size 24", "alignment 8", "modifier 0", "radius 8", "height 12", "shape 16"] }
+false = { run = ["{out}/animation_layout{exe}", "bone_mask"] }
+
+[[case]]
+name = "ideatek_bone_mask_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "bone_mask"]
+claims = { status = 0, order = ["size 16", "alignment 4", "weights 0", "count 8", "revision 12"] }
+false = { run = ["{out}/animation_layout{exe}", "animation_curves"] }
+
+[[case]]
+name = "ideatek_animation_curves_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "animation_curves"]
+claims = { status = 0, order = ["size 12", "alignment 4", "values 0", "count 8"] }
+false = { run = ["{out}/animation_layout{exe}", "warp_targets"] }
+
+[[case]]
+name = "ideatek_animation_parameters_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "animation_parameters"]
+claims = { status = 0, order = ["size 12", "alignment 4", "values 0", "count 8"] }
+false = { run = ["{out}/animation_layout{exe}", "warp_targets"] }
+
+[[case]]
+name = "ideatek_warp_targets_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "warp_targets"]
+claims = { status = 0, order = ["size 12", "alignment 4", "targets 0", "count 8"] }
+false = { run = ["{out}/animation_layout{exe}", "orientation_warp"] }
+
+[[case]]
+name = "ideatek_orientation_warp_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "orientation_warp"]
+claims = { status = 0, order = ["size 16", "alignment 4", "direction 0", "max_angle 12"] }
+false = { run = ["{out}/animation_layout{exe}", "animation_lod"] }
+
+[[case]]
+name = "ideatek_animation_lod_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "animation_lod"]
+claims = { status = 0, order = ["size 8", "alignment 4", "joint_count 0", "interval 4"] }
+false = { run = ["{out}/animation_layout{exe}", "trajectory"] }
+
+[[case]]
+name = "ideatek_trajectory_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "trajectory"]
+claims = { status = 0, order = ["size 12", "alignment 4", "samples 0", "count 8"] }
+false = { run = ["{out}/animation_layout{exe}", "motion_match"] }
+
+[[case]]
+name = "ideatek_motion_match_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "motion_match"]
+claims = { status = 0, order = ["size 32", "alignment 8", "player 0", "database 8", "blend_time 16", "search_interval 20", "inertial 24"] }
+false = { run = ["{out}/animation_layout{exe}", "inertialize"] }
+
+[[case]]
+name = "ideatek_inertialize_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "inertialize"]
+claims = { status = 0, order = ["size 4", "alignment 4", "duration 0"] }
 false = { run = ["{out}/animation_layout{exe}", "play_link"] }
 
 [[case]]
@@ -194,10 +266,13 @@ false = { run = ["{out}/animation_layout{exe}", "channel_property"] }
 name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/animation_layout{exe}", "descriptors"]
 claims = { status = 0, line = [
-    "uint8_t { IDEATEK_CHANNEL_PROPERTY_TRANSLATION = 0, IDEATEK_CHANNEL_PROPERTY_ROTATION = 1, IDEATEK_CHANNEL_PROPERTY_SCALE = 2, IDEATEK_CHANNEL_PROPERTY_WEIGHTS = 3 }",
+    "uint8_t { IDEATEK_CHANNEL_PROPERTY_TRANSLATION = 0, IDEATEK_CHANNEL_PROPERTY_ROTATION = 1, IDEATEK_CHANNEL_PROPERTY_SCALE = 2, IDEATEK_CHANNEL_PROPERTY_WEIGHTS = 3, IDEATEK_CHANNEL_PROPERTY_FLOAT = 4 }",
     "uint8_t { IDEATEK_INTERPOLATION_STEP = 0, IDEATEK_INTERPOLATION_LINEAR = 1, IDEATEK_INTERPOLATION_CUBIC_SPLINE = 2 }",
+    "uint8_t { IDEATEK_LAYER_BLEND_OVERLAY = 0, IDEATEK_LAYER_BLEND_ADDITIVE = 1, IDEATEK_LAYER_BLEND_MODEL_SPACE = 2 }",
+    "uint8_t { IDEATEK_CLIP_EVENT_KIND_GENERIC = 0, IDEATEK_CLIP_EVENT_KIND_SYNC = 1, IDEATEK_CLIP_EVENT_KIND_WARP = 2 }",
+    "uint8_t { IDEATEK_PARAMETER_TYPE_BOOL = 0, IDEATEK_PARAMETER_TYPE_ID = 1, IDEATEK_PARAMETER_TYPE_FLOAT = 2, IDEATEK_PARAMETER_TYPE_VECTOR = 3, IDEATEK_PARAMETER_TYPE_TARGET = 4 }",
     "{ uint64_t target; uint32_t key_count; uint32_t times; uint32_t values; ideatek_channel_property_t property; ideatek_interpolation_t interpolation; }",
-    "{ uint64_t name; float time; float duration; float value; }",
+    "{ uint64_t name; float time; float duration; float value; ideatek_clip_event_kind_t kind; }",
     "uint8_t { IDEATEK_REPEAT_ONCE = 0, IDEATEK_REPEAT_LOOP = 1, IDEATEK_REPEAT_PING_PONG = 2 }",
     "uint8_t { IDEATEK_STATE_SWITCH_IMMEDIATE = 0, IDEATEK_STATE_SWITCH_AT_END = 1 }",
     "uint8_t { IDEATEK_EVENT_PHASE_BEGIN = 0, IDEATEK_EVENT_PHASE_END = 1 }",
@@ -208,13 +283,13 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t skeleton; ideatek_entity_t binds; }",
     "{ bridge_text_t matrices; uint32_t count; uint32_t revision; }",
     "{ bridge_text_t weights; uint32_t count; }",
-    "{ bridge_text_t bytes; float duration; uint32_t channel_count; uint32_t event_count; uint32_t revision; }",
+    "{ bridge_text_t bytes; float duration; uint32_t channel_count; uint32_t event_count; uint32_t revision; bool additive; }",
     "{ uint64_t id; ideatek_entity_t player; }",
-    "{ ideatek_entity_t player; ideatek_entity_t clip; float time; float speed; float weight; float event_weight; ideatek_repeat_t repeat; bool paused; bool real_time; }",
+    "{ ideatek_entity_t player; ideatek_entity_t clip; ideatek_entity_t mask; uint64_t sync_group; float time; float speed; float weight; float event_weight; int32_t layer; ideatek_repeat_t repeat; bool paused; bool real_time; ideatek_layer_blend_t blend; }",
     "{ ideatek_entity_t player; float x; float y; uint8_t dimensions; bool synced; }",
     "{ ideatek_entity_t space; ideatek_entity_t clip; float x; float y; }",
     "{ ideatek_entity_t player; }",
-    "{ ideatek_entity_t machine; ideatek_entity_t source; uint32_t value; float fade; ideatek_state_switch_t when; }",
+    "{ ideatek_entity_t machine; ideatek_entity_t source; uint32_t value; float fade; ideatek_state_switch_t when; bool inertial; }",
     "{ ideatek_entity_t play; ideatek_entity_t player; uint64_t name; float value; uint32_t order; ideatek_event_phase_t phase; }",
     "{ uint64_t root; ideatek_motion_axes_t axes; }",
     "{ ideatek_quat_t rotation; ideatek_vec3_t translation; }",
@@ -225,6 +300,15 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t joint; ideatek_entity_t source; ideatek_motion_axes_t axes; }",
     "{ ideatek_entity_t root; ideatek_entity_t end; ideatek_entity_t center; ideatek_vec3_t gravity_direction; float stiffness; float drag; float gravity; float radius; }",
     "{ ideatek_entity_t modifier; float radius; float height; ideatek_collider_shape_t shape; }",
+    "{ bridge_text_t weights; uint32_t count; uint32_t revision; }",
+    "{ bridge_text_t values; uint32_t count; }",
+    "{ bridge_text_t values; uint32_t count; }",
+    "{ bridge_text_t targets; uint32_t count; }",
+    "{ ideatek_vec3_t direction; float max_angle; }",
+    "{ uint32_t joint_count; uint8_t interval; }",
+    "{ bridge_text_t samples; uint32_t count; }",
+    "{ ideatek_entity_t player; ideatek_entity_t database; float blend_time; float search_interval; bool inertial; }",
+    "{ float duration; }",
     "{ ideatek_entity_t parent; float start; }",
 ] }
 false = { run = ["{out}/animation_layout{exe}", "texts"] }
@@ -233,10 +317,13 @@ false = { run = ["{out}/animation_layout{exe}", "texts"] }
 name = "each macro of a text gives the braces of its type and the text between them"
 run = ["{out}/animation_layout{exe}", "texts"]
 claims = { status = 0, line = [
-    "{ IDEATEK_CHANNEL_PROPERTY_TRANSLATION = 0, IDEATEK_CHANNEL_PROPERTY_ROTATION = 1, IDEATEK_CHANNEL_PROPERTY_SCALE = 2, IDEATEK_CHANNEL_PROPERTY_WEIGHTS = 3 }",
+    "{ IDEATEK_CHANNEL_PROPERTY_TRANSLATION = 0, IDEATEK_CHANNEL_PROPERTY_ROTATION = 1, IDEATEK_CHANNEL_PROPERTY_SCALE = 2, IDEATEK_CHANNEL_PROPERTY_WEIGHTS = 3, IDEATEK_CHANNEL_PROPERTY_FLOAT = 4 }",
     "{ IDEATEK_INTERPOLATION_STEP = 0, IDEATEK_INTERPOLATION_LINEAR = 1, IDEATEK_INTERPOLATION_CUBIC_SPLINE = 2 }",
+    "{ IDEATEK_LAYER_BLEND_OVERLAY = 0, IDEATEK_LAYER_BLEND_ADDITIVE = 1, IDEATEK_LAYER_BLEND_MODEL_SPACE = 2 }",
+    "{ IDEATEK_CLIP_EVENT_KIND_GENERIC = 0, IDEATEK_CLIP_EVENT_KIND_SYNC = 1, IDEATEK_CLIP_EVENT_KIND_WARP = 2 }",
+    "{ IDEATEK_PARAMETER_TYPE_BOOL = 0, IDEATEK_PARAMETER_TYPE_ID = 1, IDEATEK_PARAMETER_TYPE_FLOAT = 2, IDEATEK_PARAMETER_TYPE_VECTOR = 3, IDEATEK_PARAMETER_TYPE_TARGET = 4 }",
     "{ uint64_t target; uint32_t key_count; uint32_t times; uint32_t values; ideatek_channel_property_t property; ideatek_interpolation_t interpolation; }",
-    "{ uint64_t name; float time; float duration; float value; }",
+    "{ uint64_t name; float time; float duration; float value; ideatek_clip_event_kind_t kind; }",
     "{ IDEATEK_REPEAT_ONCE = 0, IDEATEK_REPEAT_LOOP = 1, IDEATEK_REPEAT_PING_PONG = 2 }",
     "{ IDEATEK_STATE_SWITCH_IMMEDIATE = 0, IDEATEK_STATE_SWITCH_AT_END = 1 }",
     "{ IDEATEK_EVENT_PHASE_BEGIN = 0, IDEATEK_EVENT_PHASE_END = 1 }",
@@ -247,13 +334,13 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t skeleton; ideatek_entity_t binds; }",
     "{ bridge_text_t matrices; uint32_t count; uint32_t revision; }",
     "{ bridge_text_t weights; uint32_t count; }",
-    "{ bridge_text_t bytes; float duration; uint32_t channel_count; uint32_t event_count; uint32_t revision; }",
+    "{ bridge_text_t bytes; float duration; uint32_t channel_count; uint32_t event_count; uint32_t revision; bool additive; }",
     "{ uint64_t id; ideatek_entity_t player; }",
-    "{ ideatek_entity_t player; ideatek_entity_t clip; float time; float speed; float weight; float event_weight; ideatek_repeat_t repeat; bool paused; bool real_time; }",
+    "{ ideatek_entity_t player; ideatek_entity_t clip; ideatek_entity_t mask; uint64_t sync_group; float time; float speed; float weight; float event_weight; int32_t layer; ideatek_repeat_t repeat; bool paused; bool real_time; ideatek_layer_blend_t blend; }",
     "{ ideatek_entity_t player; float x; float y; uint8_t dimensions; bool synced; }",
     "{ ideatek_entity_t space; ideatek_entity_t clip; float x; float y; }",
     "{ ideatek_entity_t player; }",
-    "{ ideatek_entity_t machine; ideatek_entity_t source; uint32_t value; float fade; ideatek_state_switch_t when; }",
+    "{ ideatek_entity_t machine; ideatek_entity_t source; uint32_t value; float fade; ideatek_state_switch_t when; bool inertial; }",
     "{ ideatek_entity_t play; ideatek_entity_t player; uint64_t name; float value; uint32_t order; ideatek_event_phase_t phase; }",
     "{ uint64_t root; ideatek_motion_axes_t axes; }",
     "{ ideatek_quat_t rotation; ideatek_vec3_t translation; }",
@@ -264,6 +351,15 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t joint; ideatek_entity_t source; ideatek_motion_axes_t axes; }",
     "{ ideatek_entity_t root; ideatek_entity_t end; ideatek_entity_t center; ideatek_vec3_t gravity_direction; float stiffness; float drag; float gravity; float radius; }",
     "{ ideatek_entity_t modifier; float radius; float height; ideatek_collider_shape_t shape; }",
+    "{ bridge_text_t weights; uint32_t count; uint32_t revision; }",
+    "{ bridge_text_t values; uint32_t count; }",
+    "{ bridge_text_t values; uint32_t count; }",
+    "{ bridge_text_t targets; uint32_t count; }",
+    "{ ideatek_vec3_t direction; float max_angle; }",
+    "{ uint32_t joint_count; uint8_t interval; }",
+    "{ bridge_text_t samples; uint32_t count; }",
+    "{ ideatek_entity_t player; ideatek_entity_t database; float blend_time; float search_interval; bool inertial; }",
+    "{ float duration; }",
     "{ ideatek_entity_t parent; float start; }",
 ] }
 false = { run = ["{out}/animation_layout{exe}", "descriptors"] }
@@ -275,7 +371,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/animation_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 36 types, each type after the types of its fields"
+name = "a module declares the 48 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/animation_probe{library}"] }
 
@@ -293,18 +389,23 @@ library = "{bb_native}/bridge_native"
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_quat_t", "ideatek:ideatek_channel_property_t",
-    "ideatek:ideatek_interpolation_t", "ideatek:ideatek_clip_channel_t",
-    "ideatek:ideatek_clip_event_t", "ideatek:ideatek_repeat_t",
-    "ideatek:ideatek_state_switch_t", "ideatek:ideatek_event_phase_t",
-    "ideatek:ideatek_motion_axes_t", "ideatek:ideatek_axis_t",
-    "ideatek:ideatek_collider_shape_t", "ideatek:Joint", "ideatek:Skin",
-    "ideatek:SkinBinds", "ideatek:MorphWeights", "ideatek:Clip",
-    "ideatek:AnimationTarget", "ideatek:AnimationPlayer", "ideatek:ClipPlay",
-    "ideatek:BlendSpace", "ideatek:BlendPoint", "ideatek:AnimationStates",
-    "ideatek:AnimationState", "ideatek:ClipEvent", "ideatek:RootMotion",
-    "ideatek:RootMotionDelta", "ideatek:PoseModifier", "ideatek:TwoBoneIK",
-    "ideatek:ChainIK", "ideatek:LookAt", "ideatek:CopyTransform",
-    "ideatek:SpringChain", "ideatek:SpringCollider", "ideatek:PlayLink",
+    "ideatek:ideatek_interpolation_t", "ideatek:ideatek_layer_blend_t",
+    "ideatek:ideatek_clip_event_kind_t", "ideatek:ideatek_parameter_type_t",
+    "ideatek:ideatek_clip_channel_t", "ideatek:ideatek_clip_event_t",
+    "ideatek:ideatek_repeat_t", "ideatek:ideatek_state_switch_t",
+    "ideatek:ideatek_event_phase_t", "ideatek:ideatek_motion_axes_t",
+    "ideatek:ideatek_axis_t", "ideatek:ideatek_collider_shape_t",
+    "ideatek:Joint", "ideatek:Skin", "ideatek:SkinBinds",
+    "ideatek:MorphWeights", "ideatek:Clip", "ideatek:AnimationTarget",
+    "ideatek:AnimationPlayer", "ideatek:ClipPlay", "ideatek:BlendSpace",
+    "ideatek:BlendPoint", "ideatek:AnimationStates", "ideatek:AnimationState",
+    "ideatek:ClipEvent", "ideatek:RootMotion", "ideatek:RootMotionDelta",
+    "ideatek:PoseModifier", "ideatek:TwoBoneIK", "ideatek:ChainIK",
+    "ideatek:LookAt", "ideatek:CopyTransform", "ideatek:SpringChain",
+    "ideatek:SpringCollider", "ideatek:BoneMask", "ideatek:AnimationCurves",
+    "ideatek:AnimationParameters", "ideatek:WarpTargets",
+    "ideatek:OrientationWarp", "ideatek:AnimationLod", "ideatek:Trajectory",
+    "ideatek:MotionMatch", "ideatek:Inertialize", "ideatek:PlayLink",
 ]
 '''
 
@@ -334,13 +435,15 @@ write = [
     "ideatek:AnimationState", "ideatek:RootMotion", "ideatek:PoseModifier",
     "ideatek:TwoBoneIK", "ideatek:ChainIK", "ideatek:LookAt",
     "ideatek:CopyTransform", "ideatek:SpringChain", "ideatek:SpringCollider",
-    "ideatek:PlayLink",
+    "ideatek:PlayLink", "ideatek:BoneMask", "ideatek:AnimationParameters",
+    "ideatek:WarpTargets", "ideatek:OrientationWarp", "ideatek:AnimationLod",
+    "ideatek:Trajectory", "ideatek:MotionMatch",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
-    "ideatek:ideatek_repeat_t", "ideatek:ideatek_state_switch_t",
-    "ideatek:ideatek_motion_axes_t", "ideatek:ideatek_axis_t",
-    "ideatek:ideatek_collider_shape_t",
+    "ideatek:ideatek_layer_blend_t", "ideatek:ideatek_repeat_t",
+    "ideatek:ideatek_state_switch_t", "ideatek:ideatek_motion_axes_t",
+    "ideatek:ideatek_axis_t", "ideatek:ideatek_collider_shape_t",
 ]
 '''
 
@@ -359,12 +462,16 @@ write = [
     "ideatek:AnimationState", "ideatek:RootMotion", "ideatek:PoseModifier",
     "ideatek:TwoBoneIK", "ideatek:ChainIK", "ideatek:LookAt",
     "ideatek:CopyTransform", "ideatek:SpringChain", "ideatek:SpringCollider",
+    "ideatek:PlayLink", "ideatek:BoneMask", "ideatek:AnimationParameters",
+    "ideatek:WarpTargets", "ideatek:OrientationWarp", "ideatek:AnimationLod",
+    "ideatek:Trajectory",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
-    "ideatek:ideatek_repeat_t", "ideatek:ideatek_state_switch_t",
-    "ideatek:ideatek_motion_axes_t", "ideatek:ideatek_axis_t",
-    "ideatek:ideatek_collider_shape_t", "ideatek:PlayLink",
+    "ideatek:ideatek_layer_blend_t", "ideatek:ideatek_repeat_t",
+    "ideatek:ideatek_state_switch_t", "ideatek:ideatek_motion_axes_t",
+    "ideatek:ideatek_axis_t", "ideatek:ideatek_collider_shape_t",
+    "ideatek:MotionMatch",
 ]
 '''
 
@@ -386,17 +493,20 @@ library = "{bb_native}/bridge_native"
 [module."test:animator@1.0.0"]
 write = [
     "ideatek:Transform", "ideatek:MorphWeights", "ideatek:RootMotionDelta",
-    "ideatek:ClipEvent", "ideatek:ClipPlay",
+    "ideatek:ClipEvent", "ideatek:AnimationCurves", "ideatek:Inertialize",
+    "ideatek:ClipPlay",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
-    "ideatek:ideatek_repeat_t", "ideatek:ideatek_state_switch_t",
-    "ideatek:ideatek_event_phase_t", "ideatek:ideatek_motion_axes_t",
-    "ideatek:Joint", "ideatek:Clip", "ideatek:AnimationTarget",
-    "ideatek:AnimationPlayer", "ideatek:BlendSpace", "ideatek:BlendPoint",
-    "ideatek:AnimationStates", "ideatek:AnimationState", "ideatek:RootMotion",
-    "ideatek:PlayLink", "ideatek:Frame", "ideatek:State", "ideatek:StateChange",
+    "ideatek:ideatek_layer_blend_t", "ideatek:ideatek_repeat_t",
+    "ideatek:ideatek_state_switch_t", "ideatek:ideatek_event_phase_t",
+    "ideatek:ideatek_motion_axes_t", "ideatek:Joint", "ideatek:Clip",
+    "ideatek:AnimationTarget", "ideatek:AnimationPlayer", "ideatek:BlendSpace",
+    "ideatek:BlendPoint", "ideatek:AnimationStates", "ideatek:AnimationState",
+    "ideatek:RootMotion", "ideatek:PlayLink", "ideatek:BoneMask",
+    "ideatek:WarpTargets", "ideatek:OrientationWarp", "ideatek:AnimationLod",
+    "ideatek:Frame", "ideatek:State", "ideatek:StateChange",
 ]
 '''
 
@@ -410,18 +520,109 @@ library = "{bb_native}/bridge_native"
 [module."test:animator@1.0.0"]
 write = [
     "ideatek:Transform", "ideatek:MorphWeights", "ideatek:RootMotionDelta",
-    "ideatek:ClipEvent",
+    "ideatek:ClipEvent", "ideatek:AnimationCurves", "ideatek:Inertialize",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t",
-    "ideatek:ideatek_repeat_t", "ideatek:ideatek_state_switch_t",
-    "ideatek:ideatek_event_phase_t", "ideatek:ideatek_motion_axes_t",
-    "ideatek:Joint", "ideatek:Clip", "ideatek:AnimationTarget",
-    "ideatek:AnimationPlayer", "ideatek:BlendSpace", "ideatek:BlendPoint",
-    "ideatek:AnimationStates", "ideatek:AnimationState", "ideatek:RootMotion",
-    "ideatek:PlayLink", "ideatek:Frame", "ideatek:State", "ideatek:StateChange",
-    "ideatek:ClipPlay",
+    "ideatek:ideatek_layer_blend_t", "ideatek:ideatek_repeat_t",
+    "ideatek:ideatek_state_switch_t", "ideatek:ideatek_event_phase_t",
+    "ideatek:ideatek_motion_axes_t", "ideatek:Joint", "ideatek:Clip",
+    "ideatek:AnimationTarget", "ideatek:AnimationPlayer", "ideatek:BlendSpace",
+    "ideatek:BlendPoint", "ideatek:AnimationStates", "ideatek:AnimationState",
+    "ideatek:RootMotion", "ideatek:PlayLink", "ideatek:BoneMask",
+    "ideatek:WarpTargets", "ideatek:OrientationWarp", "ideatek:AnimationLod",
+    "ideatek:Frame", "ideatek:State", "ideatek:StateChange", "ideatek:ClipPlay",
+]
+'''
+
+[[case]]
+name = "a graph module loads with write on the plays and the inertial blends, and read on the parameters"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:graph@1.0.0, native, m/animation_graph{library}"] }
+
+[case.folders]
+"{case}/m" = ["animation_graph"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:graph@1.0.0"]
+write = [
+    "ideatek:BlendSpace", "ideatek:Inertialize", "ideatek:ClipPlay",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_layer_blend_t",
+    "ideatek:ideatek_repeat_t", "ideatek:ideatek_event_phase_t",
+    "ideatek:AnimationParameters", "ideatek:Clip", "ideatek:AnimationCurves",
+    "ideatek:ClipEvent", "ideatek:Frame",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:graph@1.0.0"]
+write = [
+    "ideatek:BlendSpace", "ideatek:Inertialize",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_layer_blend_t",
+    "ideatek:ideatek_repeat_t", "ideatek:ideatek_event_phase_t",
+    "ideatek:AnimationParameters", "ideatek:Clip", "ideatek:AnimationCurves",
+    "ideatek:ClipEvent", "ideatek:Frame", "ideatek:ClipPlay",
+]
+'''
+
+[[case]]
+name = "a matching module loads with write on the plays and the inertial blends, and read on the trajectories"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:matcher@1.0.0, native, m/animation_matcher{library}"] }
+
+[case.folders]
+"{case}/m" = ["animation_matcher"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:matcher@1.0.0"]
+write = [
+    "ideatek:Inertialize", "ideatek:ClipPlay",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_layer_blend_t",
+    "ideatek:ideatek_repeat_t", "ideatek:MotionMatch", "ideatek:Trajectory",
+    "ideatek:Clip", "ideatek:Joint", "ideatek:Frame",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:matcher@1.0.0"]
+write = [
+    "ideatek:Inertialize",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_layer_blend_t",
+    "ideatek:ideatek_repeat_t", "ideatek:MotionMatch", "ideatek:Trajectory",
+    "ideatek:Clip", "ideatek:Joint", "ideatek:Frame", "ideatek:ClipPlay",
 ]
 '''
 
