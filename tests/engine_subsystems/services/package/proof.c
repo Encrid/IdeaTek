@@ -1,0 +1,15 @@
+/*
+** Copyright (C) 2026 Enkrid
+**
+** Under the GNU Affero General Public License, version 3 only: see license.
+*/
+#include <ideatek_services.h>
+
+int main(void)
+{
+    ideatek_voice_settings_t value = { .volume = 1.0f };
+
+    if (value.volume != 1.0f)
+        return (1);
+    return (sizeof(ideatek_voice_settings_t_desc) > 1 ? 0 : 1);
+}
