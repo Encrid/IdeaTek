@@ -19,7 +19,6 @@ A failed check gives the error TLS.
 
 `headers` holds lines of `Name: value`, each line ended by a CR and an LF. The body is bytes, with no conversion.
 A body larger than `body_bytes` gives the error TOO_BIG.
-To open a page in the browser of the user, a game uses `ideatek:UrlRequest` of the system part instead.
 
 ## The settings
 

@@ -39,7 +39,6 @@ platform_abstraction/
     ideatek_input_text.h
     ideatek_input_touch.h
     ideatek_sockets.h
-    ideatek_system.h
     ideatek_window.h
     ideatek_window_clipboard.h
     ideatek_world.h
