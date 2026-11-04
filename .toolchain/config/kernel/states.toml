@@ -6,7 +6,7 @@ third_party = []
 
 [parts.states.package]
 proof = "tests/kernel/states/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform/world"]
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world"]
 
 [compose.states]
 part = "states"
@@ -31,7 +31,7 @@ kind = "program"
 part = "states"
 test = true
 sources = ["tests/kernel/states/layout/layout.c"]
-include = ["include/kernel/states", "include/platform/world", "{bridge}/include"]
+include = ["include/kernel/states", "include/platform_abstraction/world", "{bridge}/include"]
 
 [[artifact]]
 name = "states_probe"
@@ -39,7 +39,7 @@ kind = "native_module"
 part = "states"
 test = true
 sources = ["tests/kernel/states/probe/probe.c"]
-include = ["include/kernel/states", "include/platform/world"]
+include = ["include/kernel/states", "include/platform_abstraction/world"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{states_probe_words}"]
 

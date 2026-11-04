@@ -6,7 +6,7 @@ third_party = []
 
 [parts.resources.package]
 proof = "tests/kernel/resources/package/proof.c"
-include = ["{bridge}/include", "{root}/include/platform/world"]
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world"]
 
 [compose.resources]
 part = "resources"
@@ -31,7 +31,7 @@ kind = "program"
 part = "resources"
 test = true
 sources = ["tests/kernel/resources/layout/layout.c"]
-include = ["include/kernel/resources", "include/platform/world", "{bridge}/include"]
+include = ["include/kernel/resources", "include/platform_abstraction/world", "{bridge}/include"]
 
 [[artifact]]
 name = "resources_probe"
@@ -39,7 +39,7 @@ kind = "native_module"
 part = "resources"
 test = true
 sources = ["tests/kernel/resources/probe/probe.c"]
-include = ["include/kernel/resources", "include/platform/world", "include/platform/files"]
+include = ["include/kernel/resources", "include/platform_abstraction/world", "include/platform_abstraction/files"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{resources_probe_words}"]
 

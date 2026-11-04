@@ -2,7 +2,7 @@
 
 `include/kernel/resources/ideatek_resources.h` gives the types of the resources part: the loads, the handles, the loaders and the states of the resources.
 `readme.md`, *The contracts*, tells the rules of each contract.
-The fields name entities with `ideatek_entity_t` of `include/platform/world/ideatek_world.h`. The resources module reads the files with the files part, `include/platform/files/ideatek_files.h`.
+The fields name entities with `ideatek_entity_t` of `include/platform_abstraction/world/ideatek_world.h`. The resources module reads the files with the files part, `include/platform_abstraction/files/ideatek_files.h`.
 
 ## The roles
 

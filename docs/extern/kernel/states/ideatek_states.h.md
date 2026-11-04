@@ -2,7 +2,7 @@
 
 `include/kernel/states/ideatek_states.h` gives the types of the states part: the state machines of the game, their requests and their changes.
 `readme.md`, *The contracts*, tells the rules of each contract.
-`ideatek:StateScoped` names its state machine with `ideatek_entity_t` of `include/platform/world/ideatek_world.h`. Thus the header includes that header.
+`ideatek:StateScoped` names its state machine with `ideatek_entity_t` of `include/platform_abstraction/world/ideatek_world.h`. Thus the header includes that header.
 
 ## The roles
 

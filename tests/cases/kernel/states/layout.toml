@@ -44,6 +44,6 @@ false = { run = ["{out}/states_layout{exe}", "request"] }
 
 [[case]]
 name = "the header compiles with the headers of the world part and of Bridge and nothing else"
-run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel/states", "-I", "include/platform/world", "-I", "{bridge}/include", "-c", "tests/kernel/states/layout/alone.c", "-o", "{case}/alone.o"]
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel/states", "-I", "include/platform_abstraction/world", "-I", "{bridge}/include", "-c", "tests/kernel/states/layout/alone.c", "-o", "{case}/alone.o"]
 claims = { status = 0 }
-false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel/states", "-I", "include/platform/world", "-c", "tests/kernel/states/layout/alone.c", "-o", "{case}/alone.o"] }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel/states", "-I", "include/platform_abstraction/world", "-c", "tests/kernel/states/layout/alone.c", "-o", "{case}/alone.o"] }
