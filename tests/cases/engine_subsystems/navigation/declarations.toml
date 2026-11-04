@@ -1,0 +1,145 @@
+[[case]]
+name = "a module declares the 23 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/navigation_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["navigation_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_nav_build_t",
+    "ideatek:ideatek_nav_area_flags_t", "ideatek:ideatek_nav_link_flags_t",
+    "ideatek:ideatek_nav_query_kind_t", "ideatek:ideatek_nav_query_flags_t",
+    "ideatek:ideatek_nav_result_t", "ideatek:ideatek_nav_point_t",
+    "ideatek:ideatek_nav_agent_flags_t", "ideatek:ideatek_nav_steer_state_t",
+    "ideatek:NavMesh", "ideatek:NavMeshState", "ideatek:NavArea",
+    "ideatek:NavModifier", "ideatek:NavLink", "ideatek:NavQuery",
+    "ideatek:NavPath", "ideatek:NavAgent", "ideatek:NavSteer",
+    "ideatek:NavLinkReached", "ideatek:NavObstacle",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["navigation_late"]
+
+[[case]]
+name = "the game loads with write on the nav meshes, the areas, the links, the queries, the agents and the obstacles"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/navigation_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["navigation_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:NavMesh", "ideatek:NavArea", "ideatek:NavModifier",
+    "ideatek:NavLink", "ideatek:NavQuery", "ideatek:NavAgent",
+    "ideatek:NavObstacle",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_nav_area_flags_t",
+    "ideatek:ideatek_nav_link_flags_t", "ideatek:ideatek_nav_query_kind_t",
+    "ideatek:ideatek_nav_query_flags_t", "ideatek:ideatek_nav_agent_flags_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:NavMesh", "ideatek:NavArea", "ideatek:NavModifier",
+    "ideatek:NavLink", "ideatek:NavQuery", "ideatek:NavAgent",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_nav_area_flags_t",
+    "ideatek:ideatek_nav_link_flags_t", "ideatek:ideatek_nav_query_kind_t",
+    "ideatek:ideatek_nav_query_flags_t", "ideatek:ideatek_nav_agent_flags_t",
+    "ideatek:NavObstacle",
+]
+'''
+
+[[case]]
+name = "the navigation module loads with write on the states, the paths, the steers and the events"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/navigation_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["navigation_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:NavMeshState", "ideatek:NavPath", "ideatek:NavSteer",
+    "ideatek:NavLinkReached",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_shape_kind_t",
+    "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_body_kind_t",
+    "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
+    "ideatek:ideatek_body_flags_t", "ideatek:ideatek_nav_build_t",
+    "ideatek:ideatek_nav_area_flags_t", "ideatek:ideatek_nav_link_flags_t",
+    "ideatek:ideatek_nav_query_kind_t", "ideatek:ideatek_nav_query_flags_t",
+    "ideatek:ideatek_nav_result_t", "ideatek:ideatek_nav_agent_flags_t",
+    "ideatek:ideatek_nav_steer_state_t", "ideatek:NavMesh", "ideatek:NavArea",
+    "ideatek:NavModifier", "ideatek:NavLink", "ideatek:NavQuery",
+    "ideatek:NavAgent", "ideatek:NavObstacle", "ideatek:Shape", "ideatek:Body",
+    "ideatek:WorldTransform",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:NavMeshState", "ideatek:NavPath", "ideatek:NavSteer",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_shape_kind_t",
+    "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_body_kind_t",
+    "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
+    "ideatek:ideatek_body_flags_t", "ideatek:ideatek_nav_build_t",
+    "ideatek:ideatek_nav_area_flags_t", "ideatek:ideatek_nav_link_flags_t",
+    "ideatek:ideatek_nav_query_kind_t", "ideatek:ideatek_nav_query_flags_t",
+    "ideatek:ideatek_nav_result_t", "ideatek:ideatek_nav_agent_flags_t",
+    "ideatek:ideatek_nav_steer_state_t", "ideatek:NavMesh", "ideatek:NavArea",
+    "ideatek:NavModifier", "ideatek:NavLink", "ideatek:NavQuery",
+    "ideatek:NavAgent", "ideatek:NavObstacle", "ideatek:Shape", "ideatek:Body",
+    "ideatek:WorldTransform", "ideatek:NavLinkReached",
+]
+'''

@@ -1,0 +1,58 @@
+[parts.navigation]
+name = "BC-IdeaTek-Navigation"
+folder = "engine_subsystems/navigation"
+uses = ["world", "space", "physics"]
+third_party = []
+
+[parts.navigation.package]
+proof = "tests/engine_subsystems/navigation/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+
+[compose.navigation]
+part = "navigation"
+from = "include/engine_subsystems/navigation"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+navigation_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+navigation_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "navigation_layout"
+kind = "program"
+part = "navigation"
+test = true
+sources = ["tests/engine_subsystems/navigation/layout/layout.c"]
+include = ["include/engine_subsystems/navigation", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+
+[[artifact]]
+name = "navigation_probe"
+kind = "native_module"
+part = "navigation"
+test = true
+sources = ["tests/engine_subsystems/navigation/probe/probe.c"]
+include = ["include/engine_subsystems/navigation", "include/platform_abstraction/world", "include/engine_subsystems/space", "include/engine_subsystems/physics", "include/engine_subsystems/rendering"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{navigation_probe_words}"]
+
+[[artifact.variants]]
+name = "navigation_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "navigation_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{navigation_spawn_words}"]
+
+[[artifact.variants]]
+name = "navigation_module"
+defines = ["ROLE_MODULE"]
+manifest = ["test:module@1.0.0", "{navigation_spawn_words}"]
