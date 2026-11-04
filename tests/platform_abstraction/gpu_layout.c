@@ -116,8 +116,12 @@ static void show_vulkan_device(void)
     AT(ideatek_vulkan_device_t, physical_device);
     AT(ideatek_vulkan_device_t, device);
     AT(ideatek_vulkan_device_t, queue);
+    AT(ideatek_vulkan_device_t, compute_queue);
+    AT(ideatek_vulkan_device_t, transfer_queue);
     AT(ideatek_vulkan_device_t, timeline);
     AT(ideatek_vulkan_device_t, queue_family);
+    AT(ideatek_vulkan_device_t, compute_family);
+    AT(ideatek_vulkan_device_t, transfer_family);
 }
 
 static void show_vulkan_swapchain(void)
