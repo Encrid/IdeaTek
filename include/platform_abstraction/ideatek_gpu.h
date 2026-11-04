@@ -23,6 +23,18 @@
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gpu_kind_t, uint8_t, IDEATEK_GPU_KIND_VALUES);
 BRIDGE_SCHEMA_ENUM_DESC(ideatek_gpu_kind_t, uint8_t, IDEATEK_GPU_KIND_VALUES);
 
+    #define IDEATEK_GPU_FEATURE_VALUES { \
+        IDEATEK_GPU_FEATURE_RAY_QUERY = 0x01, \
+        IDEATEK_GPU_FEATURE_RAY_TRACING_PIPELINE = 0x02, \
+        IDEATEK_GPU_FEATURE_MESH_SHADER = 0x04, \
+        IDEATEK_GPU_FEATURE_DRAW_INDIRECT_COUNT = 0x08 \
+    }
+
+BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_gpu_feature_t, uint32_t,
+    IDEATEK_GPU_FEATURE_VALUES);
+BRIDGE_SCHEMA_BITMASK_DESC(ideatek_gpu_feature_t, uint32_t,
+    IDEATEK_GPU_FEATURE_VALUES);
+
     #define IDEATEK_GPU_API_VALUES { \
         IDEATEK_GPU_API_VULKAN = 0 \
     }
@@ -92,8 +104,8 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_swapchain_status_t, uint8_t,
         uint64_t memory_bytes; \
         uint32_t vendor_id; \
         uint32_t device_id; \
+        ideatek_gpu_feature_t features; \
         ideatek_gpu_kind_t kind; \
-        bool ray_query; \
         bool usable; \
     }
 
@@ -102,6 +114,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gpu_t, IDEATEK_GPU_FIELDS);
 
     #define IDEATEK_GPU_REQUEST_FIELDS { \
         ideatek_entity_t gpu; \
+        ideatek_gpu_feature_t features; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gpu_request_t, IDEATEK_GPU_REQUEST_FIELDS);
@@ -110,6 +123,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gpu_request_t, IDEATEK_GPU_REQUEST_FIELDS);
     #define IDEATEK_GPU_DEVICE_FIELDS { \
         ideatek_entity_t gpu; \
         uint32_t generation; \
+        ideatek_gpu_feature_t features; \
         ideatek_gpu_api_t api; \
         ideatek_gpu_status_t status; \
     }
