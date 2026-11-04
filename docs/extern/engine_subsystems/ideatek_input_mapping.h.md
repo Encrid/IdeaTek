@@ -239,7 +239,7 @@ Bytes 9 to 11 hold no field.
 ## ideatek:InputNegate
 
 `ideatek:InputNegate` changes the sign of axes.
-`ideatek_input_negate_t` takes 1 bytes. Its alignment is 1.
+`ideatek_input_negate_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -261,7 +261,7 @@ Bytes 9 to 11 hold no field.
 ## ideatek:InputSwizzle
 
 `ideatek:InputSwizzle` changes the order of the axes.
-`ideatek_input_swizzle_t` takes 1 bytes. Its alignment is 1.
+`ideatek_input_swizzle_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -388,7 +388,7 @@ Bytes 13 to 15 hold no field.
 ## ideatek:InputPlayer
 
 `ideatek:InputPlayer` makes an entity a local player.
-`ideatek_input_player_t` takes 1 bytes. Its alignment is 1.
+`ideatek_input_player_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |

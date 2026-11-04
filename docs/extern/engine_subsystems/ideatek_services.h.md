@@ -123,7 +123,7 @@ Bytes 18 to 23 hold no field.
 ## ideatek:SignInRequest
 
 `ideatek:SignInRequest` asks for a user, for example after "press start" on a console.
-`ideatek_sign_in_request_t` takes 1 bytes. Its alignment is 1.
+`ideatek_sign_in_request_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
@@ -665,7 +665,7 @@ Bytes 17 to 23 hold no field.
 ## ideatek:PlatformOverlay
 
 `ideatek:PlatformOverlay` tells that the overlay of the platform is open. The module writes it on 1 entity.
-`ideatek_platform_overlay_t` takes 1 bytes. Its alignment is 1.
+`ideatek_platform_overlay_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |

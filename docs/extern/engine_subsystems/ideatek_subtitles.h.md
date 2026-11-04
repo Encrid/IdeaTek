@@ -84,7 +84,7 @@ Bytes 25 to 31 hold no field.
 ## ideatek:SubtitleSettings
 
 `ideatek:SubtitleSettings` is the choice of the player. The game saves it as a setting of the user.
-`ideatek_subtitle_settings_t` takes 1 bytes. Its alignment is 1.
+`ideatek_subtitle_settings_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |

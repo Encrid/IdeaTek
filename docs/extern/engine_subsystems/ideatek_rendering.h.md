@@ -629,7 +629,7 @@ The range covers the ranges of Godot and Unreal. Unreal and Bevy share the speed
 ## ideatek:Tonemap
 
 `ideatek:Tonemap` maps the light of a camera to the range of the screen.
-`ideatek_tonemap_t` takes 1 bytes. Its alignment is 1.
+`ideatek_tonemap_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |

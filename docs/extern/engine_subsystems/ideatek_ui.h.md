@@ -476,7 +476,7 @@ Bytes 25 to 31 hold no field.
 ## ideatek:UiPickable
 
 `ideatek:UiPickable` makes a node get the hits of the pointers.
-`ideatek_ui_pickable_t` takes 1 bytes. Its alignment is 1.
+`ideatek_ui_pickable_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -729,7 +729,7 @@ Bytes 9 to 15 hold no field.
 ## ideatek:UiToggleGroup
 
 `ideatek:UiToggleGroup` makes its toggles a radio group or a list of 1 choice.
-`ideatek_ui_toggle_group_t` takes 1 bytes. Its alignment is 1.
+`ideatek_ui_toggle_group_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
