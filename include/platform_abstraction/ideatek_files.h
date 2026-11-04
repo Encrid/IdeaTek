@@ -53,6 +53,7 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_file_status_t, uint8_t,
         bridge_text_t data; \
         ideatek_storage_t storage; \
         ideatek_file_action_t action; \
+        uint8_t priority; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_file_request_t,
