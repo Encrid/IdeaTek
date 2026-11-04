@@ -1,0 +1,58 @@
+[parts.web]
+name = "BC-IdeaTek-Web"
+folder = "engine_subsystems/web"
+uses = []
+third_party = []
+
+[parts.web.package]
+proof = "tests/engine_subsystems/web/package/proof.c"
+include = ["{bridge}/include"]
+
+[compose.web]
+part = "web"
+from = "include/engine_subsystems/web"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+web_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+web_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "web_layout"
+kind = "program"
+part = "web"
+test = true
+sources = ["tests/engine_subsystems/web/layout/layout.c"]
+include = ["include/engine_subsystems/web", "{bridge}/include"]
+
+[[artifact]]
+name = "web_probe"
+kind = "native_module"
+part = "web"
+test = true
+sources = ["tests/engine_subsystems/web/probe/probe.c"]
+include = ["include/engine_subsystems/web"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{web_probe_words}"]
+
+[[artifact.variants]]
+name = "web_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "web_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{web_spawn_words}"]
+
+[[artifact.variants]]
+name = "web_module"
+defines = ["ROLE_MODULE"]
+manifest = ["test:module@1.0.0", "{web_spawn_words}"]
