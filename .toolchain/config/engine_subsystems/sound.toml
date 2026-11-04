@@ -1,0 +1,58 @@
+[parts.sound]
+name = "BC-IdeaTek-Sound"
+folder = "engine_subsystems/sound"
+uses = ["world", "space", "audio", "physics"]
+third_party = []
+
+[parts.sound.package]
+proof = "tests/engine_subsystems/sound/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/platform_abstraction/audio"]
+
+[compose.sound]
+part = "sound"
+from = "include/engine_subsystems/sound"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+sound_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+sound_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "sound_layout"
+kind = "program"
+part = "sound"
+test = true
+sources = ["tests/engine_subsystems/sound/layout/layout.c"]
+include = ["include/engine_subsystems/sound", "include/platform_abstraction/world", "include/platform_abstraction/audio", "{bridge}/include"]
+
+[[artifact]]
+name = "sound_probe"
+kind = "native_module"
+part = "sound"
+test = true
+sources = ["tests/engine_subsystems/sound/probe/probe.c"]
+include = ["include/engine_subsystems/sound", "include/platform_abstraction/world", "include/platform_abstraction/audio", "include/engine_subsystems/space", "include/engine_subsystems/physics"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{sound_probe_words}"]
+
+[[artifact.variants]]
+name = "sound_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "sound_author"
+defines = ["ROLE_AUTHOR"]
+manifest = ["test:author@1.0.0", "{sound_spawn_words}"]
+
+[[artifact.variants]]
+name = "sound_mixer"
+defines = ["ROLE_MIXER"]
+manifest = ["test:mixer@1.0.0", "{sound_spawn_words}"]
