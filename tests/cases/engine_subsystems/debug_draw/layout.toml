@@ -1,0 +1,51 @@
+[[case]]
+name = "ideatek_debug_kind_t is 1 byte"
+run = ["{out}/debug_draw_layout{exe}", "debug_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/debug_draw_layout{exe}", "debug_draw"] }
+
+[[case]]
+name = "ideatek_debug_flags_t is 1 byte"
+run = ["{out}/debug_draw_layout{exe}", "debug_flags"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/debug_draw_layout{exe}", "debug_draw"] }
+
+[[case]]
+name = "ideatek_debug_draw_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/debug_draw_layout{exe}", "debug_draw"]
+claims = { status = 0, order = ["size 16", "alignment 8", "groups 0", "data 8"] }
+false = { run = ["{out}/debug_draw_layout{exe}", "debug_view"] }
+
+[[case]]
+name = "ideatek_debug_view_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/debug_draw_layout{exe}", "debug_view"]
+claims = { status = 0, order = ["size 8", "alignment 8", "groups 0"] }
+false = { run = ["{out}/debug_draw_layout{exe}", "debug_kind"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/debug_draw_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_DEBUG_KIND_LINE = 0, IDEATEK_DEBUG_KIND_POINT = 1, IDEATEK_DEBUG_KIND_BOX = 2, IDEATEK_DEBUG_KIND_SPHERE = 3, IDEATEK_DEBUG_KIND_CAPSULE = 4, IDEATEK_DEBUG_KIND_ARROW = 5, IDEATEK_DEBUG_KIND_AXES = 6, IDEATEK_DEBUG_KIND_TEXT = 7 }",
+    "uint8_t { IDEATEK_DEBUG_FLAGS_ON_TOP = 0x01, IDEATEK_DEBUG_FLAGS_SCREEN = 0x02 }",
+    "{ uint64_t groups; bridge_text_t data; }",
+    "{ uint64_t groups; }",
+] }
+false = { run = ["{out}/debug_draw_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/debug_draw_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_DEBUG_KIND_LINE = 0, IDEATEK_DEBUG_KIND_POINT = 1, IDEATEK_DEBUG_KIND_BOX = 2, IDEATEK_DEBUG_KIND_SPHERE = 3, IDEATEK_DEBUG_KIND_CAPSULE = 4, IDEATEK_DEBUG_KIND_ARROW = 5, IDEATEK_DEBUG_KIND_AXES = 6, IDEATEK_DEBUG_KIND_TEXT = 7 }",
+    "{ IDEATEK_DEBUG_FLAGS_ON_TOP = 0x01, IDEATEK_DEBUG_FLAGS_SCREEN = 0x02 }",
+    "{ uint64_t groups; bridge_text_t data; }",
+    "{ uint64_t groups; }",
+] }
+false = { run = ["{out}/debug_draw_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with its own folder and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/debug_draw", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/debug_draw/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/debug_draw", "-c", "tests/engine_subsystems/debug_draw/layout/alone.c", "-o", "{case}/alone.o"] }

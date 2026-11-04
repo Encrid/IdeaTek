@@ -1,0 +1,129 @@
+[[case]]
+name = "a module declares the 4 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/debug_draw_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["debug_draw_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_debug_kind_t", "ideatek:ideatek_debug_flags_t",
+    "ideatek:DebugDraw", "ideatek:DebugView",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["debug_draw_late"]
+
+[[case]]
+name = "a module that draws loads with write on its batch and read on the view"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:drawer@1.0.0, native, m/debug_draw_drawer{library}"] }
+
+[case.folders]
+"{case}/m" = ["debug_draw_drawer"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:drawer@1.0.0"]
+write = [
+    "ideatek:DebugDraw",
+]
+read = [
+    "ideatek:DebugView",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:drawer@1.0.0"]
+read = [
+    "ideatek:DebugView", "ideatek:DebugDraw",
+]
+'''
+
+[[case]]
+name = "the game loads with write on the view"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/debug_draw_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["debug_draw_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:DebugView",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+read = [
+    "ideatek:DebugView",
+]
+'''
+
+[[case]]
+name = "the draw module loads with read on the batches and the view"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/debug_draw_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["debug_draw_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+read = [
+    "ideatek:DebugDraw", "ideatek:DebugView",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+read = [
+    "ideatek:DebugDraw",
+]
+'''
