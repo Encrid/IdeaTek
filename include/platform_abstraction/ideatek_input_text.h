@@ -12,6 +12,11 @@
     #include "bridge_schema.h"
 
     #define IDEATEK_TEXT_REQUEST_FIELDS { \
+        float x; \
+        float y; \
+        float width; \
+        float height; \
+        float cursor; \
         bool screen_keyboard; \
     }
 

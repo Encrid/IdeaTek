@@ -14,7 +14,8 @@
     #define IDEATEK_MOUSE_MODE_VALUES { \
         IDEATEK_MOUSE_MODE_NORMAL = 0, \
         IDEATEK_MOUSE_MODE_HIDDEN = 1, \
-        IDEATEK_MOUSE_MODE_RELATIVE = 2 \
+        IDEATEK_MOUSE_MODE_RELATIVE = 2, \
+        IDEATEK_MOUSE_MODE_CONFINED = 3 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_mouse_mode_t, uint8_t,
@@ -68,6 +69,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mouse_motion_t,
         uint32_t order; \
         uint8_t button; \
         bool down; \
+        uint8_t clicks; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mouse_button_t,
