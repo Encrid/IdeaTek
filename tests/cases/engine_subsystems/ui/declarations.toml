@@ -1,0 +1,226 @@
+[[case]]
+name = "a module declares the 72 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/ui_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["ui_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_color_t", "ideatek:ideatek_ui_unit_t",
+    "ideatek:ideatek_ui_length_t", "ideatek:ideatek_ui_display_t",
+    "ideatek:ideatek_ui_position_t", "ideatek:ideatek_ui_direction_t",
+    "ideatek:ideatek_ui_align_t", "ideatek:ideatek_ui_overflow_t",
+    "ideatek:ideatek_flip_t", "ideatek:ideatek_image_mode_t",
+    "ideatek:ideatek_font_format_t", "ideatek:ideatek_text_align_t",
+    "ideatek:ideatek_text_wrap_t", "ideatek:ideatek_pointer_buttons_t",
+    "ideatek:ideatek_pickable_flags_t", "ideatek:ideatek_interaction_t",
+    "ideatek:ideatek_pointer_event_kind_t", "ideatek:ideatek_focusable_flags_t",
+    "ideatek:ideatek_focus_event_kind_t", "ideatek:ideatek_focus_cause_t",
+    "ideatek:ideatek_button_mode_t", "ideatek:ideatek_slider_axis_t",
+    "ideatek:ideatek_scroll_flags_t", "ideatek:ideatek_text_field_flags_t",
+    "ideatek:ideatek_screen_flags_t", "ideatek:ideatek_screen_event_kind_t",
+    "ideatek:ideatek_gesture_kind_t", "ideatek:ideatek_gesture_phase_t",
+    "ideatek:ideatek_anchor_flags_t", "ideatek:UiRoot", "ideatek:UiNode",
+    "ideatek:UiLayout", "ideatek:UiScroll", "ideatek:UiRect", "ideatek:UiBox",
+    "ideatek:UiImage", "ideatek:Font", "ideatek:UiText", "ideatek:UiTextLook",
+    "ideatek:UiTextSpan", "ideatek:UiPointer", "ideatek:UiPointerHit",
+    "ideatek:UiPickable", "ideatek:UiInteraction", "ideatek:UiPointerEvent",
+    "ideatek:UiFocus", "ideatek:UiFocusState", "ideatek:UiFocusable",
+    "ideatek:UiNeighbors", "ideatek:UiFocusMove", "ideatek:UiFocusEvent",
+    "ideatek:UiValue", "ideatek:UiValueEvent", "ideatek:UiButton",
+    "ideatek:UiActivated", "ideatek:UiToggle", "ideatek:UiToggleGroup",
+    "ideatek:UiSlider", "ideatek:UiScrollArea", "ideatek:UiScrollTo",
+    "ideatek:UiTextField", "ideatek:UiTextChange", "ideatek:UiCaret",
+    "ideatek:UiScreen", "ideatek:UiScreenState", "ideatek:UiScreenEvent",
+    "ideatek:UiGesture", "ideatek:UiAnchor", "ideatek:UiAnchorState",
+    "ideatek:UiStyle",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["ui_late"]
+
+[[case]]
+name = "the game loads with write on the types that it writes"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/ui_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["ui_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:UiRoot", "ideatek:UiNode", "ideatek:UiLayout", "ideatek:UiBox",
+    "ideatek:UiImage", "ideatek:Font", "ideatek:UiText", "ideatek:UiTextLook",
+    "ideatek:UiTextSpan", "ideatek:UiPickable", "ideatek:UiFocus",
+    "ideatek:UiFocusable", "ideatek:UiNeighbors", "ideatek:UiFocusMove",
+    "ideatek:UiValue", "ideatek:UiButton", "ideatek:UiToggle",
+    "ideatek:UiToggleGroup", "ideatek:UiSlider", "ideatek:UiScrollArea",
+    "ideatek:UiScrollTo", "ideatek:UiTextField", "ideatek:UiScreen",
+    "ideatek:UiAnchor", "ideatek:UiStyle", "ideatek:UiScroll",
+    "ideatek:UiPointer",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_color_t", "ideatek:ideatek_ui_unit_t",
+    "ideatek:ideatek_ui_length_t", "ideatek:ideatek_ui_display_t",
+    "ideatek:ideatek_ui_position_t", "ideatek:ideatek_ui_direction_t",
+    "ideatek:ideatek_ui_align_t", "ideatek:ideatek_ui_overflow_t",
+    "ideatek:ideatek_flip_t", "ideatek:ideatek_image_mode_t",
+    "ideatek:ideatek_font_format_t", "ideatek:ideatek_text_align_t",
+    "ideatek:ideatek_text_wrap_t", "ideatek:ideatek_pointer_buttons_t",
+    "ideatek:ideatek_pickable_flags_t", "ideatek:ideatek_focusable_flags_t",
+    "ideatek:ideatek_button_mode_t", "ideatek:ideatek_slider_axis_t",
+    "ideatek:ideatek_scroll_flags_t", "ideatek:ideatek_text_field_flags_t",
+    "ideatek:ideatek_screen_flags_t", "ideatek:ideatek_anchor_flags_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:UiRoot", "ideatek:UiNode", "ideatek:UiLayout", "ideatek:UiBox",
+    "ideatek:UiImage", "ideatek:Font", "ideatek:UiText", "ideatek:UiTextLook",
+    "ideatek:UiTextSpan", "ideatek:UiPickable", "ideatek:UiFocus",
+    "ideatek:UiFocusable", "ideatek:UiNeighbors", "ideatek:UiFocusMove",
+    "ideatek:UiValue", "ideatek:UiButton", "ideatek:UiToggle",
+    "ideatek:UiToggleGroup", "ideatek:UiSlider", "ideatek:UiScrollArea",
+    "ideatek:UiScrollTo", "ideatek:UiTextField", "ideatek:UiScreen",
+    "ideatek:UiAnchor", "ideatek:UiStyle", "ideatek:UiScroll",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_color_t", "ideatek:ideatek_ui_unit_t",
+    "ideatek:ideatek_ui_length_t", "ideatek:ideatek_ui_display_t",
+    "ideatek:ideatek_ui_position_t", "ideatek:ideatek_ui_direction_t",
+    "ideatek:ideatek_ui_align_t", "ideatek:ideatek_ui_overflow_t",
+    "ideatek:ideatek_flip_t", "ideatek:ideatek_image_mode_t",
+    "ideatek:ideatek_font_format_t", "ideatek:ideatek_text_align_t",
+    "ideatek:ideatek_text_wrap_t", "ideatek:ideatek_pointer_buttons_t",
+    "ideatek:ideatek_pickable_flags_t", "ideatek:ideatek_focusable_flags_t",
+    "ideatek:ideatek_button_mode_t", "ideatek:ideatek_slider_axis_t",
+    "ideatek:ideatek_scroll_flags_t", "ideatek:ideatek_text_field_flags_t",
+    "ideatek:ideatek_screen_flags_t", "ideatek:ideatek_anchor_flags_t",
+    "ideatek:UiPointer",
+]
+'''
+
+[[case]]
+name = "the UI module loads with write on the results, the pointers, the states and the events"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/ui_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["ui_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:UiRect", "ideatek:UiScroll", "ideatek:UiPointer",
+    "ideatek:UiPointerHit", "ideatek:UiInteraction", "ideatek:UiPointerEvent",
+    "ideatek:UiFocusState", "ideatek:UiFocusEvent", "ideatek:UiValueEvent",
+    "ideatek:UiActivated", "ideatek:UiTextChange", "ideatek:UiCaret",
+    "ideatek:UiScreenState", "ideatek:UiScreenEvent", "ideatek:UiGesture",
+    "ideatek:UiAnchorState",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_color_t",
+    "ideatek:ideatek_ui_unit_t", "ideatek:ideatek_ui_length_t",
+    "ideatek:ideatek_ui_display_t", "ideatek:ideatek_ui_position_t",
+    "ideatek:ideatek_ui_direction_t", "ideatek:ideatek_ui_align_t",
+    "ideatek:ideatek_ui_overflow_t", "ideatek:ideatek_flip_t",
+    "ideatek:ideatek_image_mode_t", "ideatek:ideatek_font_format_t",
+    "ideatek:ideatek_text_align_t", "ideatek:ideatek_text_wrap_t",
+    "ideatek:ideatek_pointer_buttons_t", "ideatek:ideatek_pickable_flags_t",
+    "ideatek:ideatek_interaction_t", "ideatek:ideatek_pointer_event_kind_t",
+    "ideatek:ideatek_focusable_flags_t", "ideatek:ideatek_focus_event_kind_t",
+    "ideatek:ideatek_focus_cause_t", "ideatek:ideatek_button_mode_t",
+    "ideatek:ideatek_slider_axis_t", "ideatek:ideatek_scroll_flags_t",
+    "ideatek:ideatek_text_field_flags_t", "ideatek:ideatek_screen_flags_t",
+    "ideatek:ideatek_screen_event_kind_t", "ideatek:ideatek_gesture_kind_t",
+    "ideatek:ideatek_gesture_phase_t", "ideatek:ideatek_anchor_flags_t",
+    "ideatek:UiRoot", "ideatek:UiNode", "ideatek:UiLayout", "ideatek:UiBox",
+    "ideatek:UiImage", "ideatek:Font", "ideatek:UiText", "ideatek:UiTextLook",
+    "ideatek:UiTextSpan", "ideatek:UiPickable", "ideatek:UiFocus",
+    "ideatek:UiFocusable", "ideatek:UiNeighbors", "ideatek:UiFocusMove",
+    "ideatek:UiValue", "ideatek:UiButton", "ideatek:UiToggle",
+    "ideatek:UiToggleGroup", "ideatek:UiSlider", "ideatek:UiScrollArea",
+    "ideatek:UiScrollTo", "ideatek:UiTextField", "ideatek:UiScreen",
+    "ideatek:UiAnchor", "ideatek:UiStyle", "ideatek:UiScroll",
+    "ideatek:UiPointer", "ideatek:WorldTransform",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:UiRect", "ideatek:UiScroll", "ideatek:UiPointer",
+    "ideatek:UiPointerHit", "ideatek:UiInteraction", "ideatek:UiPointerEvent",
+    "ideatek:UiFocusState", "ideatek:UiFocusEvent", "ideatek:UiValueEvent",
+    "ideatek:UiActivated", "ideatek:UiTextChange", "ideatek:UiCaret",
+    "ideatek:UiScreenState", "ideatek:UiScreenEvent", "ideatek:UiGesture",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_color_t",
+    "ideatek:ideatek_ui_unit_t", "ideatek:ideatek_ui_length_t",
+    "ideatek:ideatek_ui_display_t", "ideatek:ideatek_ui_position_t",
+    "ideatek:ideatek_ui_direction_t", "ideatek:ideatek_ui_align_t",
+    "ideatek:ideatek_ui_overflow_t", "ideatek:ideatek_flip_t",
+    "ideatek:ideatek_image_mode_t", "ideatek:ideatek_font_format_t",
+    "ideatek:ideatek_text_align_t", "ideatek:ideatek_text_wrap_t",
+    "ideatek:ideatek_pointer_buttons_t", "ideatek:ideatek_pickable_flags_t",
+    "ideatek:ideatek_interaction_t", "ideatek:ideatek_pointer_event_kind_t",
+    "ideatek:ideatek_focusable_flags_t", "ideatek:ideatek_focus_event_kind_t",
+    "ideatek:ideatek_focus_cause_t", "ideatek:ideatek_button_mode_t",
+    "ideatek:ideatek_slider_axis_t", "ideatek:ideatek_scroll_flags_t",
+    "ideatek:ideatek_text_field_flags_t", "ideatek:ideatek_screen_flags_t",
+    "ideatek:ideatek_screen_event_kind_t", "ideatek:ideatek_gesture_kind_t",
+    "ideatek:ideatek_gesture_phase_t", "ideatek:ideatek_anchor_flags_t",
+    "ideatek:UiRoot", "ideatek:UiNode", "ideatek:UiLayout", "ideatek:UiBox",
+    "ideatek:UiImage", "ideatek:Font", "ideatek:UiText", "ideatek:UiTextLook",
+    "ideatek:UiTextSpan", "ideatek:UiPickable", "ideatek:UiFocus",
+    "ideatek:UiFocusable", "ideatek:UiNeighbors", "ideatek:UiFocusMove",
+    "ideatek:UiValue", "ideatek:UiButton", "ideatek:UiToggle",
+    "ideatek:UiToggleGroup", "ideatek:UiSlider", "ideatek:UiScrollArea",
+    "ideatek:UiScrollTo", "ideatek:UiTextField", "ideatek:UiScreen",
+    "ideatek:UiAnchor", "ideatek:UiStyle", "ideatek:UiScroll",
+    "ideatek:UiPointer", "ideatek:WorldTransform", "ideatek:UiAnchorState",
+]
+'''
