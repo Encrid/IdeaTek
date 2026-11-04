@@ -42,6 +42,7 @@ kernel/
     resources/
 engine_subsystems/
     space/
+    rendering/
 ```
 
 The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the
