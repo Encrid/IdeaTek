@@ -10,7 +10,7 @@ table_retry = 50
 [budget]
 entities = 8192
 tables = 16
-types = 32
+types = 128
 systems = 16
 terms = 16
 modules = 8

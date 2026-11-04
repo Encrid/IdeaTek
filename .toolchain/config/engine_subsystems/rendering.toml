@@ -1,0 +1,58 @@
+[parts.rendering]
+name = "BC-IdeaTek-Rendering"
+folder = "engine_subsystems/rendering"
+uses = ["world", "space"]
+third_party = []
+
+[parts.rendering.package]
+proof = "tests/engine_subsystems/rendering/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world", "{root}/include/engine_subsystems/space"]
+
+[compose.rendering]
+part = "rendering"
+from = "include/engine_subsystems/rendering"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+rendering_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+rendering_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "rendering_layout"
+kind = "program"
+part = "rendering"
+test = true
+sources = ["tests/engine_subsystems/rendering/layout/layout.c"]
+include = ["include/engine_subsystems/rendering", "include/platform_abstraction/world", "include/engine_subsystems/space", "{bridge}/include"]
+
+[[artifact]]
+name = "rendering_probe"
+kind = "native_module"
+part = "rendering"
+test = true
+sources = ["tests/engine_subsystems/rendering/probe/probe.c"]
+include = ["include/engine_subsystems/rendering", "include/platform_abstraction/world", "include/engine_subsystems/space"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{rendering_probe_words}"]
+
+[[artifact.variants]]
+name = "rendering_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "rendering_author"
+defines = ["ROLE_AUTHOR"]
+manifest = ["test:author@1.0.0", "{rendering_spawn_words}"]
+
+[[artifact.variants]]
+name = "rendering_renderer"
+defines = ["ROLE_RENDERER"]
+manifest = ["test:renderer@1.0.0", "{rendering_probe_words}"]

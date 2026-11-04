@@ -1,0 +1,403 @@
+[[case]]
+name = "ideatek_color_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "color"]
+claims = { status = 0, order = ["size 16", "alignment 4", "r 0", "g 4", "b 8", "a 12"] }
+false = { run = ["{out}/rendering_layout{exe}", "rgb"] }
+
+[[case]]
+name = "ideatek_rgb_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "rgb"]
+claims = { status = 0, order = ["size 12", "alignment 4", "r 0", "g 4", "b 8"] }
+false = { run = ["{out}/rendering_layout{exe}", "rect"] }
+
+[[case]]
+name = "ideatek_rect_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "rect"]
+claims = { status = 0, order = ["size 16", "alignment 4", "x 0", "y 4", "width 8", "height 12"] }
+false = { run = ["{out}/rendering_layout{exe}", "projection_kind"] }
+
+[[case]]
+name = "ideatek_projection_kind_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "projection_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "mesh_stream"] }
+
+[[case]]
+name = "ideatek_topology_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "topology"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "mesh_stream"] }
+
+[[case]]
+name = "ideatek_index_format_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "index_format"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "mesh_stream"] }
+
+[[case]]
+name = "ideatek_semantic_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "semantic"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "mesh_stream"] }
+
+[[case]]
+name = "ideatek_mesh_stream_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "mesh_stream"]
+claims = { status = 0, order = ["size 16", "alignment 4", "format 0", "offset 4", "stride 8", "target 12", "semantic 14", "set 15"] }
+false = { run = ["{out}/rendering_layout{exe}", "submesh"] }
+
+[[case]]
+name = "ideatek_submesh_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "submesh"]
+claims = { status = 0, order = ["size 8", "alignment 4", "first 0", "count 4"] }
+false = { run = ["{out}/rendering_layout{exe}", "mesh_lod"] }
+
+[[case]]
+name = "ideatek_mesh_lod_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "mesh_lod"]
+claims = { status = 0, order = ["size 12", "alignment 4", "error 0", "first 4", "count 8"] }
+false = { run = ["{out}/rendering_layout{exe}", "alpha_mode"] }
+
+[[case]]
+name = "ideatek_alpha_mode_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "alpha_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
+name = "ideatek_dimension_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "dimension"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
+name = "ideatek_filter_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "filter"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
+name = "ideatek_wrap_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "wrap"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
+name = "ideatek_light_kind_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "light_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
+name = "ideatek_cast_shadow_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "cast_shadow"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
+name = "ideatek_fog_shape_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "fog_shape"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
+name = "ideatek_sky_kind_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "sky_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
+name = "ideatek_tonemap_curve_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "tonemap_curve"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
+name = "ideatek_camera_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "camera"]
+claims = { status = 0, order = ["size 40", "alignment 8", "target 0", "groups 8", "viewport 16", "order 32", "active 36"] }
+false = { run = ["{out}/rendering_layout{exe}", "projection"] }
+
+[[case]]
+name = "ideatek_projection_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "projection"]
+claims = { status = 0, order = ["size 20", "alignment 4", "fov 0", "height 4", "near 8", "far 12", "kind 16"] }
+false = { run = ["{out}/rendering_layout{exe}", "projection_angles"] }
+
+[[case]]
+name = "ideatek_projection_angles_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "projection_angles"]
+claims = { status = 0, order = ["size 16", "alignment 4", "left 0", "right 4", "up 8", "down 12"] }
+false = { run = ["{out}/rendering_layout{exe}", "mesh"] }
+
+[[case]]
+name = "ideatek_mesh_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "mesh"]
+claims = { status = 0, order = ["size 44", "alignment 4", "bytes 0", "vertex_count 8", "index_count 12", "index_offset 16", "stream_count 20", "submesh_count 24", "lod_count 28", "target_count 32", "revision 36", "topology 40", "index_format 41"] }
+false = { run = ["{out}/rendering_layout{exe}", "mesh_instance"] }
+
+[[case]]
+name = "ideatek_mesh_instance_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "mesh_instance"]
+claims = { status = 0, order = ["size 16", "alignment 8", "mesh 0", "lod_bias 8"] }
+false = { run = ["{out}/rendering_layout{exe}", "mesh_materials"] }
+
+[[case]]
+name = "ideatek_mesh_materials_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "mesh_materials"]
+claims = { status = 0, order = ["size 8", "alignment 4", "materials 0"] }
+false = { run = ["{out}/rendering_layout{exe}", "visibility"] }
+
+[[case]]
+name = "ideatek_visibility_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "visibility"]
+claims = { status = 0, order = ["size 16", "alignment 8", "groups 0", "cast_shadow 8"] }
+false = { run = ["{out}/rendering_layout{exe}", "affects"] }
+
+[[case]]
+name = "ideatek_affects_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "affects"]
+claims = { status = 0, order = ["size 8", "alignment 8", "groups 0"] }
+false = { run = ["{out}/rendering_layout{exe}", "visibility_range"] }
+
+[[case]]
+name = "ideatek_visibility_range_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "visibility_range"]
+claims = { status = 0, order = ["size 16", "alignment 4", "begin 0", "end 4", "begin_margin 8", "end_margin 12"] }
+false = { run = ["{out}/rendering_layout{exe}", "material"] }
+
+[[case]]
+name = "ideatek_material_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "material"]
+claims = { status = 0, order = ["size 96", "alignment 8", "base_color_texture 0", "metallic_roughness_texture 8", "normal_texture 16", "occlusion_texture 24", "emissive_texture 32", "base_color 40", "emissive 56", "metallic 68", "roughness 72", "emissive_strength 76", "normal_scale 80", "occlusion_strength 84", "alpha_cutoff 88", "alpha_mode 92", "double_sided 93"] }
+false = { run = ["{out}/rendering_layout{exe}", "texture"] }
+
+[[case]]
+name = "ideatek_texture_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "texture"]
+claims = { status = 0, order = ["size 36", "alignment 4", "bytes 0", "format 8", "width 12", "height 16", "depth_or_layers 20", "mip_count 24", "revision 28", "dimension 32"] }
+false = { run = ["{out}/rendering_layout{exe}", "sampler"] }
+
+[[case]]
+name = "ideatek_sampler_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "sampler"]
+claims = { status = 0, order = ["size 12", "alignment 4", "max_anisotropy 0", "min_filter 4", "mag_filter 5", "mip_filter 6", "wrap_u 7", "wrap_v 8", "wrap_w 9"] }
+false = { run = ["{out}/rendering_layout{exe}", "light"] }
+
+[[case]]
+name = "ideatek_light_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "light"]
+claims = { status = 0, order = ["size 48", "alignment 8", "cookie 0", "color 8", "intensity 20", "range 24", "source_radius 28", "inner_cone 32", "outer_cone 36", "kind 40", "shadow 41"] }
+false = { run = ["{out}/rendering_layout{exe}", "decal"] }
+
+[[case]]
+name = "ideatek_decal_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "decal"]
+claims = { status = 0, order = ["size 32", "alignment 8", "material 0", "half_size 8", "normal_fade 20", "sort_order 24"] }
+false = { run = ["{out}/rendering_layout{exe}", "fog"] }
+
+[[case]]
+name = "ideatek_fog_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "fog"]
+claims = { status = 0, order = ["size 56", "alignment 4", "size 0", "albedo 12", "emission 24", "density 36", "height_falloff 40", "anisotropy 44", "edge 48", "shape 52"] }
+false = { run = ["{out}/rendering_layout{exe}", "sky"] }
+
+[[case]]
+name = "ideatek_sky_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "sky"]
+claims = { status = 0, order = ["size 24", "alignment 8", "texture 0", "intensity 8", "priority 12", "kind 16"] }
+false = { run = ["{out}/rendering_layout{exe}", "atmosphere"] }
+
+[[case]]
+name = "ideatek_atmosphere_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "atmosphere"]
+claims = { status = 0, order = ["size 56", "alignment 4", "rayleigh 0", "ozone 12", "bottom_radius 24", "height 28", "rayleigh_height 32", "mie 36", "mie_absorption 40", "mie_height 44", "mie_anisotropy 48", "ground_albedo 52"] }
+false = { run = ["{out}/rendering_layout{exe}", "cloud_layer"] }
+
+[[case]]
+name = "ideatek_cloud_layer_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "cloud_layer"]
+claims = { status = 0, order = ["size 24", "alignment 8", "coverage_texture 0", "bottom 8", "thickness 12", "coverage 16", "density 20"] }
+false = { run = ["{out}/rendering_layout{exe}", "exposure"] }
+
+[[case]]
+name = "ideatek_exposure_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "exposure"]
+claims = { status = 0, order = ["size 4", "alignment 4", "ev100 0"] }
+false = { run = ["{out}/rendering_layout{exe}", "auto_exposure"] }
+
+[[case]]
+name = "ideatek_auto_exposure_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "auto_exposure"]
+claims = { status = 0, order = ["size 20", "alignment 4", "min_ev 0", "max_ev 4", "compensation 8", "speed_up 12", "speed_down 16"] }
+false = { run = ["{out}/rendering_layout{exe}", "tonemap"] }
+
+[[case]]
+name = "ideatek_tonemap_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "tonemap"]
+claims = { status = 0, order = ["size 1", "alignment 1", "curve 0"] }
+false = { run = ["{out}/rendering_layout{exe}", "bloom"] }
+
+[[case]]
+name = "ideatek_bloom_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "bloom"]
+claims = { status = 0, order = ["size 8", "alignment 4", "intensity 0", "threshold 4"] }
+false = { run = ["{out}/rendering_layout{exe}", "color_grade"] }
+
+[[case]]
+name = "ideatek_color_grade_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "color_grade"]
+claims = { status = 0, order = ["size 16", "alignment 8", "lut 0", "saturation 8", "contrast 12"] }
+false = { run = ["{out}/rendering_layout{exe}", "depth_of_field"] }
+
+[[case]]
+name = "ideatek_depth_of_field_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "depth_of_field"]
+claims = { status = 0, order = ["size 12", "alignment 4", "focus_distance 0", "f_stop 4", "sensor_width 8"] }
+false = { run = ["{out}/rendering_layout{exe}", "motion_blur"] }
+
+[[case]]
+name = "ideatek_motion_blur_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "motion_blur"]
+claims = { status = 0, order = ["size 4", "alignment 4", "shutter 0"] }
+false = { run = ["{out}/rendering_layout{exe}", "vignette"] }
+
+[[case]]
+name = "ideatek_vignette_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "vignette"]
+claims = { status = 0, order = ["size 4", "alignment 4", "intensity 0"] }
+false = { run = ["{out}/rendering_layout{exe}", "lens_flare"] }
+
+[[case]]
+name = "ideatek_chromatic_aberration_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "chromatic_aberration"]
+claims = { status = 0, order = ["size 4", "alignment 4", "intensity 0"] }
+false = { run = ["{out}/rendering_layout{exe}", "lens_flare"] }
+
+[[case]]
+name = "ideatek_film_grain_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "film_grain"]
+claims = { status = 0, order = ["size 4", "alignment 4", "intensity 0"] }
+false = { run = ["{out}/rendering_layout{exe}", "lens_flare"] }
+
+[[case]]
+name = "ideatek_lens_flare_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "lens_flare"]
+claims = { status = 0, order = ["size 32", "alignment 8", "bokeh 0", "tint 8", "intensity 20", "threshold 24"] }
+false = { run = ["{out}/rendering_layout{exe}", "color"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/rendering_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "{ float r; float g; float b; float a; }",
+    "{ float r; float g; float b; }",
+    "{ float x; float y; float width; float height; }",
+    "uint8_t { IDEATEK_PROJECTION_KIND_PERSPECTIVE = 0, IDEATEK_PROJECTION_KIND_ORTHOGRAPHIC = 1, IDEATEK_PROJECTION_KIND_ASYMMETRIC = 2 }",
+    "uint8_t { IDEATEK_TOPOLOGY_POINT_LIST = 0, IDEATEK_TOPOLOGY_LINE_LIST = 1, IDEATEK_TOPOLOGY_LINE_STRIP = 2, IDEATEK_TOPOLOGY_TRIANGLE_LIST = 3, IDEATEK_TOPOLOGY_TRIANGLE_STRIP = 4 }",
+    "uint8_t { IDEATEK_INDEX_FORMAT_NONE = 0, IDEATEK_INDEX_FORMAT_U16 = 1, IDEATEK_INDEX_FORMAT_U32 = 2 }",
+    "uint8_t { IDEATEK_SEMANTIC_POSITION = 0, IDEATEK_SEMANTIC_NORMAL = 1, IDEATEK_SEMANTIC_TANGENT = 2, IDEATEK_SEMANTIC_TEXCOORD = 3, IDEATEK_SEMANTIC_COLOR = 4, IDEATEK_SEMANTIC_JOINTS = 5, IDEATEK_SEMANTIC_WEIGHTS = 6, IDEATEK_SEMANTIC_MORPH_POSITION = 7, IDEATEK_SEMANTIC_MORPH_NORMAL = 8, IDEATEK_SEMANTIC_MORPH_TANGENT = 9 }",
+    "{ uint32_t format; uint32_t offset; uint32_t stride; uint16_t target; ideatek_semantic_t semantic; uint8_t set; }",
+    "{ uint32_t first; uint32_t count; }",
+    "{ float error; uint32_t first; uint32_t count; }",
+    "uint8_t { IDEATEK_ALPHA_MODE_OPAQUE = 0, IDEATEK_ALPHA_MODE_MASK = 1, IDEATEK_ALPHA_MODE_BLEND = 2 }",
+    "uint8_t { IDEATEK_DIMENSION_2D = 0, IDEATEK_DIMENSION_2D_ARRAY = 1, IDEATEK_DIMENSION_CUBE = 2, IDEATEK_DIMENSION_3D = 3 }",
+    "uint8_t { IDEATEK_FILTER_NEAREST = 0, IDEATEK_FILTER_LINEAR = 1 }",
+    "uint8_t { IDEATEK_WRAP_REPEAT = 0, IDEATEK_WRAP_MIRRORED_REPEAT = 1, IDEATEK_WRAP_CLAMP_TO_EDGE = 2 }",
+    "uint8_t { IDEATEK_LIGHT_KIND_DIRECTIONAL = 0, IDEATEK_LIGHT_KIND_POINT = 1, IDEATEK_LIGHT_KIND_SPOT = 2 }",
+    "uint8_t { IDEATEK_CAST_SHADOW_OFF = 0, IDEATEK_CAST_SHADOW_ON = 1, IDEATEK_CAST_SHADOW_ONLY = 2 }",
+    "uint8_t { IDEATEK_FOG_SHAPE_INFINITE = 0, IDEATEK_FOG_SHAPE_BOX = 1, IDEATEK_FOG_SHAPE_ELLIPSOID = 2 }",
+    "uint8_t { IDEATEK_SKY_KIND_ATMOSPHERE = 0, IDEATEK_SKY_KIND_TEXTURE = 1 }",
+    "uint8_t { IDEATEK_TONEMAP_CURVE_AGX = 0, IDEATEK_TONEMAP_CURVE_NEUTRAL = 1, IDEATEK_TONEMAP_CURVE_ACES = 2, IDEATEK_TONEMAP_CURVE_LINEAR = 3 }",
+    "{ ideatek_entity_t target; uint64_t groups; ideatek_rect_t viewport; int32_t order; bool active; }",
+    "{ float fov; float height; float near; float far; ideatek_projection_kind_t kind; }",
+    "{ float left; float right; float up; float down; }",
+    "{ bridge_text_t bytes; uint32_t vertex_count; uint32_t index_count; uint32_t index_offset; uint32_t stream_count; uint32_t submesh_count; uint32_t lod_count; uint32_t target_count; uint32_t revision; ideatek_topology_t topology; ideatek_index_format_t index_format; }",
+    "{ ideatek_entity_t mesh; float lod_bias; }",
+    "{ bridge_text_t materials; }",
+    "{ uint64_t groups; ideatek_cast_shadow_t cast_shadow; }",
+    "{ uint64_t groups; }",
+    "{ float begin; float end; float begin_margin; float end_margin; }",
+    "{ ideatek_entity_t base_color_texture; ideatek_entity_t metallic_roughness_texture; ideatek_entity_t normal_texture; ideatek_entity_t occlusion_texture; ideatek_entity_t emissive_texture; ideatek_color_t base_color; ideatek_rgb_t emissive; float metallic; float roughness; float emissive_strength; float normal_scale; float occlusion_strength; float alpha_cutoff; ideatek_alpha_mode_t alpha_mode; bool double_sided; }",
+    "{ bridge_text_t bytes; uint32_t format; uint32_t width; uint32_t height; uint32_t depth_or_layers; uint32_t mip_count; uint32_t revision; ideatek_dimension_t dimension; }",
+    "{ float max_anisotropy; ideatek_filter_t min_filter; ideatek_filter_t mag_filter; ideatek_filter_t mip_filter; ideatek_wrap_t wrap_u; ideatek_wrap_t wrap_v; ideatek_wrap_t wrap_w; }",
+    "{ ideatek_entity_t cookie; ideatek_rgb_t color; float intensity; float range; float source_radius; float inner_cone; float outer_cone; ideatek_light_kind_t kind; bool shadow; }",
+    "{ ideatek_entity_t material; ideatek_vec3_t half_size; float normal_fade; int32_t sort_order; }",
+    "{ ideatek_vec3_t size; ideatek_rgb_t albedo; ideatek_rgb_t emission; float density; float height_falloff; float anisotropy; float edge; ideatek_fog_shape_t shape; }",
+    "{ ideatek_entity_t texture; float intensity; int32_t priority; ideatek_sky_kind_t kind; }",
+    "{ ideatek_rgb_t rayleigh; ideatek_rgb_t ozone; float bottom_radius; float height; float rayleigh_height; float mie; float mie_absorption; float mie_height; float mie_anisotropy; float ground_albedo; }",
+    "{ ideatek_entity_t coverage_texture; float bottom; float thickness; float coverage; float density; }",
+    "{ float ev100; }",
+    "{ float min_ev; float max_ev; float compensation; float speed_up; float speed_down; }",
+    "{ ideatek_tonemap_curve_t curve; }",
+    "{ float intensity; float threshold; }",
+    "{ ideatek_entity_t lut; float saturation; float contrast; }",
+    "{ float focus_distance; float f_stop; float sensor_width; }",
+    "{ float shutter; }",
+    "{ float intensity; }",
+    "{ float intensity; }",
+    "{ float intensity; }",
+    "{ ideatek_entity_t bokeh; ideatek_rgb_t tint; float intensity; float threshold; }",
+] }
+false = { run = ["{out}/rendering_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/rendering_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ float r; float g; float b; float a; }",
+    "{ float r; float g; float b; }",
+    "{ float x; float y; float width; float height; }",
+    "{ IDEATEK_PROJECTION_KIND_PERSPECTIVE = 0, IDEATEK_PROJECTION_KIND_ORTHOGRAPHIC = 1, IDEATEK_PROJECTION_KIND_ASYMMETRIC = 2 }",
+    "{ IDEATEK_TOPOLOGY_POINT_LIST = 0, IDEATEK_TOPOLOGY_LINE_LIST = 1, IDEATEK_TOPOLOGY_LINE_STRIP = 2, IDEATEK_TOPOLOGY_TRIANGLE_LIST = 3, IDEATEK_TOPOLOGY_TRIANGLE_STRIP = 4 }",
+    "{ IDEATEK_INDEX_FORMAT_NONE = 0, IDEATEK_INDEX_FORMAT_U16 = 1, IDEATEK_INDEX_FORMAT_U32 = 2 }",
+    "{ IDEATEK_SEMANTIC_POSITION = 0, IDEATEK_SEMANTIC_NORMAL = 1, IDEATEK_SEMANTIC_TANGENT = 2, IDEATEK_SEMANTIC_TEXCOORD = 3, IDEATEK_SEMANTIC_COLOR = 4, IDEATEK_SEMANTIC_JOINTS = 5, IDEATEK_SEMANTIC_WEIGHTS = 6, IDEATEK_SEMANTIC_MORPH_POSITION = 7, IDEATEK_SEMANTIC_MORPH_NORMAL = 8, IDEATEK_SEMANTIC_MORPH_TANGENT = 9 }",
+    "{ uint32_t format; uint32_t offset; uint32_t stride; uint16_t target; ideatek_semantic_t semantic; uint8_t set; }",
+    "{ uint32_t first; uint32_t count; }",
+    "{ float error; uint32_t first; uint32_t count; }",
+    "{ IDEATEK_ALPHA_MODE_OPAQUE = 0, IDEATEK_ALPHA_MODE_MASK = 1, IDEATEK_ALPHA_MODE_BLEND = 2 }",
+    "{ IDEATEK_DIMENSION_2D = 0, IDEATEK_DIMENSION_2D_ARRAY = 1, IDEATEK_DIMENSION_CUBE = 2, IDEATEK_DIMENSION_3D = 3 }",
+    "{ IDEATEK_FILTER_NEAREST = 0, IDEATEK_FILTER_LINEAR = 1 }",
+    "{ IDEATEK_WRAP_REPEAT = 0, IDEATEK_WRAP_MIRRORED_REPEAT = 1, IDEATEK_WRAP_CLAMP_TO_EDGE = 2 }",
+    "{ IDEATEK_LIGHT_KIND_DIRECTIONAL = 0, IDEATEK_LIGHT_KIND_POINT = 1, IDEATEK_LIGHT_KIND_SPOT = 2 }",
+    "{ IDEATEK_CAST_SHADOW_OFF = 0, IDEATEK_CAST_SHADOW_ON = 1, IDEATEK_CAST_SHADOW_ONLY = 2 }",
+    "{ IDEATEK_FOG_SHAPE_INFINITE = 0, IDEATEK_FOG_SHAPE_BOX = 1, IDEATEK_FOG_SHAPE_ELLIPSOID = 2 }",
+    "{ IDEATEK_SKY_KIND_ATMOSPHERE = 0, IDEATEK_SKY_KIND_TEXTURE = 1 }",
+    "{ IDEATEK_TONEMAP_CURVE_AGX = 0, IDEATEK_TONEMAP_CURVE_NEUTRAL = 1, IDEATEK_TONEMAP_CURVE_ACES = 2, IDEATEK_TONEMAP_CURVE_LINEAR = 3 }",
+    "{ ideatek_entity_t target; uint64_t groups; ideatek_rect_t viewport; int32_t order; bool active; }",
+    "{ float fov; float height; float near; float far; ideatek_projection_kind_t kind; }",
+    "{ float left; float right; float up; float down; }",
+    "{ bridge_text_t bytes; uint32_t vertex_count; uint32_t index_count; uint32_t index_offset; uint32_t stream_count; uint32_t submesh_count; uint32_t lod_count; uint32_t target_count; uint32_t revision; ideatek_topology_t topology; ideatek_index_format_t index_format; }",
+    "{ ideatek_entity_t mesh; float lod_bias; }",
+    "{ bridge_text_t materials; }",
+    "{ uint64_t groups; ideatek_cast_shadow_t cast_shadow; }",
+    "{ uint64_t groups; }",
+    "{ float begin; float end; float begin_margin; float end_margin; }",
+    "{ ideatek_entity_t base_color_texture; ideatek_entity_t metallic_roughness_texture; ideatek_entity_t normal_texture; ideatek_entity_t occlusion_texture; ideatek_entity_t emissive_texture; ideatek_color_t base_color; ideatek_rgb_t emissive; float metallic; float roughness; float emissive_strength; float normal_scale; float occlusion_strength; float alpha_cutoff; ideatek_alpha_mode_t alpha_mode; bool double_sided; }",
+    "{ bridge_text_t bytes; uint32_t format; uint32_t width; uint32_t height; uint32_t depth_or_layers; uint32_t mip_count; uint32_t revision; ideatek_dimension_t dimension; }",
+    "{ float max_anisotropy; ideatek_filter_t min_filter; ideatek_filter_t mag_filter; ideatek_filter_t mip_filter; ideatek_wrap_t wrap_u; ideatek_wrap_t wrap_v; ideatek_wrap_t wrap_w; }",
+    "{ ideatek_entity_t cookie; ideatek_rgb_t color; float intensity; float range; float source_radius; float inner_cone; float outer_cone; ideatek_light_kind_t kind; bool shadow; }",
+    "{ ideatek_entity_t material; ideatek_vec3_t half_size; float normal_fade; int32_t sort_order; }",
+    "{ ideatek_vec3_t size; ideatek_rgb_t albedo; ideatek_rgb_t emission; float density; float height_falloff; float anisotropy; float edge; ideatek_fog_shape_t shape; }",
+    "{ ideatek_entity_t texture; float intensity; int32_t priority; ideatek_sky_kind_t kind; }",
+    "{ ideatek_rgb_t rayleigh; ideatek_rgb_t ozone; float bottom_radius; float height; float rayleigh_height; float mie; float mie_absorption; float mie_height; float mie_anisotropy; float ground_albedo; }",
+    "{ ideatek_entity_t coverage_texture; float bottom; float thickness; float coverage; float density; }",
+    "{ float ev100; }",
+    "{ float min_ev; float max_ev; float compensation; float speed_up; float speed_down; }",
+    "{ ideatek_tonemap_curve_t curve; }",
+    "{ float intensity; float threshold; }",
+    "{ ideatek_entity_t lut; float saturation; float contrast; }",
+    "{ float focus_distance; float f_stop; float sensor_width; }",
+    "{ float shutter; }",
+    "{ float intensity; }",
+    "{ float intensity; }",
+    "{ float intensity; }",
+    "{ ideatek_entity_t bokeh; ideatek_rgb_t tint; float intensity; float threshold; }",
+] }
+false = { run = ["{out}/rendering_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the headers of the world and space parts and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/rendering", "-I", "include/platform_abstraction/world", "-I", "include/engine_subsystems/space", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/rendering/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/rendering", "-I", "include/platform_abstraction/world", "-I", "include/engine_subsystems/space", "-c", "tests/engine_subsystems/rendering/layout/alone.c", "-o", "{case}/alone.o"] }
