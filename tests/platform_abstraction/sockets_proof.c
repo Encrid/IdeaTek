@@ -7,10 +7,9 @@
 
 int main(void)
 {
-    ideatek_connection_request_t request = {
-        .action = IDEATEK_CONNECTION_ACTION_CLOSE };
+    ideatek_listen_request_t value = { .port = 27015 };
 
-    if (request.address.port != 0)
+    if (value.port != 27015)
         return (1);
-    return (sizeof(ideatek_connection_state_t_desc) > 1 ? 0 : 1);
+    return (sizeof(ideatek_listen_request_t_desc) > 1 ? 0 : 1);
 }

@@ -16,18 +16,13 @@ into = "include"
 
 [variables]
 sockets_probe_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
-    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
 ]
 
-sockets_game_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
-    "spans=4096", "spawns=1", "changes=1024", "persistent=64", "hot_reload=false",
-]
-
-sockets_module_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
-    "spans=4096", "spawns=1", "changes=1024", "persistent=16", "hot_reload=false",
+sockets_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
 ]
 
 [[artifact]]
@@ -51,14 +46,13 @@ manifest = ["test:probe@1.0.0", "{sockets_probe_words}"]
 [[artifact.variants]]
 name = "sockets_late"
 defines = ["ROLE_LATE"]
-manifest = ["test:probe@1.0.0", "{sockets_probe_words}"]
 
 [[artifact.variants]]
 name = "sockets_game"
 defines = ["ROLE_GAME"]
-manifest = ["test:game@1.0.0", "{sockets_game_words}"]
+manifest = ["test:game@1.0.0", "{sockets_spawn_words}"]
 
 [[artifact.variants]]
 name = "sockets_module"
-defines = ["ROLE_SOCKETS"]
-manifest = ["test:sockets@1.0.0", "{sockets_module_words}"]
+defines = ["ROLE_MODULE"]
+manifest = ["test:module@1.0.0", "{sockets_spawn_words}"]

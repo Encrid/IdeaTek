@@ -2,106 +2,208 @@
 name = "ideatek_address_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sockets_layout{exe}", "address"]
 claims = { status = 0, order = ["size 18", "alignment 2", "bytes 0", "port 16"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity"] }
 
 [[case]]
-name = "ideatek_send_t has the size and the alignment of its Usage"
+name = "ideatek_identity_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "identity"]
+claims = { status = 0, order = ["size 128", "alignment 1", "text 0"] }
+false = { run = ["{out}/sockets_layout{exe}", "send"] }
+
+[[case]]
+name = "ideatek_send_t is 1 byte"
 run = ["{out}/sockets_layout{exe}", "send"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_request"] }
 
 [[case]]
-name = "ideatek_listen_status_t has the size and the alignment of its Usage"
+name = "ideatek_connection_flag_t is 1 byte"
+run = ["{out}/sockets_layout{exe}", "connection_flag"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_request"] }
+
+[[case]]
+name = "ideatek_listen_kind_t is 1 byte"
+run = ["{out}/sockets_layout{exe}", "listen_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_request"] }
+
+[[case]]
+name = "ideatek_listen_status_t is 1 byte"
 run = ["{out}/sockets_layout{exe}", "listen_status"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_request"] }
 
 [[case]]
-name = "ideatek_connection_action_t has the size and the alignment of its Usage"
-run = ["{out}/sockets_layout{exe}", "action"]
+name = "ideatek_connection_action_t is 1 byte"
+run = ["{out}/sockets_layout{exe}", "connection_action"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_request"] }
 
 [[case]]
-name = "ideatek_connection_status_t has the size and the alignment of its Usage"
+name = "ideatek_connection_status_t is 1 byte"
 run = ["{out}/sockets_layout{exe}", "connection_status"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_request"] }
 
 [[case]]
-name = "ideatek_address_status_t has the size and the alignment of its Usage"
+name = "ideatek_auth_status_t is 1 byte"
+run = ["{out}/sockets_layout{exe}", "auth_status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_request"] }
+
+[[case]]
+name = "ideatek_session_action_t is 1 byte"
+run = ["{out}/sockets_layout{exe}", "session_action"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_request"] }
+
+[[case]]
+name = "ideatek_address_status_t is 1 byte"
 run = ["{out}/sockets_layout{exe}", "address_status"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_request"] }
+
+[[case]]
+name = "ideatek_identity_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "identity_request"]
+claims = { status = 0, order = ["size 136", "alignment 4", "certificate 0", "identity 8"] }
+false = { run = ["{out}/sockets_layout{exe}", "identity_state"] }
+
+[[case]]
+name = "ideatek_identity_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "identity_state"]
+claims = { status = 0, order = ["size 140", "alignment 4", "certificate_request 0", "identity 8", "status 136"] }
+false = { run = ["{out}/sockets_layout{exe}", "listen_request"] }
 
 [[case]]
 name = "ideatek_listen_request_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sockets_layout{exe}", "listen_request"]
-claims = { status = 0, order = ["size 2", "alignment 2", "port 0"] }
+claims = { status = 0, order = ["size 8", "alignment 4", "virtual_port 0", "port 4", "kind 6"] }
 false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
 
 [[case]]
 name = "ideatek_listen_state_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sockets_layout{exe}", "listen_state"]
-claims = { status = 0, order = ["size 4", "alignment 2", "port 0", "status 2"] }
+claims = { status = 0, order = ["size 8", "alignment 4", "virtual_port 0", "port 4", "kind 6", "status 7"] }
 false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
 
 [[case]]
 name = "ideatek_connection_request_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sockets_layout{exe}", "connection_request"]
-claims = { status = 0, order = ["size 28", "alignment 4", "send_rate 0", "reason 4", "address 8", "action 26", "linger 27"] }
+claims = { status = 0, order = ["size 168", "alignment 4", "send_rate_min 0", "send_rate_max 4", "reason 8", "virtual_port 12", "remote_identity 16", "address 144", "action 162", "linger 163", "symmetric 164"] }
 false = { run = ["{out}/sockets_layout{exe}", "inbound"] }
 
 [[case]]
 name = "ideatek_inbound_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sockets_layout{exe}", "inbound"]
 claims = { status = 0, order = ["size 8", "alignment 8", "listen 0"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "connection_state"] }
 
 [[case]]
 name = "ideatek_connection_state_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sockets_layout{exe}", "connection_state"]
-claims = { status = 0, order = ["size 64", "alignment 8", "queue_time 0", "end_reason 8", "ping 12", "quality_local 16", "quality_remote 20", "in_bytes 24", "out_bytes 28", "pending_reliable 32", "pending_unreliable 36", "remote 40", "status 58"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+claims = { status = 0, order = ["size 344", "alignment 8", "queue_time 0", "end_reason 8", "ping 12", "quality_local 16", "quality_remote 20", "in_bytes 24", "out_bytes 28", "in_packets 32", "out_packets 36", "send_rate 40", "max_jitter 44", "pending_reliable 48", "pending_unreliable 52", "sent_unacked_reliable 56", "failed_sends 60", "remote_identity 64", "end_text 192", "remote 320", "status 338", "flags 339"] }
+false = { run = ["{out}/sockets_layout{exe}", "batch"] }
 
 [[case]]
-name = "ideatek_messages_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/sockets_layout{exe}", "messages"]
+name = "ideatek_batch_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "batch"]
 claims = { status = 0, order = ["size 8", "alignment 4", "data 0"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "session"] }
+
+[[case]]
+name = "ideatek_session_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "session"]
+claims = { status = 0, order = ["size 128", "alignment 1", "remote 0"] }
+false = { run = ["{out}/sockets_layout{exe}", "session_request"] }
+
+[[case]]
+name = "ideatek_session_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sockets_layout{exe}", "session_request"]
+claims = { status = 0, order = ["size 136", "alignment 4", "channel 0", "remote 4", "action 132"] }
+false = { run = ["{out}/sockets_layout{exe}", "address_request"] }
 
 [[case]]
 name = "ideatek_address_request_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sockets_layout{exe}", "address_request"]
 claims = { status = 0, order = ["size 8", "alignment 4", "name 0"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "address_result"] }
 
 [[case]]
 name = "ideatek_address_result_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sockets_layout{exe}", "address_result"]
 claims = { status = 0, order = ["size 12", "alignment 4", "addresses 0", "status 8"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+false = { run = ["{out}/sockets_layout{exe}", "address"] }
 
 [[case]]
 name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/sockets_layout{exe}", "descriptors"]
-claims = { status = 0, line = ["{ uint8_t bytes[16]; uint16_t port; }", "uint8_t { IDEATEK_SEND_RELIABLE = 0x01, IDEATEK_SEND_NO_NAGLE = 0x02, IDEATEK_SEND_NO_DELAY = 0x04 }", "uint8_t { IDEATEK_LISTEN_STATUS_LISTENING = 0, IDEATEK_LISTEN_STATUS_FAILED = 1 }", "uint8_t { IDEATEK_CONNECTION_ACTION_CONNECT = 0, IDEATEK_CONNECTION_ACTION_ACCEPT = 1, IDEATEK_CONNECTION_ACTION_CLOSE = 2 }", "uint8_t { IDEATEK_CONNECTION_STATUS_CONNECTING = 0, IDEATEK_CONNECTION_STATUS_CONNECTED = 1, IDEATEK_CONNECTION_STATUS_CLOSED_BY_PEER = 2, IDEATEK_CONNECTION_STATUS_PROBLEM = 3 }", "uint8_t { IDEATEK_ADDRESS_STATUS_OK = 0, IDEATEK_ADDRESS_STATUS_NOT_FOUND = 1, IDEATEK_ADDRESS_STATUS_FAILED = 2 }", "{ uint16_t port; }", "{ uint16_t port; ideatek_listen_status_t status; }", "{ uint32_t send_rate; int32_t reason; ideatek_address_t address; ideatek_connection_action_t action; bool linger; }", "{ ideatek_entity_t listen; }", "{ int64_t queue_time; int32_t end_reason; int32_t ping; float quality_local; float quality_remote; float in_bytes; float out_bytes; int32_t pending_reliable; int32_t pending_unreliable; ideatek_address_t remote; ideatek_connection_status_t status; }", "{ bridge_text_t data; }", "{ bridge_text_t name; }", "{ bridge_text_t addresses; ideatek_address_status_t status; }"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+claims = { status = 0, line = [
+    "{ uint8_t bytes[16]; uint16_t port; }",
+    "{ char text[128]; }",
+    "uint8_t { IDEATEK_SEND_RELIABLE = 0x01, IDEATEK_SEND_NO_NAGLE = 0x02, IDEATEK_SEND_NO_DELAY = 0x04, IDEATEK_SEND_AUTO_RESTART = 0x08 }",
+    "uint8_t { IDEATEK_CONNECTION_FLAG_UNAUTHENTICATED = 0x01, IDEATEK_CONNECTION_FLAG_UNENCRYPTED = 0x02, IDEATEK_CONNECTION_FLAG_LOOPBACK = 0x04, IDEATEK_CONNECTION_FLAG_FAST = 0x08, IDEATEK_CONNECTION_FLAG_RELAYED = 0x10 }",
+    "uint8_t { IDEATEK_LISTEN_KIND_IP = 0, IDEATEK_LISTEN_KIND_P2P = 1 }",
+    "uint8_t { IDEATEK_LISTEN_STATUS_LISTENING = 0, IDEATEK_LISTEN_STATUS_FAILED = 1 }",
+    "uint8_t { IDEATEK_CONNECTION_ACTION_CONNECT = 0, IDEATEK_CONNECTION_ACTION_CONNECT_P2P = 1, IDEATEK_CONNECTION_ACTION_ACCEPT = 2, IDEATEK_CONNECTION_ACTION_CLOSE = 3, IDEATEK_CONNECTION_ACTION_PAIR = 4 }",
+    "uint8_t { IDEATEK_CONNECTION_STATUS_CONNECTING = 0, IDEATEK_CONNECTION_STATUS_FINDING_ROUTE = 1, IDEATEK_CONNECTION_STATUS_CONNECTED = 2, IDEATEK_CONNECTION_STATUS_CLOSED_BY_PEER = 3, IDEATEK_CONNECTION_STATUS_PROBLEM = 4 }",
+    "uint8_t { IDEATEK_AUTH_STATUS_NONE = 0, IDEATEK_AUTH_STATUS_CURRENT = 1, IDEATEK_AUTH_STATUS_FAILED = 2 }",
+    "uint8_t { IDEATEK_SESSION_ACTION_OPEN = 0, IDEATEK_SESSION_ACTION_ACCEPT = 1, IDEATEK_SESSION_ACTION_CLOSE = 2, IDEATEK_SESSION_ACTION_CLOSE_CHANNEL = 3 }",
+    "uint8_t { IDEATEK_ADDRESS_STATUS_OK = 0, IDEATEK_ADDRESS_STATUS_NOT_FOUND = 1, IDEATEK_ADDRESS_STATUS_FAILED = 2 }",
+    "{ bridge_text_t certificate; ideatek_identity_t identity; }",
+    "{ bridge_text_t certificate_request; ideatek_identity_t identity; ideatek_auth_status_t status; }",
+    "{ int32_t virtual_port; uint16_t port; ideatek_listen_kind_t kind; }",
+    "{ int32_t virtual_port; uint16_t port; ideatek_listen_kind_t kind; ideatek_listen_status_t status; }",
+    "{ uint32_t send_rate_min; uint32_t send_rate_max; int32_t reason; int32_t virtual_port; ideatek_identity_t remote_identity; ideatek_address_t address; ideatek_connection_action_t action; bool linger; bool symmetric; }",
+    "{ ideatek_entity_t listen; }",
+    "{ int64_t queue_time; int32_t end_reason; int32_t ping; float quality_local; float quality_remote; float in_bytes; float out_bytes; float in_packets; float out_packets; int32_t send_rate; int32_t max_jitter; int32_t pending_reliable; int32_t pending_unreliable; int32_t sent_unacked_reliable; uint32_t failed_sends; ideatek_identity_t remote_identity; char end_text[128]; ideatek_address_t remote; ideatek_connection_status_t status; ideatek_connection_flag_t flags; }",
+    "{ bridge_text_t data; }",
+    "{ ideatek_identity_t remote; }",
+    "{ int32_t channel; ideatek_identity_t remote; ideatek_session_action_t action; }",
+    "{ bridge_text_t name; }",
+    "{ bridge_text_t addresses; ideatek_address_status_t status; }",
+] }
+false = { run = ["{out}/sockets_layout{exe}", "texts"] }
 
 [[case]]
 name = "each macro of a text gives the braces of its type and the text between them"
 run = ["{out}/sockets_layout{exe}", "texts"]
-claims = { status = 0, line = ["{ uint8_t bytes[16]; uint16_t port; }", "{ IDEATEK_SEND_RELIABLE = 0x01, IDEATEK_SEND_NO_NAGLE = 0x02, IDEATEK_SEND_NO_DELAY = 0x04 }", "{ IDEATEK_LISTEN_STATUS_LISTENING = 0, IDEATEK_LISTEN_STATUS_FAILED = 1 }", "{ IDEATEK_CONNECTION_ACTION_CONNECT = 0, IDEATEK_CONNECTION_ACTION_ACCEPT = 1, IDEATEK_CONNECTION_ACTION_CLOSE = 2 }", "{ IDEATEK_CONNECTION_STATUS_CONNECTING = 0, IDEATEK_CONNECTION_STATUS_CONNECTED = 1, IDEATEK_CONNECTION_STATUS_CLOSED_BY_PEER = 2, IDEATEK_CONNECTION_STATUS_PROBLEM = 3 }", "{ IDEATEK_ADDRESS_STATUS_OK = 0, IDEATEK_ADDRESS_STATUS_NOT_FOUND = 1, IDEATEK_ADDRESS_STATUS_FAILED = 2 }", "{ uint16_t port; }", "{ uint16_t port; ideatek_listen_status_t status; }", "{ uint32_t send_rate; int32_t reason; ideatek_address_t address; ideatek_connection_action_t action; bool linger; }", "{ ideatek_entity_t listen; }", "{ int64_t queue_time; int32_t end_reason; int32_t ping; float quality_local; float quality_remote; float in_bytes; float out_bytes; int32_t pending_reliable; int32_t pending_unreliable; ideatek_address_t remote; ideatek_connection_status_t status; }", "{ bridge_text_t data; }", "{ bridge_text_t name; }", "{ bridge_text_t addresses; ideatek_address_status_t status; }"] }
-false = { run = ["{out}/sockets_layout{exe}", "connection_request"] }
+claims = { status = 0, line = [
+    "{ uint8_t bytes[16]; uint16_t port; }",
+    "{ char text[128]; }",
+    "{ IDEATEK_SEND_RELIABLE = 0x01, IDEATEK_SEND_NO_NAGLE = 0x02, IDEATEK_SEND_NO_DELAY = 0x04, IDEATEK_SEND_AUTO_RESTART = 0x08 }",
+    "{ IDEATEK_CONNECTION_FLAG_UNAUTHENTICATED = 0x01, IDEATEK_CONNECTION_FLAG_UNENCRYPTED = 0x02, IDEATEK_CONNECTION_FLAG_LOOPBACK = 0x04, IDEATEK_CONNECTION_FLAG_FAST = 0x08, IDEATEK_CONNECTION_FLAG_RELAYED = 0x10 }",
+    "{ IDEATEK_LISTEN_KIND_IP = 0, IDEATEK_LISTEN_KIND_P2P = 1 }",
+    "{ IDEATEK_LISTEN_STATUS_LISTENING = 0, IDEATEK_LISTEN_STATUS_FAILED = 1 }",
+    "{ IDEATEK_CONNECTION_ACTION_CONNECT = 0, IDEATEK_CONNECTION_ACTION_CONNECT_P2P = 1, IDEATEK_CONNECTION_ACTION_ACCEPT = 2, IDEATEK_CONNECTION_ACTION_CLOSE = 3, IDEATEK_CONNECTION_ACTION_PAIR = 4 }",
+    "{ IDEATEK_CONNECTION_STATUS_CONNECTING = 0, IDEATEK_CONNECTION_STATUS_FINDING_ROUTE = 1, IDEATEK_CONNECTION_STATUS_CONNECTED = 2, IDEATEK_CONNECTION_STATUS_CLOSED_BY_PEER = 3, IDEATEK_CONNECTION_STATUS_PROBLEM = 4 }",
+    "{ IDEATEK_AUTH_STATUS_NONE = 0, IDEATEK_AUTH_STATUS_CURRENT = 1, IDEATEK_AUTH_STATUS_FAILED = 2 }",
+    "{ IDEATEK_SESSION_ACTION_OPEN = 0, IDEATEK_SESSION_ACTION_ACCEPT = 1, IDEATEK_SESSION_ACTION_CLOSE = 2, IDEATEK_SESSION_ACTION_CLOSE_CHANNEL = 3 }",
+    "{ IDEATEK_ADDRESS_STATUS_OK = 0, IDEATEK_ADDRESS_STATUS_NOT_FOUND = 1, IDEATEK_ADDRESS_STATUS_FAILED = 2 }",
+    "{ bridge_text_t certificate; ideatek_identity_t identity; }",
+    "{ bridge_text_t certificate_request; ideatek_identity_t identity; ideatek_auth_status_t status; }",
+    "{ int32_t virtual_port; uint16_t port; ideatek_listen_kind_t kind; }",
+    "{ int32_t virtual_port; uint16_t port; ideatek_listen_kind_t kind; ideatek_listen_status_t status; }",
+    "{ uint32_t send_rate_min; uint32_t send_rate_max; int32_t reason; int32_t virtual_port; ideatek_identity_t remote_identity; ideatek_address_t address; ideatek_connection_action_t action; bool linger; bool symmetric; }",
+    "{ ideatek_entity_t listen; }",
+    "{ int64_t queue_time; int32_t end_reason; int32_t ping; float quality_local; float quality_remote; float in_bytes; float out_bytes; float in_packets; float out_packets; int32_t send_rate; int32_t max_jitter; int32_t pending_reliable; int32_t pending_unreliable; int32_t sent_unacked_reliable; uint32_t failed_sends; ideatek_identity_t remote_identity; char end_text[128]; ideatek_address_t remote; ideatek_connection_status_t status; ideatek_connection_flag_t flags; }",
+    "{ bridge_text_t data; }",
+    "{ ideatek_identity_t remote; }",
+    "{ int32_t channel; ideatek_identity_t remote; ideatek_session_action_t action; }",
+    "{ bridge_text_t name; }",
+    "{ bridge_text_t addresses; ideatek_address_status_t status; }",
+] }
+false = { run = ["{out}/sockets_layout{exe}", "descriptors"] }
 
 [[case]]
-name = "ideatek_sockets.h compiles with the headers of Bridge and nothing else"
+name = "the header compiles with the header of the world part and the headers of Bridge and nothing else"
 run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/platform_abstraction/sockets_alone.c", "-o", "{case}/alone.o"]
 claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-c", "tests/platform_abstraction/sockets_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the sixteen types, the field types before the structures"
+name = "a module declares the 31 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/sockets_probe{library}"] }
 
@@ -116,14 +218,28 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:probe@1.0.0"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_address_t", "ideatek:ideatek_send_t", "ideatek:ideatek_listen_status_t", "ideatek:ideatek_connection_action_t", "ideatek:ideatek_connection_status_t", "ideatek:ideatek_address_status_t", "ideatek:ListenRequest", "ideatek:ConnectionRequest", "ideatek:MessagesOut", "ideatek:AddressRequest", "ideatek:ListenState", "ideatek:Inbound", "ideatek:ConnectionState", "ideatek:MessagesIn", "ideatek:AddressResult"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_address_t",
+    "ideatek:ideatek_identity_t", "ideatek:ideatek_send_t",
+    "ideatek:ideatek_connection_flag_t", "ideatek:ideatek_listen_kind_t",
+    "ideatek:ideatek_listen_status_t", "ideatek:ideatek_connection_action_t",
+    "ideatek:ideatek_connection_status_t", "ideatek:ideatek_auth_status_t",
+    "ideatek:ideatek_session_action_t", "ideatek:ideatek_address_status_t",
+    "ideatek:IdentityRequest", "ideatek:IdentityState", "ideatek:ListenRequest",
+    "ideatek:ListenState", "ideatek:ConnectionRequest", "ideatek:Inbound",
+    "ideatek:ConnectionState", "ideatek:LanesRequest", "ideatek:LaneStates",
+    "ideatek:Session", "ideatek:SessionRequest", "ideatek:MessagesOut",
+    "ideatek:MessagesIn", "ideatek:SessionMessagesOut",
+    "ideatek:SessionMessagesIn", "ideatek:SignalsOut", "ideatek:SignalsIn",
+    "ideatek:AddressRequest", "ideatek:AddressResult",
+]
 '''
 
 [case.false.folders]
 "{case}/m" = ["sockets_late"]
 
 [[case]]
-name = "the game loads with write on the four requests and read on the rest, and attaches ideatek:ConnectionRequest"
+name = "the game loads with write on the requests and the batches out"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/sockets_game{library}"] }
 
@@ -138,8 +254,24 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
-write = ["ideatek:ListenRequest", "ideatek:ConnectionRequest", "ideatek:MessagesOut", "ideatek:AddressRequest"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_address_t", "ideatek:ideatek_send_t", "ideatek:ideatek_listen_status_t", "ideatek:ideatek_connection_action_t", "ideatek:ideatek_connection_status_t", "ideatek:ideatek_address_status_t", "ideatek:ListenState", "ideatek:Inbound", "ideatek:ConnectionState", "ideatek:MessagesIn", "ideatek:AddressResult"]
+write = [
+    "ideatek:IdentityRequest", "ideatek:ListenRequest",
+    "ideatek:ConnectionRequest", "ideatek:LanesRequest",
+    "ideatek:SessionRequest", "ideatek:MessagesOut",
+    "ideatek:SessionMessagesOut", "ideatek:SignalsIn", "ideatek:AddressRequest",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_address_t",
+    "ideatek:ideatek_identity_t", "ideatek:ideatek_connection_flag_t",
+    "ideatek:ideatek_listen_kind_t", "ideatek:ideatek_listen_status_t",
+    "ideatek:ideatek_connection_action_t",
+    "ideatek:ideatek_connection_status_t", "ideatek:ideatek_auth_status_t",
+    "ideatek:ideatek_session_action_t", "ideatek:ideatek_address_status_t",
+    "ideatek:IdentityState", "ideatek:ListenState", "ideatek:Inbound",
+    "ideatek:ConnectionState", "ideatek:LaneStates", "ideatek:Session",
+    "ideatek:MessagesIn", "ideatek:SessionMessagesIn", "ideatek:SignalsOut",
+    "ideatek:AddressResult",
+]
 '''
 
 [case.false.files]
@@ -150,13 +282,30 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_address_t", "ideatek:ideatek_send_t", "ideatek:ideatek_listen_status_t", "ideatek:ideatek_connection_action_t", "ideatek:ideatek_connection_status_t", "ideatek:ideatek_address_status_t", "ideatek:ListenRequest", "ideatek:ConnectionRequest", "ideatek:MessagesOut", "ideatek:AddressRequest", "ideatek:ListenState", "ideatek:Inbound", "ideatek:ConnectionState", "ideatek:MessagesIn", "ideatek:AddressResult"]
+write = [
+    "ideatek:IdentityRequest", "ideatek:ListenRequest",
+    "ideatek:ConnectionRequest", "ideatek:LanesRequest",
+    "ideatek:SessionRequest", "ideatek:MessagesOut",
+    "ideatek:SessionMessagesOut", "ideatek:SignalsIn",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_address_t",
+    "ideatek:ideatek_identity_t", "ideatek:ideatek_connection_flag_t",
+    "ideatek:ideatek_listen_kind_t", "ideatek:ideatek_listen_status_t",
+    "ideatek:ideatek_connection_action_t",
+    "ideatek:ideatek_connection_status_t", "ideatek:ideatek_auth_status_t",
+    "ideatek:ideatek_session_action_t", "ideatek:ideatek_address_status_t",
+    "ideatek:IdentityState", "ideatek:ListenState", "ideatek:Inbound",
+    "ideatek:ConnectionState", "ideatek:LaneStates", "ideatek:Session",
+    "ideatek:MessagesIn", "ideatek:SessionMessagesIn", "ideatek:SignalsOut",
+    "ideatek:AddressResult", "ideatek:AddressRequest",
+]
 '''
 
 [[case]]
-name = "the sockets module loads with write on the five results and read on the rest, and attaches ideatek:ConnectionState"
+name = "the sockets module loads with write on the states and the batches in"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
-claims = { status = 0, line = ["loaded: test:sockets@1.0.0, native, m/sockets_module{library}"] }
+claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/sockets_module{library}"] }
 
 [case.folders]
 "{case}/m" = ["sockets_module"]
@@ -168,9 +317,25 @@ presets = ["{root}/tests/presets/check.toml"]
 paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
-[module."test:sockets@1.0.0"]
-write = ["ideatek:ListenState", "ideatek:Inbound", "ideatek:ConnectionState", "ideatek:MessagesIn", "ideatek:AddressResult"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_address_t", "ideatek:ideatek_send_t", "ideatek:ideatek_listen_status_t", "ideatek:ideatek_connection_action_t", "ideatek:ideatek_connection_status_t", "ideatek:ideatek_address_status_t", "ideatek:ListenRequest", "ideatek:ConnectionRequest", "ideatek:MessagesOut", "ideatek:AddressRequest"]
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:IdentityState", "ideatek:ListenState", "ideatek:Inbound",
+    "ideatek:ConnectionState", "ideatek:LaneStates", "ideatek:Session",
+    "ideatek:MessagesIn", "ideatek:SessionMessagesIn", "ideatek:SignalsOut",
+    "ideatek:AddressResult",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_address_t",
+    "ideatek:ideatek_identity_t", "ideatek:ideatek_connection_flag_t",
+    "ideatek:ideatek_listen_kind_t", "ideatek:ideatek_listen_status_t",
+    "ideatek:ideatek_connection_action_t",
+    "ideatek:ideatek_connection_status_t", "ideatek:ideatek_auth_status_t",
+    "ideatek:ideatek_session_action_t", "ideatek:ideatek_address_status_t",
+    "ideatek:IdentityRequest", "ideatek:ListenRequest",
+    "ideatek:ConnectionRequest", "ideatek:LanesRequest",
+    "ideatek:SessionRequest", "ideatek:MessagesOut",
+    "ideatek:SessionMessagesOut", "ideatek:SignalsIn", "ideatek:AddressRequest",
+]
 '''
 
 [case.false.files]
@@ -180,8 +345,25 @@ presets = ["{root}/tests/presets/check.toml"]
 paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
-[module."test:sockets@1.0.0"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_address_t", "ideatek:ideatek_send_t", "ideatek:ideatek_listen_status_t", "ideatek:ideatek_connection_action_t", "ideatek:ideatek_connection_status_t", "ideatek:ideatek_address_status_t", "ideatek:ListenRequest", "ideatek:ConnectionRequest", "ideatek:MessagesOut", "ideatek:AddressRequest", "ideatek:ListenState", "ideatek:Inbound", "ideatek:ConnectionState", "ideatek:MessagesIn", "ideatek:AddressResult"]
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:IdentityState", "ideatek:ListenState", "ideatek:Inbound",
+    "ideatek:ConnectionState", "ideatek:LaneStates", "ideatek:Session",
+    "ideatek:MessagesIn", "ideatek:SessionMessagesIn", "ideatek:SignalsOut",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_address_t",
+    "ideatek:ideatek_identity_t", "ideatek:ideatek_connection_flag_t",
+    "ideatek:ideatek_listen_kind_t", "ideatek:ideatek_listen_status_t",
+    "ideatek:ideatek_connection_action_t",
+    "ideatek:ideatek_connection_status_t", "ideatek:ideatek_auth_status_t",
+    "ideatek:ideatek_session_action_t", "ideatek:ideatek_address_status_t",
+    "ideatek:IdentityRequest", "ideatek:ListenRequest",
+    "ideatek:ConnectionRequest", "ideatek:LanesRequest",
+    "ideatek:SessionRequest", "ideatek:MessagesOut",
+    "ideatek:SessionMessagesOut", "ideatek:SignalsIn", "ideatek:AddressRequest",
+    "ideatek:AddressResult",
+]
 '''
 
 [[case]]
