@@ -35,21 +35,21 @@ A key of the page 0x0C or of the page 0x01 has events, but no bit in `keys`.
 
 `ideatek_modifier_t` is a bitmask of `uint16_t`. Its size and its alignment are 2.
 
+The bits 0 to 7 follow the modifier byte of the boot report of the USB HID class. The bits 8 to 10 follow the LEDs of the page 0x08. The mask is the state that the OS gives after its remaps and its sticky keys. `keys` is the physical state.
+
 | Constant | Value | The modifier |
 | --- | --- | --- |
-| `IDEATEK_MODIFIER_LSHIFT` | 0x0001 | The left shift. |
-| `IDEATEK_MODIFIER_RSHIFT` | 0x0002 | The right shift. |
-| `IDEATEK_MODIFIER_LEVEL5` | 0x0004 | The shift of the level 5. |
-| `IDEATEK_MODIFIER_LCTRL` | 0x0040 | The left control. |
-| `IDEATEK_MODIFIER_RCTRL` | 0x0080 | The right control. |
-| `IDEATEK_MODIFIER_LALT` | 0x0100 | The left alt. |
-| `IDEATEK_MODIFIER_RALT` | 0x0200 | The right alt. |
-| `IDEATEK_MODIFIER_LGUI` | 0x0400 | The left key of the system. |
-| `IDEATEK_MODIFIER_RGUI` | 0x0800 | The right key of the system. |
-| `IDEATEK_MODIFIER_NUM` | 0x1000 | The num lock. |
-| `IDEATEK_MODIFIER_CAPS` | 0x2000 | The caps lock. |
-| `IDEATEK_MODIFIER_MODE` | 0x4000 | The key of the mode, AltGr. |
-| `IDEATEK_MODIFIER_SCROLL` | 0x8000 | The scroll lock. |
+| `IDEATEK_MODIFIER_LCTRL` | 0x0001 | The left control. |
+| `IDEATEK_MODIFIER_LSHIFT` | 0x0002 | The left shift. |
+| `IDEATEK_MODIFIER_LALT` | 0x0004 | The left alt. |
+| `IDEATEK_MODIFIER_LGUI` | 0x0008 | The left key of the system. |
+| `IDEATEK_MODIFIER_RCTRL` | 0x0010 | The right control. |
+| `IDEATEK_MODIFIER_RSHIFT` | 0x0020 | The right shift. |
+| `IDEATEK_MODIFIER_RALT` | 0x0040 | The right alt. |
+| `IDEATEK_MODIFIER_RGUI` | 0x0080 | The right key of the system. |
+| `IDEATEK_MODIFIER_NUM` | 0x0100 | The num lock. |
+| `IDEATEK_MODIFIER_CAPS` | 0x0200 | The caps lock. |
+| `IDEATEK_MODIFIER_SCROLL` | 0x0400 | The scroll lock. |
 
 ## ideatek:KeyEvent
 
@@ -75,7 +75,7 @@ A key of the page 0x0C or of the page 0x01 has events, but no bit in `keys`.
 | `ideatek:KeyEvent` | `ideatek_key_event_t` | `ideatek_key_event_t_desc` | `IDEATEK_KEY_EVENT_FIELDS` |
 
 ```text
-{ IDEATEK_MODIFIER_LSHIFT = 0x0001, IDEATEK_MODIFIER_RSHIFT = 0x0002, IDEATEK_MODIFIER_LEVEL5 = 0x0004, IDEATEK_MODIFIER_LCTRL = 0x0040, IDEATEK_MODIFIER_RCTRL = 0x0080, IDEATEK_MODIFIER_LALT = 0x0100, IDEATEK_MODIFIER_RALT = 0x0200, IDEATEK_MODIFIER_LGUI = 0x0400, IDEATEK_MODIFIER_RGUI = 0x0800, IDEATEK_MODIFIER_NUM = 0x1000, IDEATEK_MODIFIER_CAPS = 0x2000, IDEATEK_MODIFIER_MODE = 0x4000, IDEATEK_MODIFIER_SCROLL = 0x8000 }
+{ IDEATEK_MODIFIER_LCTRL = 0x0001, IDEATEK_MODIFIER_LSHIFT = 0x0002, IDEATEK_MODIFIER_LALT = 0x0004, IDEATEK_MODIFIER_LGUI = 0x0008, IDEATEK_MODIFIER_RCTRL = 0x0010, IDEATEK_MODIFIER_RSHIFT = 0x0020, IDEATEK_MODIFIER_RALT = 0x0040, IDEATEK_MODIFIER_RGUI = 0x0080, IDEATEK_MODIFIER_NUM = 0x0100, IDEATEK_MODIFIER_CAPS = 0x0200, IDEATEK_MODIFIER_SCROLL = 0x0400 }
 { uint64_t keys[4]; ideatek_modifier_t modifiers; }
 { uint32_t character; uint32_t key; uint32_t code; uint32_t order; ideatek_modifier_t modifiers; bool down; bool repeat; }
 ```
