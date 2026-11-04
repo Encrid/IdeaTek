@@ -1,6 +1,6 @@
-# include/platform_abstraction/ideatek_gamepad.h
+# include/platform_abstraction/ideatek_input_gamepad.h
 
-`include/platform_abstraction/ideatek_gamepad.h` gives the types of the gamepads.
+`include/platform_abstraction/ideatek_input_gamepad.h` gives the types of the gamepads.
 `docs/extern/platform_abstraction/ideatek_input.h.md` tells the common rules.
 
 ## The gamepads

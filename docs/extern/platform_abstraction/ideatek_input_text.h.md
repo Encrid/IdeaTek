@@ -1,6 +1,6 @@
-# include/platform_abstraction/ideatek_text.h
+# include/platform_abstraction/ideatek_input_text.h
 
-`include/platform_abstraction/ideatek_text.h` gives the types of the text input.
+`include/platform_abstraction/ideatek_input_text.h` gives the types of the text input.
 `docs/extern/platform_abstraction/ideatek_input.h.md` tells the common rules.
 
 ## The text input
@@ -49,7 +49,7 @@ The OS draws the IME composition.
 | `ideatek:TextRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TextEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
-`include/platform_abstraction/ideatek_text.h` has no field type.
+`include/platform_abstraction/ideatek_input_text.h` has no field type.
 
 ## The grants
 

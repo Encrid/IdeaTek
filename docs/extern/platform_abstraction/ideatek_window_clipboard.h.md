@@ -1,6 +1,6 @@
-# include/platform_abstraction/ideatek_clipboard.h
+# include/platform_abstraction/ideatek_window_clipboard.h
 
-`include/platform_abstraction/ideatek_clipboard.h` gives the types of the clipboard.
+`include/platform_abstraction/ideatek_window_clipboard.h` gives the types of the clipboard.
 `docs/extern/platform_abstraction/ideatek_window.h.md` tells the common rules.
 
 ## The clipboard

@@ -11,7 +11,7 @@ include = ["{bridge}/include", "{root}/include/platform_abstraction"]
 [compose.window]
 part = "window"
 from = "include/platform_abstraction"
-headers = ["ideatek_clipboard.h", "ideatek_window.h"]
+headers = ["ideatek_window_clipboard.h", "ideatek_window.h"]
 into = "include"
 
 [variables]

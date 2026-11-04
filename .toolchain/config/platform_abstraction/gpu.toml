@@ -11,7 +11,7 @@ include = ["{bridge}/include", "{root}/include/platform_abstraction"]
 [compose.gpu]
 part = "gpu"
 from = "include/platform_abstraction"
-headers = ["ideatek_gpu.h", "ideatek_vulkan.h"]
+headers = ["ideatek_gpu.h", "ideatek_gpu_vulkan.h"]
 into = "include"
 
 [variables]

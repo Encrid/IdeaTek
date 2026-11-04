@@ -1,6 +1,6 @@
-# include/platform_abstraction/ideatek_keyboard.h
+# include/platform_abstraction/ideatek_input_keyboard.h
 
-`include/platform_abstraction/ideatek_keyboard.h` gives the types of the keyboard.
+`include/platform_abstraction/ideatek_input_keyboard.h` gives the types of the keyboard.
 `docs/extern/platform_abstraction/ideatek_input.h.md` tells the common rules.
 
 ## The codes of a key

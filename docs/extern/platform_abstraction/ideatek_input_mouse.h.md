@@ -1,6 +1,6 @@
-# include/platform_abstraction/ideatek_mouse.h
+# include/platform_abstraction/ideatek_input_mouse.h
 
-`include/platform_abstraction/ideatek_mouse.h` gives the types of the mouse and of the cursor.
+`include/platform_abstraction/ideatek_input_mouse.h` gives the types of the mouse and of the cursor.
 `docs/extern/platform_abstraction/ideatek_input.h.md` tells the common rules.
 
 ## The mouse

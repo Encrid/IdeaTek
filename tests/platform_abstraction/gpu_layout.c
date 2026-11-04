@@ -8,7 +8,7 @@
 #include <string.h>
 
 #include <ideatek_gpu.h>
-#include <ideatek_vulkan.h>
+#include <ideatek_gpu_vulkan.h>
 
 #define SIZE(type) printf("size %zu\nalignment %zu\n", sizeof(type), \
     alignof(type))

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <ideatek_clipboard.h>
+#include <ideatek_window_clipboard.h>
 #include <ideatek_window.h>
 
 #define SIZE(type) printf("size %zu\nalignment %zu\n", sizeof(type), \

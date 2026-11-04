@@ -7,12 +7,12 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <ideatek_gamepad.h>
+#include <ideatek_input_gamepad.h>
 #include <ideatek_input.h>
-#include <ideatek_keyboard.h>
-#include <ideatek_mouse.h>
-#include <ideatek_text.h>
-#include <ideatek_touch.h>
+#include <ideatek_input_keyboard.h>
+#include <ideatek_input_mouse.h>
+#include <ideatek_input_text.h>
+#include <ideatek_input_touch.h>
 
 #define SIZE(type) printf("size %zu\nalignment %zu\n", sizeof(type), \
     alignof(type))

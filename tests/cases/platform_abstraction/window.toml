@@ -126,7 +126,7 @@ false = { run = [
 ] }
 
 [[case]]
-name = "ideatek_clipboard.h compiles with the headers of Bridge and nothing else"
+name = "ideatek_window_clipboard.h compiles with the headers of Bridge and nothing else"
 run = [
     "{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction",
     "-I", "{bridge}/include", "-c", "tests/platform_abstraction/window_alone_clipboard.c", "-o",
@@ -258,7 +258,7 @@ read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:id
 name = "the release of a target holds the header and the licence, and a program builds from it"
 run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "window", "--pack"]
 claims = { status = 0, line = [
-    "{case}/out/BC-IdeaTek-Window-{target}.zip", "include/ideatek_clipboard.h",
+    "{case}/out/BC-IdeaTek-Window-{target}.zip", "include/ideatek_window_clipboard.h",
     "include/ideatek_window.h", "license",
     "package proof: BC-IdeaTek-Window ran",
 ] }

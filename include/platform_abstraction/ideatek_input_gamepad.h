@@ -3,8 +3,8 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
-#ifndef BC_IDEATEK_GAMEPAD_H
-    #define BC_IDEATEK_GAMEPAD_H
+#ifndef BC_IDEATEK_INPUT_GAMEPAD_H
+    #define BC_IDEATEK_INPUT_GAMEPAD_H
 
     #include <stdint.h>
 

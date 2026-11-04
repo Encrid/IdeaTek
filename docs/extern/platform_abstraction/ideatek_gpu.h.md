@@ -2,7 +2,7 @@
 
 `include/platform_abstraction/ideatek_gpu.h` gives the types of the GPU part: the GPUs of the machine, 1 device and the swapchain of the window.
 `readme.md`, *The contracts*, tells the rules of each contract.
-The types of this header hold no value of a graphics API. A header of each API holds its handles: `docs/extern/platform_abstraction/ideatek_vulkan.h.md`.
+The types of this header hold no value of a graphics API. A header of each API holds its handles: `docs/extern/platform_abstraction/ideatek_gpu_vulkan.h.md`.
 `ideatek:GpuRequest` and `ideatek:GpuDevice` name entities of `include/platform_abstraction/ideatek_world.h`, so the GPU header includes it.
 
 ## The roles
@@ -130,7 +130,7 @@ Bytes 14 and 15 hold no field.
 
 | Constant | Value | The API | The header of its handles |
 | --- | --- | --- | --- |
-| `IDEATEK_GPU_API_VULKAN` | 0 | Vulkan | `include/platform_abstraction/ideatek_vulkan.h` |
+| `IDEATEK_GPU_API_VULKAN` | 0 | Vulkan | `include/platform_abstraction/ideatek_gpu_vulkan.h` |
 
 ### ideatek:ideatek_gpu_status_t
 

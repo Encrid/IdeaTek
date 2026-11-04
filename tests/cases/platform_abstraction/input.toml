@@ -224,7 +224,7 @@ false = { run = [
 ] }
 
 [[case]]
-name = "ideatek_keyboard.h compiles with the headers of Bridge and nothing else"
+name = "ideatek_input_keyboard.h compiles with the headers of Bridge and nothing else"
 run = [
     "{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-I",
     "{bridge}/include", "-c", "tests/platform_abstraction/input_alone_keyboard.c", "-o",
@@ -237,7 +237,7 @@ false = { run = [
 ] }
 
 [[case]]
-name = "ideatek_text.h compiles with the headers of Bridge and nothing else"
+name = "ideatek_input_text.h compiles with the headers of Bridge and nothing else"
 run = [
     "{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-I",
     "{bridge}/include", "-c", "tests/platform_abstraction/input_alone_text.c", "-o", "{case}/alone_text.o",
@@ -249,7 +249,7 @@ false = { run = [
 ] }
 
 [[case]]
-name = "ideatek_mouse.h compiles with the headers of Bridge and nothing else"
+name = "ideatek_input_mouse.h compiles with the headers of Bridge and nothing else"
 run = [
     "{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-I",
     "{bridge}/include", "-c", "tests/platform_abstraction/input_alone_mouse.c", "-o", "{case}/alone_mouse.o",
@@ -261,7 +261,7 @@ false = { run = [
 ] }
 
 [[case]]
-name = "ideatek_touch.h compiles with the headers of Bridge and nothing else"
+name = "ideatek_input_touch.h compiles with the headers of Bridge and nothing else"
 run = [
     "{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-I",
     "{bridge}/include", "-c", "tests/platform_abstraction/input_alone_touch.c", "-o", "{case}/alone_touch.o",
@@ -273,7 +273,7 @@ false = { run = [
 ] }
 
 [[case]]
-name = "ideatek_gamepad.h compiles with the headers of its layer folder and of Bridge and nothing else"
+name = "ideatek_input_gamepad.h compiles with the headers of its layer folder and of Bridge and nothing else"
 run = [
     "{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-I",
     "{bridge}/include", "-c", "tests/platform_abstraction/input_alone_gamepad.c", "-o", "{case}/alone_gamepad.o",
@@ -406,11 +406,11 @@ run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--ou
 claims = { status = 0, line = [
     "{case}/out/BC-IdeaTek-Input-{target}.zip",
     "include/ideatek_input.h",
-    "include/ideatek_keyboard.h",
-    "include/ideatek_text.h",
-    "include/ideatek_mouse.h",
-    "include/ideatek_gamepad.h",
-    "include/ideatek_touch.h",
+    "include/ideatek_input_keyboard.h",
+    "include/ideatek_input_text.h",
+    "include/ideatek_input_mouse.h",
+    "include/ideatek_input_gamepad.h",
+    "include/ideatek_input_touch.h",
     "license",
     "package proof: BC-IdeaTek-Input ran",
 ] }

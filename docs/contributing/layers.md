@@ -29,19 +29,19 @@ its parts. A part has no folder of its own:
 ```text
 platform_abstraction/
     ideatek_audio.h
-    ideatek_clipboard.h
     ideatek_files.h
-    ideatek_gamepad.h
     ideatek_gpu.h
+    ideatek_gpu_vulkan.h
     ideatek_input.h
-    ideatek_keyboard.h
-    ideatek_mouse.h
+    ideatek_input_gamepad.h
+    ideatek_input_keyboard.h
+    ideatek_input_mouse.h
+    ideatek_input_text.h
+    ideatek_input_touch.h
     ideatek_sockets.h
     ideatek_system.h
-    ideatek_text.h
-    ideatek_touch.h
-    ideatek_vulkan.h
     ideatek_window.h
+    ideatek_window_clipboard.h
     ideatek_world.h
 kernel/
     ideatek_frame.h

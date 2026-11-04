@@ -1,6 +1,6 @@
-# include/platform_abstraction/ideatek_vulkan.h
+# include/platform_abstraction/ideatek_gpu_vulkan.h
 
-`include/platform_abstraction/ideatek_vulkan.h` gives the handles of Vulkan for a GPU module that uses Vulkan.
+`include/platform_abstraction/ideatek_gpu_vulkan.h` gives the handles of Vulkan for a GPU module that uses Vulkan.
 `docs/extern/platform_abstraction/ideatek_gpu.h.md` tells the common rules.
 The header includes no header of Vulkan. Each handle is a `uint64_t`, and a drawer casts it to the type of Vulkan.
 

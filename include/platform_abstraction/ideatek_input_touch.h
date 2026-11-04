@@ -3,8 +3,8 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
-#ifndef BC_IDEATEK_TOUCH_H
-    #define BC_IDEATEK_TOUCH_H
+#ifndef BC_IDEATEK_INPUT_TOUCH_H
+    #define BC_IDEATEK_INPUT_TOUCH_H
 
     #include <stdint.h>
 

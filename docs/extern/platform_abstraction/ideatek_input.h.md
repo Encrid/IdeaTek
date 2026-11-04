@@ -2,23 +2,23 @@
 
 `include/platform_abstraction/ideatek_input.h` gives the events of the focus, and the rules of each input header.
 `readme.md`, *The contracts*, tells the rules of each contract.
-Only `include/platform_abstraction/ideatek_gamepad.h` includes `include/platform_abstraction/ideatek_world.h`, for `ideatek_entity_t`.
+Only `include/platform_abstraction/ideatek_input_gamepad.h` includes `include/platform_abstraction/ideatek_world.h`, for `ideatek_entity_t`.
 `docs/extern/platform_abstraction/ideatek_world.h.md` describes `ideatek_entity_t`.
 
 | Header | Family | Document |
 | --- | --- | --- |
 | `include/platform_abstraction/ideatek_input.h` | The focus | This document |
-| `include/platform_abstraction/ideatek_keyboard.h` | The keyboard | `docs/extern/platform_abstraction/ideatek_keyboard.h.md` |
-| `include/platform_abstraction/ideatek_text.h` | The text input | `docs/extern/platform_abstraction/ideatek_text.h.md` |
-| `include/platform_abstraction/ideatek_mouse.h` | The mouse and the cursor | `docs/extern/platform_abstraction/ideatek_mouse.h.md` |
-| `include/platform_abstraction/ideatek_gamepad.h` | The gamepads | `docs/extern/platform_abstraction/ideatek_gamepad.h.md` |
-| `include/platform_abstraction/ideatek_touch.h` | The fingers | `docs/extern/platform_abstraction/ideatek_touch.h.md` |
+| `include/platform_abstraction/ideatek_input_keyboard.h` | The keyboard | `docs/extern/platform_abstraction/ideatek_input_keyboard.h.md` |
+| `include/platform_abstraction/ideatek_input_text.h` | The text input | `docs/extern/platform_abstraction/ideatek_input_text.h.md` |
+| `include/platform_abstraction/ideatek_input_mouse.h` | The mouse and the cursor | `docs/extern/platform_abstraction/ideatek_input_mouse.h.md` |
+| `include/platform_abstraction/ideatek_input_gamepad.h` | The gamepads | `docs/extern/platform_abstraction/ideatek_input_gamepad.h.md` |
+| `include/platform_abstraction/ideatek_input_touch.h` | The fingers | `docs/extern/platform_abstraction/ideatek_input_touch.h.md` |
 
 ## The input entities
 
 At `init`, the input module spawns 1 entity, and attaches `ideatek:Keyboard` and `ideatek:Mouse` to it.
 All the keyboards are 1 keyboard, and all the mice are 1 mouse.
-Each gamepad is 1 entity: `docs/extern/platform_abstraction/ideatek_gamepad.h.md` tells its rules.
+Each gamepad is 1 entity: `docs/extern/platform_abstraction/ideatek_input_gamepad.h.md` tells its rules.
 A pen is given as mouse events, and as touch events on a touch screen.
 
 ## The events
@@ -101,7 +101,7 @@ Bytes 5 to 7 hold no field.
 | `ideatek:InputEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 The field types of a header are the enums and the bitmasks of the header.
-The field types of `include/platform_abstraction/ideatek_gamepad.h` also hold `ideatek:ideatek_entity_t`.
+The field types of `include/platform_abstraction/ideatek_input_gamepad.h` also hold `ideatek:ideatek_entity_t`.
 A module declares the field types before the structs.
 
 ## The grants

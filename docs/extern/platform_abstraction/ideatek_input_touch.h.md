@@ -1,6 +1,6 @@
-# include/platform_abstraction/ideatek_touch.h
+# include/platform_abstraction/ideatek_input_touch.h
 
-`include/platform_abstraction/ideatek_touch.h` gives the types of the fingers.
+`include/platform_abstraction/ideatek_input_touch.h` gives the types of the fingers.
 `docs/extern/platform_abstraction/ideatek_input.h.md` tells the common rules.
 
 ## The fingers

@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "bridge_native.h"
-#include "ideatek_clipboard.h"
+#include "ideatek_window_clipboard.h"
 #include "ideatek_window.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]

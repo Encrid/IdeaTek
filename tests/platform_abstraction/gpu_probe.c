@@ -5,7 +5,7 @@
 */
 #include "bridge_native.h"
 #include "ideatek_gpu.h"
-#include "ideatek_vulkan.h"
+#include "ideatek_gpu_vulkan.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
 static const char WHO[] = MANIFEST;

@@ -11,7 +11,7 @@ include = ["{bridge}/include", "{root}/include/platform_abstraction"]
 [compose.input]
 part = "input"
 from = "include/platform_abstraction"
-headers = ["ideatek_gamepad.h", "ideatek_input.h", "ideatek_keyboard.h", "ideatek_mouse.h", "ideatek_text.h", "ideatek_touch.h"]
+headers = ["ideatek_input_gamepad.h", "ideatek_input.h", "ideatek_input_keyboard.h", "ideatek_input_mouse.h", "ideatek_input_text.h", "ideatek_input_touch.h"]
 into = "include"
 
 [variables]

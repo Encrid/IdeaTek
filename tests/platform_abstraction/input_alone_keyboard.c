@@ -3,4 +3,4 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
-#include <ideatek_keyboard.h>
+#include <ideatek_input_keyboard.h>

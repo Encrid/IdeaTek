@@ -3,8 +3,8 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
-#ifndef BC_IDEATEK_CLIPBOARD_H
-    #define BC_IDEATEK_CLIPBOARD_H
+#ifndef BC_IDEATEK_WINDOW_CLIPBOARD_H
+    #define BC_IDEATEK_WINDOW_CLIPBOARD_H
 
     #include "bridge_abi.h"
     #include "bridge_schema.h"

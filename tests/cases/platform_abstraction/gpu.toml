@@ -101,7 +101,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-c", "tests/platform_abstraction/gpu_alone_gpu.c", "-o", "{case}/alone_gpu.o"] }
 
 [[case]]
-name = "ideatek_vulkan.h compiles with the headers of Bridge and nothing else"
+name = "ideatek_gpu_vulkan.h compiles with the headers of Bridge and nothing else"
 run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/platform_abstraction/gpu_alone_vulkan.c", "-o", "{case}/alone_vulkan.o"]
 claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/platform_abstraction", "-c", "tests/platform_abstraction/gpu_alone_vulkan.c", "-o", "{case}/alone_vulkan.o"] }
@@ -194,7 +194,7 @@ read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_gpu_kind_t", "ideatek:ideat
 name = "the release of a target holds the two headers and the licence, and a program builds from it"
 run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "gpu", "--pack"]
 claims = { status = 0, line = [
-    "{case}/out/BC-IdeaTek-Gpu-{target}.zip", "include/ideatek_gpu.h", "include/ideatek_vulkan.h", "license",
+    "{case}/out/BC-IdeaTek-Gpu-{target}.zip", "include/ideatek_gpu.h", "include/ideatek_gpu_vulkan.h", "license",
     "package proof: BC-IdeaTek-Gpu ran",
 ] }
 false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "gpu"] }

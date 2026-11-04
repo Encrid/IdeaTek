@@ -3,8 +3,8 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
-#ifndef BC_IDEATEK_VULKAN_H
-    #define BC_IDEATEK_VULKAN_H
+#ifndef BC_IDEATEK_GPU_VULKAN_H
+    #define BC_IDEATEK_GPU_VULKAN_H
 
     #include <stdint.h>
 
