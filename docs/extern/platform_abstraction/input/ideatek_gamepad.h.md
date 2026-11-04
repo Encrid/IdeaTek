@@ -20,11 +20,13 @@ Comes back: a model type when a game shows button prompts per model; raw joystic
 ## ideatek:Gamepad
 
 `ideatek:Gamepad` names a gamepad.
-`ideatek_gamepad_t` takes 128 bytes. Its alignment is 1.
+`ideatek_gamepad_t` takes 382 bytes. Its alignment is 1.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `name` | `char[128]` | 0 | The name of the gamepad in UTF-8, with a null at the end. |
+| `name` | `char[382]` | 0 | The name of the gamepad in UTF-8, with a null at the end. |
+
+A string descriptor of USB has at most 126 code units of UTF-16, and these give at most 381 bytes of UTF-8. A Bluetooth device name has at most 248 bytes of UTF-8. The input module cuts a longer name at the last whole code point.
 
 ## ideatek:GamepadState
 
@@ -102,7 +104,7 @@ Bytes 17 to 23 hold no field.
 
 ```text
 { IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x00001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x00002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x00004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x00008, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x00010, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x00020, IDEATEK_GAMEPAD_BUTTON_BACK = 0x00100, IDEATEK_GAMEPAD_BUTTON_START = 0x00200, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x00400, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x00800, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x01000, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x02000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x04000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x08000, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x10000 }
-{ char name[128]; }
+{ char name[382]; }
 { float left_x; float left_y; float right_x; float right_y; float left_trigger; float right_trigger; ideatek_gamepad_button_t buttons; }
 { ideatek_entity_t gamepad; uint32_t order; ideatek_gamepad_button_t button; bool down; }
 { float weak; float strong; uint32_t duration_ms; }
