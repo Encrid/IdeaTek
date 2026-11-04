@@ -147,6 +147,12 @@ A sky of the kind `IDEATEK_SKY_KIND_ATMOSPHERE` takes the sun from each directio
 | 7 | `IDEATEK_SEMANTIC_MORPH_POSITION` | The change of the position in the morph target `target`. |
 | 8 | `IDEATEK_SEMANTIC_MORPH_NORMAL` | The change of the normal in the morph target `target`. |
 | 9 | `IDEATEK_SEMANTIC_MORPH_TANGENT` | The change of the tangent in the morph target `target`. |
+| 10 | `IDEATEK_SEMANTIC_SOFT_MAX_DISTANCE` | The most that a soft body vertex moves from its skinned place. 0 pins it. |
+| 11 | `IDEATEK_SEMANTIC_SOFT_BACKSTOP_DISTANCE` | The distance of the backstop sphere behind a soft body vertex. |
+| 12 | `IDEATEK_SEMANTIC_SOFT_BACKSTOP_RADIUS` | The radius of that backstop sphere. |
+
+A soft body vertex with no `IDEATEK_SEMANTIC_SOFT_MAX_DISTANCE` is free. With no backstop stream, it has no backstop.
+The soft body streams hold 1 float for each vertex, as in Jolt.
 
 ## ideatek:ideatek_mesh_stream_t
 
@@ -778,7 +784,7 @@ Only 1 reference has a lens flare, so the default strength is 0.
 { IDEATEK_PROJECTION_KIND_PERSPECTIVE = 0, IDEATEK_PROJECTION_KIND_ORTHOGRAPHIC = 1, IDEATEK_PROJECTION_KIND_ASYMMETRIC = 2 }
 { IDEATEK_TOPOLOGY_POINT_LIST = 0, IDEATEK_TOPOLOGY_LINE_LIST = 1, IDEATEK_TOPOLOGY_LINE_STRIP = 2, IDEATEK_TOPOLOGY_TRIANGLE_LIST = 3, IDEATEK_TOPOLOGY_TRIANGLE_STRIP = 4 }
 { IDEATEK_INDEX_FORMAT_NONE = 0, IDEATEK_INDEX_FORMAT_U16 = 1, IDEATEK_INDEX_FORMAT_U32 = 2 }
-{ IDEATEK_SEMANTIC_POSITION = 0, IDEATEK_SEMANTIC_NORMAL = 1, IDEATEK_SEMANTIC_TANGENT = 2, IDEATEK_SEMANTIC_TEXCOORD = 3, IDEATEK_SEMANTIC_COLOR = 4, IDEATEK_SEMANTIC_JOINTS = 5, IDEATEK_SEMANTIC_WEIGHTS = 6, IDEATEK_SEMANTIC_MORPH_POSITION = 7, IDEATEK_SEMANTIC_MORPH_NORMAL = 8, IDEATEK_SEMANTIC_MORPH_TANGENT = 9 }
+{ IDEATEK_SEMANTIC_POSITION = 0, IDEATEK_SEMANTIC_NORMAL = 1, IDEATEK_SEMANTIC_TANGENT = 2, IDEATEK_SEMANTIC_TEXCOORD = 3, IDEATEK_SEMANTIC_COLOR = 4, IDEATEK_SEMANTIC_JOINTS = 5, IDEATEK_SEMANTIC_WEIGHTS = 6, IDEATEK_SEMANTIC_MORPH_POSITION = 7, IDEATEK_SEMANTIC_MORPH_NORMAL = 8, IDEATEK_SEMANTIC_MORPH_TANGENT = 9, IDEATEK_SEMANTIC_SOFT_MAX_DISTANCE = 10, IDEATEK_SEMANTIC_SOFT_BACKSTOP_DISTANCE = 11, IDEATEK_SEMANTIC_SOFT_BACKSTOP_RADIUS = 12 }
 { uint32_t format; uint32_t offset; uint32_t stride; uint16_t target; ideatek_semantic_t semantic; uint8_t set; }
 { uint32_t first; uint32_t count; }
 { float error; uint32_t first; uint32_t count; }
