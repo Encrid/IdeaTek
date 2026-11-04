@@ -123,6 +123,26 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_submesh_t, IDEATEK_SUBMESH_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mesh_lod_t, IDEATEK_MESH_LOD_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mesh_lod_t, IDEATEK_MESH_LOD_FIELDS);
 
+    #define IDEATEK_TEXTURE_SLOT_FIELDS { \
+        ideatek_entity_t texture; \
+        float offset[2]; \
+        float scale[2]; \
+        float rotation; \
+        uint8_t texcoord; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_texture_slot_t, IDEATEK_TEXTURE_SLOT_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_texture_slot_t, IDEATEK_TEXTURE_SLOT_FIELDS);
+
+    #define IDEATEK_GI_MODE_VALUES { \
+        IDEATEK_GI_MODE_DYNAMIC = 0, \
+        IDEATEK_GI_MODE_STATIC = 1, \
+        IDEATEK_GI_MODE_DISABLED = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gi_mode_t, uint8_t, IDEATEK_GI_MODE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_gi_mode_t, uint8_t, IDEATEK_GI_MODE_VALUES);
+
     #define IDEATEK_ALPHA_MODE_VALUES { \
         IDEATEK_ALPHA_MODE_OPAQUE = 0, \
         IDEATEK_ALPHA_MODE_MASK = 1, \
@@ -289,6 +309,8 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mesh_materials_t,
     #define IDEATEK_VISIBILITY_FIELDS { \
         uint64_t groups; \
         ideatek_cast_shadow_t cast_shadow; \
+        ideatek_gi_mode_t gi_mode; \
+        bool visible; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_visibility_t, IDEATEK_VISIBILITY_FIELDS);
@@ -314,11 +336,11 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_visibility_range_t,
     IDEATEK_VISIBILITY_RANGE_FIELDS);
 
     #define IDEATEK_MATERIAL_FIELDS { \
-        ideatek_entity_t base_color_texture; \
-        ideatek_entity_t metallic_roughness_texture; \
-        ideatek_entity_t normal_texture; \
-        ideatek_entity_t occlusion_texture; \
-        ideatek_entity_t emissive_texture; \
+        ideatek_texture_slot_t base_color_texture; \
+        ideatek_texture_slot_t metallic_roughness_texture; \
+        ideatek_texture_slot_t normal_texture; \
+        ideatek_texture_slot_t occlusion_texture; \
+        ideatek_texture_slot_t emissive_texture; \
         ideatek_color_t base_color; \
         ideatek_rgb_t emissive; \
         float metallic; \
@@ -341,6 +363,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_material_t, IDEATEK_MATERIAL_FIELDS);
         uint32_t height; \
         uint32_t depth_or_layers; \
         uint32_t mip_count; \
+        uint32_t top_mip; \
         uint32_t revision; \
         ideatek_dimension_t dimension; \
     }
@@ -531,5 +554,102 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_film_grain_t, IDEATEK_FILM_GRAIN_FIELDS);
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_lens_flare_t, IDEATEK_LENS_FLARE_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_lens_flare_t, IDEATEK_LENS_FLARE_FIELDS);
+
+    #define IDEATEK_MATERIAL_CLEARCOAT_FIELDS { \
+        ideatek_texture_slot_t texture; \
+        ideatek_texture_slot_t roughness_texture; \
+        ideatek_texture_slot_t normal_texture; \
+        float factor; \
+        float roughness; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_material_clearcoat_t,
+    IDEATEK_MATERIAL_CLEARCOAT_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_material_clearcoat_t,
+    IDEATEK_MATERIAL_CLEARCOAT_FIELDS);
+
+    #define IDEATEK_MATERIAL_SPECULAR_FIELDS { \
+        ideatek_texture_slot_t texture; \
+        ideatek_texture_slot_t color_texture; \
+        ideatek_rgb_t color; \
+        float factor; \
+        float ior; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_material_specular_t,
+    IDEATEK_MATERIAL_SPECULAR_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_material_specular_t,
+    IDEATEK_MATERIAL_SPECULAR_FIELDS);
+
+    #define IDEATEK_MATERIAL_TRANSMISSION_FIELDS { \
+        ideatek_texture_slot_t texture; \
+        ideatek_texture_slot_t thickness_texture; \
+        ideatek_rgb_t attenuation_color; \
+        float factor; \
+        float thickness; \
+        float attenuation_distance; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_material_transmission_t,
+    IDEATEK_MATERIAL_TRANSMISSION_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_material_transmission_t,
+    IDEATEK_MATERIAL_TRANSMISSION_FIELDS);
+
+    #define IDEATEK_MATERIAL_ANISOTROPY_FIELDS { \
+        ideatek_texture_slot_t texture; \
+        float strength; \
+        float rotation; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_material_anisotropy_t,
+    IDEATEK_MATERIAL_ANISOTROPY_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_material_anisotropy_t,
+    IDEATEK_MATERIAL_ANISOTROPY_FIELDS);
+
+    #define IDEATEK_MATERIAL_DIFFUSE_TRANSMISSION_FIELDS { \
+        ideatek_texture_slot_t texture; \
+        ideatek_texture_slot_t color_texture; \
+        ideatek_rgb_t color; \
+        float factor; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_material_diffuse_transmission_t,
+    IDEATEK_MATERIAL_DIFFUSE_TRANSMISSION_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_material_diffuse_transmission_t,
+    IDEATEK_MATERIAL_DIFFUSE_TRANSMISSION_FIELDS);
+
+    #define IDEATEK_REFLECTION_PROBE_FIELDS { \
+        ideatek_entity_t cube; \
+        ideatek_vec3_t half_size; \
+        float falloff; \
+        float intensity; \
+        int32_t priority; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_reflection_probe_t,
+    IDEATEK_REFLECTION_PROBE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_reflection_probe_t,
+    IDEATEK_REFLECTION_PROBE_FIELDS);
+
+    #define IDEATEK_IRRADIANCE_VOLUME_FIELDS { \
+        ideatek_entity_t texture; \
+        ideatek_vec3_t half_size; \
+        float intensity; \
+        int32_t priority; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_irradiance_volume_t,
+    IDEATEK_IRRADIANCE_VOLUME_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_irradiance_volume_t,
+    IDEATEK_IRRADIANCE_VOLUME_FIELDS);
+
+    #define IDEATEK_LIGHTMAP_FIELDS { \
+        ideatek_entity_t texture; \
+        ideatek_rect_t uv_rect; \
+        uint8_t texcoord; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_lightmap_t, IDEATEK_LIGHTMAP_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_lightmap_t, IDEATEK_LIGHTMAP_FIELDS);
 
 #endif
