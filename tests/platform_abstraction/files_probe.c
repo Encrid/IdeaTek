@@ -42,7 +42,8 @@ static uint32_t declare_change(const bridge_api_t *api)
 {
     uint32_t at = api->alloc(api, 9);
     ideatek_file_request_t request = { .path = { .at = at, .len = 9 },
-        .storage = IDEATEK_STORAGE_USER, .action = IDEATEK_FILE_ACTION_READ };
+        .storage = IDEATEK_STORAGE_USER, .action = IDEATEK_FILE_ACTION_READ,
+        .priority = 1 };
 
     memcpy(api->shared_base + at, "probe.txt", 9);
     declare_lists(api);

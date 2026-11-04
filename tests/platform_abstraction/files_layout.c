@@ -43,6 +43,7 @@ static void show_request(void)
     AT(ideatek_file_request_t, data);
     AT(ideatek_file_request_t, storage);
     AT(ideatek_file_request_t, action);
+    AT(ideatek_file_request_t, priority);
 }
 
 static void show_result(void)
