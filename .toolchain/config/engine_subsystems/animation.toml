@@ -58,6 +58,16 @@ defines = ["ROLE_ANIMATOR"]
 manifest = ["test:animator@1.0.0", "{animation_spawn_words}"]
 
 [[artifact.variants]]
+name = "animation_graph"
+defines = ["ROLE_GRAPH"]
+manifest = ["test:graph@1.0.0", "{animation_spawn_words}"]
+
+[[artifact.variants]]
+name = "animation_matcher"
+defines = ["ROLE_MATCHER"]
+manifest = ["test:matcher@1.0.0", "{animation_spawn_words}"]
+
+[[artifact.variants]]
 name = "animation_solver"
 defines = ["ROLE_SOLVER"]
 manifest = ["test:solver@1.0.0", "{animation_spawn_words}"]
