@@ -1,0 +1,83 @@
+[[case]]
+name = "ideatek_terrain_flags_t is 1 byte"
+run = ["{out}/terrain_layout{exe}", "terrain_flags"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain"] }
+
+[[case]]
+name = "ideatek_terrain_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/terrain_layout{exe}", "terrain"]
+claims = { status = 0, order = ["size 12", "alignment 4", "cell_size 0", "chunk_cells 4", "flags 8"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_material"] }
+
+[[case]]
+name = "ideatek_terrain_material_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/terrain_layout{exe}", "terrain_material"]
+claims = { status = 0, order = ["size 32", "alignment 8", "terrain 0", "material 8", "physics_material 16", "index 24"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_chunk"] }
+
+[[case]]
+name = "ideatek_terrain_chunk_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/terrain_layout{exe}", "terrain_chunk"]
+claims = { status = 0, order = ["size 32", "alignment 8", "terrain 0", "bytes 8", "x 16", "y 20", "z 24", "revision 28"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_shape"] }
+
+[[case]]
+name = "ideatek_terrain_shape_t is 1 byte"
+run = ["{out}/terrain_layout{exe}", "terrain_shape"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_edit"] }
+
+[[case]]
+name = "ideatek_terrain_op_t is 1 byte"
+run = ["{out}/terrain_layout{exe}", "terrain_op"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_edit"] }
+
+[[case]]
+name = "ideatek_terrain_edit_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/terrain_layout{exe}", "terrain_edit"]
+claims = { status = 0, order = ["size 56", "alignment 8", "terrain 0", "center 8", "size 32", "strength 44", "order 48", "shape 52", "op 53", "material 54"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_fill"] }
+
+[[case]]
+name = "ideatek_terrain_fill_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/terrain_layout{exe}", "terrain_fill"]
+claims = { status = 0, order = ["size 32", "alignment 8", "terrain 0", "data 8", "x 16", "y 20", "z 24", "order 28"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_flags"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/terrain_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_TERRAIN_FLAGS_COLLIDE = 0x01, IDEATEK_TERRAIN_FLAGS_NAVIGATE = 0x02 }",
+    "{ float cell_size; uint32_t chunk_cells; ideatek_terrain_flags_t flags; }",
+    "{ ideatek_entity_t terrain; ideatek_entity_t material; ideatek_entity_t physics_material; uint8_t index; }",
+    "{ ideatek_entity_t terrain; bridge_text_t bytes; int32_t x; int32_t y; int32_t z; uint32_t revision; }",
+    "uint8_t { IDEATEK_TERRAIN_SHAPE_SPHERE = 0, IDEATEK_TERRAIN_SHAPE_BOX = 1 }",
+    "uint8_t { IDEATEK_TERRAIN_OP_ADD = 0, IDEATEK_TERRAIN_OP_SUBTRACT = 1, IDEATEK_TERRAIN_OP_PAINT = 2, IDEATEK_TERRAIN_OP_SMOOTH = 3 }",
+    "{ ideatek_entity_t terrain; ideatek_position_t center; ideatek_vec3_t size; float strength; uint32_t order; ideatek_terrain_shape_t shape; ideatek_terrain_op_t op; uint8_t material; }",
+    "{ ideatek_entity_t terrain; bridge_text_t data; int32_t x; int32_t y; int32_t z; uint32_t order; }",
+] }
+false = { run = ["{out}/terrain_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/terrain_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_TERRAIN_FLAGS_COLLIDE = 0x01, IDEATEK_TERRAIN_FLAGS_NAVIGATE = 0x02 }",
+    "{ float cell_size; uint32_t chunk_cells; ideatek_terrain_flags_t flags; }",
+    "{ ideatek_entity_t terrain; ideatek_entity_t material; ideatek_entity_t physics_material; uint8_t index; }",
+    "{ ideatek_entity_t terrain; bridge_text_t bytes; int32_t x; int32_t y; int32_t z; uint32_t revision; }",
+    "{ IDEATEK_TERRAIN_SHAPE_SPHERE = 0, IDEATEK_TERRAIN_SHAPE_BOX = 1 }",
+    "{ IDEATEK_TERRAIN_OP_ADD = 0, IDEATEK_TERRAIN_OP_SUBTRACT = 1, IDEATEK_TERRAIN_OP_PAINT = 2, IDEATEK_TERRAIN_OP_SMOOTH = 3 }",
+    "{ ideatek_entity_t terrain; ideatek_position_t center; ideatek_vec3_t size; float strength; uint32_t order; ideatek_terrain_shape_t shape; ideatek_terrain_op_t op; uint8_t material; }",
+    "{ ideatek_entity_t terrain; bridge_text_t data; int32_t x; int32_t y; int32_t z; uint32_t order; }",
+] }
+false = { run = ["{out}/terrain_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the headers of the world and space parts and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/terrain", "-I", "include/platform_abstraction/world", "-I", "include/engine_subsystems/space", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/terrain/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/terrain", "-I", "include/platform_abstraction/world", "-I", "include/engine_subsystems/space", "-c", "tests/engine_subsystems/terrain/layout/alone.c", "-o", "{case}/alone.o"] }
