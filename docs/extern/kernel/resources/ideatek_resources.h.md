@@ -116,6 +116,7 @@ When `path` fails, the handle names `path`.
 
 With `hot_reload` at `true`, the resources module watches each source with `IDEATEK_FILE_ACTION_WATCH`.
 A change of a file or of its meta file reloads the resource, `reload_delay_ms` after the last change.
+The wait joins the events of 1 save into 1 reload, and it lets the writer end the file before the read.
 `ideatek:ResourceReload` reloads the resource at once.
 
 A reload keeps the entity. `state` becomes `IDEATEK_LOAD_STATE_LOADING`, and the loader attaches its component again.
