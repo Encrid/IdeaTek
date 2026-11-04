@@ -32,6 +32,8 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_mesh_stream_t", ideatek_mesh_stream_t);
     STRUCT(api, "ideatek:ideatek_submesh_t", ideatek_submesh_t);
     STRUCT(api, "ideatek:ideatek_mesh_lod_t", ideatek_mesh_lod_t);
+    STRUCT(api, "ideatek:ideatek_texture_slot_t", ideatek_texture_slot_t);
+    ENUM(api, "ideatek:ideatek_gi_mode_t", ideatek_gi_mode_t);
     ENUM(api, "ideatek:ideatek_alpha_mode_t", ideatek_alpha_mode_t);
     ENUM(api, "ideatek:ideatek_dimension_t", ideatek_dimension_t);
     ENUM(api, "ideatek:ideatek_filter_t", ideatek_filter_t);
@@ -81,6 +83,17 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ChromaticAberration", ideatek_chromatic_aberration_t);
     STRUCT(api, "ideatek:FilmGrain", ideatek_film_grain_t);
     STRUCT(api, "ideatek:LensFlare", ideatek_lens_flare_t);
+    STRUCT(api, "ideatek:MaterialClearcoat", ideatek_material_clearcoat_t);
+    STRUCT(api, "ideatek:MaterialSpecular", ideatek_material_specular_t);
+    STRUCT(api, "ideatek:MaterialTransmission",
+        ideatek_material_transmission_t);
+    STRUCT(api, "ideatek:MaterialAnisotropy", ideatek_material_anisotropy_t);
+    STRUCT(api, "ideatek:MaterialDiffuseTransmission",
+        ideatek_material_diffuse_transmission_t);
+    TAG(api, "ideatek:MaterialUnlit");
+    STRUCT(api, "ideatek:ReflectionProbe", ideatek_reflection_probe_t);
+    STRUCT(api, "ideatek:IrradianceVolume", ideatek_irradiance_volume_t);
+    STRUCT(api, "ideatek:Lightmap", ideatek_lightmap_t);
 }
 
 [[maybe_unused]] static void role_author(const bridge_api_t *api)
@@ -95,6 +108,8 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_projection_kind_t", ideatek_projection_kind_t);
     ENUM(api, "ideatek:ideatek_topology_t", ideatek_topology_t);
     ENUM(api, "ideatek:ideatek_index_format_t", ideatek_index_format_t);
+    STRUCT(api, "ideatek:ideatek_texture_slot_t", ideatek_texture_slot_t);
+    ENUM(api, "ideatek:ideatek_gi_mode_t", ideatek_gi_mode_t);
     ENUM(api, "ideatek:ideatek_alpha_mode_t", ideatek_alpha_mode_t);
     ENUM(api, "ideatek:ideatek_dimension_t", ideatek_dimension_t);
     ENUM(api, "ideatek:ideatek_filter_t", ideatek_filter_t);
@@ -162,6 +177,23 @@ static const char WHO[] = MANIFEST;
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:LensFlare", ideatek_lens_flare_t),
         BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:MaterialClearcoat",
+        ideatek_material_clearcoat_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:MaterialSpecular",
+        ideatek_material_specular_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:MaterialTransmission",
+        ideatek_material_transmission_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:MaterialAnisotropy",
+        ideatek_material_anisotropy_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:MaterialDiffuseTransmission",
+        ideatek_material_diffuse_transmission_t), BRIDGE_ZEROED);
+    api->attach(api, id, TAG(api, "ideatek:MaterialUnlit"), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ReflectionProbe",
+        ideatek_reflection_probe_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:IrradianceVolume",
+        ideatek_irradiance_volume_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:Lightmap", ideatek_lightmap_t),
+        BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_renderer(const bridge_api_t *api)
@@ -175,6 +207,8 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_projection_kind_t", ideatek_projection_kind_t);
     ENUM(api, "ideatek:ideatek_topology_t", ideatek_topology_t);
     ENUM(api, "ideatek:ideatek_index_format_t", ideatek_index_format_t);
+    STRUCT(api, "ideatek:ideatek_texture_slot_t", ideatek_texture_slot_t);
+    ENUM(api, "ideatek:ideatek_gi_mode_t", ideatek_gi_mode_t);
     ENUM(api, "ideatek:ideatek_alpha_mode_t", ideatek_alpha_mode_t);
     ENUM(api, "ideatek:ideatek_dimension_t", ideatek_dimension_t);
     ENUM(api, "ideatek:ideatek_filter_t", ideatek_filter_t);
@@ -213,6 +247,17 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ChromaticAberration", ideatek_chromatic_aberration_t);
     STRUCT(api, "ideatek:FilmGrain", ideatek_film_grain_t);
     STRUCT(api, "ideatek:LensFlare", ideatek_lens_flare_t);
+    STRUCT(api, "ideatek:MaterialClearcoat", ideatek_material_clearcoat_t);
+    STRUCT(api, "ideatek:MaterialSpecular", ideatek_material_specular_t);
+    STRUCT(api, "ideatek:MaterialTransmission",
+        ideatek_material_transmission_t);
+    STRUCT(api, "ideatek:MaterialAnisotropy", ideatek_material_anisotropy_t);
+    STRUCT(api, "ideatek:MaterialDiffuseTransmission",
+        ideatek_material_diffuse_transmission_t);
+    TAG(api, "ideatek:MaterialUnlit");
+    STRUCT(api, "ideatek:ReflectionProbe", ideatek_reflection_probe_t);
+    STRUCT(api, "ideatek:IrradianceVolume", ideatek_irradiance_volume_t);
+    STRUCT(api, "ideatek:Lightmap", ideatek_lightmap_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:WorldTransform",
         ideatek_world_transform_t, BRIDGE_STRIP, BRIDGE_TABLE,
         BRIDGE_ON_DESTROY_REMOVE);

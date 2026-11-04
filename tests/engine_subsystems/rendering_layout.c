@@ -91,6 +91,21 @@ static void show_mesh_lod(void)
     AT(ideatek_mesh_lod_t, count);
 }
 
+static void show_texture_slot(void)
+{
+    SIZE(ideatek_texture_slot_t);
+    AT(ideatek_texture_slot_t, texture);
+    AT(ideatek_texture_slot_t, offset);
+    AT(ideatek_texture_slot_t, scale);
+    AT(ideatek_texture_slot_t, rotation);
+    AT(ideatek_texture_slot_t, texcoord);
+}
+
+static void show_gi_mode(void)
+{
+    SIZE(ideatek_gi_mode_t);
+}
+
 static void show_alpha_mode(void)
 {
     SIZE(ideatek_alpha_mode_t);
@@ -199,6 +214,8 @@ static void show_visibility(void)
     SIZE(ideatek_visibility_t);
     AT(ideatek_visibility_t, groups);
     AT(ideatek_visibility_t, cast_shadow);
+    AT(ideatek_visibility_t, gi_mode);
+    AT(ideatek_visibility_t, visible);
 }
 
 static void show_affects(void)
@@ -245,6 +262,7 @@ static void show_texture(void)
     AT(ideatek_texture_t, height);
     AT(ideatek_texture_t, depth_or_layers);
     AT(ideatek_texture_t, mip_count);
+    AT(ideatek_texture_t, top_mip);
     AT(ideatek_texture_t, revision);
     AT(ideatek_texture_t, dimension);
 }
@@ -409,6 +427,81 @@ static void show_lens_flare(void)
     AT(ideatek_lens_flare_t, threshold);
 }
 
+static void show_material_clearcoat(void)
+{
+    SIZE(ideatek_material_clearcoat_t);
+    AT(ideatek_material_clearcoat_t, texture);
+    AT(ideatek_material_clearcoat_t, roughness_texture);
+    AT(ideatek_material_clearcoat_t, normal_texture);
+    AT(ideatek_material_clearcoat_t, factor);
+    AT(ideatek_material_clearcoat_t, roughness);
+}
+
+static void show_material_specular(void)
+{
+    SIZE(ideatek_material_specular_t);
+    AT(ideatek_material_specular_t, texture);
+    AT(ideatek_material_specular_t, color_texture);
+    AT(ideatek_material_specular_t, color);
+    AT(ideatek_material_specular_t, factor);
+    AT(ideatek_material_specular_t, ior);
+}
+
+static void show_material_transmission(void)
+{
+    SIZE(ideatek_material_transmission_t);
+    AT(ideatek_material_transmission_t, texture);
+    AT(ideatek_material_transmission_t, thickness_texture);
+    AT(ideatek_material_transmission_t, attenuation_color);
+    AT(ideatek_material_transmission_t, factor);
+    AT(ideatek_material_transmission_t, thickness);
+    AT(ideatek_material_transmission_t, attenuation_distance);
+}
+
+static void show_material_anisotropy(void)
+{
+    SIZE(ideatek_material_anisotropy_t);
+    AT(ideatek_material_anisotropy_t, texture);
+    AT(ideatek_material_anisotropy_t, strength);
+    AT(ideatek_material_anisotropy_t, rotation);
+}
+
+static void show_material_diffuse_transmission(void)
+{
+    SIZE(ideatek_material_diffuse_transmission_t);
+    AT(ideatek_material_diffuse_transmission_t, texture);
+    AT(ideatek_material_diffuse_transmission_t, color_texture);
+    AT(ideatek_material_diffuse_transmission_t, color);
+    AT(ideatek_material_diffuse_transmission_t, factor);
+}
+
+static void show_reflection_probe(void)
+{
+    SIZE(ideatek_reflection_probe_t);
+    AT(ideatek_reflection_probe_t, cube);
+    AT(ideatek_reflection_probe_t, half_size);
+    AT(ideatek_reflection_probe_t, falloff);
+    AT(ideatek_reflection_probe_t, intensity);
+    AT(ideatek_reflection_probe_t, priority);
+}
+
+static void show_irradiance_volume(void)
+{
+    SIZE(ideatek_irradiance_volume_t);
+    AT(ideatek_irradiance_volume_t, texture);
+    AT(ideatek_irradiance_volume_t, half_size);
+    AT(ideatek_irradiance_volume_t, intensity);
+    AT(ideatek_irradiance_volume_t, priority);
+}
+
+static void show_lightmap(void)
+{
+    SIZE(ideatek_lightmap_t);
+    AT(ideatek_lightmap_t, texture);
+    AT(ideatek_lightmap_t, uv_rect);
+    AT(ideatek_lightmap_t, texcoord);
+}
+
 static void show_descriptors(void)
 {
     const char *descriptors[] = {
@@ -416,7 +509,8 @@ static void show_descriptors(void)
         ideatek_projection_kind_t_desc, ideatek_topology_t_desc,
         ideatek_index_format_t_desc, ideatek_semantic_t_desc,
         ideatek_mesh_stream_t_desc, ideatek_submesh_t_desc,
-        ideatek_mesh_lod_t_desc, ideatek_alpha_mode_t_desc,
+        ideatek_mesh_lod_t_desc, ideatek_texture_slot_t_desc,
+        ideatek_gi_mode_t_desc, ideatek_alpha_mode_t_desc,
         ideatek_dimension_t_desc, ideatek_filter_t_desc, ideatek_wrap_t_desc,
         ideatek_light_kind_t_desc, ideatek_cast_shadow_t_desc,
         ideatek_fog_shape_t_desc, ideatek_sky_kind_t_desc,
@@ -433,7 +527,13 @@ static void show_descriptors(void)
         ideatek_bloom_t_desc, ideatek_color_grade_t_desc,
         ideatek_depth_of_field_t_desc, ideatek_motion_blur_t_desc,
         ideatek_vignette_t_desc, ideatek_chromatic_aberration_t_desc,
-        ideatek_film_grain_t_desc, ideatek_lens_flare_t_desc };
+        ideatek_film_grain_t_desc, ideatek_lens_flare_t_desc,
+        ideatek_material_clearcoat_t_desc, ideatek_material_specular_t_desc,
+        ideatek_material_transmission_t_desc,
+        ideatek_material_anisotropy_t_desc,
+        ideatek_material_diffuse_transmission_t_desc,
+        ideatek_reflection_probe_t_desc, ideatek_irradiance_volume_t_desc,
+        ideatek_lightmap_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -447,6 +547,7 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_TOPOLOGY_VALUES), TEXT_OF(IDEATEK_INDEX_FORMAT_VALUES),
         TEXT_OF(IDEATEK_SEMANTIC_VALUES), TEXT_OF(IDEATEK_MESH_STREAM_FIELDS),
         TEXT_OF(IDEATEK_SUBMESH_FIELDS), TEXT_OF(IDEATEK_MESH_LOD_FIELDS),
+        TEXT_OF(IDEATEK_TEXTURE_SLOT_FIELDS), TEXT_OF(IDEATEK_GI_MODE_VALUES),
         TEXT_OF(IDEATEK_ALPHA_MODE_VALUES), TEXT_OF(IDEATEK_DIMENSION_VALUES),
         TEXT_OF(IDEATEK_FILTER_VALUES), TEXT_OF(IDEATEK_WRAP_VALUES),
         TEXT_OF(IDEATEK_LIGHT_KIND_VALUES), TEXT_OF(IDEATEK_CAST_SHADOW_VALUES),
@@ -468,7 +569,15 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_DEPTH_OF_FIELD_FIELDS),
         TEXT_OF(IDEATEK_MOTION_BLUR_FIELDS), TEXT_OF(IDEATEK_VIGNETTE_FIELDS),
         TEXT_OF(IDEATEK_CHROMATIC_ABERRATION_FIELDS),
-        TEXT_OF(IDEATEK_FILM_GRAIN_FIELDS), TEXT_OF(IDEATEK_LENS_FLARE_FIELDS) };
+        TEXT_OF(IDEATEK_FILM_GRAIN_FIELDS), TEXT_OF(IDEATEK_LENS_FLARE_FIELDS),
+        TEXT_OF(IDEATEK_MATERIAL_CLEARCOAT_FIELDS),
+        TEXT_OF(IDEATEK_MATERIAL_SPECULAR_FIELDS),
+        TEXT_OF(IDEATEK_MATERIAL_TRANSMISSION_FIELDS),
+        TEXT_OF(IDEATEK_MATERIAL_ANISOTROPY_FIELDS),
+        TEXT_OF(IDEATEK_MATERIAL_DIFFUSE_TRANSMISSION_FIELDS),
+        TEXT_OF(IDEATEK_REFLECTION_PROBE_FIELDS),
+        TEXT_OF(IDEATEK_IRRADIANCE_VOLUME_FIELDS),
+        TEXT_OF(IDEATEK_LIGHTMAP_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -482,6 +591,7 @@ int main(int argc, char **argv)
         { "topology", show_topology }, { "index_format", show_index_format },
         { "semantic", show_semantic }, { "mesh_stream", show_mesh_stream },
         { "submesh", show_submesh }, { "mesh_lod", show_mesh_lod },
+        { "texture_slot", show_texture_slot }, { "gi_mode", show_gi_mode },
         { "alpha_mode", show_alpha_mode }, { "dimension", show_dimension },
         { "filter", show_filter }, { "wrap", show_wrap },
         { "light_kind", show_light_kind }, { "cast_shadow", show_cast_shadow },
@@ -504,7 +614,15 @@ int main(int argc, char **argv)
         { "motion_blur", show_motion_blur }, { "vignette", show_vignette },
         { "chromatic_aberration", show_chromatic_aberration },
         { "film_grain", show_film_grain }, { "lens_flare", show_lens_flare },
-        { "descriptors", show_descriptors }, { "texts", show_texts }
+        { "material_clearcoat", show_material_clearcoat },
+        { "material_specular", show_material_specular },
+        { "material_transmission", show_material_transmission },
+        { "material_anisotropy", show_material_anisotropy },
+        { "material_diffuse_transmission", show_material_diffuse_transmission },
+        { "reflection_probe", show_reflection_probe },
+        { "irradiance_volume", show_irradiance_volume },
+        { "lightmap", show_lightmap }, { "descriptors", show_descriptors },
+        { "texts", show_texts }
     };
 
     for (size_t i = 0; argc > 1 && i < sizeof(MODES) / sizeof(MODES[0]); i++)
