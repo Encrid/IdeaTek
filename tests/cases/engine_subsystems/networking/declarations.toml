@@ -1,0 +1,131 @@
+[[case]]
+name = "a module declares the 20 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/networking_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["networking_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
+    "ideatek:ideatek_peer_state_t", "ideatek:ideatek_admit_t",
+    "ideatek:ideatek_net_kind_t", "ideatek:ideatek_relevance_mode_t",
+    "ideatek:NetSession", "ideatek:NetPeer", "ideatek:NetJoin",
+    "ideatek:NetJoinEvent", "ideatek:NetAdmit", "ideatek:Replicated",
+    "ideatek:NetEntity", "ideatek:NetOut", "ideatek:NetIn", "ideatek:NetViewer",
+    "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:NetCommandIn",
+    "ideatek:NetSessionState",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["networking_late"]
+
+[[case]]
+name = "the game loads with write on the session, the replication and the commands"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/networking_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["networking_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:NetSession", "ideatek:NetJoin", "ideatek:NetAdmit",
+    "ideatek:Replicated", "ideatek:NetOut", "ideatek:NetViewer",
+    "ideatek:NetRelevance", "ideatek:NetCommand",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
+    "ideatek:ideatek_admit_t", "ideatek:ideatek_net_kind_t",
+    "ideatek:ideatek_relevance_mode_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:NetSession", "ideatek:NetJoin", "ideatek:NetAdmit",
+    "ideatek:Replicated", "ideatek:NetOut", "ideatek:NetViewer",
+    "ideatek:NetRelevance",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
+    "ideatek:ideatek_admit_t", "ideatek:ideatek_net_kind_t",
+    "ideatek:ideatek_relevance_mode_t", "ideatek:NetCommand",
+]
+'''
+
+[[case]]
+name = "the net module loads with write on the peers, the ids, the bytes in and the clock"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/networking_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["networking_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:NetPeer", "ideatek:NetJoinEvent", "ideatek:NetEntity",
+    "ideatek:NetIn", "ideatek:NetCommandIn", "ideatek:NetSessionState",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
+    "ideatek:ideatek_peer_state_t", "ideatek:ideatek_admit_t",
+    "ideatek:ideatek_net_kind_t", "ideatek:ideatek_relevance_mode_t",
+    "ideatek:NetSession", "ideatek:NetJoin", "ideatek:NetAdmit",
+    "ideatek:Replicated", "ideatek:NetOut", "ideatek:NetViewer",
+    "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:Tick",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:NetPeer", "ideatek:NetJoinEvent", "ideatek:NetEntity",
+    "ideatek:NetIn", "ideatek:NetCommandIn",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
+    "ideatek:ideatek_peer_state_t", "ideatek:ideatek_admit_t",
+    "ideatek:ideatek_net_kind_t", "ideatek:ideatek_relevance_mode_t",
+    "ideatek:NetSession", "ideatek:NetJoin", "ideatek:NetAdmit",
+    "ideatek:Replicated", "ideatek:NetOut", "ideatek:NetViewer",
+    "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:Tick",
+    "ideatek:NetSessionState",
+]
+'''

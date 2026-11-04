@@ -1,0 +1,58 @@
+[parts.networking]
+name = "BC-IdeaTek-Networking"
+folder = "engine_subsystems/networking"
+uses = ["world", "sockets", "frame"]
+third_party = []
+
+[parts.networking.package]
+proof = "tests/engine_subsystems/networking/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world"]
+
+[compose.networking]
+part = "networking"
+from = "include/engine_subsystems/networking"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+networking_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+networking_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "networking_layout"
+kind = "program"
+part = "networking"
+test = true
+sources = ["tests/engine_subsystems/networking/layout/layout.c"]
+include = ["include/engine_subsystems/networking", "include/platform_abstraction/world", "{bridge}/include"]
+
+[[artifact]]
+name = "networking_probe"
+kind = "native_module"
+part = "networking"
+test = true
+sources = ["tests/engine_subsystems/networking/probe/probe.c"]
+include = ["include/engine_subsystems/networking", "include/platform_abstraction/world", "include/kernel/frame"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{networking_probe_words}"]
+
+[[artifact.variants]]
+name = "networking_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "networking_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{networking_spawn_words}"]
+
+[[artifact.variants]]
+name = "networking_module"
+defines = ["ROLE_MODULE"]
+manifest = ["test:module@1.0.0", "{networking_spawn_words}"]
