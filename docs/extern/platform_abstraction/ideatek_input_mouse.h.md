@@ -49,8 +49,9 @@ The game attaches `ideatek:MouseRequest` to the input entity, the entity of `ide
 | `order` | `uint32_t` | 8 | The rank of the event: `docs/extern/platform_abstraction/ideatek_input.h.md`, *The events*. |
 | `button` | `uint8_t` | 12 | The button: *The mouse*. |
 | `down` | `bool` | 13 | `true` when the button goes down. |
+| `clicks` | `uint8_t` | 14 | The number of the click in a quick series of clicks of the system. A double click gives 2. |
 
-Bytes 14 and 15 hold no field.
+Byte 15 holds no field.
 
 ## ideatek:MouseWheel
 
@@ -71,7 +72,7 @@ Bytes 14 and 15 hold no field.
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `mode` | `ideatek_mouse_mode_t` | 0 | The mode of the mouse. |
-| `cursor` | `ideatek_cursor_t` | 1 | The cursor that shows in the mode `IDEATEK_MOUSE_MODE_NORMAL`. |
+| `cursor` | `ideatek_cursor_t` | 1 | The cursor that shows in the modes `IDEATEK_MOUSE_MODE_NORMAL` and `IDEATEK_MOUSE_MODE_CONFINED`. |
 
 ### ideatek:ideatek_mouse_mode_t
 
@@ -82,6 +83,7 @@ Bytes 14 and 15 hold no field.
 | `IDEATEK_MOUSE_MODE_NORMAL` | 0 | The mouse moves freely, and the cursor shows. |
 | `IDEATEK_MOUSE_MODE_HIDDEN` | 1 | The cursor hides. |
 | `IDEATEK_MOUSE_MODE_RELATIVE` | 2 | The cursor hides, and the mouse gives only motions. `x` and `y` stay. |
+| `IDEATEK_MOUSE_MODE_CONFINED` | 3 | The cursor shows, and it stays inside the window. |
 
 ### ideatek:ideatek_cursor_t
 
@@ -114,11 +116,11 @@ Bytes 14 and 15 hold no field.
 | `ideatek:MouseRequest` | `ideatek_mouse_request_t` | `ideatek_mouse_request_t_desc` | `IDEATEK_MOUSE_REQUEST_FIELDS` |
 
 ```text
-{ IDEATEK_MOUSE_MODE_NORMAL = 0, IDEATEK_MOUSE_MODE_HIDDEN = 1, IDEATEK_MOUSE_MODE_RELATIVE = 2 }
+{ IDEATEK_MOUSE_MODE_NORMAL = 0, IDEATEK_MOUSE_MODE_HIDDEN = 1, IDEATEK_MOUSE_MODE_RELATIVE = 2, IDEATEK_MOUSE_MODE_CONFINED = 3 }
 { IDEATEK_CURSOR_DEFAULT = 0, IDEATEK_CURSOR_ARROW = 1, IDEATEK_CURSOR_IBEAM = 2, IDEATEK_CURSOR_CROSSHAIR = 3, IDEATEK_CURSOR_POINTING_HAND = 4, IDEATEK_CURSOR_RESIZE_EW = 5, IDEATEK_CURSOR_RESIZE_NS = 6, IDEATEK_CURSOR_RESIZE_NWSE = 7, IDEATEK_CURSOR_RESIZE_NESW = 8, IDEATEK_CURSOR_RESIZE_ALL = 9, IDEATEK_CURSOR_NOT_ALLOWED = 10 }
 { float x; float y; uint32_t buttons; }
 { float x; float y; float rel_x; float rel_y; uint32_t buttons; uint32_t order; }
-{ float x; float y; uint32_t order; uint8_t button; bool down; }
+{ float x; float y; uint32_t order; uint8_t button; bool down; uint8_t clicks; }
 { float ticks_x; float ticks_y; uint32_t order; }
 { ideatek_mouse_mode_t mode; ideatek_cursor_t cursor; }
 ```

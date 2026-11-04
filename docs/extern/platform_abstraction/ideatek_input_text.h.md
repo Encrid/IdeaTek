@@ -14,11 +14,20 @@ The OS draws the IME composition.
 ## ideatek:TextRequest
 
 `ideatek:TextRequest` asks for the text input.
-`ideatek_text_request_t` takes 1 byte. Its alignment is 1.
+`ideatek_text_request_t` takes 24 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `screen_keyboard` | `bool` | 0 | `true` shows the keyboard on the screen, on a system that has one. |
+| `x` | `float` | 0 | The left edge of the text field in the window, in pixels. |
+| `y` | `float` | 4 | The top edge of the text field in the window, in pixels. |
+| `width` | `float` | 8 | The width of the text field, in pixels. |
+| `height` | `float` | 12 | The height of the text field, in pixels. |
+| `cursor` | `float` | 16 | The place of the caret, from the left edge of the text field, in pixels. |
+| `screen_keyboard` | `bool` | 20 | `true` shows the keyboard on the screen, on a system that has one. |
+
+Bytes 21 to 23 hold no field.
+The OS shows the IME candidates next to the text field and the caret.
+When the caret moves, the game attaches `ideatek:TextRequest` again.
 
 ## ideatek:TextEvent
 
@@ -38,7 +47,7 @@ The OS draws the IME composition.
 | `ideatek:TextEvent` | `ideatek_text_event_t` | `ideatek_text_event_t_desc` | `IDEATEK_TEXT_EVENT_FIELDS` |
 
 ```text
-{ bool screen_keyboard; }
+{ float x; float y; float width; float height; float cursor; bool screen_keyboard; }
 { uint32_t code_point; uint32_t order; }
 ```
 
