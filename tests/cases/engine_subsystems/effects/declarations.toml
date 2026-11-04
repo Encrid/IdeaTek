@@ -1,0 +1,155 @@
+[[case]]
+name = "a module declares the 23 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/effects_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["effects_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_color_t", "ideatek:ideatek_curve_kind_t",
+    "ideatek:ideatek_emitter_state_t", "ideatek:ideatek_emitter_flags_t",
+    "ideatek:ideatek_emission_shape_t", "ideatek:ideatek_particle_kind_t",
+    "ideatek:ideatek_particle_align_t", "ideatek:ideatek_particle_sort_t",
+    "ideatek:ideatek_collision_source_t", "ideatek:ideatek_collision_mode_t",
+    "ideatek:ideatek_spawn_on_t", "ideatek:Curve", "ideatek:ParticleEmitter",
+    "ideatek:ParticleShape", "ideatek:ParticleVelocity",
+    "ideatek:ParticleForces", "ideatek:ParticleEmitterState",
+    "ideatek:ParticleEnded", "ideatek:ParticleLook",
+    "ideatek:ParticleCollision", "ideatek:ParticleSpawn",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["effects_late"]
+
+[[case]]
+name = "an author loads with write on the curves and the emitters"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:author@1.0.0, native, m/effects_author{library}"] }
+
+[case.folders]
+"{case}/m" = ["effects_author"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
+    "ideatek:ParticleVelocity", "ideatek:ParticleForces",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision", "ideatek:ParticleSpawn",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_color_t", "ideatek:ideatek_curve_kind_t",
+    "ideatek:ideatek_emitter_state_t", "ideatek:ideatek_emitter_flags_t",
+    "ideatek:ideatek_emission_shape_t", "ideatek:ideatek_particle_kind_t",
+    "ideatek:ideatek_particle_align_t", "ideatek:ideatek_particle_sort_t",
+    "ideatek:ideatek_collision_source_t", "ideatek:ideatek_collision_mode_t",
+    "ideatek:ideatek_spawn_on_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
+    "ideatek:ParticleVelocity", "ideatek:ParticleForces",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_color_t", "ideatek:ideatek_curve_kind_t",
+    "ideatek:ideatek_emitter_state_t", "ideatek:ideatek_emitter_flags_t",
+    "ideatek:ideatek_emission_shape_t", "ideatek:ideatek_particle_kind_t",
+    "ideatek:ideatek_particle_align_t", "ideatek:ideatek_particle_sort_t",
+    "ideatek:ideatek_collision_source_t", "ideatek:ideatek_collision_mode_t",
+    "ideatek:ideatek_spawn_on_t", "ideatek:ParticleSpawn",
+]
+'''
+
+[[case]]
+name = "the effects module loads with write on the states and the ends of the emitters"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:effects@1.0.0, native, m/effects_effects{library}"] }
+
+[case.folders]
+"{case}/m" = ["effects_effects"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:effects@1.0.0"]
+write = [
+    "ideatek:ParticleEmitterState", "ideatek:ParticleEnded",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_color_t",
+    "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:ideatek_curve_kind_t", "ideatek:ideatek_emitter_state_t",
+    "ideatek:ideatek_emitter_flags_t", "ideatek:ideatek_emission_shape_t",
+    "ideatek:ideatek_particle_kind_t", "ideatek:ideatek_particle_align_t",
+    "ideatek:ideatek_particle_sort_t", "ideatek:ideatek_collision_source_t",
+    "ideatek:ideatek_collision_mode_t", "ideatek:ideatek_spawn_on_t",
+    "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
+    "ideatek:ParticleVelocity", "ideatek:ParticleForces",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision",
+    "ideatek:ParticleSpawn", "ideatek:WorldTransform", "ideatek:Shape",
+    "ideatek:Wind", "ideatek:ForceField",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:effects@1.0.0"]
+write = [
+    "ideatek:ParticleEmitterState",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_color_t",
+    "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
+    "ideatek:ideatek_curve_kind_t", "ideatek:ideatek_emitter_state_t",
+    "ideatek:ideatek_emitter_flags_t", "ideatek:ideatek_emission_shape_t",
+    "ideatek:ideatek_particle_kind_t", "ideatek:ideatek_particle_align_t",
+    "ideatek:ideatek_particle_sort_t", "ideatek:ideatek_collision_source_t",
+    "ideatek:ideatek_collision_mode_t", "ideatek:ideatek_spawn_on_t",
+    "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
+    "ideatek:ParticleVelocity", "ideatek:ParticleForces",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision",
+    "ideatek:ParticleSpawn", "ideatek:WorldTransform", "ideatek:Shape",
+    "ideatek:Wind", "ideatek:ForceField", "ideatek:ParticleEnded",
+]
+'''
