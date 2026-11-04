@@ -6,7 +6,7 @@ third_party = []
 
 [parts.resources.package]
 proof = "tests/kernel/resources_proof.c"
-include = ["{bridge}/include", "{root}/include/platform_abstraction"]
+include = ["{bridge}/include", "{root}/include/kernel", "{root}/include/platform_abstraction"]
 
 [compose.resources]
 part = "resources"
@@ -16,13 +16,13 @@ into = "include"
 
 [variables]
 resources_probe_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
-    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
 ]
 
 resources_spawn_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
-    "spans=4096", "spawns=2", "changes=1024", "persistent=128", "hot_reload=false",
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
 ]
 
 [[artifact]]
@@ -46,7 +46,6 @@ manifest = ["test:probe@1.0.0", "{resources_probe_words}"]
 [[artifact.variants]]
 name = "resources_late"
 defines = ["ROLE_LATE"]
-manifest = ["test:probe@1.0.0", "{resources_probe_words}"]
 
 [[artifact.variants]]
 name = "resources_game"
@@ -59,6 +58,11 @@ defines = ["ROLE_LOADER"]
 manifest = ["test:loader@1.0.0", "{resources_spawn_words}"]
 
 [[artifact.variants]]
+name = "resources_source"
+defines = ["ROLE_SOURCE"]
+manifest = ["test:source@1.0.0", "{resources_spawn_words}"]
+
+[[artifact.variants]]
 name = "resources_module"
-defines = ["ROLE_RESOURCES"]
-manifest = ["test:resources@1.0.0", "{resources_spawn_words}"]
+defines = ["ROLE_MODULE"]
+manifest = ["test:module@1.0.0", "{resources_spawn_words}"]

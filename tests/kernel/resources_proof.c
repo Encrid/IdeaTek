@@ -7,9 +7,9 @@
 
 int main(void)
 {
-    ideatek_resource_t resource = { .state = IDEATEK_LOAD_STATE_LOADED };
+    ideatek_resource_t value = { .state = IDEATEK_LOAD_STATE_LOADED };
 
-    if (resource.state != IDEATEK_LOAD_STATE_LOADED)
+    if (value.state != IDEATEK_LOAD_STATE_LOADED)
         return (1);
     return (sizeof(ideatek_resource_t_desc) > 1 ? 0 : 1);
 }

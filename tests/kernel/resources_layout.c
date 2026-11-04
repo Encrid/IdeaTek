@@ -19,17 +19,17 @@ typedef struct {
     void (*show)(void);
 } show_mode_t;
 
-static void show_state(void)
+static void show_load_state(void)
 {
     SIZE(ideatek_load_state_t);
 }
 
-static void show_error(void)
+static void show_resource_error(void)
 {
     SIZE(ideatek_resource_error_t);
 }
 
-static void show_load(void)
+static void show_resource_load(void)
 {
     SIZE(ideatek_resource_load_t);
     AT(ideatek_resource_load_t, owner);
@@ -37,9 +37,17 @@ static void show_load(void)
     AT(ideatek_resource_load_t, type);
     AT(ideatek_resource_load_t, settings);
     AT(ideatek_resource_load_t, reload_owner);
+    AT(ideatek_resource_load_t, priority);
 }
 
-static void show_handle(void)
+static void show_resource_add(void)
+{
+    SIZE(ideatek_resource_add_t);
+    AT(ideatek_resource_add_t, resource);
+    AT(ideatek_resource_add_t, type);
+}
+
+static void show_resource_handle(void)
 {
     SIZE(ideatek_resource_handle_t);
     AT(ideatek_resource_handle_t, resource);
@@ -56,76 +64,136 @@ static void show_resource(void)
     AT(ideatek_resource_t, error);
 }
 
-static void show_loader(void)
+static void show_resource_loader(void)
 {
     SIZE(ideatek_resource_loader_t);
     AT(ideatek_resource_loader_t, name);
     AT(ideatek_resource_loader_t, type);
     AT(ideatek_resource_loader_t, extensions);
+    AT(ideatek_resource_loader_t, magic);
+    AT(ideatek_resource_loader_t, ranged);
 }
 
-static void show_bytes(void)
+static void show_resource_bytes(void)
 {
     SIZE(ideatek_resource_bytes_t);
     AT(ideatek_resource_bytes_t, loader);
+    AT(ideatek_resource_bytes_t, offset);
+    AT(ideatek_resource_bytes_t, size);
     AT(ideatek_resource_bytes_t, data);
     AT(ideatek_resource_bytes_t, settings);
+    AT(ideatek_resource_bytes_t, error);
 }
 
-static void show_outcome(void)
+static void show_resource_read(void)
+{
+    SIZE(ideatek_resource_read_t);
+    AT(ideatek_resource_read_t, offset);
+    AT(ideatek_resource_read_t, length);
+    AT(ideatek_resource_read_t, priority);
+}
+
+static void show_resource_outcome(void)
 {
     SIZE(ideatek_resource_outcome_t);
     AT(ideatek_resource_outcome_t, error);
 }
 
-static void show_label(void)
+static void show_resource_label(void)
 {
     SIZE(ideatek_resource_label_t);
     AT(ideatek_resource_label_t, resource);
     AT(ideatek_resource_label_t, label);
 }
 
+static void show_raw_bytes(void)
+{
+    SIZE(ideatek_raw_bytes_t);
+    AT(ideatek_raw_bytes_t, data);
+}
+
+static void show_resource_source(void)
+{
+    SIZE(ideatek_resource_source_t);
+    AT(ideatek_resource_source_t, name);
+}
+
+static void show_resource_source_read(void)
+{
+    SIZE(ideatek_resource_source_read_t);
+    AT(ideatek_resource_source_read_t, source);
+    AT(ideatek_resource_source_read_t, offset);
+    AT(ideatek_resource_source_read_t, length);
+    AT(ideatek_resource_source_read_t, path);
+    AT(ideatek_resource_source_read_t, priority);
+}
+
+static void show_resource_source_result(void)
+{
+    SIZE(ideatek_resource_source_result_t);
+    AT(ideatek_resource_source_result_t, size);
+    AT(ideatek_resource_source_result_t, data);
+    AT(ideatek_resource_source_result_t, error);
+}
+
 static void show_descriptors(void)
 {
-    static const char *DESCRIPTORS[] = {
+    const char *descriptors[] = {
         ideatek_load_state_t_desc, ideatek_resource_error_t_desc,
-        ideatek_resource_load_t_desc, ideatek_resource_handle_t_desc,
-        ideatek_resource_t_desc, ideatek_resource_loader_t_desc,
-        ideatek_resource_bytes_t_desc, ideatek_resource_outcome_t_desc,
-        ideatek_resource_label_t_desc
-    };
+        ideatek_resource_load_t_desc, ideatek_resource_add_t_desc,
+        ideatek_resource_handle_t_desc, ideatek_resource_t_desc,
+        ideatek_resource_loader_t_desc, ideatek_resource_bytes_t_desc,
+        ideatek_resource_read_t_desc, ideatek_resource_outcome_t_desc,
+        ideatek_resource_label_t_desc, ideatek_raw_bytes_t_desc,
+        ideatek_resource_source_t_desc, ideatek_resource_source_read_t_desc,
+        ideatek_resource_source_result_t_desc };
 
-    for (size_t i = 0; i < sizeof(DESCRIPTORS) / sizeof(DESCRIPTORS[0]); i++)
-        printf("%s\n", DESCRIPTORS[i]);
+    for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
+        printf("%s\n", descriptors[i]);
 }
 
 static void show_texts(void)
 {
-    static const char *TEXTS[] = {
+    const char *texts[] = {
         TEXT_OF(IDEATEK_LOAD_STATE_VALUES),
         TEXT_OF(IDEATEK_RESOURCE_ERROR_VALUES),
         TEXT_OF(IDEATEK_RESOURCE_LOAD_FIELDS),
+        TEXT_OF(IDEATEK_RESOURCE_ADD_FIELDS),
         TEXT_OF(IDEATEK_RESOURCE_HANDLE_FIELDS),
         TEXT_OF(IDEATEK_RESOURCE_FIELDS),
         TEXT_OF(IDEATEK_RESOURCE_LOADER_FIELDS),
         TEXT_OF(IDEATEK_RESOURCE_BYTES_FIELDS),
+        TEXT_OF(IDEATEK_RESOURCE_READ_FIELDS),
         TEXT_OF(IDEATEK_RESOURCE_OUTCOME_FIELDS),
-        TEXT_OF(IDEATEK_RESOURCE_LABEL_FIELDS)
-    };
+        TEXT_OF(IDEATEK_RESOURCE_LABEL_FIELDS),
+        TEXT_OF(IDEATEK_RAW_BYTES_FIELDS),
+        TEXT_OF(IDEATEK_RESOURCE_SOURCE_FIELDS),
+        TEXT_OF(IDEATEK_RESOURCE_SOURCE_READ_FIELDS),
+        TEXT_OF(IDEATEK_RESOURCE_SOURCE_RESULT_FIELDS) };
 
-    for (size_t i = 0; i < sizeof(TEXTS) / sizeof(TEXTS[0]); i++)
-        printf("%s\n", TEXTS[i]);
+    for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
+        printf("%s\n", texts[i]);
 }
 
 int main(int argc, char **argv)
 {
     static const show_mode_t MODES[] = {
-        { "state", show_state }, { "error", show_error },
-        { "load", show_load }, { "handle", show_handle },
-        { "resource", show_resource }, { "loader", show_loader },
-        { "bytes", show_bytes }, { "outcome", show_outcome },
-        { "label", show_label }, { "descriptors", show_descriptors },
-        { "texts", show_texts }
+        { "load_state", show_load_state },
+        { "resource_error", show_resource_error },
+        { "resource_load", show_resource_load },
+        { "resource_add", show_resource_add },
+        { "resource_handle", show_resource_handle },
+        { "resource", show_resource },
+        { "resource_loader", show_resource_loader },
+        { "resource_bytes", show_resource_bytes },
+        { "resource_read", show_resource_read },
+        { "resource_outcome", show_resource_outcome },
+        { "resource_label", show_resource_label },
+        { "raw_bytes", show_raw_bytes },
+        { "resource_source", show_resource_source },
+        { "resource_source_read", show_resource_source_read },
+        { "resource_source_result", show_resource_source_result },
+        { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 
     for (size_t i = 0; argc > 1 && i < sizeof(MODES) / sizeof(MODES[0]); i++)
