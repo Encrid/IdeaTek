@@ -1,0 +1,115 @@
+[[case]]
+name = "ideatek_save_action_t is 1 byte"
+run = ["{out}/persistence_layout{exe}", "save_action"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_request"] }
+
+[[case]]
+name = "ideatek_save_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_request"]
+claims = { status = 0, order = ["size 32", "alignment 8", "groups 0", "slot 8", "info 16", "action 24"] }
+false = { run = ["{out}/persistence_layout{exe}", "saved"] }
+
+[[case]]
+name = "ideatek_saved_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "saved"]
+claims = { status = 0, order = ["size 16", "alignment 8", "prefab 0", "groups 8"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_id"] }
+
+[[case]]
+name = "ideatek_save_id_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_id"]
+claims = { status = 0, order = ["size 8", "alignment 8", "id 0"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_participant"] }
+
+[[case]]
+name = "ideatek_save_participant_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_participant"]
+claims = { status = 0, order = ["size 8", "alignment 8", "tag 0"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_chunk"] }
+
+[[case]]
+name = "ideatek_save_chunk_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_chunk"]
+claims = { status = 0, order = ["size 32", "alignment 8", "request 0", "tag 8", "data 16", "version 24"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_ready"] }
+
+[[case]]
+name = "ideatek_save_ready_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_ready"]
+claims = { status = 0, order = ["size 16", "alignment 8", "request 0", "tag 8"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_refuse"] }
+
+[[case]]
+name = "ideatek_save_refuse_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_refuse"]
+claims = { status = 0, order = ["size 24", "alignment 8", "request 0", "tag 8", "reason 16"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_state"] }
+
+[[case]]
+name = "ideatek_save_state_t is 1 byte"
+run = ["{out}/persistence_layout{exe}", "save_state"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_result"] }
+
+[[case]]
+name = "ideatek_save_error_t is 1 byte"
+run = ["{out}/persistence_layout{exe}", "save_error"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_result"] }
+
+[[case]]
+name = "ideatek_save_result_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_result"]
+claims = { status = 0, order = ["size 2", "alignment 1", "state 0", "error 1"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_info"] }
+
+[[case]]
+name = "ideatek_save_info_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/persistence_layout{exe}", "save_info"]
+claims = { status = 0, order = ["size 56", "alignment 8", "request 0", "time 8", "bytes 16", "groups 24", "slot 32", "info 40", "version 48"] }
+false = { run = ["{out}/persistence_layout{exe}", "save_action"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/persistence_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_SAVE_ACTION_SAVE = 0, IDEATEK_SAVE_ACTION_LOAD = 1, IDEATEK_SAVE_ACTION_INFO = 2, IDEATEK_SAVE_ACTION_LIST = 3, IDEATEK_SAVE_ACTION_REMOVE = 4 }",
+    "{ uint64_t groups; bridge_text_t slot; bridge_text_t info; ideatek_save_action_t action; }",
+    "{ uint64_t prefab; uint64_t groups; }",
+    "{ uint64_t id; }",
+    "{ uint64_t tag; }",
+    "{ ideatek_entity_t request; uint64_t tag; bridge_text_t data; uint32_t version; }",
+    "{ ideatek_entity_t request; uint64_t tag; }",
+    "{ ideatek_entity_t request; uint64_t tag; int32_t reason; }",
+    "uint8_t { IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }",
+    "uint8_t { IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6 }",
+    "{ ideatek_save_state_t state; ideatek_save_error_t error; }",
+    "{ ideatek_entity_t request; int64_t time; uint64_t bytes; uint64_t groups; bridge_text_t slot; bridge_text_t info; uint32_t version; }",
+] }
+false = { run = ["{out}/persistence_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/persistence_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_SAVE_ACTION_SAVE = 0, IDEATEK_SAVE_ACTION_LOAD = 1, IDEATEK_SAVE_ACTION_INFO = 2, IDEATEK_SAVE_ACTION_LIST = 3, IDEATEK_SAVE_ACTION_REMOVE = 4 }",
+    "{ uint64_t groups; bridge_text_t slot; bridge_text_t info; ideatek_save_action_t action; }",
+    "{ uint64_t prefab; uint64_t groups; }",
+    "{ uint64_t id; }",
+    "{ uint64_t tag; }",
+    "{ ideatek_entity_t request; uint64_t tag; bridge_text_t data; uint32_t version; }",
+    "{ ideatek_entity_t request; uint64_t tag; }",
+    "{ ideatek_entity_t request; uint64_t tag; int32_t reason; }",
+    "{ IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }",
+    "{ IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6 }",
+    "{ ideatek_save_state_t state; ideatek_save_error_t error; }",
+    "{ ideatek_entity_t request; int64_t time; uint64_t bytes; uint64_t groups; bridge_text_t slot; bridge_text_t info; uint32_t version; }",
+] }
+false = { run = ["{out}/persistence_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the header of the world part and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/persistence", "-I", "include/platform_abstraction/world", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/persistence/layout/alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems/persistence", "-I", "include/platform_abstraction/world", "-c", "tests/engine_subsystems/persistence/layout/alone.c", "-o", "{case}/alone.o"] }

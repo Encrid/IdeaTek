@@ -1,0 +1,157 @@
+[[case]]
+name = "a module declares the 13 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/persistence_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["persistence_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:ideatek_save_state_t", "ideatek:ideatek_save_error_t",
+    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveId",
+    "ideatek:SaveParticipant", "ideatek:SaveChunk", "ideatek:SaveReady",
+    "ideatek:SaveRefuse", "ideatek:SaveResult", "ideatek:SaveInfo",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["persistence_late"]
+
+[[case]]
+name = "the game loads with write on the requests and the saved entities"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/persistence_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["persistence_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:SaveRequest", "ideatek:Saved",
+]
+read = [
+    "ideatek:ideatek_save_action_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:SaveRequest",
+]
+read = [
+    "ideatek:ideatek_save_action_t", "ideatek:Saved",
+]
+'''
+
+[[case]]
+name = "a participant loads with write on its chunks and its answers"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:participant@1.0.0, native, m/persistence_participant{library}"] }
+
+[case.folders]
+"{case}/m" = ["persistence_participant"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:participant@1.0.0"]
+write = [
+    "ideatek:SaveParticipant", "ideatek:SaveChunk", "ideatek:SaveReady",
+    "ideatek:SaveRefuse",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:SaveRequest", "ideatek:SaveId",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:participant@1.0.0"]
+write = [
+    "ideatek:SaveParticipant", "ideatek:SaveChunk", "ideatek:SaveReady",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:SaveRequest", "ideatek:SaveId", "ideatek:SaveRefuse",
+]
+'''
+
+[[case]]
+name = "the save module loads with write on the ids, the chunks of a load, the results and the heads"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:saver@1.0.0, native, m/persistence_saver{library}"] }
+
+[case.folders]
+"{case}/m" = ["persistence_saver"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:saver@1.0.0"]
+write = [
+    "ideatek:SaveId", "ideatek:SaveChunk", "ideatek:SaveResult",
+    "ideatek:SaveInfo",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:ideatek_save_state_t", "ideatek:ideatek_save_error_t",
+    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveParticipant",
+    "ideatek:SaveReady", "ideatek:SaveRefuse",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:saver@1.0.0"]
+write = [
+    "ideatek:SaveId", "ideatek:SaveChunk", "ideatek:SaveResult",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
+    "ideatek:ideatek_save_state_t", "ideatek:ideatek_save_error_t",
+    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveParticipant",
+    "ideatek:SaveReady", "ideatek:SaveRefuse", "ideatek:SaveInfo",
+]
+'''

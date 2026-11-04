@@ -1,0 +1,63 @@
+[parts.persistence]
+name = "BC-IdeaTek-Persistence"
+folder = "engine_subsystems/persistence"
+uses = ["world", "files"]
+third_party = []
+
+[parts.persistence.package]
+proof = "tests/engine_subsystems/persistence/package/proof.c"
+include = ["{bridge}/include", "{root}/include/platform_abstraction/world"]
+
+[compose.persistence]
+part = "persistence"
+from = "include/engine_subsystems/persistence"
+headers = ["*.h"]
+into = "include"
+
+[variables]
+persistence_probe_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+persistence_spawn_words = [
+    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "persistence_layout"
+kind = "program"
+part = "persistence"
+test = true
+sources = ["tests/engine_subsystems/persistence/layout/layout.c"]
+include = ["include/engine_subsystems/persistence", "include/platform_abstraction/world", "{bridge}/include"]
+
+[[artifact]]
+name = "persistence_probe"
+kind = "native_module"
+part = "persistence"
+test = true
+sources = ["tests/engine_subsystems/persistence/probe/probe.c"]
+include = ["include/engine_subsystems/persistence", "include/platform_abstraction/world"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{persistence_probe_words}"]
+
+[[artifact.variants]]
+name = "persistence_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "persistence_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{persistence_spawn_words}"]
+
+[[artifact.variants]]
+name = "persistence_participant"
+defines = ["ROLE_PARTICIPANT"]
+manifest = ["test:participant@1.0.0", "{persistence_spawn_words}"]
+
+[[artifact.variants]]
+name = "persistence_saver"
+defines = ["ROLE_SAVER"]
+manifest = ["test:saver@1.0.0", "{persistence_spawn_words}"]
