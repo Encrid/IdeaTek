@@ -16,6 +16,7 @@
         ideatek_entity_t target; \
         int32_t order; \
         float scale; \
+        bool right_to_left; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_root_t, IDEATEK_UI_ROOT_FIELDS);
@@ -47,7 +48,8 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_length_t, IDEATEK_UI_LENGTH_FIELDS);
 
     #define IDEATEK_UI_DISPLAY_VALUES { \
         IDEATEK_UI_DISPLAY_NONE = 0, \
-        IDEATEK_UI_DISPLAY_FLEX = 1 \
+        IDEATEK_UI_DISPLAY_FLEX = 1, \
+        IDEATEK_UI_DISPLAY_GRID = 2 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_ui_display_t,
@@ -67,7 +69,9 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_ui_position_t,
 
     #define IDEATEK_UI_DIRECTION_VALUES { \
         IDEATEK_UI_DIRECTION_ROW = 0, \
-        IDEATEK_UI_DIRECTION_COLUMN = 1 \
+        IDEATEK_UI_DIRECTION_COLUMN = 1, \
+        IDEATEK_UI_DIRECTION_ROW_REVERSE = 2, \
+        IDEATEK_UI_DIRECTION_COLUMN_REVERSE = 3 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_ui_direction_t,
@@ -267,6 +271,16 @@ BRIDGE_SCHEMA_ENUM_TYPE(ideatek_text_wrap_t,
 BRIDGE_SCHEMA_ENUM_DESC(ideatek_text_wrap_t,
     uint8_t, IDEATEK_TEXT_WRAP_VALUES);
 
+    #define IDEATEK_TEXT_OVERFLOW_VALUES { \
+        IDEATEK_TEXT_OVERFLOW_CLIP = 0, \
+        IDEATEK_TEXT_OVERFLOW_ELLIPSIS = 1 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_text_overflow_t,
+    uint8_t, IDEATEK_TEXT_OVERFLOW_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_text_overflow_t,
+    uint8_t, IDEATEK_TEXT_OVERFLOW_VALUES);
+
     #define IDEATEK_UI_TEXT_LOOK_FIELDS { \
         ideatek_entity_t font; \
         ideatek_color_t color; \
@@ -277,8 +291,10 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_text_wrap_t,
         float outline; \
         float shadow_x; \
         float shadow_y; \
+        float letter_spacing; \
         ideatek_text_align_t align; \
         ideatek_text_wrap_t wrap; \
+        ideatek_text_overflow_t overflow; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_text_look_t, IDEATEK_UI_TEXT_LOOK_FIELDS);
@@ -287,6 +303,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_text_look_t, IDEATEK_UI_TEXT_LOOK_FIELDS);
     #define IDEATEK_UI_TEXT_SPAN_FIELDS { \
         bridge_text_t text; \
         ideatek_entity_t font; \
+        ideatek_entity_t image; \
         ideatek_color_t color; \
         float size; \
     }
@@ -782,12 +799,128 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_anchor_state_t,
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_anchor_state_t,
     IDEATEK_UI_ANCHOR_STATE_FIELDS);
 
+    #define IDEATEK_UI_GRID_FIELDS { \
+        uint32_t columns; \
+        uint32_t rows; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_grid_t, IDEATEK_UI_GRID_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_grid_t, IDEATEK_UI_GRID_FIELDS);
+
+    #define IDEATEK_UI_GRID_ITEM_FIELDS { \
+        uint32_t column; \
+        uint32_t row; \
+        uint32_t column_span; \
+        uint32_t row_span; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_grid_item_t, IDEATEK_UI_GRID_ITEM_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_grid_item_t, IDEATEK_UI_GRID_ITEM_FIELDS);
+
+    #define IDEATEK_UI_TRANSFORM_FIELDS { \
+        float x; \
+        float y; \
+        float scale_x; \
+        float scale_y; \
+        float rotation; \
+        float pivot_x; \
+        float pivot_y; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_transform_t, IDEATEK_UI_TRANSFORM_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_transform_t, IDEATEK_UI_TRANSFORM_FIELDS);
+
+    #define IDEATEK_UI_OPACITY_FIELDS { \
+        float value; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_opacity_t, IDEATEK_UI_OPACITY_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_opacity_t, IDEATEK_UI_OPACITY_FIELDS);
+
+    #define IDEATEK_GRADIENT_KIND_VALUES { \
+        IDEATEK_GRADIENT_KIND_LINEAR = 0, \
+        IDEATEK_GRADIENT_KIND_RADIAL = 1, \
+        IDEATEK_GRADIENT_KIND_CONIC = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gradient_kind_t,
+    uint8_t, IDEATEK_GRADIENT_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_gradient_kind_t,
+    uint8_t, IDEATEK_GRADIENT_KIND_VALUES);
+
+    #define IDEATEK_UI_GRADIENT_FIELDS { \
+        bridge_text_t stops; \
+        uint32_t count; \
+        float angle; \
+        ideatek_gradient_kind_t kind; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_gradient_t, IDEATEK_UI_GRADIENT_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_gradient_t, IDEATEK_UI_GRADIENT_FIELDS);
+
+    #define IDEATEK_UI_ACCESSIBLE_FIELDS { \
+        bridge_text_t label; \
+        bridge_text_t description; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_accessible_t,
+    IDEATEK_UI_ACCESSIBLE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_accessible_t,
+    IDEATEK_UI_ACCESSIBLE_FIELDS);
+
+    #define IDEATEK_UI_SHADER_FIELDS { \
+        bridge_text_t name; \
+        bridge_text_t params; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_shader_t, IDEATEK_UI_SHADER_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_shader_t, IDEATEK_UI_SHADER_FIELDS);
+
+    #define IDEATEK_UI_BLUR_FIELDS { \
+        float radius; \
+        bool backdrop; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_blur_t, IDEATEK_UI_BLUR_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_blur_t, IDEATEK_UI_BLUR_FIELDS);
+
+    #define IDEATEK_EASE_VALUES { \
+        IDEATEK_EASE_LINEAR = 0, \
+        IDEATEK_EASE_QUADRATIC = 1, \
+        IDEATEK_EASE_CUBIC = 2, \
+        IDEATEK_EASE_QUARTIC = 3, \
+        IDEATEK_EASE_QUINTIC = 4, \
+        IDEATEK_EASE_SINE = 5, \
+        IDEATEK_EASE_EXPONENTIAL = 6, \
+        IDEATEK_EASE_CIRCULAR = 7, \
+        IDEATEK_EASE_BACK = 8, \
+        IDEATEK_EASE_ELASTIC = 9, \
+        IDEATEK_EASE_BOUNCE = 10 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_ease_t, uint8_t, IDEATEK_EASE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_ease_t, uint8_t, IDEATEK_EASE_VALUES);
+
+    #define IDEATEK_EASE_DIRECTION_VALUES { \
+        IDEATEK_EASE_DIRECTION_IN = 0, \
+        IDEATEK_EASE_DIRECTION_OUT = 1, \
+        IDEATEK_EASE_DIRECTION_IN_OUT = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_ease_direction_t,
+    uint8_t, IDEATEK_EASE_DIRECTION_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_ease_direction_t,
+    uint8_t, IDEATEK_EASE_DIRECTION_VALUES);
+
     #define IDEATEK_UI_STYLE_FIELDS { \
         ideatek_entity_t normal; \
         ideatek_entity_t hovered; \
         ideatek_entity_t pressed; \
         ideatek_entity_t disabled; \
         ideatek_entity_t focus; \
+        float transition; \
+        ideatek_ease_t ease; \
+        ideatek_ease_direction_t ease_direction; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_style_t, IDEATEK_UI_STYLE_FIELDS);
