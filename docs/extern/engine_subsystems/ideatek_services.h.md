@@ -19,10 +19,29 @@ The module destroys the entities of a list 1 round after the game destroys the r
 
 ## The users and the tickets
 
-The module writes 1 entity for each local user. On a console, the OS pairs each gamepad with a user, and the module writes `ideatek:DeviceUser` on the gamepad entity of the input part.
-The game uses it to give the gamepad to a player of the map of the inputs.
+The module writes 1 entity for each local user.
 A client puts the bytes of its ticket into the join of the networking part. The server checks them with `ideatek:TicketCheck`, then admits the peer.
 `owner` differs from `account` for a game that a friend shares.
+
+## The game servers
+
+A dedicated server or a host writes `ideatek:GameServer` on 1 entity, and the module advertises it on the platform. The module changes the advert when the game changes a field.
+A client spawns `ideatek:ServerSearch`, and the module writes 1 `ideatek:ServerFound` for each server, as a list of the requests. `filter` holds lines of `key=value`, and an empty filter keeps each server.
+A client sends its ticket in the join of the networking part, and the server checks it with `ideatek:TicketCheck`.
+
+## The platform
+
+At the start, the module writes `ideatek:PlatformInfo` on 1 entity. It holds the language, the branch of the build, and the Steam Deck and Big Picture flags.
+It writes `ideatek:ParentalLimits` on each user entity. The game hides each blocked feature, for example the chat.
+`ideatek:TextFilter` gives the text that the platform filters, in `ideatek:TextFiltered` on the same entity. Each chat line and each name of a player goes through it.
+
+`ideatek:OverlayRequest` opens the overlay on a page. An `account` of 0 is the local user, and INVITE invites to `lobby`.
+
+## The recording and the screenshots
+
+`ideatek:TimelineMode` tells the platform what the game does now, so its recording marks the play and the menus. `ideatek:TimelineEvent` puts a marker in the recording, and `clip` proposes a clip of the recording.
+`ideatek:ScreenshotRequest` takes a screenshot with the platform. When the user takes one with the key of the platform, the module spawns `ideatek:ScreenshotTaken`.
+`ideatek:AvatarRequest` gives `ideatek:Avatar`: pixels of RGBA8, row by row from the top. The game makes its own texture from them.
 
 ## The achievements, the stats and the scores
 
@@ -46,7 +65,7 @@ A server of the game puts its address in a value. The relay of a platform is a b
 
 The module plays each member of a channel through a stream player of the sound part, on the bus of the channel. With a speaker entity, the voice plays at that entity, for a voice near an avatar.
 `TRANSMIT` is the push to talk of the game. The detection of the voice and the codec are choices of the module.
-A service module of voice uses its own transport. A module for Steam sends the frames as an EVENT of the networking part.
+A service module of voice uses its own transport. A module for Steam sends the frames as an EVENT of `ideatek:RowChanges` of the changes part.
 
 ## The content
 
@@ -74,8 +93,6 @@ Code in a mod is a module of Bridge, not an item of this part.
 | --- | --- | --- |
 | 0 | `IDEATEK_PLATFORM_NONE` | No platform: the null module. |
 | 1 | `IDEATEK_PLATFORM_STEAM` | Steam. |
-| 2 | `IDEATEK_PLATFORM_EOS` | Epic Online Services. |
-| 255 | `IDEATEK_PLATFORM_OTHER` | Another platform. |
 
 ## ideatek:ideatek_sign_status_t
 
@@ -102,15 +119,6 @@ Code in a mod is a module of Bridge, not an item of this part.
 
 Bytes 18 to 23 hold no field.
 
-## ideatek:DeviceUser
-
-`ideatek:DeviceUser` names the user that the OS pairs with a gamepad, on the gamepad entity.
-`ideatek_device_user_t` takes 8 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `user` | `ideatek_entity_t` | 0 | The user. |
-
 ## ideatek:ideatek_sign_in_flags_t
 
 `ideatek_sign_in_flags_t` names the options of a sign-in.
@@ -122,7 +130,7 @@ Bytes 18 to 23 hold no field.
 
 ## ideatek:SignInRequest
 
-`ideatek:SignInRequest` asks for a user, for example after "press start" on a console.
+`ideatek:SignInRequest` asks for a user, for example at the start of the game.
 `ideatek_sign_in_request_t` takes 1 byte. Its alignment is 1.
 
 | Field | C type | Offset | Value |
@@ -737,6 +745,272 @@ Bytes 17 to 23 hold no field.
 
 Bytes 9 to 11 hold no field.
 
+## ideatek:GameServer
+
+`ideatek:GameServer` advertises a server of the game: *The game servers*.
+`ideatek_game_server_t` takes 48 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `name` | `bridge_text_t` | 0 | The name of the server. |
+| `map` | `bridge_text_t` | 8 | The map. |
+| `tags` | `bridge_text_t` | 16 | The tags, separated by commas. |
+| `address` | `bridge_text_t` | 24 | The address and the port, as `ip:port`. |
+| `players` | `uint32_t` | 32 | The players now. |
+| `max_players` | `uint32_t` | 36 | The most players. |
+| `bots` | `uint32_t` | 40 | The bots now. |
+| `password` | `bool` | 44 | `true` if a join needs a password. |
+| `dedicated` | `bool` | 45 | `true` for a dedicated server, `false` for a host. |
+
+Bytes 46 to 47 hold no field.
+
+## ideatek:ideatek_server_list_t
+
+`ideatek_server_list_t` tells which servers a search lists.
+`ideatek_server_list_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_SERVER_LIST_INTERNET` | The servers on the internet. |
+| 1 | `IDEATEK_SERVER_LIST_LAN` | The servers on the local network. |
+| 2 | `IDEATEK_SERVER_LIST_FAVORITES` | The favorite servers of the user. |
+| 3 | `IDEATEK_SERVER_LIST_HISTORY` | The servers that the user played on. |
+| 4 | `IDEATEK_SERVER_LIST_FRIENDS` | The servers of the friends. |
+
+## ideatek:ServerSearch
+
+`ideatek:ServerSearch` asks for a list of servers.
+`ideatek_server_search_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `filter` | `bridge_text_t` | 0 | The filter: lines of `key=value`. |
+| `kind` | `ideatek_server_list_t` | 8 | The list. |
+
+Bytes 9 to 11 hold no field.
+
+## ideatek:ServerFound
+
+`ideatek:ServerFound` is 1 server of a search.
+`ideatek_server_found_t` takes 64 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `search` | `ideatek_entity_t` | 0 | The search. |
+| `name` | `bridge_text_t` | 8 | The name. |
+| `map` | `bridge_text_t` | 16 | The map. |
+| `tags` | `bridge_text_t` | 24 | The tags. |
+| `address` | `bridge_text_t` | 32 | The address, as `ip:port`. |
+| `players` | `uint32_t` | 40 | The players. |
+| `max_players` | `uint32_t` | 44 | The most players. |
+| `bots` | `uint32_t` | 48 | The bots. |
+| `ping` | `uint32_t` | 52 | The round trip, in milliseconds. |
+| `password` | `bool` | 56 | `true` if a join needs a password. |
+
+Bytes 57 to 63 hold no field.
+
+## ideatek:ideatek_parental_t
+
+`ideatek_parental_t` names the features that the parental settings block.
+`ideatek_parental_t` is a bitmask of 1 byte.
+
+| Bit | Name | Meaning |
+| --- | --- | --- |
+| 0x01 | `IDEATEK_PARENTAL_CHAT` | The chat. |
+| 0x02 | `IDEATEK_PARENTAL_UGC` | The items of the users. |
+| 0x04 | `IDEATEK_PARENTAL_ONLINE` | The online play. |
+| 0x08 | `IDEATEK_PARENTAL_STORE` | The store. |
+| 0x10 | `IDEATEK_PARENTAL_PROFILES` | The profiles of other users. |
+
+## ideatek:ParentalLimits
+
+`ideatek:ParentalLimits` tells the features that a user may not use, on the user entity.
+`ideatek_parental_limits_t` takes 1 byte. Its alignment is 1.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `blocked` | `ideatek_parental_t` | 0 | The blocked features. |
+
+## ideatek:ideatek_text_context_t
+
+`ideatek_text_context_t` tells the use of a text to filter.
+`ideatek_text_context_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_TEXT_CONTEXT_CONTENT` | A text of the content of the game. |
+| 1 | `IDEATEK_TEXT_CONTEXT_CHAT` | A line of chat. |
+| 2 | `IDEATEK_TEXT_CONTEXT_NAME` | A name of a player or of a thing. |
+
+## ideatek:TextFilter
+
+`ideatek:TextFilter` asks the platform to filter a text: *The platform*.
+`ideatek_text_filter_t` takes 24 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `user` | `ideatek_entity_t` | 0 | The user. |
+| `text` | `bridge_text_t` | 8 | The text in UTF-8. |
+| `context` | `ideatek_text_context_t` | 16 | The use of the text. |
+
+Bytes 17 to 23 hold no field.
+
+## ideatek:TextFiltered
+
+`ideatek:TextFiltered` is the answer to a text filter, on the request entity.
+`ideatek_text_filtered_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `text` | `bridge_text_t` | 0 | The filtered text. |
+| `state` | `ideatek_service_state_t` | 8 | The state. |
+
+Bytes 9 to 11 hold no field.
+
+## ideatek:ideatek_overlay_page_t
+
+`ideatek_overlay_page_t` tells a page of the overlay.
+`ideatek_overlay_page_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_OVERLAY_PAGE_FRIENDS` | The friends. |
+| 1 | `IDEATEK_OVERLAY_PAGE_PROFILE` | The profile of `account`. |
+| 2 | `IDEATEK_OVERLAY_PAGE_INVITE` | The invite dialog of `lobby`. |
+| 3 | `IDEATEK_OVERLAY_PAGE_ACHIEVEMENTS` | The achievements. |
+| 4 | `IDEATEK_OVERLAY_PAGE_SETTINGS` | The settings of the platform. |
+
+## ideatek:OverlayRequest
+
+`ideatek:OverlayRequest` opens the overlay of the platform on a page.
+`ideatek_overlay_request_t` takes 24 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `account` | `uint64_t` | 0 | 0 | The account of PROFILE. 0 means the local user. |
+| `lobby` | `ideatek_entity_t` | 8 | 0 | The lobby of INVITE. |
+| `page` | `ideatek_overlay_page_t` | 16 | No default | The page. |
+
+Bytes 17 to 23 hold no field.
+
+## ideatek:PlatformInfo
+
+`ideatek:PlatformInfo` tells the platform where the game runs. The module writes it on 1 entity.
+`ideatek_platform_info_t` takes 20 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `language` | `bridge_text_t` | 0 | The language of the platform, as a code of the platform. |
+| `branch` | `bridge_text_t` | 8 | The branch of the build, for example a beta. Empty means the public build. |
+| `steam_deck` | `bool` | 16 | `true` on a Steam Deck. |
+| `big_picture` | `bool` | 17 | `true` in the Big Picture mode. |
+
+Bytes 18 to 19 hold no field.
+
+## ideatek:ideatek_timeline_mode_t
+
+`ideatek_timeline_mode_t` tells what the game does, for the recording of the platform.
+`ideatek_timeline_mode_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_TIMELINE_MODE_PLAYING` | The game plays. |
+| 1 | `IDEATEK_TIMELINE_MODE_STAGING` | The game waits for a match, for example in a lobby. |
+| 2 | `IDEATEK_TIMELINE_MODE_MENUS` | The game is in its menus. |
+| 3 | `IDEATEK_TIMELINE_MODE_LOADING` | The game loads. |
+
+## ideatek:TimelineMode
+
+`ideatek:TimelineMode` tells the platform what the game does now, on 1 entity.
+`ideatek_timeline_mode_record_t` takes 1 byte. Its alignment is 1.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `mode` | `ideatek_timeline_mode_t` | 0 | What the game does. |
+
+## ideatek:ideatek_timeline_clip_t
+
+`ideatek_timeline_clip_t` tells if a marker proposes a clip of the recording.
+`ideatek_timeline_clip_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_TIMELINE_CLIP_NONE` | No clip. |
+| 1 | `IDEATEK_TIMELINE_CLIP_STANDARD` | A clip that the platform can propose. |
+| 2 | `IDEATEK_TIMELINE_CLIP_FEATURED` | A clip that the platform puts first. |
+
+## ideatek:TimelineEvent
+
+`ideatek:TimelineEvent` puts a marker in the recording of the platform: *The recording and the screenshots*.
+`ideatek_timeline_event_t` takes 40 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `title` | `bridge_text_t` | 0 | No default | The title. |
+| `description` | `bridge_text_t` | 8 | No default | The description. |
+| `icon` | `bridge_text_t` | 16 | No default | The name of an icon of the platform. |
+| `start_offset` | `float` | 24 | 0 | The seconds from now to the start. A value below 0 is in the past. |
+| `duration` | `float` | 28 | 0 | The seconds of the event. 0 means an instant. |
+| `priority` | `uint32_t` | 32 | 0 | The rank of the icon among the markers. |
+| `clip` | `ideatek_timeline_clip_t` | 36 | `IDEATEK_TIMELINE_CLIP_NONE` | The clip that it proposes. |
+
+Bytes 37 to 39 hold no field.
+
+## ideatek:ScreenshotRequest
+
+`ideatek:ScreenshotRequest` takes a screenshot with the platform.
+`ideatek_screenshot_request_t` takes 8 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `location` | `bridge_text_t` | 0 | The place in the game, for the tag of the screenshot. |
+
+## ideatek:ScreenshotTaken
+
+`ideatek:ScreenshotTaken` tells that the user took a screenshot. It is an event of 1 round.
+`ideatek_screenshot_taken_t` takes 4 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `order` | `uint32_t` | 0 | The rank in the round. |
+
+## ideatek:ideatek_avatar_size_t
+
+`ideatek_avatar_size_t` tells the size of an avatar.
+`ideatek_avatar_size_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_AVATAR_SIZE_SMALL` | The small image of the platform. |
+| 1 | `IDEATEK_AVATAR_SIZE_MEDIUM` | The medium image. |
+| 2 | `IDEATEK_AVATAR_SIZE_LARGE` | The large image. |
+
+## ideatek:AvatarRequest
+
+`ideatek:AvatarRequest` asks for the image of a user.
+`ideatek_avatar_request_t` takes 16 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `account` | `uint64_t` | 0 | 0 | The account. 0 means the local user. |
+| `size` | `ideatek_avatar_size_t` | 8 | `IDEATEK_AVATAR_SIZE_MEDIUM` | The size. |
+
+Bytes 9 to 15 hold no field.
+
+## ideatek:Avatar
+
+`ideatek:Avatar` is the image of a user, on the request entity.
+`ideatek_avatar_t` takes 20 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `pixels` | `bridge_text_t` | 0 | The pixels: RGBA8, row by row from the top. |
+| `width` | `uint32_t` | 8 | The width, in pixels. |
+| `height` | `uint32_t` | 12 | The height, in pixels. |
+| `state` | `ideatek_service_state_t` | 16 | The state. |
+
+Bytes 17 to 19 hold no field.
+
 ## The C types
 
 | Type of Bridge | C type | Descriptor | Macro of the text |
@@ -745,7 +1019,6 @@ Bytes 9 to 11 hold no field.
 | `ideatek:ideatek_platform_t` | `ideatek_platform_t` | `ideatek_platform_t_desc` | `IDEATEK_PLATFORM_VALUES` |
 | `ideatek:ideatek_sign_status_t` | `ideatek_sign_status_t` | `ideatek_sign_status_t_desc` | `IDEATEK_SIGN_STATUS_VALUES` |
 | `ideatek:PlatformUser` | `ideatek_platform_user_t` | `ideatek_platform_user_t_desc` | `IDEATEK_PLATFORM_USER_FIELDS` |
-| `ideatek:DeviceUser` | `ideatek_device_user_t` | `ideatek_device_user_t_desc` | `IDEATEK_DEVICE_USER_FIELDS` |
 | `ideatek:ideatek_sign_in_flags_t` | `ideatek_sign_in_flags_t` | `ideatek_sign_in_flags_t_desc` | `IDEATEK_SIGN_IN_FLAGS_VALUES` |
 | `ideatek:SignInRequest` | `ideatek_sign_in_request_t` | `ideatek_sign_in_request_t_desc` | `IDEATEK_SIGN_IN_REQUEST_FIELDS` |
 | `ideatek:ideatek_ticket_purpose_t` | `ideatek_ticket_purpose_t` | `ideatek_ticket_purpose_t_desc` | `IDEATEK_TICKET_PURPOSE_VALUES` |
@@ -797,13 +1070,33 @@ Bytes 9 to 11 hold no field.
 | `ideatek:UgcSubscribe` | `ideatek_ugc_subscribe_t` | `ideatek_ugc_subscribe_t_desc` | `IDEATEK_UGC_SUBSCRIBE_FIELDS` |
 | `ideatek:UgcPublish` | `ideatek_ugc_publish_t` | `ideatek_ugc_publish_t_desc` | `IDEATEK_UGC_PUBLISH_FIELDS` |
 | `ideatek:UgcResult` | `ideatek_ugc_result_t` | `ideatek_ugc_result_t_desc` | `IDEATEK_UGC_RESULT_FIELDS` |
+| `ideatek:GameServer` | `ideatek_game_server_t` | `ideatek_game_server_t_desc` | `IDEATEK_GAME_SERVER_FIELDS` |
+| `ideatek:ideatek_server_list_t` | `ideatek_server_list_t` | `ideatek_server_list_t_desc` | `IDEATEK_SERVER_LIST_VALUES` |
+| `ideatek:ServerSearch` | `ideatek_server_search_t` | `ideatek_server_search_t_desc` | `IDEATEK_SERVER_SEARCH_FIELDS` |
+| `ideatek:ServerFound` | `ideatek_server_found_t` | `ideatek_server_found_t_desc` | `IDEATEK_SERVER_FOUND_FIELDS` |
+| `ideatek:ideatek_parental_t` | `ideatek_parental_t` | `ideatek_parental_t_desc` | `IDEATEK_PARENTAL_VALUES` |
+| `ideatek:ParentalLimits` | `ideatek_parental_limits_t` | `ideatek_parental_limits_t_desc` | `IDEATEK_PARENTAL_LIMITS_FIELDS` |
+| `ideatek:ideatek_text_context_t` | `ideatek_text_context_t` | `ideatek_text_context_t_desc` | `IDEATEK_TEXT_CONTEXT_VALUES` |
+| `ideatek:TextFilter` | `ideatek_text_filter_t` | `ideatek_text_filter_t_desc` | `IDEATEK_TEXT_FILTER_FIELDS` |
+| `ideatek:TextFiltered` | `ideatek_text_filtered_t` | `ideatek_text_filtered_t_desc` | `IDEATEK_TEXT_FILTERED_FIELDS` |
+| `ideatek:ideatek_overlay_page_t` | `ideatek_overlay_page_t` | `ideatek_overlay_page_t_desc` | `IDEATEK_OVERLAY_PAGE_VALUES` |
+| `ideatek:OverlayRequest` | `ideatek_overlay_request_t` | `ideatek_overlay_request_t_desc` | `IDEATEK_OVERLAY_REQUEST_FIELDS` |
+| `ideatek:PlatformInfo` | `ideatek_platform_info_t` | `ideatek_platform_info_t_desc` | `IDEATEK_PLATFORM_INFO_FIELDS` |
+| `ideatek:ideatek_timeline_mode_t` | `ideatek_timeline_mode_t` | `ideatek_timeline_mode_t_desc` | `IDEATEK_TIMELINE_MODE_VALUES` |
+| `ideatek:TimelineMode` | `ideatek_timeline_mode_record_t` | `ideatek_timeline_mode_record_t_desc` | `IDEATEK_TIMELINE_MODE_RECORD_FIELDS` |
+| `ideatek:ideatek_timeline_clip_t` | `ideatek_timeline_clip_t` | `ideatek_timeline_clip_t_desc` | `IDEATEK_TIMELINE_CLIP_VALUES` |
+| `ideatek:TimelineEvent` | `ideatek_timeline_event_t` | `ideatek_timeline_event_t_desc` | `IDEATEK_TIMELINE_EVENT_FIELDS` |
+| `ideatek:ScreenshotRequest` | `ideatek_screenshot_request_t` | `ideatek_screenshot_request_t_desc` | `IDEATEK_SCREENSHOT_REQUEST_FIELDS` |
+| `ideatek:ScreenshotTaken` | `ideatek_screenshot_taken_t` | `ideatek_screenshot_taken_t_desc` | `IDEATEK_SCREENSHOT_TAKEN_FIELDS` |
+| `ideatek:ideatek_avatar_size_t` | `ideatek_avatar_size_t` | `ideatek_avatar_size_t_desc` | `IDEATEK_AVATAR_SIZE_VALUES` |
+| `ideatek:AvatarRequest` | `ideatek_avatar_request_t` | `ideatek_avatar_request_t_desc` | `IDEATEK_AVATAR_REQUEST_FIELDS` |
+| `ideatek:Avatar` | `ideatek_avatar_t` | `ideatek_avatar_t_desc` | `IDEATEK_AVATAR_FIELDS` |
 
 ```text
 { IDEATEK_SERVICE_STATE_PENDING = 0, IDEATEK_SERVICE_STATE_DONE = 1, IDEATEK_SERVICE_STATE_FAILED = 2 }
-{ IDEATEK_PLATFORM_NONE = 0, IDEATEK_PLATFORM_STEAM = 1, IDEATEK_PLATFORM_EOS = 2, IDEATEK_PLATFORM_OTHER = 255 }
+{ IDEATEK_PLATFORM_NONE = 0, IDEATEK_PLATFORM_STEAM = 1 }
 { IDEATEK_SIGN_STATUS_SIGNED_OUT = 0, IDEATEK_SIGN_STATUS_SIGNED_IN = 1, IDEATEK_SIGN_STATUS_REDUCED = 2 }
 { uint64_t account; bridge_text_t name; ideatek_platform_t platform; ideatek_sign_status_t status; }
-{ ideatek_entity_t user; }
 { IDEATEK_SIGN_IN_FLAGS_SHOW_UI = 0x01 }
 { ideatek_sign_in_flags_t flags; }
 { IDEATEK_TICKET_PURPOSE_SERVER = 0, IDEATEK_TICKET_PURPOSE_WEB = 1 }
@@ -855,6 +1148,27 @@ Bytes 9 to 11 hold no field.
 { ideatek_entity_t user; bridge_text_t id; bool subscribe; }
 { ideatek_entity_t user; bridge_text_t id; bridge_text_t title; bridge_text_t folder; bridge_text_t note; }
 { bridge_text_t id; ideatek_service_state_t state; }
+{ bridge_text_t name; bridge_text_t map; bridge_text_t tags; bridge_text_t address; uint32_t players; uint32_t max_players; uint32_t bots; bool password; bool dedicated; }
+{ IDEATEK_SERVER_LIST_INTERNET = 0, IDEATEK_SERVER_LIST_LAN = 1, IDEATEK_SERVER_LIST_FAVORITES = 2, IDEATEK_SERVER_LIST_HISTORY = 3, IDEATEK_SERVER_LIST_FRIENDS = 4 }
+{ bridge_text_t filter; ideatek_server_list_t kind; }
+{ ideatek_entity_t search; bridge_text_t name; bridge_text_t map; bridge_text_t tags; bridge_text_t address; uint32_t players; uint32_t max_players; uint32_t bots; uint32_t ping; bool password; }
+{ IDEATEK_PARENTAL_CHAT = 0x01, IDEATEK_PARENTAL_UGC = 0x02, IDEATEK_PARENTAL_ONLINE = 0x04, IDEATEK_PARENTAL_STORE = 0x08, IDEATEK_PARENTAL_PROFILES = 0x10 }
+{ ideatek_parental_t blocked; }
+{ IDEATEK_TEXT_CONTEXT_CONTENT = 0, IDEATEK_TEXT_CONTEXT_CHAT = 1, IDEATEK_TEXT_CONTEXT_NAME = 2 }
+{ ideatek_entity_t user; bridge_text_t text; ideatek_text_context_t context; }
+{ bridge_text_t text; ideatek_service_state_t state; }
+{ IDEATEK_OVERLAY_PAGE_FRIENDS = 0, IDEATEK_OVERLAY_PAGE_PROFILE = 1, IDEATEK_OVERLAY_PAGE_INVITE = 2, IDEATEK_OVERLAY_PAGE_ACHIEVEMENTS = 3, IDEATEK_OVERLAY_PAGE_SETTINGS = 4 }
+{ uint64_t account; ideatek_entity_t lobby; ideatek_overlay_page_t page; }
+{ bridge_text_t language; bridge_text_t branch; bool steam_deck; bool big_picture; }
+{ IDEATEK_TIMELINE_MODE_PLAYING = 0, IDEATEK_TIMELINE_MODE_STAGING = 1, IDEATEK_TIMELINE_MODE_MENUS = 2, IDEATEK_TIMELINE_MODE_LOADING = 3 }
+{ ideatek_timeline_mode_t mode; }
+{ IDEATEK_TIMELINE_CLIP_NONE = 0, IDEATEK_TIMELINE_CLIP_STANDARD = 1, IDEATEK_TIMELINE_CLIP_FEATURED = 2 }
+{ bridge_text_t title; bridge_text_t description; bridge_text_t icon; float start_offset; float duration; uint32_t priority; ideatek_timeline_clip_t clip; }
+{ bridge_text_t location; }
+{ uint32_t order; }
+{ IDEATEK_AVATAR_SIZE_SMALL = 0, IDEATEK_AVATAR_SIZE_MEDIUM = 1, IDEATEK_AVATAR_SIZE_LARGE = 2 }
+{ uint64_t account; ideatek_avatar_size_t size; }
+{ bridge_text_t pixels; uint32_t width; uint32_t height; ideatek_service_state_t state; }
 ```
 
 ## The declarations
@@ -878,8 +1192,14 @@ Bytes 9 to 11 hold no field.
 | `ideatek:ideatek_voice_channel_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_store_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_ugc_state_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_server_list_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_parental_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_text_context_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_overlay_page_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_timeline_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_timeline_clip_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_avatar_size_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:PlatformUser` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:DeviceUser` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SignInRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TicketRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Ticket` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -918,6 +1238,20 @@ Bytes 9 to 11 hold no field.
 | `ideatek:UgcSubscribe` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UgcPublish` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UgcResult` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:GameServer` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ServerSearch` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ServerFound` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ParentalLimits` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:TextFilter` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:TextFiltered` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:OverlayRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:PlatformInfo` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:TimelineMode` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:TimelineEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ScreenshotRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ScreenshotTaken` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:AvatarRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:Avatar` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
 
