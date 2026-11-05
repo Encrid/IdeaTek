@@ -196,6 +196,13 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_morph_weights_t,
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_morph_weights_t,
     IDEATEK_MORPH_WEIGHTS_FIELDS);
 
+    #define IDEATEK_HIDDEN_JOINT_FIELDS { \
+        ideatek_entity_t cap; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_hidden_joint_t, IDEATEK_HIDDEN_JOINT_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_hidden_joint_t, IDEATEK_HIDDEN_JOINT_FIELDS);
+
     #define IDEATEK_CLIP_FIELDS { \
         bridge_text_t bytes; \
         float duration; \

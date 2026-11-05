@@ -1009,32 +1009,6 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_damage_t, IDEATEK_DAMAGE_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_break_event_t, IDEATEK_BREAK_EVENT_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_break_event_t, IDEATEK_BREAK_EVENT_FIELDS);
 
-    #define IDEATEK_HIDDEN_JOINT_FIELDS { \
-        ideatek_entity_t cap; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_hidden_joint_t, IDEATEK_HIDDEN_JOINT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_hidden_joint_t, IDEATEK_HIDDEN_JOINT_FIELDS);
-
-    #define IDEATEK_CUT_FIELDS { \
-        ideatek_entity_t drawn; \
-        ideatek_position_t point; \
-        ideatek_vec3_t normal; \
-        uint32_t order; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_cut_t, IDEATEK_CUT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_cut_t, IDEATEK_CUT_FIELDS);
-
-    #define IDEATEK_CUT_EVENT_FIELDS { \
-        ideatek_entity_t drawn; \
-        ideatek_entity_t piece; \
-        uint32_t order; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_cut_event_t, IDEATEK_CUT_EVENT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_cut_event_t, IDEATEK_CUT_EVENT_FIELDS);
-
     #define IDEATEK_BEND_VALUES { \
         IDEATEK_BEND_NONE = 0, \
         IDEATEK_BEND_DISTANCE = 1, \
