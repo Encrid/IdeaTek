@@ -7,13 +7,14 @@ An item lives for 1 round. Its bytes stay good while its entity lives: `docs/ext
 
 Bridge writes the settings after `init`, so the first round of `events` reads them with `start_items`:
 
-1. If `drop_bytes` is less than 2, more than 1073741824, or odd, it writes `<setting> is <value>, and it must be an even number from 2 to 1073741824`.
+1. If `drop_bytes` is less than 2, more than 1073741824, or odd, it writes the line of the range.
 2. It does the same check for `clipboard_bytes`.
 3. After a line of step 1 or 2, it gives `false`, and `events` gives 1.
 4. Else `alloc` takes `drop_bytes` and then `clipboard_bytes` from the share of the module in the persistent arena.
 5. `size` of each `window_half_t` is the half of its bytes, and it gives `true`.
 
-A setting out of its range fails each round, and the line comes in each round, until Bridge stops the module.
+The line and the failure follow `readme.md`, *The contracts*. The range in the line is `2 to 1073741824, an even number`.
+A setting out of its range fails each round, and the line comes in each round, until Bridge stops the module or the world.
 The share must hold `drop_bytes`, `clipboard_bytes` and the text of `icon`. Bridge rounds each one up to a multiple of 8.
 If the share is too small, Bridge refuses `alloc`, and its record names the reason: https://github.com/Encrid/Bridge/blob/v0.4.0/docs/extern/bridge_abi.h.md#alloc.
 

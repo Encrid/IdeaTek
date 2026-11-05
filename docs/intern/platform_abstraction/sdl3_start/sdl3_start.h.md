@@ -19,13 +19,14 @@ Thus the functions stay out of the exports of each module, and 2 modules never c
 
 - The caller starts and stops on the thread that starts the video of SDL3. A pinned module does this in `init` and `shutdown`.
 - The caller gives to the stop the same flags that it gave to the start, after a start that gave `true`.
+- After its start, the caller turns on the types of events that it takes, with `SDL_SetEventEnabled`.
 - After a start that gave `false`, the caller stops nothing. The start then holds no subsystem.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `sdl3_start_subsystem(flags, reason, size)` | Starts the subsystems of `flags`, with no handler of SDL3 for the signals of the system. Gives `true`, or `false` with the reason in `reason`. |
+| `sdl3_start_subsystem(flags, reason, size)` | Starts the subsystems of `flags`, with no handler of SDL3 for the signals of the system. At the first start, it also turns off the types of events that no module takes. Gives `true`, or `false` with the reason in `reason`. |
 | `sdl3_stop_subsystem(flags)` | Stops the subsystems of `flags`. Then it stops SDL3 when no subsystem is left. |
 
 `docs/intern/platform_abstraction/sdl3_start/sdl3_start.c.md` tells the steps of each function.
