@@ -62,7 +62,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t request; uint64_t tag; }",
     "{ ideatek_entity_t request; uint64_t tag; int32_t reason; }",
     "uint8_t { IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }",
-    "uint8_t { IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6 }",
+    "uint8_t { IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6, IDEATEK_SAVE_ERROR_CORRUPT = 7 }",
     "{ ideatek_save_state_t state; ideatek_save_error_t error; }",
     "{ ideatek_entity_t request; int64_t time; uint64_t bytes; uint64_t groups; bridge_text_t slot; bridge_text_t info; uint32_t version; }",
 ] }
@@ -78,7 +78,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t request; uint64_t tag; }",
     "{ ideatek_entity_t request; uint64_t tag; int32_t reason; }",
     "{ IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }",
-    "{ IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6 }",
+    "{ IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6, IDEATEK_SAVE_ERROR_CORRUPT = 7 }",
     "{ ideatek_save_state_t state; ideatek_save_error_t error; }",
     "{ ideatek_entity_t request; int64_t time; uint64_t bytes; uint64_t groups; bridge_text_t slot; bridge_text_t info; uint32_t version; }",
 ] }
