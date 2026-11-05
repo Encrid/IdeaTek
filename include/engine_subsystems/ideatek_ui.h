@@ -765,8 +765,7 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_gesture_t, IDEATEK_UI_GESTURE_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_gesture_t, IDEATEK_UI_GESTURE_FIELDS);
 
     #define IDEATEK_ANCHOR_FLAGS_VALUES { \
-        IDEATEK_ANCHOR_FLAGS_CLAMP = 0x01, \
-        IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND = 0x02 \
+        IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND = 0x01 \
     }
 
 BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_anchor_flags_t,
@@ -780,7 +779,6 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_anchor_flags_t,
         ideatek_vec3_t offset; \
         float pivot_x; \
         float pivot_y; \
-        float margin; \
         ideatek_anchor_flags_t flags; \
     }
 
@@ -789,9 +787,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_anchor_t, IDEATEK_UI_ANCHOR_FIELDS);
 
     #define IDEATEK_UI_ANCHOR_STATE_FIELDS { \
         float distance; \
-        float angle; \
         bool visible; \
-        bool clamped; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_anchor_state_t,
