@@ -25,9 +25,14 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     STRUCT(api, "ideatek:ideatek_vec3_t", ideatek_vec3_t);
     STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
+    ENUM(api, "ideatek:ideatek_terrain_kind_t", ideatek_terrain_kind_t);
+    MASK(api, "ideatek:ideatek_terrain_channels_t", ideatek_terrain_channels_t);
     MASK(api, "ideatek:ideatek_terrain_flags_t", ideatek_terrain_flags_t);
+    ENUM(api, "ideatek:ideatek_block_shape_t", ideatek_block_shape_t);
+    ENUM(api, "ideatek:ideatek_block_rotation_t", ideatek_block_rotation_t);
     ENUM(api, "ideatek:ideatek_terrain_shape_t", ideatek_terrain_shape_t);
     ENUM(api, "ideatek:ideatek_terrain_op_t", ideatek_terrain_op_t);
+    MASK(api, "ideatek:ideatek_viewer_flags_t", ideatek_viewer_flags_t);
 }
 
 [[maybe_unused]] static void declare_late(const bridge_api_t *api)
@@ -44,6 +49,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:TerrainChunk", ideatek_terrain_chunk_t);
     STRUCT(api, "ideatek:TerrainEdit", ideatek_terrain_edit_t);
     STRUCT(api, "ideatek:TerrainFill", ideatek_terrain_fill_t);
+    STRUCT(api, "ideatek:TerrainViewer", ideatek_terrain_viewer_t);
+    STRUCT(api, "ideatek:TerrainSplit", ideatek_terrain_split_t);
+    STRUCT(api, "ideatek:TerrainScatter", ideatek_terrain_scatter_t);
 }
 
 [[maybe_unused]] static void role_game(const bridge_api_t *api)
@@ -53,9 +61,14 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     STRUCT(api, "ideatek:ideatek_vec3_t", ideatek_vec3_t);
     STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
+    ENUM(api, "ideatek:ideatek_terrain_kind_t", ideatek_terrain_kind_t);
+    MASK(api, "ideatek:ideatek_terrain_channels_t", ideatek_terrain_channels_t);
     MASK(api, "ideatek:ideatek_terrain_flags_t", ideatek_terrain_flags_t);
+    ENUM(api, "ideatek:ideatek_block_shape_t", ideatek_block_shape_t);
+    ENUM(api, "ideatek:ideatek_block_rotation_t", ideatek_block_rotation_t);
     ENUM(api, "ideatek:ideatek_terrain_shape_t", ideatek_terrain_shape_t);
     ENUM(api, "ideatek:ideatek_terrain_op_t", ideatek_terrain_op_t);
+    MASK(api, "ideatek:ideatek_viewer_flags_t", ideatek_viewer_flags_t);
     api->attach(api, id, STRUCT(api, "ideatek:Terrain", ideatek_terrain_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:TerrainMaterial",
@@ -64,6 +77,10 @@ static const char WHO[] = MANIFEST;
         ideatek_terrain_edit_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:TerrainFill",
         ideatek_terrain_fill_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:TerrainViewer",
+        ideatek_terrain_viewer_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:TerrainScatter",
+        ideatek_terrain_scatter_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_module(const bridge_api_t *api)
@@ -82,20 +99,32 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_motion_quality_t", ideatek_motion_quality_t);
     ENUM(api, "ideatek:ideatek_shape_kind_t", ideatek_shape_kind_t);
     MASK(api, "ideatek:ideatek_shape_flags_t", ideatek_shape_flags_t);
+    ENUM(api, "ideatek:ideatek_terrain_kind_t", ideatek_terrain_kind_t);
+    MASK(api, "ideatek:ideatek_terrain_channels_t", ideatek_terrain_channels_t);
     MASK(api, "ideatek:ideatek_terrain_flags_t", ideatek_terrain_flags_t);
+    ENUM(api, "ideatek:ideatek_block_shape_t", ideatek_block_shape_t);
+    ENUM(api, "ideatek:ideatek_block_rotation_t", ideatek_block_rotation_t);
     ENUM(api, "ideatek:ideatek_terrain_shape_t", ideatek_terrain_shape_t);
     ENUM(api, "ideatek:ideatek_terrain_op_t", ideatek_terrain_op_t);
+    MASK(api, "ideatek:ideatek_viewer_flags_t", ideatek_viewer_flags_t);
     STRUCT(api, "ideatek:Terrain", ideatek_terrain_t);
     STRUCT(api, "ideatek:TerrainMaterial", ideatek_terrain_material_t);
     STRUCT(api, "ideatek:TerrainEdit", ideatek_terrain_edit_t);
     STRUCT(api, "ideatek:TerrainFill", ideatek_terrain_fill_t);
+    STRUCT(api, "ideatek:TerrainViewer", ideatek_terrain_viewer_t);
+    STRUCT(api, "ideatek:TerrainScatter", ideatek_terrain_scatter_t);
     api->attach(api, id, STRUCT(api, "ideatek:TerrainChunk",
         ideatek_terrain_chunk_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:TerrainSplit",
+        ideatek_terrain_split_t), BRIDGE_ZEROED);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Mesh",
         ideatek_mesh_t, BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE),
         BRIDGE_ZEROED);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:MeshInstance",
         ideatek_mesh_instance_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
+    api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:MeshInstances",
+        ideatek_mesh_instances_t, BRIDGE_STRIP, BRIDGE_TABLE,
         BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Body",
         ideatek_body_t, BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE),

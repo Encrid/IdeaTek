@@ -1,4 +1,16 @@
 [[case]]
+name = "ideatek_terrain_kind_t is 1 byte"
+run = ["{out}/terrain_layout{exe}", "terrain_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain"] }
+
+[[case]]
+name = "ideatek_terrain_channels_t is 1 byte"
+run = ["{out}/terrain_layout{exe}", "terrain_channels"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain"] }
+
+[[case]]
 name = "ideatek_terrain_flags_t is 1 byte"
 run = ["{out}/terrain_layout{exe}", "terrain_flags"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
@@ -7,13 +19,25 @@ false = { run = ["{out}/terrain_layout{exe}", "terrain"] }
 [[case]]
 name = "ideatek_terrain_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/terrain_layout{exe}", "terrain"]
-claims = { status = 0, order = ["size 12", "alignment 4", "cell_size 0", "chunk_cells 4", "flags 8"] }
+claims = { status = 0, order = ["size 48", "alignment 8", "heights 0", "weights 8", "holes 16", "cell_size 24", "height_scale 28", "chunk_cells 32", "component_quads 36", "background_type 40", "kind 42", "channels 43", "flags 44", "background_solid 45"] }
+false = { run = ["{out}/terrain_layout{exe}", "block_shape"] }
+
+[[case]]
+name = "ideatek_block_shape_t is 1 byte"
+run = ["{out}/terrain_layout{exe}", "block_shape"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_material"] }
+
+[[case]]
+name = "ideatek_block_rotation_t is 1 byte"
+run = ["{out}/terrain_layout{exe}", "block_rotation"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/terrain_layout{exe}", "terrain_material"] }
 
 [[case]]
 name = "ideatek_terrain_material_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/terrain_layout{exe}", "terrain_material"]
-claims = { status = 0, order = ["size 32", "alignment 8", "terrain 0", "material 8", "physics_material 16", "index 24"] }
+claims = { status = 0, order = ["size 40", "alignment 8", "terrain 0", "material 8", "physics_material 16", "model 24", "index 32", "shape 34", "rotation 35"] }
 false = { run = ["{out}/terrain_layout{exe}", "terrain_chunk"] }
 
 [[case]]
@@ -37,27 +61,59 @@ false = { run = ["{out}/terrain_layout{exe}", "terrain_edit"] }
 [[case]]
 name = "ideatek_terrain_edit_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/terrain_layout{exe}", "terrain_edit"]
-claims = { status = 0, order = ["size 56", "alignment 8", "terrain 0", "center 8", "size 32", "strength 44", "order 48", "shape 52", "op 53", "material 54"] }
+claims = { status = 0, order = ["size 96", "alignment 8", "terrain 0", "mesh 8", "center 16", "end 40", "size 64", "strength 76", "order 80", "material 84", "type 86", "shape 88", "op 89"] }
 false = { run = ["{out}/terrain_layout{exe}", "terrain_fill"] }
 
 [[case]]
 name = "ideatek_terrain_fill_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/terrain_layout{exe}", "terrain_fill"]
 claims = { status = 0, order = ["size 32", "alignment 8", "terrain 0", "data 8", "x 16", "y 20", "z 24", "order 28"] }
-false = { run = ["{out}/terrain_layout{exe}", "terrain_flags"] }
+false = { run = ["{out}/terrain_layout{exe}", "viewer_flags"] }
+
+[[case]]
+name = "ideatek_viewer_flags_t is 1 byte"
+run = ["{out}/terrain_layout{exe}", "viewer_flags"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_viewer"] }
+
+[[case]]
+name = "ideatek_terrain_viewer_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/terrain_layout{exe}", "terrain_viewer"]
+claims = { status = 0, order = ["size 16", "alignment 4", "radius 0", "vertical_ratio 4", "peer 8", "flags 12"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_split"] }
+
+[[case]]
+name = "ideatek_terrain_split_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/terrain_layout{exe}", "terrain_split"]
+claims = { status = 0, order = ["size 24", "alignment 8", "source 0", "piece 8", "order 16"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_scatter"] }
+
+[[case]]
+name = "ideatek_terrain_scatter_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/terrain_layout{exe}", "terrain_scatter"]
+claims = { status = 0, order = ["size 40", "alignment 8", "terrain 0", "mesh 8", "density 16", "min_scale 20", "max_scale 24", "seed 28", "material 32", "align 34"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_kind"] }
 
 [[case]]
 name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/terrain_layout{exe}", "descriptors"]
 claims = { status = 0, line = [
-    "uint8_t { IDEATEK_TERRAIN_FLAGS_COLLIDE = 0x01, IDEATEK_TERRAIN_FLAGS_NAVIGATE = 0x02 }",
-    "{ float cell_size; uint32_t chunk_cells; ideatek_terrain_flags_t flags; }",
-    "{ ideatek_entity_t terrain; ideatek_entity_t material; ideatek_entity_t physics_material; uint8_t index; }",
+    "uint8_t { IDEATEK_TERRAIN_KIND_VOXEL = 0, IDEATEK_TERRAIN_KIND_HEIGHTMAP = 1 }",
+    "uint8_t { IDEATEK_TERRAIN_CHANNELS_SDF = 0x01, IDEATEK_TERRAIN_CHANNELS_TYPE = 0x02, IDEATEK_TERRAIN_CHANNELS_INDICES = 0x04, IDEATEK_TERRAIN_CHANNELS_WEIGHTS = 0x08, IDEATEK_TERRAIN_CHANNELS_STATE = 0x10, IDEATEK_TERRAIN_CHANNELS_LIGHT = 0x20, IDEATEK_TERRAIN_CHANNELS_DATA = 0x40 }",
+    "uint8_t { IDEATEK_TERRAIN_FLAGS_COLLIDE = 0x01, IDEATEK_TERRAIN_FLAGS_NAVIGATE = 0x02, IDEATEK_TERRAIN_FLAGS_MESH = 0x04 }",
+    "{ ideatek_entity_t heights; ideatek_entity_t weights; ideatek_entity_t holes; float cell_size; float height_scale; uint32_t chunk_cells; uint32_t component_quads; uint16_t background_type; ideatek_terrain_kind_t kind; ideatek_terrain_channels_t channels; ideatek_terrain_flags_t flags; bool background_solid; }",
+    "uint8_t { IDEATEK_BLOCK_SHAPE_CUBE = 0, IDEATEK_BLOCK_SHAPE_MESH = 1, IDEATEK_BLOCK_SHAPE_NONE = 2 }",
+    "uint8_t { IDEATEK_BLOCK_ROTATION_NONE = 0, IDEATEK_BLOCK_ROTATION_FACEDIR = 1, IDEATEK_BLOCK_ROTATION_FOUR_DIR = 2 }",
+    "{ ideatek_entity_t terrain; ideatek_entity_t material; ideatek_entity_t physics_material; ideatek_entity_t model; uint16_t index; ideatek_block_shape_t shape; ideatek_block_rotation_t rotation; }",
     "{ ideatek_entity_t terrain; bridge_text_t bytes; int32_t x; int32_t y; int32_t z; uint32_t revision; }",
-    "uint8_t { IDEATEK_TERRAIN_SHAPE_SPHERE = 0, IDEATEK_TERRAIN_SHAPE_BOX = 1 }",
-    "uint8_t { IDEATEK_TERRAIN_OP_ADD = 0, IDEATEK_TERRAIN_OP_SUBTRACT = 1, IDEATEK_TERRAIN_OP_PAINT = 2, IDEATEK_TERRAIN_OP_SMOOTH = 3 }",
-    "{ ideatek_entity_t terrain; ideatek_position_t center; ideatek_vec3_t size; float strength; uint32_t order; ideatek_terrain_shape_t shape; ideatek_terrain_op_t op; uint8_t material; }",
+    "uint8_t { IDEATEK_TERRAIN_SHAPE_SPHERE = 0, IDEATEK_TERRAIN_SHAPE_BOX = 1, IDEATEK_TERRAIN_SHAPE_POINT = 2, IDEATEK_TERRAIN_SHAPE_PATH = 3, IDEATEK_TERRAIN_SHAPE_MESH = 4 }",
+    "uint8_t { IDEATEK_TERRAIN_OP_ADD = 0, IDEATEK_TERRAIN_OP_SUBTRACT = 1, IDEATEK_TERRAIN_OP_PAINT = 2, IDEATEK_TERRAIN_OP_SMOOTH = 3, IDEATEK_TERRAIN_OP_SET = 4 }",
+    "{ ideatek_entity_t terrain; ideatek_entity_t mesh; ideatek_position_t center; ideatek_position_t end; ideatek_vec3_t size; float strength; uint32_t order; uint16_t material; uint16_t type; ideatek_terrain_shape_t shape; ideatek_terrain_op_t op; }",
     "{ ideatek_entity_t terrain; bridge_text_t data; int32_t x; int32_t y; int32_t z; uint32_t order; }",
+    "uint8_t { IDEATEK_VIEWER_FLAGS_VISUALS = 0x01, IDEATEK_VIEWER_FLAGS_COLLISIONS = 0x02 }",
+    "{ float radius; float vertical_ratio; uint32_t peer; ideatek_viewer_flags_t flags; }",
+    "{ ideatek_entity_t source; ideatek_entity_t piece; uint32_t order; }",
+    "{ ideatek_entity_t terrain; ideatek_entity_t mesh; float density; float min_scale; float max_scale; uint32_t seed; uint16_t material; bool align; }",
 ] }
 false = { run = ["{out}/terrain_layout{exe}", "texts"] }
 
@@ -65,14 +121,22 @@ false = { run = ["{out}/terrain_layout{exe}", "texts"] }
 name = "each macro of a text gives the braces of its type and the text between them"
 run = ["{out}/terrain_layout{exe}", "texts"]
 claims = { status = 0, line = [
-    "{ IDEATEK_TERRAIN_FLAGS_COLLIDE = 0x01, IDEATEK_TERRAIN_FLAGS_NAVIGATE = 0x02 }",
-    "{ float cell_size; uint32_t chunk_cells; ideatek_terrain_flags_t flags; }",
-    "{ ideatek_entity_t terrain; ideatek_entity_t material; ideatek_entity_t physics_material; uint8_t index; }",
+    "{ IDEATEK_TERRAIN_KIND_VOXEL = 0, IDEATEK_TERRAIN_KIND_HEIGHTMAP = 1 }",
+    "{ IDEATEK_TERRAIN_CHANNELS_SDF = 0x01, IDEATEK_TERRAIN_CHANNELS_TYPE = 0x02, IDEATEK_TERRAIN_CHANNELS_INDICES = 0x04, IDEATEK_TERRAIN_CHANNELS_WEIGHTS = 0x08, IDEATEK_TERRAIN_CHANNELS_STATE = 0x10, IDEATEK_TERRAIN_CHANNELS_LIGHT = 0x20, IDEATEK_TERRAIN_CHANNELS_DATA = 0x40 }",
+    "{ IDEATEK_TERRAIN_FLAGS_COLLIDE = 0x01, IDEATEK_TERRAIN_FLAGS_NAVIGATE = 0x02, IDEATEK_TERRAIN_FLAGS_MESH = 0x04 }",
+    "{ ideatek_entity_t heights; ideatek_entity_t weights; ideatek_entity_t holes; float cell_size; float height_scale; uint32_t chunk_cells; uint32_t component_quads; uint16_t background_type; ideatek_terrain_kind_t kind; ideatek_terrain_channels_t channels; ideatek_terrain_flags_t flags; bool background_solid; }",
+    "{ IDEATEK_BLOCK_SHAPE_CUBE = 0, IDEATEK_BLOCK_SHAPE_MESH = 1, IDEATEK_BLOCK_SHAPE_NONE = 2 }",
+    "{ IDEATEK_BLOCK_ROTATION_NONE = 0, IDEATEK_BLOCK_ROTATION_FACEDIR = 1, IDEATEK_BLOCK_ROTATION_FOUR_DIR = 2 }",
+    "{ ideatek_entity_t terrain; ideatek_entity_t material; ideatek_entity_t physics_material; ideatek_entity_t model; uint16_t index; ideatek_block_shape_t shape; ideatek_block_rotation_t rotation; }",
     "{ ideatek_entity_t terrain; bridge_text_t bytes; int32_t x; int32_t y; int32_t z; uint32_t revision; }",
-    "{ IDEATEK_TERRAIN_SHAPE_SPHERE = 0, IDEATEK_TERRAIN_SHAPE_BOX = 1 }",
-    "{ IDEATEK_TERRAIN_OP_ADD = 0, IDEATEK_TERRAIN_OP_SUBTRACT = 1, IDEATEK_TERRAIN_OP_PAINT = 2, IDEATEK_TERRAIN_OP_SMOOTH = 3 }",
-    "{ ideatek_entity_t terrain; ideatek_position_t center; ideatek_vec3_t size; float strength; uint32_t order; ideatek_terrain_shape_t shape; ideatek_terrain_op_t op; uint8_t material; }",
+    "{ IDEATEK_TERRAIN_SHAPE_SPHERE = 0, IDEATEK_TERRAIN_SHAPE_BOX = 1, IDEATEK_TERRAIN_SHAPE_POINT = 2, IDEATEK_TERRAIN_SHAPE_PATH = 3, IDEATEK_TERRAIN_SHAPE_MESH = 4 }",
+    "{ IDEATEK_TERRAIN_OP_ADD = 0, IDEATEK_TERRAIN_OP_SUBTRACT = 1, IDEATEK_TERRAIN_OP_PAINT = 2, IDEATEK_TERRAIN_OP_SMOOTH = 3, IDEATEK_TERRAIN_OP_SET = 4 }",
+    "{ ideatek_entity_t terrain; ideatek_entity_t mesh; ideatek_position_t center; ideatek_position_t end; ideatek_vec3_t size; float strength; uint32_t order; uint16_t material; uint16_t type; ideatek_terrain_shape_t shape; ideatek_terrain_op_t op; }",
     "{ ideatek_entity_t terrain; bridge_text_t data; int32_t x; int32_t y; int32_t z; uint32_t order; }",
+    "{ IDEATEK_VIEWER_FLAGS_VISUALS = 0x01, IDEATEK_VIEWER_FLAGS_COLLISIONS = 0x02 }",
+    "{ float radius; float vertical_ratio; uint32_t peer; ideatek_viewer_flags_t flags; }",
+    "{ ideatek_entity_t source; ideatek_entity_t piece; uint32_t order; }",
+    "{ ideatek_entity_t terrain; ideatek_entity_t mesh; float density; float min_scale; float max_scale; uint32_t seed; uint16_t material; bool align; }",
 ] }
 false = { run = ["{out}/terrain_layout{exe}", "descriptors"] }
 
@@ -83,7 +147,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/terrain_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 11 types, each type after the types of its fields"
+name = "a module declares the 19 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/terrain_probe{library}"] }
 
@@ -100,10 +164,14 @@ library = "{bb_native}/bridge_native"
 [module."test:probe@1.0.0"]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
-    "ideatek:ideatek_position_t", "ideatek:ideatek_terrain_flags_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_terrain_kind_t",
+    "ideatek:ideatek_terrain_channels_t", "ideatek:ideatek_terrain_flags_t",
+    "ideatek:ideatek_block_shape_t", "ideatek:ideatek_block_rotation_t",
     "ideatek:ideatek_terrain_shape_t", "ideatek:ideatek_terrain_op_t",
-    "ideatek:Terrain", "ideatek:TerrainMaterial", "ideatek:TerrainChunk",
-    "ideatek:TerrainEdit", "ideatek:TerrainFill",
+    "ideatek:ideatek_viewer_flags_t", "ideatek:Terrain",
+    "ideatek:TerrainMaterial", "ideatek:TerrainChunk", "ideatek:TerrainEdit",
+    "ideatek:TerrainFill", "ideatek:TerrainViewer", "ideatek:TerrainSplit",
+    "ideatek:TerrainScatter",
 ]
 '''
 
@@ -111,7 +179,7 @@ read = [
 "{case}/m" = ["terrain_late"]
 
 [[case]]
-name = "the game loads with write on the terrain, its materials and the commands"
+name = "the game loads with write on the terrain, its materials, the commands, the viewers and the scatter"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/terrain_game{library}"] }
 
@@ -128,12 +196,15 @@ library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
 write = [
     "ideatek:Terrain", "ideatek:TerrainMaterial", "ideatek:TerrainEdit",
-    "ideatek:TerrainFill",
+    "ideatek:TerrainFill", "ideatek:TerrainViewer", "ideatek:TerrainScatter",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
-    "ideatek:ideatek_position_t", "ideatek:ideatek_terrain_flags_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_terrain_kind_t",
+    "ideatek:ideatek_terrain_channels_t", "ideatek:ideatek_terrain_flags_t",
+    "ideatek:ideatek_block_shape_t", "ideatek:ideatek_block_rotation_t",
     "ideatek:ideatek_terrain_shape_t", "ideatek:ideatek_terrain_op_t",
+    "ideatek:ideatek_viewer_flags_t",
 ]
 '''
 
@@ -147,17 +218,20 @@ library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
 write = [
     "ideatek:Terrain", "ideatek:TerrainMaterial", "ideatek:TerrainEdit",
+    "ideatek:TerrainFill", "ideatek:TerrainViewer",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
-    "ideatek:ideatek_position_t", "ideatek:ideatek_terrain_flags_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_terrain_kind_t",
+    "ideatek:ideatek_terrain_channels_t", "ideatek:ideatek_terrain_flags_t",
+    "ideatek:ideatek_block_shape_t", "ideatek:ideatek_block_rotation_t",
     "ideatek:ideatek_terrain_shape_t", "ideatek:ideatek_terrain_op_t",
-    "ideatek:TerrainFill",
+    "ideatek:ideatek_viewer_flags_t", "ideatek:TerrainScatter",
 ]
 '''
 
 [[case]]
-name = "the terrain module loads with write on the chunks, the meshes, the bodies and the shapes"
+name = "the terrain module loads with write on the chunks, the pieces, the meshes, the bodies and the shapes"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/terrain_module{library}"] }
 
@@ -173,8 +247,9 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:module@1.0.0"]
 write = [
-    "ideatek:TerrainChunk", "ideatek:Mesh", "ideatek:MeshInstance",
-    "ideatek:Body", "ideatek:Shape",
+    "ideatek:TerrainChunk", "ideatek:TerrainSplit", "ideatek:Mesh",
+    "ideatek:MeshInstance", "ideatek:MeshInstances", "ideatek:Body",
+    "ideatek:Shape",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -183,9 +258,12 @@ read = [
     "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
     "ideatek:ideatek_body_flags_t", "ideatek:ideatek_motion_quality_t",
     "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
-    "ideatek:ideatek_terrain_flags_t", "ideatek:ideatek_terrain_shape_t",
-    "ideatek:ideatek_terrain_op_t", "ideatek:Terrain",
-    "ideatek:TerrainMaterial", "ideatek:TerrainEdit", "ideatek:TerrainFill",
+    "ideatek:ideatek_terrain_kind_t", "ideatek:ideatek_terrain_channels_t",
+    "ideatek:ideatek_terrain_flags_t", "ideatek:ideatek_block_shape_t",
+    "ideatek:ideatek_block_rotation_t", "ideatek:ideatek_terrain_shape_t",
+    "ideatek:ideatek_terrain_op_t", "ideatek:ideatek_viewer_flags_t",
+    "ideatek:Terrain", "ideatek:TerrainMaterial", "ideatek:TerrainEdit",
+    "ideatek:TerrainFill", "ideatek:TerrainViewer", "ideatek:TerrainScatter",
 ]
 '''
 
@@ -198,8 +276,8 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:module@1.0.0"]
 write = [
-    "ideatek:TerrainChunk", "ideatek:Mesh", "ideatek:MeshInstance",
-    "ideatek:Body",
+    "ideatek:TerrainChunk", "ideatek:TerrainSplit", "ideatek:Mesh",
+    "ideatek:MeshInstance", "ideatek:MeshInstances", "ideatek:Body",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -208,9 +286,12 @@ read = [
     "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
     "ideatek:ideatek_body_flags_t", "ideatek:ideatek_motion_quality_t",
     "ideatek:ideatek_shape_kind_t", "ideatek:ideatek_shape_flags_t",
-    "ideatek:ideatek_terrain_flags_t", "ideatek:ideatek_terrain_shape_t",
-    "ideatek:ideatek_terrain_op_t", "ideatek:Terrain",
-    "ideatek:TerrainMaterial", "ideatek:TerrainEdit", "ideatek:TerrainFill",
+    "ideatek:ideatek_terrain_kind_t", "ideatek:ideatek_terrain_channels_t",
+    "ideatek:ideatek_terrain_flags_t", "ideatek:ideatek_block_shape_t",
+    "ideatek:ideatek_block_rotation_t", "ideatek:ideatek_terrain_shape_t",
+    "ideatek:ideatek_terrain_op_t", "ideatek:ideatek_viewer_flags_t",
+    "ideatek:Terrain", "ideatek:TerrainMaterial", "ideatek:TerrainEdit",
+    "ideatek:TerrainFill", "ideatek:TerrainViewer", "ideatek:TerrainScatter",
     "ideatek:Shape",
 ]
 '''
