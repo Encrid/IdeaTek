@@ -403,13 +403,13 @@ false = { run = ["{out}/ui_layout{exe}", "ui_anchor"] }
 [[case]]
 name = "ideatek_ui_anchor_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/ui_layout{exe}", "ui_anchor"]
-claims = { status = 0, order = ["size 48", "alignment 8", "entity 0", "camera 8", "offset 16", "pivot_x 28", "pivot_y 32", "margin 36", "flags 40"] }
+claims = { status = 0, order = ["size 40", "alignment 8", "entity 0", "camera 8", "offset 16", "pivot_x 28", "pivot_y 32", "flags 36"] }
 false = { run = ["{out}/ui_layout{exe}", "ui_anchor_state"] }
 
 [[case]]
 name = "ideatek_ui_anchor_state_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/ui_layout{exe}", "ui_anchor_state"]
-claims = { status = 0, order = ["size 12", "alignment 4", "distance 0", "angle 4", "visible 8", "clamped 9"] }
+claims = { status = 0, order = ["size 8", "alignment 4", "distance 0", "visible 4"] }
 false = { run = ["{out}/ui_layout{exe}", "ui_grid"] }
 
 [[case]]
@@ -560,9 +560,9 @@ claims = { status = 0, line = [
     "uint8_t { IDEATEK_GESTURE_KIND_TAP = 0, IDEATEK_GESTURE_KIND_LONG_PRESS = 1, IDEATEK_GESTURE_KIND_PAN = 2, IDEATEK_GESTURE_KIND_PINCH = 3 }",
     "uint8_t { IDEATEK_GESTURE_PHASE_BEGIN = 0, IDEATEK_GESTURE_PHASE_CHANGE = 1, IDEATEK_GESTURE_PHASE_END = 2 }",
     "{ ideatek_entity_t node; ideatek_entity_t target; float x; float y; float dx; float dy; float scale; float angle; float vx; float vy; uint32_t order; ideatek_gesture_kind_t kind; ideatek_gesture_phase_t phase; uint8_t fingers; }",
-    "uint8_t { IDEATEK_ANCHOR_FLAGS_CLAMP = 0x01, IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND = 0x02 }",
-    "{ ideatek_entity_t entity; ideatek_entity_t camera; ideatek_vec3_t offset; float pivot_x; float pivot_y; float margin; ideatek_anchor_flags_t flags; }",
-    "{ float distance; float angle; bool visible; bool clamped; }",
+    "uint8_t { IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND = 0x01 }",
+    "{ ideatek_entity_t entity; ideatek_entity_t camera; ideatek_vec3_t offset; float pivot_x; float pivot_y; ideatek_anchor_flags_t flags; }",
+    "{ float distance; bool visible; }",
     "{ uint32_t columns; uint32_t rows; }",
     "{ uint32_t column; uint32_t row; uint32_t column_span; uint32_t row_span; }",
     "{ float x; float y; float scale_x; float scale_y; float rotation; float rotation_x; float rotation_y; float perspective; float pivot_x; float pivot_y; }",
@@ -649,9 +649,9 @@ claims = { status = 0, line = [
     "{ IDEATEK_GESTURE_KIND_TAP = 0, IDEATEK_GESTURE_KIND_LONG_PRESS = 1, IDEATEK_GESTURE_KIND_PAN = 2, IDEATEK_GESTURE_KIND_PINCH = 3 }",
     "{ IDEATEK_GESTURE_PHASE_BEGIN = 0, IDEATEK_GESTURE_PHASE_CHANGE = 1, IDEATEK_GESTURE_PHASE_END = 2 }",
     "{ ideatek_entity_t node; ideatek_entity_t target; float x; float y; float dx; float dy; float scale; float angle; float vx; float vy; uint32_t order; ideatek_gesture_kind_t kind; ideatek_gesture_phase_t phase; uint8_t fingers; }",
-    "{ IDEATEK_ANCHOR_FLAGS_CLAMP = 0x01, IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND = 0x02 }",
-    "{ ideatek_entity_t entity; ideatek_entity_t camera; ideatek_vec3_t offset; float pivot_x; float pivot_y; float margin; ideatek_anchor_flags_t flags; }",
-    "{ float distance; float angle; bool visible; bool clamped; }",
+    "{ IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND = 0x01 }",
+    "{ ideatek_entity_t entity; ideatek_entity_t camera; ideatek_vec3_t offset; float pivot_x; float pivot_y; ideatek_anchor_flags_t flags; }",
+    "{ float distance; bool visible; }",
     "{ uint32_t columns; uint32_t rows; }",
     "{ uint32_t column; uint32_t row; uint32_t column_span; uint32_t row_span; }",
     "{ float x; float y; float scale_x; float scale_y; float rotation; float rotation_x; float rotation_y; float perspective; float pivot_x; float pivot_y; }",

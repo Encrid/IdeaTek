@@ -559,7 +559,6 @@ static void show_ui_anchor(void)
     AT(ideatek_ui_anchor_t, offset);
     AT(ideatek_ui_anchor_t, pivot_x);
     AT(ideatek_ui_anchor_t, pivot_y);
-    AT(ideatek_ui_anchor_t, margin);
     AT(ideatek_ui_anchor_t, flags);
 }
 
@@ -567,9 +566,7 @@ static void show_ui_anchor_state(void)
 {
     SIZE(ideatek_ui_anchor_state_t);
     AT(ideatek_ui_anchor_state_t, distance);
-    AT(ideatek_ui_anchor_state_t, angle);
     AT(ideatek_ui_anchor_state_t, visible);
-    AT(ideatek_ui_anchor_state_t, clamped);
 }
 
 static void show_ui_grid(void)
