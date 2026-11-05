@@ -51,6 +51,11 @@ static const char WHO[] = MANIFEST;
     return (STRUCT(api, "ideatek:Drop", ideatek_drop_t));
 }
 
+[[maybe_unused]] static uint32_t declare_event_wait(const bridge_api_t *api)
+{
+    return (STRUCT(api, "ideatek:EventWait", ideatek_event_wait_t));
+}
+
 [[maybe_unused]] static uint32_t declare_clipboard(const bridge_api_t *api)
 {
     return (STRUCT(api, "ideatek:ClipboardRequest",
@@ -69,6 +74,7 @@ static const char WHO[] = MANIFEST;
     declare_display(api);
     declare_video_mode(api);
     declare_drop(api);
+    declare_event_wait(api);
     declare_clipboard(api);
     declare_paste(api);
 }
@@ -114,12 +120,20 @@ static const char WHO[] = MANIFEST;
 
     declare_fields(api);
     declare_request(api);
+    declare_event_wait(api);
     declare_clipboard(api);
     BRIDGE_NATIVE_ATTACH(api, api->spawn(api), declare_drop(api), drop);
     BRIDGE_NATIVE_ATTACH(api, api->spawn(api), declare_paste(api), paste);
     BRIDGE_NATIVE_ATTACH(api, id, declare_display(api), display);
     BRIDGE_NATIVE_ATTACH(api, id, declare_video_mode(api), mode);
     BRIDGE_NATIVE_ATTACH(api, id, declare_state(api), state);
+}
+
+[[maybe_unused]] static void limit_rate(const bridge_api_t *api)
+{
+    ideatek_event_wait_t wait = { .wait = 1.0 / 60.0 };
+
+    BRIDGE_NATIVE_ATTACH(api, api->spawn(api), declare_event_wait(api), wait);
 }
 
 BRIDGE_NATIVE(init)
@@ -131,6 +145,8 @@ BRIDGE_NATIVE(init)
     open_window(api);
 #elif defined(ROLE_WINDOW)
     report(api);
+#elif defined(ROLE_CLOCK)
+    limit_rate(api);
 #else
     declare_fields(api);
     declare_module(api);
