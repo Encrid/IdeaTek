@@ -519,8 +519,12 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_cone_joint_t, IDEATEK_CONE_JOINT_FIELDS);
         ideatek_vec3_t angular_velocity; \
         float max_force; \
         float max_torque; \
-        float hertz; \
-        float damping; \
+        float linear_hertz; \
+        float linear_damping; \
+        float max_spring_force; \
+        float angular_hertz; \
+        float angular_damping; \
+        float max_spring_torque; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_motor_joint_t, IDEATEK_MOTOR_JOINT_FIELDS);
