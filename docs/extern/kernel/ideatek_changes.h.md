@@ -51,7 +51,7 @@ The module of the tag reads an older version and upgrades it in its own code. A 
 ## The recordings
 
 A recorder writes the stream to a file, for a demo or a replay. With PLAY, it writes `ideatek:RowsIn` from the file, as a client does with the network.
-The path of a recording is a path of the files part.
+The path of a recording is a path of the files part. A recorder can also record the `ideatek:DebugDraw` batches of the debug_draw part.
 
 ## The settings
 
