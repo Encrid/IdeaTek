@@ -12,7 +12,18 @@
     #include "bridge_schema.h"
     #include "ideatek_space.h"
 
+    #define IDEATEK_NAV_MESH_KIND_VALUES { \
+        IDEATEK_NAV_MESH_KIND_SURFACE = 0, \
+        IDEATEK_NAV_MESH_KIND_VOLUME = 1 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_nav_mesh_kind_t,
+    uint8_t, IDEATEK_NAV_MESH_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_nav_mesh_kind_t,
+    uint8_t, IDEATEK_NAV_MESH_KIND_VALUES);
+
     #define IDEATEK_NAV_MESH_FIELDS { \
+        ideatek_entity_t data; \
         uint64_t sources; \
         ideatek_vec3_t size; \
         float agent_radius; \
@@ -22,6 +33,7 @@
         float cell_size; \
         float cell_height; \
         float tile_size; \
+        ideatek_nav_mesh_kind_t kind; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_nav_mesh_t, IDEATEK_NAV_MESH_FIELDS);
@@ -101,7 +113,10 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_nav_link_t, IDEATEK_NAV_LINK_FIELDS);
     #define IDEATEK_NAV_QUERY_KIND_VALUES { \
         IDEATEK_NAV_QUERY_KIND_PATH = 0, \
         IDEATEK_NAV_QUERY_KIND_PROJECT = 1, \
-        IDEATEK_NAV_QUERY_KIND_RAY = 2 \
+        IDEATEK_NAV_QUERY_KIND_RAY = 2, \
+        IDEATEK_NAV_QUERY_KIND_RANDOM = 3, \
+        IDEATEK_NAV_QUERY_KIND_RANDOM_IN_RADIUS = 4, \
+        IDEATEK_NAV_QUERY_KIND_EDGE = 5 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_nav_query_kind_t,
@@ -120,9 +135,11 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_nav_query_flags_t,
 
     #define IDEATEK_NAV_QUERY_FIELDS { \
         ideatek_entity_t nav_mesh; \
+        ideatek_entity_t filter; \
         ideatek_position_t start; \
         ideatek_position_t end; \
         uint64_t groups; \
+        float radius; \
         ideatek_nav_query_kind_t kind; \
         ideatek_nav_query_flags_t flags; \
     }
@@ -173,9 +190,15 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_nav_agent_flags_t,
 
     #define IDEATEK_NAV_AGENT_FIELDS { \
         ideatek_entity_t nav_mesh; \
+        ideatek_entity_t goal; \
+        ideatek_entity_t filter; \
         ideatek_position_t target; \
         uint64_t groups; \
+        uint64_t avoid_groups; \
+        uint64_t avoid_mask; \
         float max_speed; \
+        float max_acceleration; \
+        float avoidance_priority; \
         float radius; \
         float arrive_distance; \
         ideatek_nav_agent_flags_t flags; \
@@ -218,11 +241,37 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_nav_link_reached_t,
     IDEATEK_NAV_LINK_REACHED_FIELDS);
 
     #define IDEATEK_NAV_OBSTACLE_FIELDS { \
+        uint64_t avoid_groups; \
         float radius; \
         float height; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_nav_obstacle_t, IDEATEK_NAV_OBSTACLE_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_nav_obstacle_t, IDEATEK_NAV_OBSTACLE_FIELDS);
+
+    #define IDEATEK_NAV_MESH_DATA_FIELDS { \
+        bridge_text_t bytes; \
+        uint32_t revision; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_nav_mesh_data_t,
+    IDEATEK_NAV_MESH_DATA_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_nav_mesh_data_t,
+    IDEATEK_NAV_MESH_DATA_FIELDS);
+
+    #define IDEATEK_NAV_GOAL_FIELDS { \
+        ideatek_position_t position; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_nav_goal_t, IDEATEK_NAV_GOAL_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_nav_goal_t, IDEATEK_NAV_GOAL_FIELDS);
+
+    #define IDEATEK_NAV_FILTER_FIELDS { \
+        bridge_text_t costs; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_nav_filter_t, IDEATEK_NAV_FILTER_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_nav_filter_t, IDEATEK_NAV_FILTER_FIELDS);
 
 #endif
