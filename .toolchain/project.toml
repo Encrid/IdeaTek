@@ -5,5 +5,9 @@ name = "IdeaTek"
 timeout = 600
 copies = 1
 
+[ci]
+needs = ["display", "gl"]
+
 [check]
+unicode = ["third_party/sdl3_linux/license"]
 guides = ["layers.md"]
