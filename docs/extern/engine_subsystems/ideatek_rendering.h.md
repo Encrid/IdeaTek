@@ -391,7 +391,7 @@ The references do not agree on the angle and the planes, so the game sets each v
 | `up` | `float` | 8 | The angle of the top plane. |
 | `down` | `float` | 12 | The angle of the bottom plane. It is negative below. |
 
-An XR module writes it for the view of each eye. A portal or a screen of many displays uses it too.
+A module of a headset can write it for each eye. A portal or a screen of many displays uses it too.
 
 ## ideatek:Mesh
 

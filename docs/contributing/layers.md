@@ -63,7 +63,6 @@ engine_subsystems/
     ideatek_subtitles.h
     ideatek_terrain.h
     ideatek_ui.h
-    ideatek_xr.h
 ```
 
 The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the
