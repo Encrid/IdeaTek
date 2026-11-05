@@ -28,7 +28,8 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_sound_format_t,
     uint8_t, IDEATEK_SOUND_FORMAT_VALUES);
 
     #define IDEATEK_SOUND_FLAGS_VALUES { \
-        IDEATEK_SOUND_FLAGS_STREAM = 0x01 \
+        IDEATEK_SOUND_FLAGS_STREAM = 0x01, \
+        IDEATEK_SOUND_FLAGS_AMBISONIC = 0x02 \
     }
 
 BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_sound_flags_t,
@@ -50,6 +51,53 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_sound_flags_t,
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sound_t, IDEATEK_SOUND_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sound_t, IDEATEK_SOUND_FIELDS);
+
+    #define IDEATEK_SOUND_HRTF_FIELDS { \
+        bridge_text_t bytes; \
+        uint32_t revision; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sound_hrtf_t, IDEATEK_SOUND_HRTF_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sound_hrtf_t, IDEATEK_SOUND_HRTF_FIELDS);
+
+    #define IDEATEK_SOUND_PROBES_FIELDS { \
+        bridge_text_t bytes; \
+        uint32_t revision; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sound_probes_t, IDEATEK_SOUND_PROBES_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sound_probes_t, IDEATEK_SOUND_PROBES_FIELDS);
+
+    #define IDEATEK_SOUND_SEND_FIELDS { \
+        ideatek_entity_t player; \
+        ideatek_entity_t bus; \
+        float volume; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sound_send_t, IDEATEK_SOUND_SEND_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sound_send_t, IDEATEK_SOUND_SEND_FIELDS);
+
+    #define IDEATEK_RANDOM_MODE_VALUES { \
+        IDEATEK_RANDOM_MODE_RANDOM_NO_REPEATS = 0, \
+        IDEATEK_RANDOM_MODE_RANDOM = 1, \
+        IDEATEK_RANDOM_MODE_SEQUENTIAL = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_random_mode_t,
+    uint8_t, IDEATEK_RANDOM_MODE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_random_mode_t,
+    uint8_t, IDEATEK_RANDOM_MODE_VALUES);
+
+    #define IDEATEK_SOUND_RANDOM_FIELDS { \
+        bridge_text_t sounds; \
+        uint32_t count; \
+        float pitch_scale; \
+        float volume_offset; \
+        ideatek_random_mode_t mode; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sound_random_t, IDEATEK_SOUND_RANDOM_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sound_random_t, IDEATEK_SOUND_RANDOM_FIELDS);
 
     #define IDEATEK_SOUND_STATE_VALUES { \
         IDEATEK_SOUND_STATE_STOPPED = 0, \
@@ -78,6 +126,8 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_sound_player_flags_t,
         uint64_t start_offset; \
         float volume; \
         float pitch; \
+        float fade_in; \
+        float fade_out; \
         uint32_t cue; \
         ideatek_sound_state_t state; \
         ideatek_sound_player_flags_t flags; \
@@ -108,7 +158,8 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sound_ended_t, IDEATEK_SOUND_ENDED_FIELDS);
         IDEATEK_ATTENUATION_INVERSE = 0, \
         IDEATEK_ATTENUATION_INVERSE_SQUARE = 1, \
         IDEATEK_ATTENUATION_LINEAR = 2, \
-        IDEATEK_ATTENUATION_NONE = 3 \
+        IDEATEK_ATTENUATION_NONE = 3, \
+        IDEATEK_ATTENUATION_CURVE = 4 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_attenuation_t,
@@ -117,12 +168,12 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_attenuation_t,
     uint8_t, IDEATEK_ATTENUATION_VALUES);
 
     #define IDEATEK_SPATIAL_FLAGS_VALUES { \
-        IDEATEK_SPATIAL_FLAGS_DOPPLER = 0x01, \
-        IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION = 0x02, \
-        IDEATEK_SPATIAL_FLAGS_OCCLUSION = 0x04, \
-        IDEATEK_SPATIAL_FLAGS_TRANSMISSION = 0x08, \
-        IDEATEK_SPATIAL_FLAGS_REFLECTIONS = 0x10, \
-        IDEATEK_SPATIAL_FLAGS_PATHING = 0x20 \
+        IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION = 0x01, \
+        IDEATEK_SPATIAL_FLAGS_OCCLUSION = 0x02, \
+        IDEATEK_SPATIAL_FLAGS_TRANSMISSION = 0x04, \
+        IDEATEK_SPATIAL_FLAGS_REFLECTIONS = 0x08, \
+        IDEATEK_SPATIAL_FLAGS_PATHING = 0x10, \
+        IDEATEK_SPATIAL_FLAGS_BINAURAL = 0x20 \
     }
 
 BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_spatial_flags_t,
@@ -131,12 +182,16 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_spatial_flags_t,
     uint8_t, IDEATEK_SPATIAL_FLAGS_VALUES);
 
     #define IDEATEK_SOUND_SPATIAL_FIELDS { \
+        bridge_text_t rolloff_curve; \
         float reference_distance; \
         float max_distance; \
         float rolloff; \
         float cone_inner; \
         float cone_outer; \
         float cone_outer_gain; \
+        float radius; \
+        float spatial_blend; \
+        float doppler; \
         ideatek_attenuation_t model; \
         ideatek_spatial_flags_t flags; \
     }
@@ -147,6 +202,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sound_spatial_t,
     IDEATEK_SOUND_SPATIAL_FIELDS);
 
     #define IDEATEK_SOUND_LISTENER_FIELDS { \
+        ideatek_entity_t hrtf; \
         float volume; \
     }
 
@@ -169,6 +225,7 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_bus_flags_t,
     #define IDEATEK_SOUND_BUS_FIELDS { \
         ideatek_entity_t parent; \
         float volume; \
+        float fade; \
         ideatek_bus_flags_t flags; \
     }
 
