@@ -203,6 +203,15 @@ static void show_mesh_instance(void)
     AT(ideatek_mesh_instance_t, lod_bias);
 }
 
+static void show_mesh_instances(void)
+{
+    SIZE(ideatek_mesh_instances_t);
+    AT(ideatek_mesh_instances_t, mesh);
+    AT(ideatek_mesh_instances_t, transforms);
+    AT(ideatek_mesh_instances_t, count);
+    AT(ideatek_mesh_instances_t, revision);
+}
+
 static void show_mesh_materials(void)
 {
     SIZE(ideatek_mesh_materials_t);
@@ -517,19 +526,19 @@ static void show_descriptors(void)
         ideatek_tonemap_curve_t_desc, ideatek_camera_t_desc,
         ideatek_projection_t_desc, ideatek_projection_angles_t_desc,
         ideatek_mesh_t_desc, ideatek_mesh_instance_t_desc,
-        ideatek_mesh_materials_t_desc, ideatek_visibility_t_desc,
-        ideatek_affects_t_desc, ideatek_visibility_range_t_desc,
-        ideatek_material_t_desc, ideatek_texture_t_desc, ideatek_sampler_t_desc,
-        ideatek_light_t_desc, ideatek_decal_t_desc, ideatek_fog_t_desc,
-        ideatek_sky_t_desc, ideatek_atmosphere_t_desc,
-        ideatek_cloud_layer_t_desc, ideatek_exposure_t_desc,
-        ideatek_auto_exposure_t_desc, ideatek_tonemap_t_desc,
-        ideatek_bloom_t_desc, ideatek_color_grade_t_desc,
-        ideatek_depth_of_field_t_desc, ideatek_motion_blur_t_desc,
-        ideatek_vignette_t_desc, ideatek_chromatic_aberration_t_desc,
-        ideatek_film_grain_t_desc, ideatek_lens_flare_t_desc,
-        ideatek_material_clearcoat_t_desc, ideatek_material_specular_t_desc,
-        ideatek_material_transmission_t_desc,
+        ideatek_mesh_instances_t_desc, ideatek_mesh_materials_t_desc,
+        ideatek_visibility_t_desc, ideatek_affects_t_desc,
+        ideatek_visibility_range_t_desc, ideatek_material_t_desc,
+        ideatek_texture_t_desc, ideatek_sampler_t_desc, ideatek_light_t_desc,
+        ideatek_decal_t_desc, ideatek_fog_t_desc, ideatek_sky_t_desc,
+        ideatek_atmosphere_t_desc, ideatek_cloud_layer_t_desc,
+        ideatek_exposure_t_desc, ideatek_auto_exposure_t_desc,
+        ideatek_tonemap_t_desc, ideatek_bloom_t_desc,
+        ideatek_color_grade_t_desc, ideatek_depth_of_field_t_desc,
+        ideatek_motion_blur_t_desc, ideatek_vignette_t_desc,
+        ideatek_chromatic_aberration_t_desc, ideatek_film_grain_t_desc,
+        ideatek_lens_flare_t_desc, ideatek_material_clearcoat_t_desc,
+        ideatek_material_specular_t_desc, ideatek_material_transmission_t_desc,
         ideatek_material_anisotropy_t_desc,
         ideatek_material_diffuse_transmission_t_desc,
         ideatek_reflection_probe_t_desc, ideatek_irradiance_volume_t_desc,
@@ -556,6 +565,7 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_PROJECTION_FIELDS),
         TEXT_OF(IDEATEK_PROJECTION_ANGLES_FIELDS), TEXT_OF(IDEATEK_MESH_FIELDS),
         TEXT_OF(IDEATEK_MESH_INSTANCE_FIELDS),
+        TEXT_OF(IDEATEK_MESH_INSTANCES_FIELDS),
         TEXT_OF(IDEATEK_MESH_MATERIALS_FIELDS),
         TEXT_OF(IDEATEK_VISIBILITY_FIELDS), TEXT_OF(IDEATEK_AFFECTS_FIELDS),
         TEXT_OF(IDEATEK_VISIBILITY_RANGE_FIELDS),
@@ -600,6 +610,7 @@ int main(int argc, char **argv)
         { "projection", show_projection },
         { "projection_angles", show_projection_angles }, { "mesh", show_mesh },
         { "mesh_instance", show_mesh_instance },
+        { "mesh_instances", show_mesh_instances },
         { "mesh_materials", show_mesh_materials },
         { "visibility", show_visibility }, { "affects", show_affects },
         { "visibility_range", show_visibility_range },

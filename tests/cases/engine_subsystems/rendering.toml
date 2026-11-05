@@ -152,6 +152,12 @@ false = { run = ["{out}/rendering_layout{exe}", "mesh_instance"] }
 name = "ideatek_mesh_instance_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/rendering_layout{exe}", "mesh_instance"]
 claims = { status = 0, order = ["size 16", "alignment 8", "mesh 0", "lod_bias 8"] }
+false = { run = ["{out}/rendering_layout{exe}", "mesh_instances"] }
+
+[[case]]
+name = "ideatek_mesh_instances_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "mesh_instances"]
+claims = { status = 0, order = ["size 24", "alignment 8", "mesh 0", "transforms 8", "count 16", "revision 20"] }
 false = { run = ["{out}/rendering_layout{exe}", "mesh_materials"] }
 
 [[case]]
@@ -376,6 +382,7 @@ claims = { status = 0, line = [
     "{ float left; float right; float up; float down; }",
     "{ bridge_text_t bytes; uint32_t vertex_count; uint32_t index_count; uint32_t index_offset; uint32_t stream_count; uint32_t submesh_count; uint32_t lod_count; uint32_t target_count; uint32_t revision; ideatek_topology_t topology; ideatek_index_format_t index_format; }",
     "{ ideatek_entity_t mesh; float lod_bias; }",
+    "{ ideatek_entity_t mesh; bridge_text_t transforms; uint32_t count; uint32_t revision; }",
     "{ bridge_text_t materials; }",
     "{ uint64_t groups; ideatek_cast_shadow_t cast_shadow; ideatek_gi_mode_t gi_mode; bool visible; }",
     "{ uint64_t groups; }",
@@ -441,6 +448,7 @@ claims = { status = 0, line = [
     "{ float left; float right; float up; float down; }",
     "{ bridge_text_t bytes; uint32_t vertex_count; uint32_t index_count; uint32_t index_offset; uint32_t stream_count; uint32_t submesh_count; uint32_t lod_count; uint32_t target_count; uint32_t revision; ideatek_topology_t topology; ideatek_index_format_t index_format; }",
     "{ ideatek_entity_t mesh; float lod_bias; }",
+    "{ ideatek_entity_t mesh; bridge_text_t transforms; uint32_t count; uint32_t revision; }",
     "{ bridge_text_t materials; }",
     "{ uint64_t groups; ideatek_cast_shadow_t cast_shadow; ideatek_gi_mode_t gi_mode; bool visible; }",
     "{ uint64_t groups; }",
@@ -483,7 +491,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/rendering_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 61 types, each type after the types of its fields"
+name = "a module declares the 62 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/rendering_probe{library}"] }
 
@@ -512,10 +520,10 @@ read = [
     "ideatek:ideatek_fog_shape_t", "ideatek:ideatek_sky_kind_t",
     "ideatek:ideatek_tonemap_curve_t", "ideatek:Camera", "ideatek:Projection",
     "ideatek:ProjectionAngles", "ideatek:Mesh", "ideatek:MeshInstance",
-    "ideatek:MeshMaterials", "ideatek:Visibility", "ideatek:Affects",
-    "ideatek:VisibilityRange", "ideatek:Material", "ideatek:Texture",
-    "ideatek:Sampler", "ideatek:Light", "ideatek:Decal", "ideatek:Fog",
-    "ideatek:Sky", "ideatek:Atmosphere", "ideatek:CloudLayer",
+    "ideatek:MeshInstances", "ideatek:MeshMaterials", "ideatek:Visibility",
+    "ideatek:Affects", "ideatek:VisibilityRange", "ideatek:Material",
+    "ideatek:Texture", "ideatek:Sampler", "ideatek:Light", "ideatek:Decal",
+    "ideatek:Fog", "ideatek:Sky", "ideatek:Atmosphere", "ideatek:CloudLayer",
     "ideatek:Exposure", "ideatek:AutoExposure", "ideatek:Tonemap",
     "ideatek:Bloom", "ideatek:ColorGrade", "ideatek:DepthOfField",
     "ideatek:MotionBlur", "ideatek:Vignette", "ideatek:ChromaticAberration",
@@ -548,18 +556,19 @@ library = "{bb_native}/bridge_native"
 [module."test:author@1.0.0"]
 write = [
     "ideatek:Camera", "ideatek:Projection", "ideatek:ProjectionAngles",
-    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshMaterials",
-    "ideatek:Visibility", "ideatek:Affects", "ideatek:VisibilityRange",
-    "ideatek:Material", "ideatek:Texture", "ideatek:Sampler", "ideatek:Light",
-    "ideatek:Decal", "ideatek:Fog", "ideatek:Sky", "ideatek:Atmosphere",
-    "ideatek:CloudLayer", "ideatek:Exposure", "ideatek:AutoExposure",
-    "ideatek:Tonemap", "ideatek:Bloom", "ideatek:ColorGrade",
-    "ideatek:DepthOfField", "ideatek:MotionBlur", "ideatek:Vignette",
-    "ideatek:ChromaticAberration", "ideatek:FilmGrain", "ideatek:LensFlare",
-    "ideatek:MaterialClearcoat", "ideatek:MaterialSpecular",
-    "ideatek:MaterialTransmission", "ideatek:MaterialAnisotropy",
-    "ideatek:MaterialDiffuseTransmission", "ideatek:MaterialUnlit",
-    "ideatek:ReflectionProbe", "ideatek:IrradianceVolume", "ideatek:Lightmap",
+    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshInstances",
+    "ideatek:MeshMaterials", "ideatek:Visibility", "ideatek:Affects",
+    "ideatek:VisibilityRange", "ideatek:Material", "ideatek:Texture",
+    "ideatek:Sampler", "ideatek:Light", "ideatek:Decal", "ideatek:Fog",
+    "ideatek:Sky", "ideatek:Atmosphere", "ideatek:CloudLayer",
+    "ideatek:Exposure", "ideatek:AutoExposure", "ideatek:Tonemap",
+    "ideatek:Bloom", "ideatek:ColorGrade", "ideatek:DepthOfField",
+    "ideatek:MotionBlur", "ideatek:Vignette", "ideatek:ChromaticAberration",
+    "ideatek:FilmGrain", "ideatek:LensFlare", "ideatek:MaterialClearcoat",
+    "ideatek:MaterialSpecular", "ideatek:MaterialTransmission",
+    "ideatek:MaterialAnisotropy", "ideatek:MaterialDiffuseTransmission",
+    "ideatek:MaterialUnlit", "ideatek:ReflectionProbe",
+    "ideatek:IrradianceVolume", "ideatek:Lightmap",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -585,18 +594,19 @@ library = "{bb_native}/bridge_native"
 [module."test:author@1.0.0"]
 write = [
     "ideatek:Camera", "ideatek:Projection", "ideatek:ProjectionAngles",
-    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshMaterials",
-    "ideatek:Visibility", "ideatek:Affects", "ideatek:VisibilityRange",
-    "ideatek:Material", "ideatek:Texture", "ideatek:Sampler", "ideatek:Light",
-    "ideatek:Decal", "ideatek:Fog", "ideatek:Sky", "ideatek:Atmosphere",
-    "ideatek:CloudLayer", "ideatek:Exposure", "ideatek:AutoExposure",
-    "ideatek:Tonemap", "ideatek:Bloom", "ideatek:ColorGrade",
-    "ideatek:DepthOfField", "ideatek:MotionBlur", "ideatek:Vignette",
-    "ideatek:ChromaticAberration", "ideatek:FilmGrain", "ideatek:LensFlare",
-    "ideatek:MaterialClearcoat", "ideatek:MaterialSpecular",
-    "ideatek:MaterialTransmission", "ideatek:MaterialAnisotropy",
-    "ideatek:MaterialDiffuseTransmission", "ideatek:MaterialUnlit",
-    "ideatek:ReflectionProbe", "ideatek:IrradianceVolume",
+    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshInstances",
+    "ideatek:MeshMaterials", "ideatek:Visibility", "ideatek:Affects",
+    "ideatek:VisibilityRange", "ideatek:Material", "ideatek:Texture",
+    "ideatek:Sampler", "ideatek:Light", "ideatek:Decal", "ideatek:Fog",
+    "ideatek:Sky", "ideatek:Atmosphere", "ideatek:CloudLayer",
+    "ideatek:Exposure", "ideatek:AutoExposure", "ideatek:Tonemap",
+    "ideatek:Bloom", "ideatek:ColorGrade", "ideatek:DepthOfField",
+    "ideatek:MotionBlur", "ideatek:Vignette", "ideatek:ChromaticAberration",
+    "ideatek:FilmGrain", "ideatek:LensFlare", "ideatek:MaterialClearcoat",
+    "ideatek:MaterialSpecular", "ideatek:MaterialTransmission",
+    "ideatek:MaterialAnisotropy", "ideatek:MaterialDiffuseTransmission",
+    "ideatek:MaterialUnlit", "ideatek:ReflectionProbe",
+    "ideatek:IrradianceVolume",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -640,19 +650,19 @@ read = [
     "ideatek:ideatek_cast_shadow_t", "ideatek:ideatek_fog_shape_t",
     "ideatek:ideatek_sky_kind_t", "ideatek:ideatek_tonemap_curve_t",
     "ideatek:Camera", "ideatek:Projection", "ideatek:ProjectionAngles",
-    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshMaterials",
-    "ideatek:Visibility", "ideatek:Affects", "ideatek:VisibilityRange",
-    "ideatek:Material", "ideatek:Texture", "ideatek:Sampler", "ideatek:Light",
-    "ideatek:Decal", "ideatek:Fog", "ideatek:Sky", "ideatek:Atmosphere",
-    "ideatek:CloudLayer", "ideatek:Exposure", "ideatek:AutoExposure",
-    "ideatek:Tonemap", "ideatek:Bloom", "ideatek:ColorGrade",
-    "ideatek:DepthOfField", "ideatek:MotionBlur", "ideatek:Vignette",
-    "ideatek:ChromaticAberration", "ideatek:FilmGrain", "ideatek:LensFlare",
-    "ideatek:MaterialClearcoat", "ideatek:MaterialSpecular",
-    "ideatek:MaterialTransmission", "ideatek:MaterialAnisotropy",
-    "ideatek:MaterialDiffuseTransmission", "ideatek:MaterialUnlit",
-    "ideatek:ReflectionProbe", "ideatek:IrradianceVolume", "ideatek:Lightmap",
-    "ideatek:WorldTransform",
+    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshInstances",
+    "ideatek:MeshMaterials", "ideatek:Visibility", "ideatek:Affects",
+    "ideatek:VisibilityRange", "ideatek:Material", "ideatek:Texture",
+    "ideatek:Sampler", "ideatek:Light", "ideatek:Decal", "ideatek:Fog",
+    "ideatek:Sky", "ideatek:Atmosphere", "ideatek:CloudLayer",
+    "ideatek:Exposure", "ideatek:AutoExposure", "ideatek:Tonemap",
+    "ideatek:Bloom", "ideatek:ColorGrade", "ideatek:DepthOfField",
+    "ideatek:MotionBlur", "ideatek:Vignette", "ideatek:ChromaticAberration",
+    "ideatek:FilmGrain", "ideatek:LensFlare", "ideatek:MaterialClearcoat",
+    "ideatek:MaterialSpecular", "ideatek:MaterialTransmission",
+    "ideatek:MaterialAnisotropy", "ideatek:MaterialDiffuseTransmission",
+    "ideatek:MaterialUnlit", "ideatek:ReflectionProbe",
+    "ideatek:IrradianceVolume", "ideatek:Lightmap", "ideatek:WorldTransform",
 ]
 '''
 
@@ -676,18 +686,19 @@ read = [
     "ideatek:ideatek_cast_shadow_t", "ideatek:ideatek_fog_shape_t",
     "ideatek:ideatek_sky_kind_t", "ideatek:ideatek_tonemap_curve_t",
     "ideatek:Camera", "ideatek:Projection", "ideatek:ProjectionAngles",
-    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshMaterials",
-    "ideatek:Visibility", "ideatek:Affects", "ideatek:VisibilityRange",
-    "ideatek:Material", "ideatek:Texture", "ideatek:Sampler", "ideatek:Light",
-    "ideatek:Decal", "ideatek:Fog", "ideatek:Sky", "ideatek:Atmosphere",
-    "ideatek:CloudLayer", "ideatek:Exposure", "ideatek:AutoExposure",
-    "ideatek:Tonemap", "ideatek:Bloom", "ideatek:ColorGrade",
-    "ideatek:DepthOfField", "ideatek:MotionBlur", "ideatek:Vignette",
-    "ideatek:ChromaticAberration", "ideatek:FilmGrain", "ideatek:LensFlare",
-    "ideatek:MaterialClearcoat", "ideatek:MaterialSpecular",
-    "ideatek:MaterialTransmission", "ideatek:MaterialAnisotropy",
-    "ideatek:MaterialDiffuseTransmission", "ideatek:MaterialUnlit",
-    "ideatek:ReflectionProbe", "ideatek:IrradianceVolume", "ideatek:Lightmap",
+    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshInstances",
+    "ideatek:MeshMaterials", "ideatek:Visibility", "ideatek:Affects",
+    "ideatek:VisibilityRange", "ideatek:Material", "ideatek:Texture",
+    "ideatek:Sampler", "ideatek:Light", "ideatek:Decal", "ideatek:Fog",
+    "ideatek:Sky", "ideatek:Atmosphere", "ideatek:CloudLayer",
+    "ideatek:Exposure", "ideatek:AutoExposure", "ideatek:Tonemap",
+    "ideatek:Bloom", "ideatek:ColorGrade", "ideatek:DepthOfField",
+    "ideatek:MotionBlur", "ideatek:Vignette", "ideatek:ChromaticAberration",
+    "ideatek:FilmGrain", "ideatek:LensFlare", "ideatek:MaterialClearcoat",
+    "ideatek:MaterialSpecular", "ideatek:MaterialTransmission",
+    "ideatek:MaterialAnisotropy", "ideatek:MaterialDiffuseTransmission",
+    "ideatek:MaterialUnlit", "ideatek:ReflectionProbe",
+    "ideatek:IrradianceVolume", "ideatek:Lightmap",
 ]
 '''
 
