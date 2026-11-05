@@ -53,6 +53,11 @@ Each implementation is a part with its own release. A module part fills the role
 - The behavior and the settings of each role are in the document of its contract, under the name of the role.
 - The namespace of each identity is the key of its part, so no module has the namespace `ideatek`.
 - `sdl3` holds the shared library of SDL3 3.4.20. A deployment puts 1 copy of it beside its modules, so each module in the process uses the same SDL3.
+- For each target, the zip of `sdl3` holds the library, its headers in `include/SDL3`, the notices, and `leaks.toml` for `[leaks] with` of a module.
+- The library is `SDL3.dll`, `SDL3.so` with that soname, or `SDL3.dylib` with the install name `@rpath/SDL3.dylib`. A module links it with no import library.
+- The library keeps GL, Vulkan and the GPU API. It loads the GL or Vulkan library of the system only for a window or a call that asks for it.
+- On macOS, a window that names no graphics API and no external context asks for GL.
+- `SDL_Metal_CreateView` gives a view with a CAMetalLayer on macOS, and no view on the other systems.
 - The GPU module needs the base of `docs/extern/platform_abstraction/ideatek_gpu_vulkan.h.md`, *The features*.
 - On macOS, KosmicKrisp needs Apple silicon and macOS 26. MoltenVK serves an Intel Mac and an older macOS.
 - A GPU that lacks a part of that base gets `IDEATEK_GPU_STATUS_NONE`, and the log gets 1 line for each missing part.
@@ -77,3 +82,4 @@ Each implementation is a part with its own release. A module part fills the role
 
 The GNU Affero General Public License, version 3 only. The file `license` holds the text.
 Each source of third-party code has its notice in `third_party/<source>/license`.
+SDL3 is under the zlib licence: `third_party/sdl3/license`. Its Linux build holds code of SDL_linux_deps: `third_party/sdl3_linux/license`.
