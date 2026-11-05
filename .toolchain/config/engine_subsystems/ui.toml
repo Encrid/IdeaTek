@@ -1,7 +1,7 @@
 [parts.ui]
 name = "BC-IdeaTek-Ui"
 folder = "engine_subsystems/ui"
-uses = ["world", "space", "window", "input", "rendering", "input_mapping", "animation"]
+uses = ["world", "space", "window", "input", "rendering", "input_mapping", "animation", "localization"]
 third_party = []
 
 [parts.ui.package]
@@ -39,7 +39,7 @@ kind = "native_module"
 part = "ui"
 test = true
 sources = ["tests/engine_subsystems/ui_probe.c"]
-include = ["include/engine_subsystems", "include/platform_abstraction"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{ui_probe_words}"]
 

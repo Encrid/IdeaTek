@@ -873,6 +873,7 @@ read = [
     "ideatek:UiTransform", "ideatek:UiOpacity", "ideatek:UiGradient",
     "ideatek:UiAccessible", "ideatek:UiShader", "ideatek:UiBlur",
     "ideatek:UiMask", "ideatek:WorldTransform", "ideatek:AnimationCurves",
+    "ideatek:LocalizedText",
 ]
 '''
 
@@ -922,7 +923,7 @@ read = [
     "ideatek:UiTransform", "ideatek:UiOpacity", "ideatek:UiGradient",
     "ideatek:UiAccessible", "ideatek:UiShader", "ideatek:UiBlur",
     "ideatek:UiMask", "ideatek:WorldTransform", "ideatek:AnimationCurves",
-    "ideatek:UiAnchorState",
+    "ideatek:LocalizedText", "ideatek:UiAnchorState",
 ]
 '''
 

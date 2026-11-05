@@ -1,7 +1,7 @@
 [parts.resources]
 name = "BC-IdeaTek-Resources"
 folder = "kernel/resources"
-uses = ["world", "files"]
+uses = ["world", "files", "localization"]
 third_party = []
 
 [parts.resources.package]

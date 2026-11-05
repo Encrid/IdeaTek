@@ -5,6 +5,7 @@
 */
 #include "bridge_native.h"
 #include "ideatek_animation.h"
+#include "ideatek_localization.h"
 #include "ideatek_ui.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -310,6 +311,9 @@ static const char WHO[] = MANIFEST;
         BRIDGE_ON_DESTROY_REMOVE);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:AnimationCurves",
         ideatek_animation_curves_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:LocalizedText",
+        ideatek_localized_text_t, BRIDGE_STRIP, BRIDGE_TABLE,
         BRIDGE_ON_DESTROY_REMOVE);
     api->attach(api, id, STRUCT(api, "ideatek:UiRect", ideatek_ui_rect_t),
         BRIDGE_ZEROED);

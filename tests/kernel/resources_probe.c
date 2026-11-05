@@ -5,6 +5,7 @@
 */
 #include "bridge_native.h"
 #include "ideatek_files.h"
+#include "ideatek_localization.h"
 #include "ideatek_resources.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -123,6 +124,8 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_file_status_t", ideatek_file_status_t);
     ENUM(api, "ideatek:ideatek_load_state_t", ideatek_load_state_t);
     ENUM(api, "ideatek:ideatek_resource_error_t", ideatek_resource_error_t);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:Locale", ideatek_locale_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
     STRUCT(api, "ideatek:ResourceLoad", ideatek_resource_load_t);
     STRUCT(api, "ideatek:ResourceAdd", ideatek_resource_add_t);
     STRUCT(api, "ideatek:ResourceLoader", ideatek_resource_loader_t);

@@ -332,8 +332,8 @@ read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_storage_t",
     "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t",
     "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
-    "ideatek:ResourceLoad", "ideatek:ResourceAdd", "ideatek:ResourceLoader",
-    "ideatek:ResourceLabel", "ideatek:ResourceSource",
+    "ideatek:Locale", "ideatek:ResourceLoad", "ideatek:ResourceAdd",
+    "ideatek:ResourceLoader", "ideatek:ResourceLabel", "ideatek:ResourceSource",
     "ideatek:ResourceSourceResult", "ideatek:FileResult", "ideatek:FileChange",
 ]
 '''
@@ -356,8 +356,8 @@ read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_storage_t",
     "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t",
     "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
-    "ideatek:ResourceLoad", "ideatek:ResourceAdd", "ideatek:ResourceLoader",
-    "ideatek:ResourceLabel", "ideatek:ResourceSource",
+    "ideatek:Locale", "ideatek:ResourceLoad", "ideatek:ResourceAdd",
+    "ideatek:ResourceLoader", "ideatek:ResourceLabel", "ideatek:ResourceSource",
     "ideatek:ResourceSourceResult", "ideatek:FileResult", "ideatek:FileChange",
     "ideatek:ResourceFailed",
 ]
