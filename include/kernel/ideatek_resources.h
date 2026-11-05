@@ -182,4 +182,15 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_resource_source_result_t,
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_resource_source_result_t,
     IDEATEK_RESOURCE_SOURCE_RESULT_FIELDS);
 
+    #define IDEATEK_RESOURCE_VARIABLE_FIELDS { \
+        bridge_text_t name; \
+        bridge_text_t value; \
+        bridge_text_t fallback; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_resource_variable_t,
+    IDEATEK_RESOURCE_VARIABLE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_resource_variable_t,
+    IDEATEK_RESOURCE_VARIABLE_FIELDS);
+
 #endif
