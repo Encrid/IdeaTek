@@ -60,7 +60,6 @@ engine_subsystems/
     ideatek_services.h
     ideatek_sound.h
     ideatek_space.h
-    ideatek_subtitles.h
     ideatek_terrain.h
     ideatek_ui.h
 ```
