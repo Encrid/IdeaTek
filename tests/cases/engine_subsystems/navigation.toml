@@ -1,7 +1,13 @@
 [[case]]
+name = "ideatek_nav_mesh_kind_t is 1 byte"
+run = ["{out}/navigation_layout{exe}", "nav_mesh_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/navigation_layout{exe}", "nav_mesh"] }
+
+[[case]]
 name = "ideatek_nav_mesh_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/navigation_layout{exe}", "nav_mesh"]
-claims = { status = 0, order = ["size 48", "alignment 8", "sources 0", "size 8", "agent_radius 20", "agent_height 24", "max_climb 28", "max_slope 32", "cell_size 36", "cell_height 40", "tile_size 44"] }
+claims = { status = 0, order = ["size 64", "alignment 8", "data 0", "sources 8", "size 16", "agent_radius 28", "agent_height 32", "max_climb 36", "max_slope 40", "cell_size 44", "cell_height 48", "tile_size 52", "kind 56"] }
 false = { run = ["{out}/navigation_layout{exe}", "nav_build"] }
 
 [[case]]
@@ -61,7 +67,7 @@ false = { run = ["{out}/navigation_layout{exe}", "nav_query"] }
 [[case]]
 name = "ideatek_nav_query_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/navigation_layout{exe}", "nav_query"]
-claims = { status = 0, order = ["size 72", "alignment 8", "nav_mesh 0", "start 8", "end 32", "groups 56", "kind 64", "flags 65"] }
+claims = { status = 0, order = ["size 80", "alignment 8", "nav_mesh 0", "filter 8", "start 16", "end 40", "groups 64", "radius 72", "kind 76", "flags 77"] }
 false = { run = ["{out}/navigation_layout{exe}", "nav_result"] }
 
 [[case]]
@@ -91,7 +97,7 @@ false = { run = ["{out}/navigation_layout{exe}", "nav_agent"] }
 [[case]]
 name = "ideatek_nav_agent_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/navigation_layout{exe}", "nav_agent"]
-claims = { status = 0, order = ["size 56", "alignment 8", "nav_mesh 0", "target 8", "groups 32", "max_speed 40", "radius 44", "arrive_distance 48", "flags 52"] }
+claims = { status = 0, order = ["size 96", "alignment 8", "nav_mesh 0", "goal 8", "filter 16", "target 24", "groups 48", "avoid_groups 56", "avoid_mask 64", "max_speed 72", "max_acceleration 76", "avoidance_priority 80", "radius 84", "arrive_distance 88", "flags 92"] }
 false = { run = ["{out}/navigation_layout{exe}", "nav_steer_state"] }
 
 [[case]]
@@ -115,14 +121,33 @@ false = { run = ["{out}/navigation_layout{exe}", "nav_obstacle"] }
 [[case]]
 name = "ideatek_nav_obstacle_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/navigation_layout{exe}", "nav_obstacle"]
-claims = { status = 0, order = ["size 8", "alignment 4", "radius 0", "height 4"] }
-false = { run = ["{out}/navigation_layout{exe}", "nav_mesh"] }
+claims = { status = 0, order = ["size 16", "alignment 8", "avoid_groups 0", "radius 8", "height 12"] }
+false = { run = ["{out}/navigation_layout{exe}", "nav_mesh_data"] }
+
+[[case]]
+name = "ideatek_nav_mesh_data_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/navigation_layout{exe}", "nav_mesh_data"]
+claims = { status = 0, order = ["size 12", "alignment 4", "bytes 0", "revision 8"] }
+false = { run = ["{out}/navigation_layout{exe}", "nav_goal"] }
+
+[[case]]
+name = "ideatek_nav_goal_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/navigation_layout{exe}", "nav_goal"]
+claims = { status = 0, order = ["size 24", "alignment 8", "position 0"] }
+false = { run = ["{out}/navigation_layout{exe}", "nav_filter"] }
+
+[[case]]
+name = "ideatek_nav_filter_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/navigation_layout{exe}", "nav_filter"]
+claims = { status = 0, order = ["size 12", "alignment 4", "costs 0", "count 8"] }
+false = { run = ["{out}/navigation_layout{exe}", "nav_mesh_kind"] }
 
 [[case]]
 name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/navigation_layout{exe}", "descriptors"]
 claims = { status = 0, line = [
-    "{ uint64_t sources; ideatek_vec3_t size; float agent_radius; float agent_height; float max_climb; float max_slope; float cell_size; float cell_height; float tile_size; }",
+    "uint8_t { IDEATEK_NAV_MESH_KIND_SURFACE = 0, IDEATEK_NAV_MESH_KIND_VOLUME = 1 }",
+    "{ ideatek_entity_t data; uint64_t sources; ideatek_vec3_t size; float agent_radius; float agent_height; float max_climb; float max_slope; float cell_size; float cell_height; float tile_size; ideatek_nav_mesh_kind_t kind; }",
     "uint8_t { IDEATEK_NAV_BUILD_EMPTY = 0, IDEATEK_NAV_BUILD_BUILDING = 1, IDEATEK_NAV_BUILD_READY = 2 }",
     "{ uint32_t tiles; uint32_t revision; ideatek_nav_build_t state; }",
     "uint8_t { IDEATEK_NAV_AREA_FLAGS_BLOCKED = 0x01 }",
@@ -130,18 +155,21 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t area; ideatek_entity_t shape; ideatek_vec3_t size; }",
     "uint8_t { IDEATEK_NAV_LINK_FLAGS_BIDIRECTIONAL = 0x01, IDEATEK_NAV_LINK_FLAGS_ENABLED = 0x02 }",
     "{ ideatek_entity_t area; ideatek_vec3_t start; ideatek_vec3_t end; float radius; ideatek_nav_link_flags_t flags; }",
-    "uint8_t { IDEATEK_NAV_QUERY_KIND_PATH = 0, IDEATEK_NAV_QUERY_KIND_PROJECT = 1, IDEATEK_NAV_QUERY_KIND_RAY = 2 }",
+    "uint8_t { IDEATEK_NAV_QUERY_KIND_PATH = 0, IDEATEK_NAV_QUERY_KIND_PROJECT = 1, IDEATEK_NAV_QUERY_KIND_RAY = 2, IDEATEK_NAV_QUERY_KIND_RANDOM = 3, IDEATEK_NAV_QUERY_KIND_RANDOM_IN_RADIUS = 4, IDEATEK_NAV_QUERY_KIND_EDGE = 5 }",
     "uint8_t { IDEATEK_NAV_QUERY_FLAGS_PARTIAL = 0x01 }",
-    "{ ideatek_entity_t nav_mesh; ideatek_position_t start; ideatek_position_t end; uint64_t groups; ideatek_nav_query_kind_t kind; ideatek_nav_query_flags_t flags; }",
+    "{ ideatek_entity_t nav_mesh; ideatek_entity_t filter; ideatek_position_t start; ideatek_position_t end; uint64_t groups; float radius; ideatek_nav_query_kind_t kind; ideatek_nav_query_flags_t flags; }",
     "uint8_t { IDEATEK_NAV_RESULT_PENDING = 0, IDEATEK_NAV_RESULT_FOUND = 1, IDEATEK_NAV_RESULT_PARTIAL = 2, IDEATEK_NAV_RESULT_NONE = 3 }",
     "{ ideatek_position_t position; ideatek_entity_t link; }",
     "{ bridge_text_t bytes; uint32_t count; float length; uint32_t revision; ideatek_nav_result_t state; }",
     "uint8_t { IDEATEK_NAV_AGENT_FLAGS_ACTIVE = 0x01, IDEATEK_NAV_AGENT_FLAGS_AVOID = 0x02 }",
-    "{ ideatek_entity_t nav_mesh; ideatek_position_t target; uint64_t groups; float max_speed; float radius; float arrive_distance; ideatek_nav_agent_flags_t flags; }",
+    "{ ideatek_entity_t nav_mesh; ideatek_entity_t goal; ideatek_entity_t filter; ideatek_position_t target; uint64_t groups; uint64_t avoid_groups; uint64_t avoid_mask; float max_speed; float max_acceleration; float avoidance_priority; float radius; float arrive_distance; ideatek_nav_agent_flags_t flags; }",
     "uint8_t { IDEATEK_NAV_STEER_STATE_IDLE = 0, IDEATEK_NAV_STEER_STATE_MOVING = 1, IDEATEK_NAV_STEER_STATE_ARRIVED = 2, IDEATEK_NAV_STEER_STATE_BLOCKED = 3 }",
     "{ ideatek_entity_t link; ideatek_position_t next; ideatek_vec3_t velocity; ideatek_nav_steer_state_t state; }",
     "{ ideatek_entity_t agent; ideatek_entity_t link; uint32_t order; }",
-    "{ float radius; float height; }",
+    "{ uint64_t avoid_groups; float radius; float height; }",
+    "{ bridge_text_t bytes; uint32_t revision; }",
+    "{ ideatek_position_t position; }",
+    "{ bridge_text_t costs; uint32_t count; }",
 ] }
 false = { run = ["{out}/navigation_layout{exe}", "texts"] }
 
@@ -149,7 +177,8 @@ false = { run = ["{out}/navigation_layout{exe}", "texts"] }
 name = "each macro of a text gives the braces of its type and the text between them"
 run = ["{out}/navigation_layout{exe}", "texts"]
 claims = { status = 0, line = [
-    "{ uint64_t sources; ideatek_vec3_t size; float agent_radius; float agent_height; float max_climb; float max_slope; float cell_size; float cell_height; float tile_size; }",
+    "{ IDEATEK_NAV_MESH_KIND_SURFACE = 0, IDEATEK_NAV_MESH_KIND_VOLUME = 1 }",
+    "{ ideatek_entity_t data; uint64_t sources; ideatek_vec3_t size; float agent_radius; float agent_height; float max_climb; float max_slope; float cell_size; float cell_height; float tile_size; ideatek_nav_mesh_kind_t kind; }",
     "{ IDEATEK_NAV_BUILD_EMPTY = 0, IDEATEK_NAV_BUILD_BUILDING = 1, IDEATEK_NAV_BUILD_READY = 2 }",
     "{ uint32_t tiles; uint32_t revision; ideatek_nav_build_t state; }",
     "{ IDEATEK_NAV_AREA_FLAGS_BLOCKED = 0x01 }",
@@ -157,18 +186,21 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t area; ideatek_entity_t shape; ideatek_vec3_t size; }",
     "{ IDEATEK_NAV_LINK_FLAGS_BIDIRECTIONAL = 0x01, IDEATEK_NAV_LINK_FLAGS_ENABLED = 0x02 }",
     "{ ideatek_entity_t area; ideatek_vec3_t start; ideatek_vec3_t end; float radius; ideatek_nav_link_flags_t flags; }",
-    "{ IDEATEK_NAV_QUERY_KIND_PATH = 0, IDEATEK_NAV_QUERY_KIND_PROJECT = 1, IDEATEK_NAV_QUERY_KIND_RAY = 2 }",
+    "{ IDEATEK_NAV_QUERY_KIND_PATH = 0, IDEATEK_NAV_QUERY_KIND_PROJECT = 1, IDEATEK_NAV_QUERY_KIND_RAY = 2, IDEATEK_NAV_QUERY_KIND_RANDOM = 3, IDEATEK_NAV_QUERY_KIND_RANDOM_IN_RADIUS = 4, IDEATEK_NAV_QUERY_KIND_EDGE = 5 }",
     "{ IDEATEK_NAV_QUERY_FLAGS_PARTIAL = 0x01 }",
-    "{ ideatek_entity_t nav_mesh; ideatek_position_t start; ideatek_position_t end; uint64_t groups; ideatek_nav_query_kind_t kind; ideatek_nav_query_flags_t flags; }",
+    "{ ideatek_entity_t nav_mesh; ideatek_entity_t filter; ideatek_position_t start; ideatek_position_t end; uint64_t groups; float radius; ideatek_nav_query_kind_t kind; ideatek_nav_query_flags_t flags; }",
     "{ IDEATEK_NAV_RESULT_PENDING = 0, IDEATEK_NAV_RESULT_FOUND = 1, IDEATEK_NAV_RESULT_PARTIAL = 2, IDEATEK_NAV_RESULT_NONE = 3 }",
     "{ ideatek_position_t position; ideatek_entity_t link; }",
     "{ bridge_text_t bytes; uint32_t count; float length; uint32_t revision; ideatek_nav_result_t state; }",
     "{ IDEATEK_NAV_AGENT_FLAGS_ACTIVE = 0x01, IDEATEK_NAV_AGENT_FLAGS_AVOID = 0x02 }",
-    "{ ideatek_entity_t nav_mesh; ideatek_position_t target; uint64_t groups; float max_speed; float radius; float arrive_distance; ideatek_nav_agent_flags_t flags; }",
+    "{ ideatek_entity_t nav_mesh; ideatek_entity_t goal; ideatek_entity_t filter; ideatek_position_t target; uint64_t groups; uint64_t avoid_groups; uint64_t avoid_mask; float max_speed; float max_acceleration; float avoidance_priority; float radius; float arrive_distance; ideatek_nav_agent_flags_t flags; }",
     "{ IDEATEK_NAV_STEER_STATE_IDLE = 0, IDEATEK_NAV_STEER_STATE_MOVING = 1, IDEATEK_NAV_STEER_STATE_ARRIVED = 2, IDEATEK_NAV_STEER_STATE_BLOCKED = 3 }",
     "{ ideatek_entity_t link; ideatek_position_t next; ideatek_vec3_t velocity; ideatek_nav_steer_state_t state; }",
     "{ ideatek_entity_t agent; ideatek_entity_t link; uint32_t order; }",
-    "{ float radius; float height; }",
+    "{ uint64_t avoid_groups; float radius; float height; }",
+    "{ bridge_text_t bytes; uint32_t revision; }",
+    "{ ideatek_position_t position; }",
+    "{ bridge_text_t costs; uint32_t count; }",
 ] }
 false = { run = ["{out}/navigation_layout{exe}", "descriptors"] }
 
@@ -179,7 +211,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/navigation_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 23 types, each type after the types of its fields"
+name = "a module declares the 27 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/navigation_probe{library}"] }
 
@@ -196,15 +228,17 @@ library = "{bb_native}/bridge_native"
 [module."test:probe@1.0.0"]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
-    "ideatek:ideatek_position_t", "ideatek:ideatek_nav_build_t",
-    "ideatek:ideatek_nav_area_flags_t", "ideatek:ideatek_nav_link_flags_t",
-    "ideatek:ideatek_nav_query_kind_t", "ideatek:ideatek_nav_query_flags_t",
-    "ideatek:ideatek_nav_result_t", "ideatek:ideatek_nav_point_t",
-    "ideatek:ideatek_nav_agent_flags_t", "ideatek:ideatek_nav_steer_state_t",
-    "ideatek:NavMesh", "ideatek:NavMeshState", "ideatek:NavArea",
-    "ideatek:NavModifier", "ideatek:NavLink", "ideatek:NavQuery",
-    "ideatek:NavPath", "ideatek:NavAgent", "ideatek:NavSteer",
-    "ideatek:NavLinkReached", "ideatek:NavObstacle",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_nav_mesh_kind_t",
+    "ideatek:ideatek_nav_build_t", "ideatek:ideatek_nav_area_flags_t",
+    "ideatek:ideatek_nav_link_flags_t", "ideatek:ideatek_nav_query_kind_t",
+    "ideatek:ideatek_nav_query_flags_t", "ideatek:ideatek_nav_result_t",
+    "ideatek:ideatek_nav_point_t", "ideatek:ideatek_nav_agent_flags_t",
+    "ideatek:ideatek_nav_steer_state_t", "ideatek:NavMesh",
+    "ideatek:NavMeshState", "ideatek:NavArea", "ideatek:NavModifier",
+    "ideatek:NavLink", "ideatek:NavQuery", "ideatek:NavPath",
+    "ideatek:NavAgent", "ideatek:NavSteer", "ideatek:NavLinkReached",
+    "ideatek:NavObstacle", "ideatek:NavMeshData", "ideatek:NavGoal",
+    "ideatek:NavFilter",
 ]
 '''
 
@@ -230,13 +264,15 @@ library = "{bb_native}/bridge_native"
 write = [
     "ideatek:NavMesh", "ideatek:NavArea", "ideatek:NavModifier",
     "ideatek:NavLink", "ideatek:NavQuery", "ideatek:NavAgent",
-    "ideatek:NavObstacle",
+    "ideatek:NavObstacle", "ideatek:NavMeshData", "ideatek:NavGoal",
+    "ideatek:NavFilter",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
-    "ideatek:ideatek_position_t", "ideatek:ideatek_nav_area_flags_t",
-    "ideatek:ideatek_nav_link_flags_t", "ideatek:ideatek_nav_query_kind_t",
-    "ideatek:ideatek_nav_query_flags_t", "ideatek:ideatek_nav_agent_flags_t",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_nav_mesh_kind_t",
+    "ideatek:ideatek_nav_area_flags_t", "ideatek:ideatek_nav_link_flags_t",
+    "ideatek:ideatek_nav_query_kind_t", "ideatek:ideatek_nav_query_flags_t",
+    "ideatek:ideatek_nav_agent_flags_t",
 ]
 '''
 
@@ -251,13 +287,14 @@ library = "{bb_native}/bridge_native"
 write = [
     "ideatek:NavMesh", "ideatek:NavArea", "ideatek:NavModifier",
     "ideatek:NavLink", "ideatek:NavQuery", "ideatek:NavAgent",
+    "ideatek:NavObstacle", "ideatek:NavMeshData", "ideatek:NavGoal",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
-    "ideatek:ideatek_position_t", "ideatek:ideatek_nav_area_flags_t",
-    "ideatek:ideatek_nav_link_flags_t", "ideatek:ideatek_nav_query_kind_t",
-    "ideatek:ideatek_nav_query_flags_t", "ideatek:ideatek_nav_agent_flags_t",
-    "ideatek:NavObstacle",
+    "ideatek:ideatek_position_t", "ideatek:ideatek_nav_mesh_kind_t",
+    "ideatek:ideatek_nav_area_flags_t", "ideatek:ideatek_nav_link_flags_t",
+    "ideatek:ideatek_nav_query_kind_t", "ideatek:ideatek_nav_query_flags_t",
+    "ideatek:ideatek_nav_agent_flags_t", "ideatek:NavFilter",
 ]
 '''
 
@@ -287,13 +324,14 @@ read = [
     "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_body_kind_t",
     "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
     "ideatek:ideatek_body_flags_t", "ideatek:ideatek_motion_quality_t",
-    "ideatek:ideatek_nav_build_t", "ideatek:ideatek_nav_area_flags_t",
-    "ideatek:ideatek_nav_link_flags_t", "ideatek:ideatek_nav_query_kind_t",
-    "ideatek:ideatek_nav_query_flags_t", "ideatek:ideatek_nav_result_t",
-    "ideatek:ideatek_nav_agent_flags_t", "ideatek:ideatek_nav_steer_state_t",
-    "ideatek:NavMesh", "ideatek:NavArea", "ideatek:NavModifier",
-    "ideatek:NavLink", "ideatek:NavQuery", "ideatek:NavAgent",
-    "ideatek:NavObstacle", "ideatek:Shape", "ideatek:Body",
+    "ideatek:ideatek_nav_mesh_kind_t", "ideatek:ideatek_nav_build_t",
+    "ideatek:ideatek_nav_area_flags_t", "ideatek:ideatek_nav_link_flags_t",
+    "ideatek:ideatek_nav_query_kind_t", "ideatek:ideatek_nav_query_flags_t",
+    "ideatek:ideatek_nav_result_t", "ideatek:ideatek_nav_agent_flags_t",
+    "ideatek:ideatek_nav_steer_state_t", "ideatek:NavMesh", "ideatek:NavArea",
+    "ideatek:NavModifier", "ideatek:NavLink", "ideatek:NavQuery",
+    "ideatek:NavAgent", "ideatek:NavObstacle", "ideatek:NavMeshData",
+    "ideatek:NavGoal", "ideatek:NavFilter", "ideatek:Shape", "ideatek:Body",
     "ideatek:WorldTransform",
 ]
 '''
@@ -315,13 +353,14 @@ read = [
     "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_body_kind_t",
     "ideatek:ideatek_mass_mode_t", "ideatek:ideatek_locked_t",
     "ideatek:ideatek_body_flags_t", "ideatek:ideatek_motion_quality_t",
-    "ideatek:ideatek_nav_build_t", "ideatek:ideatek_nav_area_flags_t",
-    "ideatek:ideatek_nav_link_flags_t", "ideatek:ideatek_nav_query_kind_t",
-    "ideatek:ideatek_nav_query_flags_t", "ideatek:ideatek_nav_result_t",
-    "ideatek:ideatek_nav_agent_flags_t", "ideatek:ideatek_nav_steer_state_t",
-    "ideatek:NavMesh", "ideatek:NavArea", "ideatek:NavModifier",
-    "ideatek:NavLink", "ideatek:NavQuery", "ideatek:NavAgent",
-    "ideatek:NavObstacle", "ideatek:Shape", "ideatek:Body",
+    "ideatek:ideatek_nav_mesh_kind_t", "ideatek:ideatek_nav_build_t",
+    "ideatek:ideatek_nav_area_flags_t", "ideatek:ideatek_nav_link_flags_t",
+    "ideatek:ideatek_nav_query_kind_t", "ideatek:ideatek_nav_query_flags_t",
+    "ideatek:ideatek_nav_result_t", "ideatek:ideatek_nav_agent_flags_t",
+    "ideatek:ideatek_nav_steer_state_t", "ideatek:NavMesh", "ideatek:NavArea",
+    "ideatek:NavModifier", "ideatek:NavLink", "ideatek:NavQuery",
+    "ideatek:NavAgent", "ideatek:NavObstacle", "ideatek:NavMeshData",
+    "ideatek:NavGoal", "ideatek:NavFilter", "ideatek:Shape", "ideatek:Body",
     "ideatek:WorldTransform", "ideatek:NavLinkReached",
 ]
 '''

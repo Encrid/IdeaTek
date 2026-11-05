@@ -24,6 +24,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     STRUCT(api, "ideatek:ideatek_vec3_t", ideatek_vec3_t);
     STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
+    ENUM(api, "ideatek:ideatek_nav_mesh_kind_t", ideatek_nav_mesh_kind_t);
     ENUM(api, "ideatek:ideatek_nav_build_t", ideatek_nav_build_t);
     MASK(api, "ideatek:ideatek_nav_area_flags_t", ideatek_nav_area_flags_t);
     MASK(api, "ideatek:ideatek_nav_link_flags_t", ideatek_nav_link_flags_t);
@@ -55,6 +56,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:NavSteer", ideatek_nav_steer_t);
     STRUCT(api, "ideatek:NavLinkReached", ideatek_nav_link_reached_t);
     STRUCT(api, "ideatek:NavObstacle", ideatek_nav_obstacle_t);
+    STRUCT(api, "ideatek:NavMeshData", ideatek_nav_mesh_data_t);
+    STRUCT(api, "ideatek:NavGoal", ideatek_nav_goal_t);
+    STRUCT(api, "ideatek:NavFilter", ideatek_nav_filter_t);
 }
 
 [[maybe_unused]] static void role_game(const bridge_api_t *api)
@@ -64,6 +68,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     STRUCT(api, "ideatek:ideatek_vec3_t", ideatek_vec3_t);
     STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
+    ENUM(api, "ideatek:ideatek_nav_mesh_kind_t", ideatek_nav_mesh_kind_t);
     MASK(api, "ideatek:ideatek_nav_area_flags_t", ideatek_nav_area_flags_t);
     MASK(api, "ideatek:ideatek_nav_link_flags_t", ideatek_nav_link_flags_t);
     ENUM(api, "ideatek:ideatek_nav_query_kind_t", ideatek_nav_query_kind_t);
@@ -83,6 +88,12 @@ static const char WHO[] = MANIFEST;
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:NavObstacle",
         ideatek_nav_obstacle_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:NavMeshData",
+        ideatek_nav_mesh_data_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:NavGoal", ideatek_nav_goal_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:NavFilter", ideatek_nav_filter_t),
+        BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_module(const bridge_api_t *api)
@@ -99,6 +110,7 @@ static const char WHO[] = MANIFEST;
     MASK(api, "ideatek:ideatek_locked_t", ideatek_locked_t);
     MASK(api, "ideatek:ideatek_body_flags_t", ideatek_body_flags_t);
     ENUM(api, "ideatek:ideatek_motion_quality_t", ideatek_motion_quality_t);
+    ENUM(api, "ideatek:ideatek_nav_mesh_kind_t", ideatek_nav_mesh_kind_t);
     ENUM(api, "ideatek:ideatek_nav_build_t", ideatek_nav_build_t);
     MASK(api, "ideatek:ideatek_nav_area_flags_t", ideatek_nav_area_flags_t);
     MASK(api, "ideatek:ideatek_nav_link_flags_t", ideatek_nav_link_flags_t);
@@ -114,6 +126,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:NavQuery", ideatek_nav_query_t);
     STRUCT(api, "ideatek:NavAgent", ideatek_nav_agent_t);
     STRUCT(api, "ideatek:NavObstacle", ideatek_nav_obstacle_t);
+    STRUCT(api, "ideatek:NavMeshData", ideatek_nav_mesh_data_t);
+    STRUCT(api, "ideatek:NavGoal", ideatek_nav_goal_t);
+    STRUCT(api, "ideatek:NavFilter", ideatek_nav_filter_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Shape", ideatek_shape_t, BRIDGE_STRIP,
         BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Body", ideatek_body_t, BRIDGE_STRIP,
