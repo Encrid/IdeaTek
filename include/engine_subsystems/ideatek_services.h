@@ -25,9 +25,7 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_service_state_t,
 
     #define IDEATEK_PLATFORM_VALUES { \
         IDEATEK_PLATFORM_NONE = 0, \
-        IDEATEK_PLATFORM_STEAM = 1, \
-        IDEATEK_PLATFORM_EOS = 2, \
-        IDEATEK_PLATFORM_OTHER = 255 \
+        IDEATEK_PLATFORM_STEAM = 1 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_platform_t, uint8_t, IDEATEK_PLATFORM_VALUES);
@@ -55,13 +53,6 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_platform_user_t,
     IDEATEK_PLATFORM_USER_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_platform_user_t,
     IDEATEK_PLATFORM_USER_FIELDS);
-
-    #define IDEATEK_DEVICE_USER_FIELDS { \
-        ideatek_entity_t user; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_device_user_t, IDEATEK_DEVICE_USER_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_device_user_t, IDEATEK_DEVICE_USER_FIELDS);
 
     #define IDEATEK_SIGN_IN_FLAGS_VALUES { \
         IDEATEK_SIGN_IN_FLAGS_SHOW_UI = 0x01 \
@@ -584,5 +575,243 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ugc_publish_t, IDEATEK_UGC_PUBLISH_FIELDS);
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ugc_result_t, IDEATEK_UGC_RESULT_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ugc_result_t, IDEATEK_UGC_RESULT_FIELDS);
+
+    #define IDEATEK_GAME_SERVER_FIELDS { \
+        bridge_text_t name; \
+        bridge_text_t map; \
+        bridge_text_t tags; \
+        bridge_text_t address; \
+        uint32_t players; \
+        uint32_t max_players; \
+        uint32_t bots; \
+        bool password; \
+        bool dedicated; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_game_server_t, IDEATEK_GAME_SERVER_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_game_server_t, IDEATEK_GAME_SERVER_FIELDS);
+
+    #define IDEATEK_SERVER_LIST_VALUES { \
+        IDEATEK_SERVER_LIST_INTERNET = 0, \
+        IDEATEK_SERVER_LIST_LAN = 1, \
+        IDEATEK_SERVER_LIST_FAVORITES = 2, \
+        IDEATEK_SERVER_LIST_HISTORY = 3, \
+        IDEATEK_SERVER_LIST_FRIENDS = 4 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_server_list_t,
+    uint8_t, IDEATEK_SERVER_LIST_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_server_list_t,
+    uint8_t, IDEATEK_SERVER_LIST_VALUES);
+
+    #define IDEATEK_SERVER_SEARCH_FIELDS { \
+        bridge_text_t filter; \
+        ideatek_server_list_t kind; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_server_search_t,
+    IDEATEK_SERVER_SEARCH_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_server_search_t,
+    IDEATEK_SERVER_SEARCH_FIELDS);
+
+    #define IDEATEK_SERVER_FOUND_FIELDS { \
+        ideatek_entity_t search; \
+        bridge_text_t name; \
+        bridge_text_t map; \
+        bridge_text_t tags; \
+        bridge_text_t address; \
+        uint32_t players; \
+        uint32_t max_players; \
+        uint32_t bots; \
+        uint32_t ping; \
+        bool password; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_server_found_t, IDEATEK_SERVER_FOUND_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_server_found_t, IDEATEK_SERVER_FOUND_FIELDS);
+
+    #define IDEATEK_PARENTAL_VALUES { \
+        IDEATEK_PARENTAL_CHAT = 0x01, \
+        IDEATEK_PARENTAL_UGC = 0x02, \
+        IDEATEK_PARENTAL_ONLINE = 0x04, \
+        IDEATEK_PARENTAL_STORE = 0x08, \
+        IDEATEK_PARENTAL_PROFILES = 0x10 \
+    }
+
+BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_parental_t,
+    uint8_t, IDEATEK_PARENTAL_VALUES);
+BRIDGE_SCHEMA_BITMASK_DESC(ideatek_parental_t,
+    uint8_t, IDEATEK_PARENTAL_VALUES);
+
+    #define IDEATEK_PARENTAL_LIMITS_FIELDS { \
+        ideatek_parental_t blocked; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_parental_limits_t,
+    IDEATEK_PARENTAL_LIMITS_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_parental_limits_t,
+    IDEATEK_PARENTAL_LIMITS_FIELDS);
+
+    #define IDEATEK_TEXT_CONTEXT_VALUES { \
+        IDEATEK_TEXT_CONTEXT_CONTENT = 0, \
+        IDEATEK_TEXT_CONTEXT_CHAT = 1, \
+        IDEATEK_TEXT_CONTEXT_NAME = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_text_context_t,
+    uint8_t, IDEATEK_TEXT_CONTEXT_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_text_context_t,
+    uint8_t, IDEATEK_TEXT_CONTEXT_VALUES);
+
+    #define IDEATEK_TEXT_FILTER_FIELDS { \
+        ideatek_entity_t user; \
+        bridge_text_t text; \
+        ideatek_text_context_t context; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_text_filter_t, IDEATEK_TEXT_FILTER_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_text_filter_t, IDEATEK_TEXT_FILTER_FIELDS);
+
+    #define IDEATEK_TEXT_FILTERED_FIELDS { \
+        bridge_text_t text; \
+        ideatek_service_state_t state; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_text_filtered_t,
+    IDEATEK_TEXT_FILTERED_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_text_filtered_t,
+    IDEATEK_TEXT_FILTERED_FIELDS);
+
+    #define IDEATEK_OVERLAY_PAGE_VALUES { \
+        IDEATEK_OVERLAY_PAGE_FRIENDS = 0, \
+        IDEATEK_OVERLAY_PAGE_PROFILE = 1, \
+        IDEATEK_OVERLAY_PAGE_INVITE = 2, \
+        IDEATEK_OVERLAY_PAGE_ACHIEVEMENTS = 3, \
+        IDEATEK_OVERLAY_PAGE_SETTINGS = 4 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_overlay_page_t,
+    uint8_t, IDEATEK_OVERLAY_PAGE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_overlay_page_t,
+    uint8_t, IDEATEK_OVERLAY_PAGE_VALUES);
+
+    #define IDEATEK_OVERLAY_REQUEST_FIELDS { \
+        uint64_t account; \
+        ideatek_entity_t lobby; \
+        ideatek_overlay_page_t page; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_overlay_request_t,
+    IDEATEK_OVERLAY_REQUEST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_overlay_request_t,
+    IDEATEK_OVERLAY_REQUEST_FIELDS);
+
+    #define IDEATEK_PLATFORM_INFO_FIELDS { \
+        bridge_text_t language; \
+        bridge_text_t branch; \
+        bool steam_deck; \
+        bool big_picture; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_platform_info_t,
+    IDEATEK_PLATFORM_INFO_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_platform_info_t,
+    IDEATEK_PLATFORM_INFO_FIELDS);
+
+    #define IDEATEK_TIMELINE_MODE_VALUES { \
+        IDEATEK_TIMELINE_MODE_PLAYING = 0, \
+        IDEATEK_TIMELINE_MODE_STAGING = 1, \
+        IDEATEK_TIMELINE_MODE_MENUS = 2, \
+        IDEATEK_TIMELINE_MODE_LOADING = 3 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_timeline_mode_t,
+    uint8_t, IDEATEK_TIMELINE_MODE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_timeline_mode_t,
+    uint8_t, IDEATEK_TIMELINE_MODE_VALUES);
+
+    #define IDEATEK_TIMELINE_MODE_RECORD_FIELDS { \
+        ideatek_timeline_mode_t mode; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_timeline_mode_record_t,
+    IDEATEK_TIMELINE_MODE_RECORD_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_timeline_mode_record_t,
+    IDEATEK_TIMELINE_MODE_RECORD_FIELDS);
+
+    #define IDEATEK_TIMELINE_CLIP_VALUES { \
+        IDEATEK_TIMELINE_CLIP_NONE = 0, \
+        IDEATEK_TIMELINE_CLIP_STANDARD = 1, \
+        IDEATEK_TIMELINE_CLIP_FEATURED = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_timeline_clip_t,
+    uint8_t, IDEATEK_TIMELINE_CLIP_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_timeline_clip_t,
+    uint8_t, IDEATEK_TIMELINE_CLIP_VALUES);
+
+    #define IDEATEK_TIMELINE_EVENT_FIELDS { \
+        bridge_text_t title; \
+        bridge_text_t description; \
+        bridge_text_t icon; \
+        float start_offset; \
+        float duration; \
+        uint32_t priority; \
+        ideatek_timeline_clip_t clip; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_timeline_event_t,
+    IDEATEK_TIMELINE_EVENT_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_timeline_event_t,
+    IDEATEK_TIMELINE_EVENT_FIELDS);
+
+    #define IDEATEK_SCREENSHOT_REQUEST_FIELDS { \
+        bridge_text_t location; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_screenshot_request_t,
+    IDEATEK_SCREENSHOT_REQUEST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_screenshot_request_t,
+    IDEATEK_SCREENSHOT_REQUEST_FIELDS);
+
+    #define IDEATEK_SCREENSHOT_TAKEN_FIELDS { \
+        uint32_t order; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_screenshot_taken_t,
+    IDEATEK_SCREENSHOT_TAKEN_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_screenshot_taken_t,
+    IDEATEK_SCREENSHOT_TAKEN_FIELDS);
+
+    #define IDEATEK_AVATAR_SIZE_VALUES { \
+        IDEATEK_AVATAR_SIZE_SMALL = 0, \
+        IDEATEK_AVATAR_SIZE_MEDIUM = 1, \
+        IDEATEK_AVATAR_SIZE_LARGE = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_avatar_size_t,
+    uint8_t, IDEATEK_AVATAR_SIZE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_avatar_size_t,
+    uint8_t, IDEATEK_AVATAR_SIZE_VALUES);
+
+    #define IDEATEK_AVATAR_REQUEST_FIELDS { \
+        uint64_t account; \
+        ideatek_avatar_size_t size; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_avatar_request_t,
+    IDEATEK_AVATAR_REQUEST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_avatar_request_t,
+    IDEATEK_AVATAR_REQUEST_FIELDS);
+
+    #define IDEATEK_AVATAR_FIELDS { \
+        bridge_text_t pixels; \
+        uint32_t width; \
+        uint32_t height; \
+        ideatek_service_state_t state; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_avatar_t, IDEATEK_AVATAR_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_avatar_t, IDEATEK_AVATAR_FIELDS);
 
 #endif
