@@ -45,6 +45,7 @@ platform_abstraction/
 kernel/
     ideatek_changes.h
     ideatek_frame.h
+    ideatek_localization.h
     ideatek_resources.h
     ideatek_states.h
 engine_subsystems/
