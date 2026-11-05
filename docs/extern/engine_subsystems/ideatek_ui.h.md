@@ -41,6 +41,8 @@ A font is a resource entity with `ideatek:Font`. 1 file is 1 face. When a font l
 
 A span with an `image` draws the texture at the height of the line, in place of its text. The text stays, for a screen reader.
 `letter_spacing` adds space between the glyphs. With ELLIPSIS, a line that is too long ends with an ellipsis.
+A text node with `ideatek:LocalizedText` of the localization part draws that text in place of the text of `ideatek:UiText`.
+
 The module that writes `ideatek:UiRect` shapes and measures the text. Its glyphs, its atlas and the method of the draw are its own.
 
 ## The pointers
@@ -1492,4 +1494,4 @@ Bytes 46 to 47 hold no field.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | The game | The roots, the nodes, the looks, the texts, the fonts, the focus, the widgets, the screens, the markers, the styles and the labels | The types of the fields |
-| The UI module | The rectangles, the scrolls, the pointers, the hits, the states, the events and the carets | The types of the game, `ideatek:WorldTransform`, `ideatek:AnimationCurves`, and the types of the fields |
+| The UI module | The rectangles, the scrolls, the pointers, the hits, the states, the events and the carets | The types of the game, `ideatek:WorldTransform`, `ideatek:AnimationCurves`, `ideatek:LocalizedText`, and the types of the fields |

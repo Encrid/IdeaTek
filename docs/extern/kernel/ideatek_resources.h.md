@@ -74,6 +74,8 @@ A path with no source names the default source. The default source is the conten
 
 A name of a source holds only `a` to `z`, `0` to `9` and `_`. A path with an unknown source gets `IDEATEK_RESOURCE_ERROR_NOT_FOUND`.
 When 2 sources have the same name, the resources module keeps the first, and the log gets 1 line.
+A path can hold `{locale}`. The resources module puts `code` of `ideatek:Locale` of the localization part in its place, or `fallback` when that file is missing.
+When the locale changes, the resources module reloads each resource whose path holds `{locale}`.
 
 ## The source modules
 
@@ -457,4 +459,4 @@ Bytes 17 to 23 hold no field.
 | The game | `ideatek:ResourceAdd`, `ideatek:ResourceReload`, `ideatek:ResourceLoad` | `ideatek:ResourceHandle`, `ideatek:Resource`, `ideatek:ResourceLabel`, `ideatek:ResourceModified`, `ideatek:ResourceReady`, `ideatek:ResourceFailed`, and the types of the fields |
 | A loader module | `ideatek:ResourceLoad`, `ideatek:ResourceAdd`, `ideatek:ResourceRead`, `ideatek:ResourceOutcome`, `ideatek:ResourceLabel`, `ideatek:ResourceLoader` | `ideatek:ResourceHandle`, `ideatek:Resource`, `ideatek:ResourceBytes`, `ideatek:RawBytes`, and the types of the fields |
 | A source module | `ideatek:ResourceSourceResult`, `ideatek:ResourceSource` | `ideatek:ResourceSourceRead`, and the types of the fields |
-| The resources module | `ideatek:FileRequest`, `ideatek:ResourceHandle`, `ideatek:Resource`, `ideatek:ResourceBytes`, `ideatek:ResourceOutcome`, `ideatek:ResourceRead`, `ideatek:RawBytes`, `ideatek:ResourceSourceRead`, `ideatek:ResourceReload`, `ideatek:ResourceModified`, `ideatek:ResourceReady`, `ideatek:ResourceFailed` | `ideatek:ResourceLoad`, `ideatek:ResourceAdd`, `ideatek:ResourceLoader`, `ideatek:ResourceLabel`, `ideatek:ResourceSource`, `ideatek:ResourceSourceResult`, `ideatek:FileResult`, `ideatek:FileChange`, and the types of the fields |
+| The resources module | `ideatek:FileRequest`, `ideatek:ResourceHandle`, `ideatek:Resource`, `ideatek:ResourceBytes`, `ideatek:ResourceOutcome`, `ideatek:ResourceRead`, `ideatek:RawBytes`, `ideatek:ResourceSourceRead`, `ideatek:ResourceReload`, `ideatek:ResourceModified`, `ideatek:ResourceReady`, `ideatek:ResourceFailed` | `ideatek:Locale`, `ideatek:ResourceLoad`, `ideatek:ResourceAdd`, `ideatek:ResourceLoader`, `ideatek:ResourceLabel`, `ideatek:ResourceSource`, `ideatek:ResourceSourceResult`, `ideatek:FileResult`, `ideatek:FileChange`, and the types of the fields |
