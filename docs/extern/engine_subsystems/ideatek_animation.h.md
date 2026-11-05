@@ -179,6 +179,10 @@ A spring chain moves its joints with Verlet steps of `delta` of `ideatek:Frame`,
 A spring collider pushes only the springs. It is not a physics collider.
 After a jump of the entity, the game sets `active` of the modifier to `false` and back to `true`. The chain then starts again from the pose.
 
+## The hidden joints
+
+`ideatek:HiddenJoint` on a joint hides the triangles that depend on the joint or on its children, on each skinned mesh of its skeleton. The render module closes the hole with the material `cap`.
+
 ## The scenes
 
 A scene of a choreography is a clip that a play on a scene player plays. Its channels move the actors, the cameras and the props by target id.
@@ -395,6 +399,17 @@ A matrix is relative to the drawn entity.
 | `count` | `uint32_t` | 8 | The number of weights. |
 
 An entity with no `ideatek:MorphWeights` has all weights at 0. A count that differs from the mesh gets 1 line in the log.
+
+## ideatek:HiddenJoint
+
+`ideatek:HiddenJoint` hides a joint and its children on each skinned mesh: *The hidden joints*.
+`ideatek_hidden_joint_t` takes 8 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `cap` | `ideatek_entity_t` | 0 | The material of the cap. 0 means the material of the surface. |
+
+To show the joint again, the game removes the type.
 
 ## ideatek:Clip
 
@@ -774,6 +789,7 @@ Before `start`, the play has a weight of 0.
 | `ideatek:Skin` | `ideatek_skin_t` | `ideatek_skin_t_desc` | `IDEATEK_SKIN_FIELDS` |
 | `ideatek:SkinBinds` | `ideatek_skin_binds_t` | `ideatek_skin_binds_t_desc` | `IDEATEK_SKIN_BINDS_FIELDS` |
 | `ideatek:MorphWeights` | `ideatek_morph_weights_t` | `ideatek_morph_weights_t_desc` | `IDEATEK_MORPH_WEIGHTS_FIELDS` |
+| `ideatek:HiddenJoint` | `ideatek_hidden_joint_t` | `ideatek_hidden_joint_t_desc` | `IDEATEK_HIDDEN_JOINT_FIELDS` |
 | `ideatek:Clip` | `ideatek_clip_t` | `ideatek_clip_t_desc` | `IDEATEK_CLIP_FIELDS` |
 | `ideatek:AnimationTarget` | `ideatek_animation_target_t` | `ideatek_animation_target_t_desc` | `IDEATEK_ANIMATION_TARGET_FIELDS` |
 | `ideatek:ClipPlay` | `ideatek_clip_play_t` | `ideatek_clip_play_t_desc` | `IDEATEK_CLIP_PLAY_FIELDS` |
@@ -820,6 +836,7 @@ Before `start`, the play has a weight of 0.
 { ideatek_entity_t skeleton; ideatek_entity_t binds; }
 { bridge_text_t matrices; uint32_t count; uint32_t revision; }
 { bridge_text_t weights; uint32_t count; }
+{ ideatek_entity_t cap; }
 { bridge_text_t bytes; float duration; uint32_t channel_count; uint32_t event_count; uint32_t revision; bool additive; }
 { uint64_t id; ideatek_entity_t player; }
 { ideatek_entity_t player; ideatek_entity_t clip; ideatek_entity_t mask; uint64_t sync_group; float time; float speed; float weight; float event_weight; int32_t layer; ideatek_repeat_t repeat; bool paused; bool real_time; ideatek_layer_blend_t blend; }
@@ -873,6 +890,7 @@ Before `start`, the play has a weight of 0.
 | `ideatek:Skin` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SkinBinds` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:MorphWeights` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:HiddenJoint` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Clip` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:AnimationTarget` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:AnimationPlayer` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -911,4 +929,4 @@ Before `start`, the play has a weight of 0.
 | A graph module | `ideatek:BlendSpace`, `ideatek:Inertialize`, `ideatek:ClipPlay` | `ideatek:AnimationParameters`, `ideatek:Clip`, `ideatek:AnimationCurves`, `ideatek:ClipEvent`, `ideatek:Frame`, and the types of the fields |
 | A matching module | `ideatek:Inertialize`, `ideatek:ClipPlay` | `ideatek:MotionMatch`, `ideatek:Trajectory`, `ideatek:Clip`, `ideatek:Joint`, `ideatek:Frame`, and the types of the fields |
 | An IK or a spring module | `ideatek:Transform` | The modifiers, `ideatek:Joint`, `ideatek:Frame`, and the types of the fields |
-| The render module | No type. | `ideatek:Joint`, `ideatek:Skin`, `ideatek:SkinBinds`, `ideatek:MorphWeights`, and the types of the fields |
+| The render module | No type. | `ideatek:Joint`, `ideatek:Skin`, `ideatek:SkinBinds`, `ideatek:MorphWeights`, `ideatek:HiddenJoint`, and the types of the fields |

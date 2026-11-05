@@ -8,7 +8,7 @@ The header includes the headers of the world and space parts, for the entities, 
 
 - The game is the author. It writes the bodies, the shapes, the materials, the joints, the queries and the requests.
 - The physics module steps the world in the fixed phase. It writes `ideatek:Motion`, the `ideatek:Transform` of each dynamic body, the events, the answers of the queries and the meshes that it makes.
-- The render module reads `ideatek:HiddenJoint`, `ideatek:Water`, `ideatek:Wave`, the particles of the liquids and the grids of the smoke.
+- The render module reads `ideatek:Water`, `ideatek:Wave`, the particles of the liquids and the grids of the smoke.
 
 ## The world of the physics
 
@@ -179,13 +179,6 @@ A record of `bonds`:
 
 A bond breaks when the force on it, divided by its area, passes a strength of the material. The damage and the weight of the structure both load the bonds.
 The chunk of a mesh is the sub-mesh with the index of the chunk. A group of chunks with no path to a bond to the world becomes a piece.
-
-## The cuts
-
-`ideatek:HiddenJoint` on a joint hides the triangles that depend on the joint or on its children. The cutting module closes the hole with the cap material.
-For `ideatek:Cut`, the module never changes a shared mesh. It gives the drawn entity a new mesh. It spawns a new drawn entity for the other side, with its own new mesh on the same joints.
-
-Then it spawns `ideatek:CutEvent`. The game makes the cut joints fall with the ragdoll forms.
 
 ## The soft bodies
 
@@ -1426,42 +1419,6 @@ Bytes 101 to 103 hold no field.
 | `chunks` | `bridge_text_t` | 52 | With an asset: the `uint32_t` index of each chunk of the piece. |
 | `order` | `uint32_t` | 60 | The rank in the step. |
 
-## ideatek:HiddenJoint
-
-`ideatek:HiddenJoint` hides a joint and its children on each skinned mesh.
-`ideatek_hidden_joint_t` takes 8 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `cap` | `ideatek_entity_t` | 0 | The material of the cap. 0 means the material of the surface. |
-
-To show the joint again, the game removes the type.
-
-## ideatek:Cut
-
-`ideatek:Cut` cuts a skinned mesh at a plane. The game spawns it as an event.
-`ideatek_cut_t` takes 48 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `drawn` | `ideatek_entity_t` | 0 | The drawn entity to cut. |
-| `point` | `ideatek_position_t` | 8 | A point of the plane of the cut. |
-| `normal` | `ideatek_vec3_t` | 32 | The normal of the plane. |
-| `order` | `uint32_t` | 44 | The rank in the round. |
-
-## ideatek:CutEvent
-
-`ideatek:CutEvent` tells that a cut is done.
-`ideatek_cut_event_t` takes 24 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `drawn` | `ideatek_entity_t` | 0 | The drawn entity that was cut. |
-| `piece` | `ideatek_entity_t` | 8 | The new drawn entity of the other side. |
-| `order` | `uint32_t` | 16 | The rank in the step. |
-
-Bytes 20 to 23 hold no field.
-
 ## ideatek:ideatek_bend_t
 
 `ideatek_bend_t` tells how a soft body resists a bend, as in Jolt.
@@ -1983,9 +1940,6 @@ Byte 31 holds no field.
 | `ideatek:ideatek_damage_shape_t` | `ideatek_damage_shape_t` | `ideatek_damage_shape_t_desc` | `IDEATEK_DAMAGE_SHAPE_VALUES` |
 | `ideatek:Damage` | `ideatek_damage_t` | `ideatek_damage_t_desc` | `IDEATEK_DAMAGE_FIELDS` |
 | `ideatek:BreakEvent` | `ideatek_break_event_t` | `ideatek_break_event_t_desc` | `IDEATEK_BREAK_EVENT_FIELDS` |
-| `ideatek:HiddenJoint` | `ideatek_hidden_joint_t` | `ideatek_hidden_joint_t_desc` | `IDEATEK_HIDDEN_JOINT_FIELDS` |
-| `ideatek:Cut` | `ideatek_cut_t` | `ideatek_cut_t_desc` | `IDEATEK_CUT_FIELDS` |
-| `ideatek:CutEvent` | `ideatek_cut_event_t` | `ideatek_cut_event_t_desc` | `IDEATEK_CUT_EVENT_FIELDS` |
 | `ideatek:ideatek_bend_t` | `ideatek_bend_t` | `ideatek_bend_t_desc` | `IDEATEK_BEND_VALUES` |
 | `ideatek:ideatek_lra_t` | `ideatek_lra_t` | `ideatek_lra_t_desc` | `IDEATEK_LRA_VALUES` |
 | `ideatek:SoftBody` | `ideatek_soft_body_t` | `ideatek_soft_body_t_desc` | `IDEATEK_SOFT_BODY_FIELDS` |
@@ -2099,9 +2053,6 @@ Byte 31 holds no field.
 { IDEATEK_DAMAGE_SHAPE_RADIAL = 0, IDEATEK_DAMAGE_SHAPE_CAPSULE = 1, IDEATEK_DAMAGE_SHAPE_SHEAR = 2, IDEATEK_DAMAGE_SHAPE_TRIANGLE = 3, IDEATEK_DAMAGE_SHAPE_IMPACT = 4 }
 { ideatek_position_t point; ideatek_position_t point_b; ideatek_position_t point_c; ideatek_vec3_t normal; float min_radius; float radius; float pressure; uint32_t order; ideatek_damage_shape_t shape; }
 { ideatek_entity_t body; ideatek_entity_t piece; ideatek_position_t point; ideatek_vec3_t excess_force; bridge_text_t chunks; uint32_t order; }
-{ ideatek_entity_t cap; }
-{ ideatek_entity_t drawn; ideatek_position_t point; ideatek_vec3_t normal; uint32_t order; }
-{ ideatek_entity_t drawn; ideatek_entity_t piece; uint32_t order; }
 { IDEATEK_BEND_NONE = 0, IDEATEK_BEND_DISTANCE = 1, IDEATEK_BEND_DIHEDRAL = 2 }
 { IDEATEK_LRA_NONE = 0, IDEATEK_LRA_EUCLIDEAN = 1, IDEATEK_LRA_GEODESIC = 2 }
 { ideatek_entity_t source; uint64_t categories; uint64_t touches; float edge_compliance; float shear_compliance; float bend_compliance; float vertex_mass; float linear_damping; float friction; float gravity_scale; float vertex_radius; float pressure; float restitution; float volume_compliance; float lra_scale; float skin_distance_scale; uint32_t iterations; ideatek_bend_t bend; ideatek_lra_t lra; bool double_sided; }
@@ -2237,9 +2188,6 @@ Byte 31 holds no field.
 | `ideatek:DestructibleAsset` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Damage` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:BreakEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:HiddenJoint` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:Cut` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:CutEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SoftBody` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SoftBodyAttachment` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SoftBodyReset` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -2266,4 +2214,4 @@ Byte 31 holds no field.
 | --- | --- | --- |
 | The game | The bodies, the shapes, the materials, the queries, the joints, the requests and their options | The types of the fields |
 | The physics module | `ideatek:Transform`, `ideatek:Motion`, the events, the states, the snapshots, the particles, the grids, `ideatek:Mesh`, `ideatek:MeshInstance` and `ideatek:Texture` | Each type that the game writes, `ideatek:Tick`, and the types of the fields |
-| The render module | No type. | `ideatek:HiddenJoint`, `ideatek:Water`, `ideatek:Wave`, `ideatek:LiquidParticles`, `ideatek:LiquidFoam`, `ideatek:SmokeGrid`, and the types of the fields |
+| The render module | No type. | `ideatek:Water`, `ideatek:Wave`, `ideatek:LiquidParticles`, `ideatek:LiquidFoam`, `ideatek:SmokeGrid`, and the types of the fields |
