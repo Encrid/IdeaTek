@@ -43,32 +43,6 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_save_request_t, IDEATEK_SAVE_REQUEST_FIELDS);
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_saved_t, IDEATEK_SAVED_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_saved_t, IDEATEK_SAVED_FIELDS);
 
-    #define IDEATEK_SAVE_ID_FIELDS { \
-        uint64_t id; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_save_id_t, IDEATEK_SAVE_ID_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_save_id_t, IDEATEK_SAVE_ID_FIELDS);
-
-    #define IDEATEK_SAVE_PARTICIPANT_FIELDS { \
-        uint64_t tag; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_save_participant_t,
-    IDEATEK_SAVE_PARTICIPANT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_save_participant_t,
-    IDEATEK_SAVE_PARTICIPANT_FIELDS);
-
-    #define IDEATEK_SAVE_CHUNK_FIELDS { \
-        ideatek_entity_t request; \
-        uint64_t tag; \
-        bridge_text_t data; \
-        uint32_t version; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_save_chunk_t, IDEATEK_SAVE_CHUNK_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_save_chunk_t, IDEATEK_SAVE_CHUNK_FIELDS);
-
     #define IDEATEK_SAVE_READY_FIELDS { \
         ideatek_entity_t request; \
         uint64_t tag; \

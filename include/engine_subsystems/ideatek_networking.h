@@ -110,55 +110,6 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_net_authority_t,
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_replicated_t, IDEATEK_REPLICATED_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_replicated_t, IDEATEK_REPLICATED_FIELDS);
 
-    #define IDEATEK_NET_ENTITY_FIELDS { \
-        uint64_t net_id; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_net_entity_t, IDEATEK_NET_ENTITY_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_net_entity_t, IDEATEK_NET_ENTITY_FIELDS);
-
-    #define IDEATEK_NET_KIND_VALUES { \
-        IDEATEK_NET_KIND_STATE = 0, \
-        IDEATEK_NET_KIND_EVENT = 1, \
-        IDEATEK_NET_KIND_PREDICTED = 2 \
-    }
-
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_net_kind_t, uint8_t, IDEATEK_NET_KIND_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_net_kind_t, uint8_t, IDEATEK_NET_KIND_VALUES);
-
-    #define IDEATEK_NET_CONDITION_VALUES { \
-        IDEATEK_NET_CONDITION_ALL = 0, \
-        IDEATEK_NET_CONDITION_OWNER_ONLY = 1, \
-        IDEATEK_NET_CONDITION_SKIP_OWNER = 2, \
-        IDEATEK_NET_CONDITION_INITIAL_ONLY = 3 \
-    }
-
-BRIDGE_SCHEMA_ENUM_TYPE(ideatek_net_condition_t,
-    uint8_t, IDEATEK_NET_CONDITION_VALUES);
-BRIDGE_SCHEMA_ENUM_DESC(ideatek_net_condition_t,
-    uint8_t, IDEATEK_NET_CONDITION_VALUES);
-
-    #define IDEATEK_NET_OUT_FIELDS { \
-        uint64_t tag; \
-        bridge_text_t data; \
-        uint32_t peer; \
-        ideatek_net_kind_t kind; \
-        ideatek_net_condition_t condition; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_net_out_t, IDEATEK_NET_OUT_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_net_out_t, IDEATEK_NET_OUT_FIELDS);
-
-    #define IDEATEK_NET_IN_FIELDS { \
-        uint64_t tag; \
-        bridge_text_t data; \
-        uint32_t peer; \
-        ideatek_net_kind_t kind; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_net_in_t, IDEATEK_NET_IN_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_net_in_t, IDEATEK_NET_IN_FIELDS);
-
     #define IDEATEK_NET_VIEWER_FIELDS { \
         uint32_t peer; \
     }
