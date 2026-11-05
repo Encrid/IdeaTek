@@ -70,7 +70,7 @@ A service module of voice uses its own transport. A module for Steam sends the f
 ## The content
 
 An entitlement and an item of the users give a `path`: their folder when they are installed. The game adds it as a source of the resources part.
-Code in a mod is a module of Bridge, not an item of this part.
+Code in a mod is a module that runs on Bridge, not an item of this part.
 `ideatek:PlatformOverlay` tells each part that the overlay of the platform is open, so the game can pause.
 
 ## ideatek:ideatek_service_state_t
