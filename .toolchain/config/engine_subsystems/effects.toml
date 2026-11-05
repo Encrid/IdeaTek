@@ -1,7 +1,7 @@
 [parts.effects]
 name = "BC-IdeaTek-Effects"
 folder = "engine_subsystems/effects"
-uses = ["world", "space", "rendering", "physics"]
+uses = ["world", "space", "audio", "rendering", "physics", "sound"]
 third_party = []
 
 [parts.effects.package]

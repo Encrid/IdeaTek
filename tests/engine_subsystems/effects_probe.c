@@ -5,6 +5,7 @@
 */
 #include "bridge_native.h"
 #include "ideatek_physics.h"
+#include "ideatek_sound.h"
 #include "ideatek_effects.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -57,6 +58,8 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ParticleCollision", ideatek_particle_collision_t);
     STRUCT(api, "ideatek:ParticleSpawn", ideatek_particle_spawn_t);
     STRUCT(api, "ideatek:ParticleLight", ideatek_particle_light_t);
+    STRUCT(api, "ideatek:ParticleSound", ideatek_particle_sound_t);
+    STRUCT(api, "ideatek:ParticleHits", ideatek_particle_hits_t);
 }
 
 [[maybe_unused]] static void role_author(const bridge_api_t *api)
@@ -94,6 +97,8 @@ static const char WHO[] = MANIFEST;
         ideatek_particle_spawn_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:ParticleLight",
         ideatek_particle_light_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ParticleSound",
+        ideatek_particle_sound_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_effects(const bridge_api_t *api)
@@ -102,7 +107,13 @@ static const char WHO[] = MANIFEST;
 
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     STRUCT(api, "ideatek:ideatek_vec3_t", ideatek_vec3_t);
+    STRUCT(api, "ideatek:ideatek_quat_t", ideatek_quat_t);
     STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
+    ENUM(api, "ideatek:ideatek_sound_state_t", ideatek_sound_state_t);
+    MASK(api, "ideatek:ideatek_sound_player_flags_t",
+        ideatek_sound_player_flags_t);
+    ENUM(api, "ideatek:ideatek_attenuation_t", ideatek_attenuation_t);
+    MASK(api, "ideatek:ideatek_spatial_flags_t", ideatek_spatial_flags_t);
     STRUCT(api, "ideatek:ideatek_color_t", ideatek_color_t);
     ENUM(api, "ideatek:ideatek_shape_kind_t", ideatek_shape_kind_t);
     MASK(api, "ideatek:ideatek_shape_flags_t", ideatek_shape_flags_t);
@@ -128,6 +139,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ParticleCollision", ideatek_particle_collision_t);
     STRUCT(api, "ideatek:ParticleSpawn", ideatek_particle_spawn_t);
     STRUCT(api, "ideatek:ParticleLight", ideatek_particle_light_t);
+    STRUCT(api, "ideatek:ParticleSound", ideatek_particle_sound_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:WorldTransform",
         ideatek_world_transform_t, BRIDGE_STRIP, BRIDGE_TABLE,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -144,6 +156,17 @@ static const char WHO[] = MANIFEST;
         ideatek_particle_emitter_state_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:ParticleEnded",
         ideatek_particle_ended_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ParticleHits",
+        ideatek_particle_hits_t), BRIDGE_ZEROED);
+    api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:SoundPlayer",
+        ideatek_sound_player_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
+    api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:SoundSpatial",
+        ideatek_sound_spatial_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
+    api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Transform",
+        ideatek_transform_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
 }
 
 BRIDGE_NATIVE(init)

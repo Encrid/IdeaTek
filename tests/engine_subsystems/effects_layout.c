@@ -55,6 +55,8 @@ static void show_particle_emitter(void)
     AT(ideatek_particle_emitter_t, lifetime_max);
     AT(ideatek_particle_emitter_t, speed_scale);
     AT(ideatek_particle_emitter_t, prewarm);
+    AT(ideatek_particle_emitter_t, lod_distance);
+    AT(ideatek_particle_emitter_t, cull_distance);
     AT(ideatek_particle_emitter_t, burst);
     AT(ideatek_particle_emitter_t, max);
     AT(ideatek_particle_emitter_t, seed);
@@ -134,13 +136,15 @@ static void show_particle_look(void)
     AT(ideatek_particle_look_t, size_curve);
     AT(ideatek_particle_look_t, color_curve);
     AT(ideatek_particle_look_t, start_color_curve);
+    AT(ideatek_particle_look_t, speed_curve);
+    AT(ideatek_particle_look_t, spin_curve);
     AT(ideatek_particle_look_t, color);
-    AT(ideatek_particle_look_t, size_min);
-    AT(ideatek_particle_look_t, size_max);
     AT(ideatek_particle_look_t, rotation_min);
     AT(ideatek_particle_look_t, rotation_max);
     AT(ideatek_particle_look_t, spin_min);
     AT(ideatek_particle_look_t, spin_max);
+    AT(ideatek_particle_look_t, size_min);
+    AT(ideatek_particle_look_t, size_max);
     AT(ideatek_particle_look_t, frame_rate);
     AT(ideatek_particle_look_t, trail_lifetime);
     AT(ideatek_particle_look_t, frames_x);
@@ -181,6 +185,7 @@ static void show_particle_spawn(void)
 {
     SIZE(ideatek_particle_spawn_t);
     AT(ideatek_particle_spawn_t, parent);
+    AT(ideatek_particle_spawn_t, hit_material);
     AT(ideatek_particle_spawn_t, rate);
     AT(ideatek_particle_spawn_t, inherit_velocity);
     AT(ideatek_particle_spawn_t, count);
@@ -196,6 +201,25 @@ static void show_particle_light(void)
     AT(ideatek_particle_light_t, max);
 }
 
+static void show_particle_sound(void)
+{
+    SIZE(ideatek_particle_sound_t);
+    AT(ideatek_particle_sound_t, sound);
+    AT(ideatek_particle_sound_t, bus);
+    AT(ideatek_particle_sound_t, volume);
+    AT(ideatek_particle_sound_t, max);
+    AT(ideatek_particle_sound_t, on);
+}
+
+static void show_particle_hits(void)
+{
+    SIZE(ideatek_particle_hits_t);
+    AT(ideatek_particle_hits_t, emitter);
+    AT(ideatek_particle_hits_t, hits);
+    AT(ideatek_particle_hits_t, count);
+    AT(ideatek_particle_hits_t, order);
+}
+
 static void show_descriptors(void)
 {
     const char *descriptors[] = {
@@ -209,7 +233,8 @@ static void show_descriptors(void)
         ideatek_particle_look_t_desc, ideatek_collision_source_t_desc,
         ideatek_collision_mode_t_desc, ideatek_particle_collision_t_desc,
         ideatek_spawn_on_t_desc, ideatek_particle_spawn_t_desc,
-        ideatek_particle_light_t_desc };
+        ideatek_particle_light_t_desc, ideatek_particle_sound_t_desc,
+        ideatek_particle_hits_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -237,7 +262,9 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_PARTICLE_COLLISION_FIELDS),
         TEXT_OF(IDEATEK_SPAWN_ON_VALUES),
         TEXT_OF(IDEATEK_PARTICLE_SPAWN_FIELDS),
-        TEXT_OF(IDEATEK_PARTICLE_LIGHT_FIELDS) };
+        TEXT_OF(IDEATEK_PARTICLE_LIGHT_FIELDS),
+        TEXT_OF(IDEATEK_PARTICLE_SOUND_FIELDS),
+        TEXT_OF(IDEATEK_PARTICLE_HITS_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -266,6 +293,8 @@ int main(int argc, char **argv)
         { "spawn_on", show_spawn_on },
         { "particle_spawn", show_particle_spawn },
         { "particle_light", show_particle_light },
+        { "particle_sound", show_particle_sound },
+        { "particle_hits", show_particle_hits },
         { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 
