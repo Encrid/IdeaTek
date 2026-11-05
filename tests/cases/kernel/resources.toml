@@ -86,6 +86,12 @@ false = { run = ["{out}/resources_layout{exe}", "resource_source_result"] }
 name = "ideatek_resource_source_result_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/resources_layout{exe}", "resource_source_result"]
 claims = { status = 0, order = ["size 24", "alignment 8", "size 0", "data 8", "error 16"] }
+false = { run = ["{out}/resources_layout{exe}", "resource_variable"] }
+
+[[case]]
+name = "ideatek_resource_variable_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/resources_layout{exe}", "resource_variable"]
+claims = { status = 0, order = ["size 24", "alignment 4", "name 0", "value 8", "fallback 16"] }
 false = { run = ["{out}/resources_layout{exe}", "load_state"] }
 
 [[case]]
@@ -107,6 +113,7 @@ claims = { status = 0, line = [
     "{ bridge_text_t name; }",
     "{ ideatek_entity_t source; uint64_t offset; uint64_t length; bridge_text_t path; uint8_t priority; }",
     "{ uint64_t size; bridge_text_t data; ideatek_resource_error_t error; }",
+    "{ bridge_text_t name; bridge_text_t value; bridge_text_t fallback; }",
 ] }
 false = { run = ["{out}/resources_layout{exe}", "texts"] }
 
@@ -129,6 +136,7 @@ claims = { status = 0, line = [
     "{ bridge_text_t name; }",
     "{ ideatek_entity_t source; uint64_t offset; uint64_t length; bridge_text_t path; uint8_t priority; }",
     "{ uint64_t size; bridge_text_t data; ideatek_resource_error_t error; }",
+    "{ bridge_text_t name; bridge_text_t value; bridge_text_t fallback; }",
 ] }
 false = { run = ["{out}/resources_layout{exe}", "descriptors"] }
 
@@ -139,7 +147,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel", "-I", "include/platform_abstraction", "-c", "tests/kernel/resources_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 20 types, each type after the types of its fields"
+name = "a module declares the 21 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/resources_probe{library}"] }
 
@@ -163,7 +171,7 @@ read = [
     "ideatek:ResourceSource", "ideatek:ResourceSourceRead",
     "ideatek:ResourceSourceResult", "ideatek:ResourceReload",
     "ideatek:ResourceModified", "ideatek:ResourceReady",
-    "ideatek:ResourceFailed",
+    "ideatek:ResourceFailed", "ideatek:ResourceVariable",
 ]
 '''
 
@@ -171,7 +179,7 @@ read = [
 "{case}/m" = ["resources_late"]
 
 [[case]]
-name = "the game loads with write on the loads, the additions and the reloads"
+name = "the game loads with write on the loads, the additions, the reloads and the variables"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/resources_game{library}"] }
 
@@ -188,6 +196,7 @@ library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
 write = [
     "ideatek:ResourceAdd", "ideatek:ResourceReload", "ideatek:ResourceLoad",
+    "ideatek:ResourceVariable",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_load_state_t",
@@ -206,13 +215,14 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
 write = [
-    "ideatek:ResourceAdd", "ideatek:ResourceReload",
+    "ideatek:ResourceAdd", "ideatek:ResourceReload", "ideatek:ResourceLoad",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_load_state_t",
     "ideatek:ideatek_resource_error_t", "ideatek:ResourceHandle",
     "ideatek:Resource", "ideatek:ResourceLabel", "ideatek:ResourceModified",
-    "ideatek:ResourceReady", "ideatek:ResourceFailed", "ideatek:ResourceLoad",
+    "ideatek:ResourceReady", "ideatek:ResourceFailed",
+    "ideatek:ResourceVariable",
 ]
 '''
 
@@ -332,7 +342,7 @@ read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_storage_t",
     "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t",
     "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
-    "ideatek:Locale", "ideatek:ResourceLoad", "ideatek:ResourceAdd",
+    "ideatek:ResourceVariable", "ideatek:ResourceLoad", "ideatek:ResourceAdd",
     "ideatek:ResourceLoader", "ideatek:ResourceLabel", "ideatek:ResourceSource",
     "ideatek:ResourceSourceResult", "ideatek:FileResult", "ideatek:FileChange",
 ]
@@ -356,7 +366,7 @@ read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_storage_t",
     "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t",
     "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t",
-    "ideatek:Locale", "ideatek:ResourceLoad", "ideatek:ResourceAdd",
+    "ideatek:ResourceVariable", "ideatek:ResourceLoad", "ideatek:ResourceAdd",
     "ideatek:ResourceLoader", "ideatek:ResourceLabel", "ideatek:ResourceSource",
     "ideatek:ResourceSourceResult", "ideatek:FileResult", "ideatek:FileChange",
     "ideatek:ResourceFailed",

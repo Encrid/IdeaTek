@@ -5,7 +5,6 @@
 */
 #include "bridge_native.h"
 #include "ideatek_files.h"
-#include "ideatek_localization.h"
 #include "ideatek_resources.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -54,6 +53,7 @@ static const char WHO[] = MANIFEST;
     TAG(api, "ideatek:ResourceModified");
     TAG(api, "ideatek:ResourceReady");
     TAG(api, "ideatek:ResourceFailed");
+    STRUCT(api, "ideatek:ResourceVariable", ideatek_resource_variable_t);
 }
 
 [[maybe_unused]] static void role_game(const bridge_api_t *api)
@@ -74,6 +74,8 @@ static const char WHO[] = MANIFEST;
     api->attach(api, id, TAG(api, "ideatek:ResourceReload"), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:ResourceLoad",
         ideatek_resource_load_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ResourceVariable",
+        ideatek_resource_variable_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_loader(const bridge_api_t *api)
@@ -124,8 +126,7 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_file_status_t", ideatek_file_status_t);
     ENUM(api, "ideatek:ideatek_load_state_t", ideatek_load_state_t);
     ENUM(api, "ideatek:ideatek_resource_error_t", ideatek_resource_error_t);
-    BRIDGE_NATIVE_COMPONENT(api, "ideatek:Locale", ideatek_locale_t,
-        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    STRUCT(api, "ideatek:ResourceVariable", ideatek_resource_variable_t);
     STRUCT(api, "ideatek:ResourceLoad", ideatek_resource_load_t);
     STRUCT(api, "ideatek:ResourceAdd", ideatek_resource_add_t);
     STRUCT(api, "ideatek:ResourceLoader", ideatek_resource_loader_t);

@@ -1,16 +1,16 @@
 [parts.localization]
 name = "BC-IdeaTek-Localization"
-folder = "kernel/localization"
-uses = ["world"]
+folder = "engine_subsystems/localization"
+uses = ["world", "resources"]
 third_party = []
 
 [parts.localization.package]
-proof = "tests/kernel/localization_proof.c"
-include = ["{bridge}/include", "{root}/include/kernel", "{root}/include/platform_abstraction"]
+proof = "tests/engine_subsystems/localization_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
 
 [compose.localization]
 part = "localization"
-from = "include/kernel"
+from = "include/engine_subsystems"
 headers = ["ideatek_localization.h"]
 into = "include"
 
@@ -30,16 +30,16 @@ name = "localization_layout"
 kind = "program"
 part = "localization"
 test = true
-sources = ["tests/kernel/localization_layout.c"]
-include = ["include/kernel", "include/platform_abstraction", "{bridge}/include"]
+sources = ["tests/engine_subsystems/localization_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "localization_probe"
 kind = "native_module"
 part = "localization"
 test = true
-sources = ["tests/kernel/localization_probe.c"]
-include = ["include/kernel", "include/platform_abstraction"]
+sources = ["tests/engine_subsystems/localization_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{localization_probe_words}"]
 

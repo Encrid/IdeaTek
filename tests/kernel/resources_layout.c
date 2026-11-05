@@ -136,6 +136,14 @@ static void show_resource_source_result(void)
     AT(ideatek_resource_source_result_t, error);
 }
 
+static void show_resource_variable(void)
+{
+    SIZE(ideatek_resource_variable_t);
+    AT(ideatek_resource_variable_t, name);
+    AT(ideatek_resource_variable_t, value);
+    AT(ideatek_resource_variable_t, fallback);
+}
+
 static void show_descriptors(void)
 {
     const char *descriptors[] = {
@@ -146,7 +154,7 @@ static void show_descriptors(void)
         ideatek_resource_read_t_desc, ideatek_resource_outcome_t_desc,
         ideatek_resource_label_t_desc, ideatek_raw_bytes_t_desc,
         ideatek_resource_source_t_desc, ideatek_resource_source_read_t_desc,
-        ideatek_resource_source_result_t_desc };
+        ideatek_resource_source_result_t_desc, ideatek_resource_variable_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -169,7 +177,8 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_RAW_BYTES_FIELDS),
         TEXT_OF(IDEATEK_RESOURCE_SOURCE_FIELDS),
         TEXT_OF(IDEATEK_RESOURCE_SOURCE_READ_FIELDS),
-        TEXT_OF(IDEATEK_RESOURCE_SOURCE_RESULT_FIELDS) };
+        TEXT_OF(IDEATEK_RESOURCE_SOURCE_RESULT_FIELDS),
+        TEXT_OF(IDEATEK_RESOURCE_VARIABLE_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -193,6 +202,7 @@ int main(int argc, char **argv)
         { "resource_source", show_resource_source },
         { "resource_source_read", show_resource_source_read },
         { "resource_source_result", show_resource_source_result },
+        { "resource_variable", show_resource_variable },
         { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 

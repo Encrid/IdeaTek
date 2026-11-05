@@ -110,9 +110,9 @@ false = { run = ["{out}/changes_layout{exe}", "descriptors"] }
 
 [[case]]
 name = "the header compiles with the header of the world part and the headers of Bridge and nothing else"
-run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/kernel/changes_alone.c", "-o", "{case}/alone.o"]
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/changes_alone.c", "-o", "{case}/alone.o"]
 claims = { status = 0 }
-false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel", "-I", "include/platform_abstraction", "-c", "tests/kernel/changes_alone.c", "-o", "{case}/alone.o"] }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/changes_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
 name = "a module declares the 13 types, each type after the types of its fields"

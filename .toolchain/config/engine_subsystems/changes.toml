@@ -1,16 +1,16 @@
 [parts.changes]
 name = "BC-IdeaTek-Changes"
-folder = "kernel/changes"
+folder = "engine_subsystems/changes"
 uses = ["world"]
 third_party = []
 
 [parts.changes.package]
-proof = "tests/kernel/changes_proof.c"
-include = ["{bridge}/include", "{root}/include/kernel", "{root}/include/platform_abstraction"]
+proof = "tests/engine_subsystems/changes_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
 
 [compose.changes]
 part = "changes"
-from = "include/kernel"
+from = "include/engine_subsystems"
 headers = ["ideatek_changes.h"]
 into = "include"
 
@@ -30,16 +30,16 @@ name = "changes_layout"
 kind = "program"
 part = "changes"
 test = true
-sources = ["tests/kernel/changes_layout.c"]
-include = ["include/kernel", "include/platform_abstraction", "{bridge}/include"]
+sources = ["tests/engine_subsystems/changes_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]
 name = "changes_probe"
 kind = "native_module"
 part = "changes"
 test = true
-sources = ["tests/kernel/changes_probe.c"]
-include = ["include/kernel", "include/platform_abstraction"]
+sources = ["tests/engine_subsystems/changes_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{changes_probe_words}"]
 

@@ -62,9 +62,9 @@ false = { run = ["{out}/localization_layout{exe}", "descriptors"] }
 
 [[case]]
 name = "the header compiles with the header of the world part and the headers of Bridge and nothing else"
-run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/kernel/localization_alone.c", "-o", "{case}/alone.o"]
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/localization_alone.c", "-o", "{case}/alone.o"]
 claims = { status = 0 }
-false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel", "-I", "include/platform_abstraction", "-c", "tests/kernel/localization_alone.c", "-o", "{case}/alone.o"] }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/localization_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
 name = "a module declares the 6 types, each type after the types of its fields"
@@ -170,7 +170,7 @@ read = [
 '''
 
 [[case]]
-name = "the localization module loads with write on the localized texts"
+name = "the localization module loads with write on the localized texts and the variable of the locale"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/localization_module{library}"] }
 
@@ -186,7 +186,7 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:module@1.0.0"]
 write = [
-    "ideatek:LocalizedText",
+    "ideatek:LocalizedText", "ideatek:ResourceVariable",
 ]
 read = [
     "ideatek:ideatek_text_syntax_t", "ideatek:Locale", "ideatek:StringTable",
@@ -202,9 +202,12 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:module@1.0.0"]
+write = [
+    "ideatek:LocalizedText",
+]
 read = [
     "ideatek:ideatek_text_syntax_t", "ideatek:Locale", "ideatek:StringTable",
-    "ideatek:TextKey", "ideatek:LocalizedText",
+    "ideatek:TextKey", "ideatek:ResourceVariable",
 ]
 '''
 

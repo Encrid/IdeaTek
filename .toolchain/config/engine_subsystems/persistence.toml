@@ -39,7 +39,7 @@ kind = "native_module"
 part = "persistence"
 test = true
 sources = ["tests/engine_subsystems/persistence_probe.c"]
-include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel"]
+include = ["include/engine_subsystems", "include/platform_abstraction"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{persistence_probe_words}"]
 

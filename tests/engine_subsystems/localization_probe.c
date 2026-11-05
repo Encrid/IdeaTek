@@ -4,6 +4,7 @@
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
 #include "bridge_native.h"
+#include "ideatek_resources.h"
 #include "ideatek_localization.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -69,6 +70,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:TextKey", ideatek_text_key_t);
     api->attach(api, id, STRUCT(api, "ideatek:LocalizedText",
         ideatek_localized_text_t), BRIDGE_ZEROED);
+    api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api,
+        "ideatek:ResourceVariable", ideatek_resource_variable_t, BRIDGE_STRIP,
+        BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
 }
 
 BRIDGE_NATIVE(init)
