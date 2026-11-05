@@ -78,7 +78,8 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_save_state_t,
         IDEATEK_SAVE_ERROR_WRITE = 3, \
         IDEATEK_SAVE_ERROR_NO_SPACE = 4, \
         IDEATEK_SAVE_ERROR_FORMAT = 5, \
-        IDEATEK_SAVE_ERROR_VERSION = 6 \
+        IDEATEK_SAVE_ERROR_VERSION = 6, \
+        IDEATEK_SAVE_ERROR_CORRUPT = 7 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_save_error_t,
