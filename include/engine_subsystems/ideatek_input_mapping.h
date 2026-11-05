@@ -8,6 +8,7 @@
 
     #include <stdint.h>
 
+    #include "bridge_abi.h"
     #include "bridge_schema.h"
     #include "ideatek_world.h"
 
@@ -34,6 +35,7 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_accumulate_t,
     uint8_t, IDEATEK_ACCUMULATE_VALUES);
 
     #define IDEATEK_INPUT_ACTION_FIELDS { \
+        bridge_text_t name; \
         ideatek_action_type_t type; \
         ideatek_accumulate_t accumulate; \
     }
@@ -89,7 +91,12 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_action_state_t,
         IDEATEK_INPUT_SOURCE_GAMEPAD_TRIGGER = 7, \
         IDEATEK_INPUT_SOURCE_XR_BOOLEAN = 8, \
         IDEATEK_INPUT_SOURCE_XR_FLOAT = 9, \
-        IDEATEK_INPUT_SOURCE_XR_VECTOR2 = 10 \
+        IDEATEK_INPUT_SOURCE_XR_VECTOR2 = 10, \
+        IDEATEK_INPUT_SOURCE_GAMEPAD_GYRO = 11, \
+        IDEATEK_INPUT_SOURCE_GAMEPAD_ACCEL = 12, \
+        IDEATEK_INPUT_SOURCE_TOUCH = 13, \
+        IDEATEK_INPUT_SOURCE_TOUCH_MOTION = 14, \
+        IDEATEK_INPUT_SOURCE_EXTERNAL = 15 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_input_source_t,
@@ -185,6 +192,42 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_swizzle_t,
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_swizzle_t,
     IDEATEK_INPUT_SWIZZLE_FIELDS);
 
+    #define IDEATEK_INPUT_RESPONSE_CURVE_FIELDS { \
+        bridge_text_t x_points; \
+        bridge_text_t y_points; \
+        bridge_text_t z_points; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_response_curve_t,
+    IDEATEK_INPUT_RESPONSE_CURVE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_response_curve_t,
+    IDEATEK_INPUT_RESPONSE_CURVE_FIELDS);
+
+    #define IDEATEK_INPUT_CLAMP_FIELDS { \
+        float min[3]; \
+        float max[3]; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_clamp_t, IDEATEK_INPUT_CLAMP_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_clamp_t, IDEATEK_INPUT_CLAMP_FIELDS);
+
+    #define IDEATEK_INPUT_SMOOTH_FIELDS { \
+        float decay_rate; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_smooth_t, IDEATEK_INPUT_SMOOTH_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_smooth_t, IDEATEK_INPUT_SMOOTH_FIELDS);
+
+    #define IDEATEK_INPUT_LINEAR_STEP_FIELDS { \
+        float accel_rate; \
+        float decel_rate; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_linear_step_t,
+    IDEATEK_INPUT_LINEAR_STEP_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_linear_step_t,
+    IDEATEK_INPUT_LINEAR_STEP_FIELDS);
+
     #define IDEATEK_INPUT_PRESSED_FIELDS { \
         float threshold; \
     }
@@ -248,6 +291,54 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_pulse_flags_t,
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_pulse_t, IDEATEK_INPUT_PULSE_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_pulse_t, IDEATEK_INPUT_PULSE_FIELDS);
 
+    #define IDEATEK_INPUT_HOLD_RELEASE_FIELDS { \
+        float threshold; \
+        float time; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_hold_release_t,
+    IDEATEK_INPUT_HOLD_RELEASE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_hold_release_t,
+    IDEATEK_INPUT_HOLD_RELEASE_FIELDS);
+
+    #define IDEATEK_INPUT_MULTI_TAP_FIELDS { \
+        float threshold; \
+        float time; \
+        float gap; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_multi_tap_t,
+    IDEATEK_INPUT_MULTI_TAP_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_multi_tap_t,
+    IDEATEK_INPUT_MULTI_TAP_FIELDS);
+
+    #define IDEATEK_INPUT_TOGGLE_FIELDS { \
+        float threshold; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_toggle_t, IDEATEK_INPUT_TOGGLE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_toggle_t, IDEATEK_INPUT_TOGGLE_FIELDS);
+
+    #define IDEATEK_INPUT_FLICK_FIELDS { \
+        float threshold; \
+        float rest; \
+        float time; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_flick_t, IDEATEK_INPUT_FLICK_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_flick_t, IDEATEK_INPUT_FLICK_FIELDS);
+
+    #define IDEATEK_INPUT_COOLDOWN_FIELDS { \
+        float threshold; \
+        float time; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_cooldown_t,
+    IDEATEK_INPUT_COOLDOWN_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_cooldown_t,
+    IDEATEK_INPUT_COOLDOWN_FIELDS);
+
     #define IDEATEK_CHORD_FLAGS_VALUES { \
         IDEATEK_CHORD_FLAGS_BLOCK = 0x01 \
     }
@@ -265,10 +356,55 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_chord_flags_t,
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_chord_t, IDEATEK_INPUT_CHORD_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_chord_t, IDEATEK_INPUT_CHORD_FIELDS);
 
+    #define IDEATEK_INPUT_COMBO_FIELDS { \
+        bridge_text_t steps; \
+        bridge_text_t cancels; \
+        uint32_t steps_count; \
+        uint32_t cancels_count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_combo_t, IDEATEK_INPUT_COMBO_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_combo_t, IDEATEK_INPUT_COMBO_FIELDS);
+
+    #define IDEATEK_INPUT_CARDINAL_FIELDS { \
+        uint32_t up; \
+        uint32_t down; \
+        uint32_t left; \
+        uint32_t right; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_cardinal_t,
+    IDEATEK_INPUT_CARDINAL_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_cardinal_t,
+    IDEATEK_INPUT_CARDINAL_FIELDS);
+
+    #define IDEATEK_INPUT_EXTERNAL_FIELDS { \
+        float x; \
+        float y; \
+        float z; \
+        uint32_t origin; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_external_t,
+    IDEATEK_INPUT_EXTERNAL_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_external_t,
+    IDEATEK_INPUT_EXTERNAL_FIELDS);
+
+    #define IDEATEK_INPUT_ACTION_ORIGINS_FIELDS { \
+        bridge_text_t origins; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_action_origins_t,
+    IDEATEK_INPUT_ACTION_ORIGINS_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_input_action_origins_t,
+    IDEATEK_INPUT_ACTION_ORIGINS_FIELDS);
+
     #define IDEATEK_CONTEXT_FLAGS_VALUES { \
         IDEATEK_CONTEXT_FLAGS_ACTIVE = 0x01, \
         IDEATEK_CONTEXT_FLAGS_CONSUME = 0x02, \
-        IDEATEK_CONTEXT_FLAGS_IGNORE_HELD = 0x04 \
+        IDEATEK_CONTEXT_FLAGS_IGNORE_HELD = 0x04, \
+        IDEATEK_CONTEXT_FLAGS_REAL_TIME = 0x08 \
     }
 
 BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_context_flags_t,
@@ -277,6 +413,7 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_context_flags_t,
     uint8_t, IDEATEK_CONTEXT_FLAGS_VALUES);
 
     #define IDEATEK_INPUT_CONTEXT_FIELDS { \
+        bridge_text_t name; \
         ideatek_entity_t player; \
         int32_t priority; \
         ideatek_context_flags_t flags; \
