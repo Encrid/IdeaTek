@@ -25,6 +25,7 @@ static void show_ui_root(void)
     AT(ideatek_ui_root_t, target);
     AT(ideatek_ui_root_t, order);
     AT(ideatek_ui_root_t, scale);
+    AT(ideatek_ui_root_t, right_to_left);
 }
 
 static void show_ui_node(void)
@@ -205,6 +206,11 @@ static void show_text_wrap(void)
     SIZE(ideatek_text_wrap_t);
 }
 
+static void show_text_overflow(void)
+{
+    SIZE(ideatek_text_overflow_t);
+}
+
 static void show_ui_text_look(void)
 {
     SIZE(ideatek_ui_text_look_t);
@@ -217,8 +223,10 @@ static void show_ui_text_look(void)
     AT(ideatek_ui_text_look_t, outline);
     AT(ideatek_ui_text_look_t, shadow_x);
     AT(ideatek_ui_text_look_t, shadow_y);
+    AT(ideatek_ui_text_look_t, letter_spacing);
     AT(ideatek_ui_text_look_t, align);
     AT(ideatek_ui_text_look_t, wrap);
+    AT(ideatek_ui_text_look_t, overflow);
 }
 
 static void show_ui_text_span(void)
@@ -226,6 +234,7 @@ static void show_ui_text_span(void)
     SIZE(ideatek_ui_text_span_t);
     AT(ideatek_ui_text_span_t, text);
     AT(ideatek_ui_text_span_t, font);
+    AT(ideatek_ui_text_span_t, image);
     AT(ideatek_ui_text_span_t, color);
     AT(ideatek_ui_text_span_t, size);
 }
@@ -563,6 +572,85 @@ static void show_ui_anchor_state(void)
     AT(ideatek_ui_anchor_state_t, clamped);
 }
 
+static void show_ui_grid(void)
+{
+    SIZE(ideatek_ui_grid_t);
+    AT(ideatek_ui_grid_t, columns);
+    AT(ideatek_ui_grid_t, rows);
+}
+
+static void show_ui_grid_item(void)
+{
+    SIZE(ideatek_ui_grid_item_t);
+    AT(ideatek_ui_grid_item_t, column);
+    AT(ideatek_ui_grid_item_t, row);
+    AT(ideatek_ui_grid_item_t, column_span);
+    AT(ideatek_ui_grid_item_t, row_span);
+}
+
+static void show_ui_transform(void)
+{
+    SIZE(ideatek_ui_transform_t);
+    AT(ideatek_ui_transform_t, x);
+    AT(ideatek_ui_transform_t, y);
+    AT(ideatek_ui_transform_t, scale_x);
+    AT(ideatek_ui_transform_t, scale_y);
+    AT(ideatek_ui_transform_t, rotation);
+    AT(ideatek_ui_transform_t, pivot_x);
+    AT(ideatek_ui_transform_t, pivot_y);
+}
+
+static void show_ui_opacity(void)
+{
+    SIZE(ideatek_ui_opacity_t);
+    AT(ideatek_ui_opacity_t, value);
+}
+
+static void show_gradient_kind(void)
+{
+    SIZE(ideatek_gradient_kind_t);
+}
+
+static void show_ui_gradient(void)
+{
+    SIZE(ideatek_ui_gradient_t);
+    AT(ideatek_ui_gradient_t, stops);
+    AT(ideatek_ui_gradient_t, count);
+    AT(ideatek_ui_gradient_t, angle);
+    AT(ideatek_ui_gradient_t, kind);
+}
+
+static void show_ui_accessible(void)
+{
+    SIZE(ideatek_ui_accessible_t);
+    AT(ideatek_ui_accessible_t, label);
+    AT(ideatek_ui_accessible_t, description);
+}
+
+static void show_ui_shader(void)
+{
+    SIZE(ideatek_ui_shader_t);
+    AT(ideatek_ui_shader_t, name);
+    AT(ideatek_ui_shader_t, params);
+}
+
+static void show_ui_blur(void)
+{
+    SIZE(ideatek_ui_blur_t);
+    AT(ideatek_ui_blur_t, radius);
+    AT(ideatek_ui_blur_t, backdrop);
+}
+
+static void show_ease(void)
+{
+    SIZE(ideatek_ease_t);
+}
+
+static void show_ease_direction(void)
+{
+    SIZE(ideatek_ease_direction_t);
+}
+
 static void show_ui_style(void)
 {
     SIZE(ideatek_ui_style_t);
@@ -571,6 +659,9 @@ static void show_ui_style(void)
     AT(ideatek_ui_style_t, pressed);
     AT(ideatek_ui_style_t, disabled);
     AT(ideatek_ui_style_t, focus);
+    AT(ideatek_ui_style_t, transition);
+    AT(ideatek_ui_style_t, ease);
+    AT(ideatek_ui_style_t, ease_direction);
 }
 
 static void show_descriptors(void)
@@ -585,30 +676,36 @@ static void show_descriptors(void)
         ideatek_ui_box_t_desc, ideatek_ui_image_t_desc,
         ideatek_font_format_t_desc, ideatek_font_t_desc, ideatek_ui_text_t_desc,
         ideatek_text_align_t_desc, ideatek_text_wrap_t_desc,
-        ideatek_ui_text_look_t_desc, ideatek_ui_text_span_t_desc,
-        ideatek_pointer_buttons_t_desc, ideatek_ui_pointer_t_desc,
-        ideatek_ui_pointer_hit_t_desc, ideatek_pickable_flags_t_desc,
-        ideatek_ui_pickable_t_desc, ideatek_interaction_t_desc,
-        ideatek_ui_interaction_t_desc, ideatek_pointer_event_kind_t_desc,
-        ideatek_ui_pointer_event_t_desc, ideatek_ui_focus_t_desc,
-        ideatek_ui_focus_state_t_desc, ideatek_focusable_flags_t_desc,
-        ideatek_ui_focusable_t_desc, ideatek_ui_neighbors_t_desc,
-        ideatek_ui_focus_move_t_desc, ideatek_focus_event_kind_t_desc,
-        ideatek_focus_cause_t_desc, ideatek_ui_focus_event_t_desc,
-        ideatek_ui_value_t_desc, ideatek_ui_value_event_t_desc,
-        ideatek_button_mode_t_desc, ideatek_ui_button_t_desc,
-        ideatek_ui_activated_t_desc, ideatek_ui_toggle_t_desc,
-        ideatek_ui_toggle_group_t_desc, ideatek_slider_axis_t_desc,
-        ideatek_ui_slider_t_desc, ideatek_scroll_flags_t_desc,
-        ideatek_ui_scroll_area_t_desc, ideatek_ui_scroll_to_t_desc,
-        ideatek_text_field_flags_t_desc, ideatek_ui_text_field_t_desc,
-        ideatek_ui_text_change_t_desc, ideatek_ui_caret_t_desc,
-        ideatek_screen_flags_t_desc, ideatek_ui_screen_t_desc,
-        ideatek_ui_screen_state_t_desc, ideatek_screen_event_kind_t_desc,
-        ideatek_ui_screen_event_t_desc, ideatek_gesture_kind_t_desc,
-        ideatek_gesture_phase_t_desc, ideatek_ui_gesture_t_desc,
-        ideatek_anchor_flags_t_desc, ideatek_ui_anchor_t_desc,
-        ideatek_ui_anchor_state_t_desc, ideatek_ui_style_t_desc };
+        ideatek_text_overflow_t_desc, ideatek_ui_text_look_t_desc,
+        ideatek_ui_text_span_t_desc, ideatek_pointer_buttons_t_desc,
+        ideatek_ui_pointer_t_desc, ideatek_ui_pointer_hit_t_desc,
+        ideatek_pickable_flags_t_desc, ideatek_ui_pickable_t_desc,
+        ideatek_interaction_t_desc, ideatek_ui_interaction_t_desc,
+        ideatek_pointer_event_kind_t_desc, ideatek_ui_pointer_event_t_desc,
+        ideatek_ui_focus_t_desc, ideatek_ui_focus_state_t_desc,
+        ideatek_focusable_flags_t_desc, ideatek_ui_focusable_t_desc,
+        ideatek_ui_neighbors_t_desc, ideatek_ui_focus_move_t_desc,
+        ideatek_focus_event_kind_t_desc, ideatek_focus_cause_t_desc,
+        ideatek_ui_focus_event_t_desc, ideatek_ui_value_t_desc,
+        ideatek_ui_value_event_t_desc, ideatek_button_mode_t_desc,
+        ideatek_ui_button_t_desc, ideatek_ui_activated_t_desc,
+        ideatek_ui_toggle_t_desc, ideatek_ui_toggle_group_t_desc,
+        ideatek_slider_axis_t_desc, ideatek_ui_slider_t_desc,
+        ideatek_scroll_flags_t_desc, ideatek_ui_scroll_area_t_desc,
+        ideatek_ui_scroll_to_t_desc, ideatek_text_field_flags_t_desc,
+        ideatek_ui_text_field_t_desc, ideatek_ui_text_change_t_desc,
+        ideatek_ui_caret_t_desc, ideatek_screen_flags_t_desc,
+        ideatek_ui_screen_t_desc, ideatek_ui_screen_state_t_desc,
+        ideatek_screen_event_kind_t_desc, ideatek_ui_screen_event_t_desc,
+        ideatek_gesture_kind_t_desc, ideatek_gesture_phase_t_desc,
+        ideatek_ui_gesture_t_desc, ideatek_anchor_flags_t_desc,
+        ideatek_ui_anchor_t_desc, ideatek_ui_anchor_state_t_desc,
+        ideatek_ui_grid_t_desc, ideatek_ui_grid_item_t_desc,
+        ideatek_ui_transform_t_desc, ideatek_ui_opacity_t_desc,
+        ideatek_gradient_kind_t_desc, ideatek_ui_gradient_t_desc,
+        ideatek_ui_accessible_t_desc, ideatek_ui_shader_t_desc,
+        ideatek_ui_blur_t_desc, ideatek_ease_t_desc,
+        ideatek_ease_direction_t_desc, ideatek_ui_style_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -627,7 +724,9 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_UI_BOX_FIELDS), TEXT_OF(IDEATEK_UI_IMAGE_FIELDS),
         TEXT_OF(IDEATEK_FONT_FORMAT_VALUES), TEXT_OF(IDEATEK_FONT_FIELDS),
         TEXT_OF(IDEATEK_UI_TEXT_FIELDS), TEXT_OF(IDEATEK_TEXT_ALIGN_VALUES),
-        TEXT_OF(IDEATEK_TEXT_WRAP_VALUES), TEXT_OF(IDEATEK_UI_TEXT_LOOK_FIELDS),
+        TEXT_OF(IDEATEK_TEXT_WRAP_VALUES),
+        TEXT_OF(IDEATEK_TEXT_OVERFLOW_VALUES),
+        TEXT_OF(IDEATEK_UI_TEXT_LOOK_FIELDS),
         TEXT_OF(IDEATEK_UI_TEXT_SPAN_FIELDS),
         TEXT_OF(IDEATEK_POINTER_BUTTONS_VALUES),
         TEXT_OF(IDEATEK_UI_POINTER_FIELDS),
@@ -669,6 +768,14 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_UI_GESTURE_FIELDS),
         TEXT_OF(IDEATEK_ANCHOR_FLAGS_VALUES), TEXT_OF(IDEATEK_UI_ANCHOR_FIELDS),
         TEXT_OF(IDEATEK_UI_ANCHOR_STATE_FIELDS),
+        TEXT_OF(IDEATEK_UI_GRID_FIELDS), TEXT_OF(IDEATEK_UI_GRID_ITEM_FIELDS),
+        TEXT_OF(IDEATEK_UI_TRANSFORM_FIELDS),
+        TEXT_OF(IDEATEK_UI_OPACITY_FIELDS),
+        TEXT_OF(IDEATEK_GRADIENT_KIND_VALUES),
+        TEXT_OF(IDEATEK_UI_GRADIENT_FIELDS),
+        TEXT_OF(IDEATEK_UI_ACCESSIBLE_FIELDS),
+        TEXT_OF(IDEATEK_UI_SHADER_FIELDS), TEXT_OF(IDEATEK_UI_BLUR_FIELDS),
+        TEXT_OF(IDEATEK_EASE_VALUES), TEXT_OF(IDEATEK_EASE_DIRECTION_VALUES),
         TEXT_OF(IDEATEK_UI_STYLE_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
@@ -688,7 +795,9 @@ int main(int argc, char **argv)
         { "ui_box", show_ui_box }, { "ui_image", show_ui_image },
         { "font_format", show_font_format }, { "font", show_font },
         { "ui_text", show_ui_text }, { "text_align", show_text_align },
-        { "text_wrap", show_text_wrap }, { "ui_text_look", show_ui_text_look },
+        { "text_wrap", show_text_wrap },
+        { "text_overflow", show_text_overflow },
+        { "ui_text_look", show_ui_text_look },
         { "ui_text_span", show_ui_text_span },
         { "pointer_buttons", show_pointer_buttons },
         { "ui_pointer", show_ui_pointer },
@@ -730,6 +839,14 @@ int main(int argc, char **argv)
         { "ui_gesture", show_ui_gesture },
         { "anchor_flags", show_anchor_flags }, { "ui_anchor", show_ui_anchor },
         { "ui_anchor_state", show_ui_anchor_state },
+        { "ui_grid", show_ui_grid }, { "ui_grid_item", show_ui_grid_item },
+        { "ui_transform", show_ui_transform },
+        { "ui_opacity", show_ui_opacity },
+        { "gradient_kind", show_gradient_kind },
+        { "ui_gradient", show_ui_gradient },
+        { "ui_accessible", show_ui_accessible },
+        { "ui_shader", show_ui_shader }, { "ui_blur", show_ui_blur },
+        { "ease", show_ease }, { "ease_direction", show_ease_direction },
         { "ui_style", show_ui_style }, { "descriptors", show_descriptors },
         { "texts", show_texts }
     };

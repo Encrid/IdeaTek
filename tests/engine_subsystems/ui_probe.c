@@ -35,6 +35,7 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_font_format_t", ideatek_font_format_t);
     ENUM(api, "ideatek:ideatek_text_align_t", ideatek_text_align_t);
     ENUM(api, "ideatek:ideatek_text_wrap_t", ideatek_text_wrap_t);
+    ENUM(api, "ideatek:ideatek_text_overflow_t", ideatek_text_overflow_t);
     MASK(api, "ideatek:ideatek_pointer_buttons_t", ideatek_pointer_buttons_t);
     MASK(api, "ideatek:ideatek_pickable_flags_t", ideatek_pickable_flags_t);
     ENUM(api, "ideatek:ideatek_interaction_t", ideatek_interaction_t);
@@ -53,6 +54,9 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_gesture_kind_t", ideatek_gesture_kind_t);
     ENUM(api, "ideatek:ideatek_gesture_phase_t", ideatek_gesture_phase_t);
     MASK(api, "ideatek:ideatek_anchor_flags_t", ideatek_anchor_flags_t);
+    ENUM(api, "ideatek:ideatek_gradient_kind_t", ideatek_gradient_kind_t);
+    ENUM(api, "ideatek:ideatek_ease_t", ideatek_ease_t);
+    ENUM(api, "ideatek:ideatek_ease_direction_t", ideatek_ease_direction_t);
 }
 
 [[maybe_unused]] static void declare_late(const bridge_api_t *api)
@@ -104,6 +108,14 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:UiGesture", ideatek_ui_gesture_t);
     STRUCT(api, "ideatek:UiAnchor", ideatek_ui_anchor_t);
     STRUCT(api, "ideatek:UiAnchorState", ideatek_ui_anchor_state_t);
+    STRUCT(api, "ideatek:UiGrid", ideatek_ui_grid_t);
+    STRUCT(api, "ideatek:UiGridItem", ideatek_ui_grid_item_t);
+    STRUCT(api, "ideatek:UiTransform", ideatek_ui_transform_t);
+    STRUCT(api, "ideatek:UiOpacity", ideatek_ui_opacity_t);
+    STRUCT(api, "ideatek:UiGradient", ideatek_ui_gradient_t);
+    STRUCT(api, "ideatek:UiAccessible", ideatek_ui_accessible_t);
+    STRUCT(api, "ideatek:UiShader", ideatek_ui_shader_t);
+    STRUCT(api, "ideatek:UiBlur", ideatek_ui_blur_t);
     STRUCT(api, "ideatek:UiStyle", ideatek_ui_style_t);
 }
 
@@ -126,6 +138,7 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_font_format_t", ideatek_font_format_t);
     ENUM(api, "ideatek:ideatek_text_align_t", ideatek_text_align_t);
     ENUM(api, "ideatek:ideatek_text_wrap_t", ideatek_text_wrap_t);
+    ENUM(api, "ideatek:ideatek_text_overflow_t", ideatek_text_overflow_t);
     MASK(api, "ideatek:ideatek_pointer_buttons_t", ideatek_pointer_buttons_t);
     MASK(api, "ideatek:ideatek_pickable_flags_t", ideatek_pickable_flags_t);
     MASK(api, "ideatek:ideatek_focusable_flags_t", ideatek_focusable_flags_t);
@@ -135,6 +148,9 @@ static const char WHO[] = MANIFEST;
     MASK(api, "ideatek:ideatek_text_field_flags_t", ideatek_text_field_flags_t);
     MASK(api, "ideatek:ideatek_screen_flags_t", ideatek_screen_flags_t);
     MASK(api, "ideatek:ideatek_anchor_flags_t", ideatek_anchor_flags_t);
+    ENUM(api, "ideatek:ideatek_gradient_kind_t", ideatek_gradient_kind_t);
+    ENUM(api, "ideatek:ideatek_ease_t", ideatek_ease_t);
+    ENUM(api, "ideatek:ideatek_ease_direction_t", ideatek_ease_direction_t);
     api->attach(api, id, STRUCT(api, "ideatek:UiRoot", ideatek_ui_root_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:UiNode", ideatek_ui_node_t),
@@ -189,6 +205,22 @@ static const char WHO[] = MANIFEST;
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:UiPointer", ideatek_ui_pointer_t),
         BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:UiGrid", ideatek_ui_grid_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:UiGridItem",
+        ideatek_ui_grid_item_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:UiTransform",
+        ideatek_ui_transform_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:UiOpacity", ideatek_ui_opacity_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:UiGradient",
+        ideatek_ui_gradient_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:UiAccessible",
+        ideatek_ui_accessible_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:UiShader", ideatek_ui_shader_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:UiBlur", ideatek_ui_blur_t),
+        BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_module(const bridge_api_t *api)
@@ -211,6 +243,7 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_font_format_t", ideatek_font_format_t);
     ENUM(api, "ideatek:ideatek_text_align_t", ideatek_text_align_t);
     ENUM(api, "ideatek:ideatek_text_wrap_t", ideatek_text_wrap_t);
+    ENUM(api, "ideatek:ideatek_text_overflow_t", ideatek_text_overflow_t);
     MASK(api, "ideatek:ideatek_pointer_buttons_t", ideatek_pointer_buttons_t);
     MASK(api, "ideatek:ideatek_pickable_flags_t", ideatek_pickable_flags_t);
     ENUM(api, "ideatek:ideatek_interaction_t", ideatek_interaction_t);
@@ -229,6 +262,9 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_gesture_kind_t", ideatek_gesture_kind_t);
     ENUM(api, "ideatek:ideatek_gesture_phase_t", ideatek_gesture_phase_t);
     MASK(api, "ideatek:ideatek_anchor_flags_t", ideatek_anchor_flags_t);
+    ENUM(api, "ideatek:ideatek_gradient_kind_t", ideatek_gradient_kind_t);
+    ENUM(api, "ideatek:ideatek_ease_t", ideatek_ease_t);
+    ENUM(api, "ideatek:ideatek_ease_direction_t", ideatek_ease_direction_t);
     STRUCT(api, "ideatek:UiRoot", ideatek_ui_root_t);
     STRUCT(api, "ideatek:UiNode", ideatek_ui_node_t);
     STRUCT(api, "ideatek:UiLayout", ideatek_ui_layout_t);
@@ -256,6 +292,14 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:UiStyle", ideatek_ui_style_t);
     STRUCT(api, "ideatek:UiScroll", ideatek_ui_scroll_t);
     STRUCT(api, "ideatek:UiPointer", ideatek_ui_pointer_t);
+    STRUCT(api, "ideatek:UiGrid", ideatek_ui_grid_t);
+    STRUCT(api, "ideatek:UiGridItem", ideatek_ui_grid_item_t);
+    STRUCT(api, "ideatek:UiTransform", ideatek_ui_transform_t);
+    STRUCT(api, "ideatek:UiOpacity", ideatek_ui_opacity_t);
+    STRUCT(api, "ideatek:UiGradient", ideatek_ui_gradient_t);
+    STRUCT(api, "ideatek:UiAccessible", ideatek_ui_accessible_t);
+    STRUCT(api, "ideatek:UiShader", ideatek_ui_shader_t);
+    STRUCT(api, "ideatek:UiBlur", ideatek_ui_blur_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:WorldTransform",
         ideatek_world_transform_t, BRIDGE_STRIP, BRIDGE_TABLE,
         BRIDGE_ON_DESTROY_REMOVE);
