@@ -1,7 +1,7 @@
 # src/platform_abstraction/window_sdl3/window_inside.h
 
 Each source of the part `window_sdl3` includes this header.
-It includes SDL3, BB-Native, `include/platform_abstraction/ideatek_window.h`, `include/platform_abstraction/ideatek_window_clipboard.h`, `include/kernel/ideatek_frame.h` and the header of the part `sdl3_start`.
+It includes SDL3, BB-Native, `include/platform_abstraction/ideatek_window.h` and `include/platform_abstraction/ideatek_window_clipboard.h`, and the header of the part `sdl3_start`.
 It gives the slots, the limits, the types of the module, and the functions that one source gives to another.
 
 ## The module
@@ -26,7 +26,7 @@ Each slot is a `constexpr`, and `declare_types` of `docs/intern/platform_abstrac
 | 9 | `DROP` | `ideatek:Drop` |
 | 10 | `CLIPBOARD` | `ideatek:ClipboardRequest` |
 | 11 | `PASTE` | `ideatek:Paste` |
-| 12 | `FRAME` | `ideatek:Frame` |
+| 12 | `EVENT_WAIT` | `ideatek:EventWait` |
 | 13 | `SETTINGS` | `ideatek_window_sdl3:Settings` |
 
 ## The limits
@@ -118,7 +118,7 @@ The header gives no function of its own. It declares the functions that one sour
 
 | Function | Source |
 | --- | --- |
-| `disable_events` | `window_events.c` |
+| `enable_events` | `window_events.c` |
 | `apply_request` | `window_request.c` |
 | `get_target` | `window_request.c` |
 | `open_window` | `window_open.c` |

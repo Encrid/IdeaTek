@@ -10,12 +10,12 @@ This file holds the manifest of the window module, its exports `init`, `shutdown
 1. It starts the video of SDL3 with `sdl3_start_subsystem` and `SDL_INIT_VIDEO`.
 2. If SDL3 refuses, it writes `no video: <reason>`, and gives 1.
 3. It keeps the row of `find_driver` in `driver`.
-4. `disable_events` turns off the types of events that no part takes.
+4. `enable_events` turns on the types of events that the module takes.
 5. `declare_types` declares the types, in the order of their slots.
 6. `add_runs` adds the system `events` and the observers `request` and `clipboard`.
 7. It gives 0.
 
-`docs/intern/platform_abstraction/window_sdl3/window_events.c.md`, *The events that no module takes*, gives the types of step 4.
+`docs/intern/platform_abstraction/window_sdl3/window_events.c.md`, *The ranges of the module*, gives the types of step 4.
 
 Bridge calls no `shutdown` after an `init` that gave 1. The start then holds no subsystem: `docs/intern/platform_abstraction/sdl3_start/sdl3_start.h.md`, *The rules of a caller*.
 The module does not read its settings in `init`, because Bridge writes them after `init`: https://github.com/Encrid/Bridge/blob/v0.4.0/docs/extern/bridge.h.md#the-settings-of-a-module.
@@ -24,7 +24,7 @@ Thus the first round reads them: `docs/intern/platform_abstraction/window_sdl3/w
 ## The declarations
 
 Each type states the kind, the storage layout and `on_destroy` of its contract: `docs/extern/platform_abstraction/ideatek_window.h.md`, *The declarations*.
-`ideatek:Frame` and `ideatek_window_sdl3:Settings` state `BRIDGE_SINGLETON`.
+`ideatek_window_sdl3:Settings` states `BRIDGE_SINGLETON`.
 
 | Types | `on_unload` | Reason |
 | --- | --- | --- |
@@ -40,7 +40,8 @@ Each type states the kind, the storage layout and `on_destroy` of its contract: 
 | `clipboard` | An observer | `BRIDGE_ON_ENTER` and `BRIDGE_ON_ATTACH` | `ideatek:ClipboardRequest`, `BRIDGE_READ` and `BRIDGE_AND` | None. |
 
 `events` has no term. A term of a singleton is optional, and a query of optional terms alone walks each table: https://github.com/Encrid/Bridge/blob/v0.4.0/docs/extern/bridge_abi.h.md#bridge_term_t.
-Thus `events` runs 1 time in each run of its phase, and reads `ideatek:Frame` and the settings through their kept cells.
+Thus `events` runs 1 time in each run of its phase. It reads the settings through their kept cell, and `ideatek:EventWait` of the window with `get_cell`.
+
 A pair of the deployment orders `events` after the clock module. Other pairs put it before each module that reads the queue of SDL3.
 The deployment maps the phase `first` of the module to the first phase of the round.
 

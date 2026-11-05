@@ -40,16 +40,19 @@ ENDFUNCTION
 
 ## The wait
 
-`wait_for_events` reads `wait` of `ideatek:Frame`: `docs/extern/kernel/ideatek_frame.h.md`, *The limit of the rate*.
+`wait_for_events` reads `wait` of the `ideatek:EventWait` of the window: `docs/extern/platform_abstraction/ideatek_window.h.md`, *ideatek:EventWait*.
 
 ```pseudo
 PROCEDURE wait_for_events()
-   DECLARE frame : ideatek_frame_t
+   DECLARE at : U32
    DECLARE left : I64
-   frame <- bridge_native_get_single(FRAME)
+   at <- 0
+   IF window_module.entity <> 0 THEN
+      at <- get_cell(window_module.entity, EVENT_WAIT)
+   ENDIF
    left <- 0
-   IF frame <> nullptr AND window_module.taken > 0 THEN
-      left <- window_module.taken + INT(frame.wait * 1000000000) - SDL_GetTicksNS()
+   IF at <> 0 AND window_module.taken > 0 THEN
+      left <- window_module.taken + INT(read_f64(at) * 1000000000) - SDL_GetTicksNS()
    ENDIF
    IF left > 0 THEN
       CALL SDL_WaitEventTimeout(nullptr, (left + 999999) DIV 1000000)
@@ -59,7 +62,8 @@ PROCEDURE wait_for_events()
 ENDPROCEDURE
 ```
 
-- With no clock module, `ideatek:Frame` has no value, and the module does not wait.
+- With no window, or before the window entity has `ideatek:EventWait`, the module does not wait.
+- `read_f64` reads the `double` at `at`, in the shared memory. The module reads only types of its layer.
 - The first round does not wait, because `taken` is 0 before it.
 - `SDL_WaitEventTimeout` takes a time in milliseconds. The module rounds the time up, so a round never comes before `wait` passed.
 - With no buffer for the event, `SDL_WaitEventTimeout` takes no event from the queue. It pumps the queue before and after the wait.
@@ -94,25 +98,24 @@ Only the events of the drops carry text, so `take_drops` takes them 1 at a time:
 
 `count_pastes` reads the key presses before the input module takes them, and takes none: `docs/intern/platform_abstraction/window_sdl3/window_clipboard.c.md`, *A paste*.
 The events of the keyboard, the mouse, the text, the touch and the gamepads stay in the queue for the input module.
+The events of the focus are in the range of the window, so the module takes them. The input module reads `focused` of `ideatek:WindowState` in their place.
 The input module runs after `events`, in the same phase.
 
-## The events that no module takes
+## The ranges of the module
 
-An event that stays in the queue ends each wait at once, because `SDL_WaitEventTimeout` returns when the queue holds an event.
-SDL3 also refuses a new event when the queue holds 65535 events: https://github.com/libsdl-org/SDL/blob/release-3.4.20/src/events/SDL_events.c#L54.
-Thus `disable_events` turns off each type that no part of the project takes, in `bridge_init`, after the start of the video:
+The first start of a subsystem turns off the other types of events: `docs/intern/platform_abstraction/sdl3_start/sdl3_start.c.md`, *The events that no part takes*.
+Thus no event stays in the queue for ever, and each wait can last until its end.
+`enable_events` turns on each type of the ranges of the window module in `bridge_init`, after the start of the video:
 
 | Types | Range |
 | --- | --- |
-| The events of the application, but the quit: the end, the memory, the background, the foreground, the locale and the theme. | `SDL_EVENT_TERMINATING` to `SDL_EVENT_SYSTEM_THEME_CHANGED` |
-| The audio devices. | `SDL_EVENT_AUDIO_DEVICE_ADDED` to `SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED` |
-| The sensors. | `SDL_EVENT_SENSOR_UPDATE` |
-| The pens. | `SDL_EVENT_PEN_PROXIMITY_IN` to `SDL_EVENT_PEN_AXIS` |
-| The cameras. | `SDL_EVENT_CAMERA_DEVICE_ADDED` to `SDL_EVENT_CAMERA_DEVICE_DENIED` |
-| The renderers of SDL3. | `SDL_EVENT_RENDER_TARGETS_RESET` to `SDL_EVENT_RENDER_DEVICE_LOST` |
+| The quit | `SDL_EVENT_QUIT` |
+| The displays | `SDL_EVENT_DISPLAY_FIRST` to `SDL_EVENT_DISPLAY_LAST` |
+| The window | `SDL_EVENT_WINDOW_FIRST` to `SDL_EVENT_WINDOW_LAST` |
+| The clipboard | `SDL_EVENT_CLIPBOARD_UPDATE` |
+| The drops | `SDL_EVENT_DROP_FILE` to `SDL_EVENT_DROP_POSITION` |
 
-`SDL_SetEventEnabled` turns off 1 type, and SDL3 then drops each event of that type before the queue.
-A part that takes a type of this table turns it on again in its `init`, after the window module loaded.
+These are the ranges that *The ranges* takes from the queue. `SDL_SetEventEnabled` with `true` turns on 1 type.
 
 ## The close
 
@@ -145,7 +148,7 @@ A close request and a quit in 1 round are 1 request. SDL3 sends both when the us
 | Case | Result |
 | --- | --- |
 | The first round, with settings out of their range. | `bridge_events` gives 1. |
-| `wait` is 0, or no clock module runs. | No wait. |
+| `wait` is 0, or the window has no `ideatek:EventWait`. | No wait. |
 | `wait` is more than 0, and an event comes. | The wait ends at the event. |
 | `wait` is more than 0, and no event comes. | The round starts `wait` after the take of the last round, or less than 1 ms later. |
 | The time of the round is more than `wait`. | No wait. |
@@ -155,14 +158,15 @@ A close request and a quit in 1 round are 1 request. SDL3 sends both when the us
 | A close request with no window, and `close_on_request` at `true`. | `bridge_events` gives `BRIDGE_END`. |
 | A close request with `close_on_request` at `false`. | `close_asked` is `true` in this round, and `false` in the next round. |
 | A key press of the keyboard. | It stays in the queue. |
-| An event of a type of *The events that no module takes*. | It never comes into the queue. |
+| An event of a type that no part takes. | It never comes into the queue. |
+| An event of each range of *The ranges of the module*. | It comes into the queue, and the round takes it. |
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
 | `bridge_events` | Does the work of a round. Gives 0, `BRIDGE_END` after a close request, or 1 with bad settings. |
-| `wait_for_events` | Waits for an event for at most `wait`, or pumps the queue. |
+| `wait_for_events` | Waits at most `wait` for an event, or pumps the queue. |
 | `take_events` | Takes the events of the module from the queue. Gives `true` after a close request or a quit. |
 | `answer_close` | Hides the window and gives `BRIDGE_END`, or sets `close_asked`. |
-| `disable_events` | Turns off each type of event that no part takes. |
+| `enable_events` | Turns on each type of event of the ranges of the module. |
