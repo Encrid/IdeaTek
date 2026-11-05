@@ -56,3 +56,8 @@ manifest = ["test:game@1.0.0", "{terrain_spawn_words}"]
 name = "terrain_module"
 defines = ["ROLE_MODULE"]
 manifest = ["test:module@1.0.0", "{terrain_spawn_words}"]
+
+[[artifact.variants]]
+name = "terrain_generator"
+defines = ["ROLE_GENERATOR"]
+manifest = ["test:generator@1.0.0", "{terrain_spawn_words}"]

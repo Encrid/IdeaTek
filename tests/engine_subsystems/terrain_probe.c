@@ -51,6 +51,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:TerrainFill", ideatek_terrain_fill_t);
     STRUCT(api, "ideatek:TerrainViewer", ideatek_terrain_viewer_t);
     STRUCT(api, "ideatek:TerrainSplit", ideatek_terrain_split_t);
+    STRUCT(api, "ideatek:TerrainNeed", ideatek_terrain_need_t);
     STRUCT(api, "ideatek:TerrainScatter", ideatek_terrain_scatter_t);
 }
 
@@ -117,6 +118,8 @@ static const char WHO[] = MANIFEST;
         ideatek_terrain_chunk_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:TerrainSplit",
         ideatek_terrain_split_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:TerrainNeed",
+        ideatek_terrain_need_t), BRIDGE_ZEROED);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Mesh",
         ideatek_mesh_t, BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE),
         BRIDGE_ZEROED);
@@ -134,6 +137,20 @@ static const char WHO[] = MANIFEST;
         BRIDGE_ZEROED);
 }
 
+[[maybe_unused]] static void role_generator(const bridge_api_t *api)
+{
+    uint64_t id = api->spawn(api);
+
+    STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
+    ENUM(api, "ideatek:ideatek_terrain_kind_t", ideatek_terrain_kind_t);
+    MASK(api, "ideatek:ideatek_terrain_channels_t", ideatek_terrain_channels_t);
+    MASK(api, "ideatek:ideatek_terrain_flags_t", ideatek_terrain_flags_t);
+    STRUCT(api, "ideatek:Terrain", ideatek_terrain_t);
+    STRUCT(api, "ideatek:TerrainNeed", ideatek_terrain_need_t);
+    api->attach(api, id, STRUCT(api, "ideatek:TerrainFill",
+        ideatek_terrain_fill_t), BRIDGE_ZEROED);
+}
+
 BRIDGE_NATIVE(init)
 {
 #if defined(ROLE_LATE)
@@ -142,6 +159,8 @@ BRIDGE_NATIVE(init)
     role_game(api);
 #elif defined(ROLE_MODULE)
     role_module(api);
+#elif defined(ROLE_GENERATOR)
+    role_generator(api);
 #else
     declare_all(api);
 #endif

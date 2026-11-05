@@ -86,6 +86,12 @@ false = { run = ["{out}/terrain_layout{exe}", "terrain_split"] }
 name = "ideatek_terrain_split_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/terrain_layout{exe}", "terrain_split"]
 claims = { status = 0, order = ["size 24", "alignment 8", "source 0", "piece 8", "order 16"] }
+false = { run = ["{out}/terrain_layout{exe}", "terrain_need"] }
+
+[[case]]
+name = "ideatek_terrain_need_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/terrain_layout{exe}", "terrain_need"]
+claims = { status = 0, order = ["size 24", "alignment 8", "terrain 0", "x 8", "y 12", "z 16", "order 20"] }
 false = { run = ["{out}/terrain_layout{exe}", "terrain_scatter"] }
 
 [[case]]
@@ -113,6 +119,7 @@ claims = { status = 0, line = [
     "uint8_t { IDEATEK_VIEWER_FLAGS_VISUALS = 0x01, IDEATEK_VIEWER_FLAGS_COLLISIONS = 0x02 }",
     "{ float radius; float vertical_ratio; uint32_t peer; ideatek_viewer_flags_t flags; }",
     "{ ideatek_entity_t source; ideatek_entity_t piece; uint32_t order; }",
+    "{ ideatek_entity_t terrain; int32_t x; int32_t y; int32_t z; uint32_t order; }",
     "{ ideatek_entity_t terrain; ideatek_entity_t mesh; float density; float min_scale; float max_scale; uint32_t seed; uint16_t material; bool align; }",
 ] }
 false = { run = ["{out}/terrain_layout{exe}", "texts"] }
@@ -136,6 +143,7 @@ claims = { status = 0, line = [
     "{ IDEATEK_VIEWER_FLAGS_VISUALS = 0x01, IDEATEK_VIEWER_FLAGS_COLLISIONS = 0x02 }",
     "{ float radius; float vertical_ratio; uint32_t peer; ideatek_viewer_flags_t flags; }",
     "{ ideatek_entity_t source; ideatek_entity_t piece; uint32_t order; }",
+    "{ ideatek_entity_t terrain; int32_t x; int32_t y; int32_t z; uint32_t order; }",
     "{ ideatek_entity_t terrain; ideatek_entity_t mesh; float density; float min_scale; float max_scale; uint32_t seed; uint16_t material; bool align; }",
 ] }
 false = { run = ["{out}/terrain_layout{exe}", "descriptors"] }
@@ -147,7 +155,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/terrain_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 19 types, each type after the types of its fields"
+name = "a module declares the 20 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/terrain_probe{library}"] }
 
@@ -171,7 +179,7 @@ read = [
     "ideatek:ideatek_viewer_flags_t", "ideatek:Terrain",
     "ideatek:TerrainMaterial", "ideatek:TerrainChunk", "ideatek:TerrainEdit",
     "ideatek:TerrainFill", "ideatek:TerrainViewer", "ideatek:TerrainSplit",
-    "ideatek:TerrainScatter",
+    "ideatek:TerrainNeed", "ideatek:TerrainScatter",
 ]
 '''
 
@@ -247,9 +255,9 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:module@1.0.0"]
 write = [
-    "ideatek:TerrainChunk", "ideatek:TerrainSplit", "ideatek:Mesh",
-    "ideatek:MeshInstance", "ideatek:MeshInstances", "ideatek:Body",
-    "ideatek:Shape",
+    "ideatek:TerrainChunk", "ideatek:TerrainSplit", "ideatek:TerrainNeed",
+    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshInstances",
+    "ideatek:Body", "ideatek:Shape",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -276,8 +284,9 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:module@1.0.0"]
 write = [
-    "ideatek:TerrainChunk", "ideatek:TerrainSplit", "ideatek:Mesh",
-    "ideatek:MeshInstance", "ideatek:MeshInstances", "ideatek:Body",
+    "ideatek:TerrainChunk", "ideatek:TerrainSplit", "ideatek:TerrainNeed",
+    "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshInstances",
+    "ideatek:Body",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -293,6 +302,47 @@ read = [
     "ideatek:Terrain", "ideatek:TerrainMaterial", "ideatek:TerrainEdit",
     "ideatek:TerrainFill", "ideatek:TerrainViewer", "ideatek:TerrainScatter",
     "ideatek:Shape",
+]
+'''
+
+[[case]]
+name = "a generator loads with write on the fills and read on the needs"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:generator@1.0.0, native, m/terrain_generator{library}"] }
+
+[case.folders]
+"{case}/m" = ["terrain_generator"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:generator@1.0.0"]
+write = [
+    "ideatek:TerrainFill",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_terrain_kind_t",
+    "ideatek:ideatek_terrain_channels_t", "ideatek:ideatek_terrain_flags_t",
+    "ideatek:Terrain", "ideatek:TerrainNeed",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:generator@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_terrain_kind_t",
+    "ideatek:ideatek_terrain_channels_t", "ideatek:ideatek_terrain_flags_t",
+    "ideatek:Terrain", "ideatek:TerrainNeed", "ideatek:TerrainFill",
 ]
 '''
 
