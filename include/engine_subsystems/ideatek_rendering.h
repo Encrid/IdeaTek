@@ -297,6 +297,18 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mesh_instance_t,
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mesh_instance_t,
     IDEATEK_MESH_INSTANCE_FIELDS);
 
+    #define IDEATEK_MESH_INSTANCES_FIELDS { \
+        ideatek_entity_t mesh; \
+        bridge_text_t transforms; \
+        uint32_t count; \
+        uint32_t revision; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mesh_instances_t,
+    IDEATEK_MESH_INSTANCES_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mesh_instances_t,
+    IDEATEK_MESH_INSTANCES_FIELDS);
+
     #define IDEATEK_MESH_MATERIALS_FIELDS { \
         bridge_text_t materials; \
     }
