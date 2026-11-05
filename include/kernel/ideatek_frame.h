@@ -16,7 +16,6 @@
         double real_delta; \
         double real_elapsed; \
         double scale; \
-        double wait; \
         uint64_t index; \
         uint8_t paused; \
     }
