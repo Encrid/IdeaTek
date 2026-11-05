@@ -596,6 +596,9 @@ static void show_ui_transform(void)
     AT(ideatek_ui_transform_t, scale_x);
     AT(ideatek_ui_transform_t, scale_y);
     AT(ideatek_ui_transform_t, rotation);
+    AT(ideatek_ui_transform_t, rotation_x);
+    AT(ideatek_ui_transform_t, rotation_y);
+    AT(ideatek_ui_transform_t, perspective);
     AT(ideatek_ui_transform_t, pivot_x);
     AT(ideatek_ui_transform_t, pivot_y);
 }
@@ -639,6 +642,12 @@ static void show_ui_blur(void)
     SIZE(ideatek_ui_blur_t);
     AT(ideatek_ui_blur_t, radius);
     AT(ideatek_ui_blur_t, backdrop);
+}
+
+static void show_ui_mask(void)
+{
+    SIZE(ideatek_ui_mask_t);
+    AT(ideatek_ui_mask_t, texture);
 }
 
 static void show_ease(void)
@@ -704,7 +713,7 @@ static void show_descriptors(void)
         ideatek_ui_transform_t_desc, ideatek_ui_opacity_t_desc,
         ideatek_gradient_kind_t_desc, ideatek_ui_gradient_t_desc,
         ideatek_ui_accessible_t_desc, ideatek_ui_shader_t_desc,
-        ideatek_ui_blur_t_desc, ideatek_ease_t_desc,
+        ideatek_ui_blur_t_desc, ideatek_ui_mask_t_desc, ideatek_ease_t_desc,
         ideatek_ease_direction_t_desc, ideatek_ui_style_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
@@ -775,8 +784,8 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_UI_GRADIENT_FIELDS),
         TEXT_OF(IDEATEK_UI_ACCESSIBLE_FIELDS),
         TEXT_OF(IDEATEK_UI_SHADER_FIELDS), TEXT_OF(IDEATEK_UI_BLUR_FIELDS),
-        TEXT_OF(IDEATEK_EASE_VALUES), TEXT_OF(IDEATEK_EASE_DIRECTION_VALUES),
-        TEXT_OF(IDEATEK_UI_STYLE_FIELDS) };
+        TEXT_OF(IDEATEK_UI_MASK_FIELDS), TEXT_OF(IDEATEK_EASE_VALUES),
+        TEXT_OF(IDEATEK_EASE_DIRECTION_VALUES), TEXT_OF(IDEATEK_UI_STYLE_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -846,7 +855,8 @@ int main(int argc, char **argv)
         { "ui_gradient", show_ui_gradient },
         { "ui_accessible", show_ui_accessible },
         { "ui_shader", show_ui_shader }, { "ui_blur", show_ui_blur },
-        { "ease", show_ease }, { "ease_direction", show_ease_direction },
+        { "ui_mask", show_ui_mask }, { "ease", show_ease },
+        { "ease_direction", show_ease_direction },
         { "ui_style", show_ui_style }, { "descriptors", show_descriptors },
         { "texts", show_texts }
     };

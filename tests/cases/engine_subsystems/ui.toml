@@ -427,7 +427,7 @@ false = { run = ["{out}/ui_layout{exe}", "ui_transform"] }
 [[case]]
 name = "ideatek_ui_transform_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/ui_layout{exe}", "ui_transform"]
-claims = { status = 0, order = ["size 28", "alignment 4", "x 0", "y 4", "scale_x 8", "scale_y 12", "rotation 16", "pivot_x 20", "pivot_y 24"] }
+claims = { status = 0, order = ["size 40", "alignment 4", "x 0", "y 4", "scale_x 8", "scale_y 12", "rotation 16", "rotation_x 20", "rotation_y 24", "perspective 28", "pivot_x 32", "pivot_y 36"] }
 false = { run = ["{out}/ui_layout{exe}", "ui_opacity"] }
 
 [[case]]
@@ -464,6 +464,12 @@ false = { run = ["{out}/ui_layout{exe}", "ui_blur"] }
 name = "ideatek_ui_blur_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/ui_layout{exe}", "ui_blur"]
 claims = { status = 0, order = ["size 8", "alignment 4", "radius 0", "backdrop 4"] }
+false = { run = ["{out}/ui_layout{exe}", "ui_mask"] }
+
+[[case]]
+name = "ideatek_ui_mask_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/ui_layout{exe}", "ui_mask"]
+claims = { status = 0, order = ["size 8", "alignment 8", "texture 0"] }
 false = { run = ["{out}/ui_layout{exe}", "ease"] }
 
 [[case]]
@@ -559,13 +565,14 @@ claims = { status = 0, line = [
     "{ float distance; float angle; bool visible; bool clamped; }",
     "{ uint32_t columns; uint32_t rows; }",
     "{ uint32_t column; uint32_t row; uint32_t column_span; uint32_t row_span; }",
-    "{ float x; float y; float scale_x; float scale_y; float rotation; float pivot_x; float pivot_y; }",
+    "{ float x; float y; float scale_x; float scale_y; float rotation; float rotation_x; float rotation_y; float perspective; float pivot_x; float pivot_y; }",
     "{ float value; }",
     "uint8_t { IDEATEK_GRADIENT_KIND_LINEAR = 0, IDEATEK_GRADIENT_KIND_RADIAL = 1, IDEATEK_GRADIENT_KIND_CONIC = 2 }",
     "{ bridge_text_t stops; uint32_t count; float angle; ideatek_gradient_kind_t kind; }",
     "{ bridge_text_t label; bridge_text_t description; }",
     "{ bridge_text_t name; bridge_text_t params; }",
     "{ float radius; bool backdrop; }",
+    "{ ideatek_entity_t texture; }",
     "uint8_t { IDEATEK_EASE_LINEAR = 0, IDEATEK_EASE_QUADRATIC = 1, IDEATEK_EASE_CUBIC = 2, IDEATEK_EASE_QUARTIC = 3, IDEATEK_EASE_QUINTIC = 4, IDEATEK_EASE_SINE = 5, IDEATEK_EASE_EXPONENTIAL = 6, IDEATEK_EASE_CIRCULAR = 7, IDEATEK_EASE_BACK = 8, IDEATEK_EASE_ELASTIC = 9, IDEATEK_EASE_BOUNCE = 10 }",
     "uint8_t { IDEATEK_EASE_DIRECTION_IN = 0, IDEATEK_EASE_DIRECTION_OUT = 1, IDEATEK_EASE_DIRECTION_IN_OUT = 2 }",
     "{ ideatek_entity_t normal; ideatek_entity_t hovered; ideatek_entity_t pressed; ideatek_entity_t disabled; ideatek_entity_t focus; float transition; ideatek_ease_t ease; ideatek_ease_direction_t ease_direction; }",
@@ -647,13 +654,14 @@ claims = { status = 0, line = [
     "{ float distance; float angle; bool visible; bool clamped; }",
     "{ uint32_t columns; uint32_t rows; }",
     "{ uint32_t column; uint32_t row; uint32_t column_span; uint32_t row_span; }",
-    "{ float x; float y; float scale_x; float scale_y; float rotation; float pivot_x; float pivot_y; }",
+    "{ float x; float y; float scale_x; float scale_y; float rotation; float rotation_x; float rotation_y; float perspective; float pivot_x; float pivot_y; }",
     "{ float value; }",
     "{ IDEATEK_GRADIENT_KIND_LINEAR = 0, IDEATEK_GRADIENT_KIND_RADIAL = 1, IDEATEK_GRADIENT_KIND_CONIC = 2 }",
     "{ bridge_text_t stops; uint32_t count; float angle; ideatek_gradient_kind_t kind; }",
     "{ bridge_text_t label; bridge_text_t description; }",
     "{ bridge_text_t name; bridge_text_t params; }",
     "{ float radius; bool backdrop; }",
+    "{ ideatek_entity_t texture; }",
     "{ IDEATEK_EASE_LINEAR = 0, IDEATEK_EASE_QUADRATIC = 1, IDEATEK_EASE_CUBIC = 2, IDEATEK_EASE_QUARTIC = 3, IDEATEK_EASE_QUINTIC = 4, IDEATEK_EASE_SINE = 5, IDEATEK_EASE_EXPONENTIAL = 6, IDEATEK_EASE_CIRCULAR = 7, IDEATEK_EASE_BACK = 8, IDEATEK_EASE_ELASTIC = 9, IDEATEK_EASE_BOUNCE = 10 }",
     "{ IDEATEK_EASE_DIRECTION_IN = 0, IDEATEK_EASE_DIRECTION_OUT = 1, IDEATEK_EASE_DIRECTION_IN_OUT = 2 }",
     "{ ideatek_entity_t normal; ideatek_entity_t hovered; ideatek_entity_t pressed; ideatek_entity_t disabled; ideatek_entity_t focus; float transition; ideatek_ease_t ease; ideatek_ease_direction_t ease_direction; }",
@@ -667,7 +675,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/ui_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 84 types, each type after the types of its fields"
+name = "a module declares the 85 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/ui_probe{library}"] }
 
@@ -715,7 +723,7 @@ read = [
     "ideatek:UiGesture", "ideatek:UiAnchor", "ideatek:UiAnchorState",
     "ideatek:UiGrid", "ideatek:UiGridItem", "ideatek:UiTransform",
     "ideatek:UiOpacity", "ideatek:UiGradient", "ideatek:UiAccessible",
-    "ideatek:UiShader", "ideatek:UiBlur", "ideatek:UiStyle",
+    "ideatek:UiShader", "ideatek:UiBlur", "ideatek:UiMask", "ideatek:UiStyle",
 ]
 '''
 
@@ -750,6 +758,7 @@ write = [
     "ideatek:UiPointer", "ideatek:UiGrid", "ideatek:UiGridItem",
     "ideatek:UiTransform", "ideatek:UiOpacity", "ideatek:UiGradient",
     "ideatek:UiAccessible", "ideatek:UiShader", "ideatek:UiBlur",
+    "ideatek:UiMask",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -788,7 +797,7 @@ write = [
     "ideatek:UiAnchor", "ideatek:UiStyle", "ideatek:UiScroll",
     "ideatek:UiPointer", "ideatek:UiGrid", "ideatek:UiGridItem",
     "ideatek:UiTransform", "ideatek:UiOpacity", "ideatek:UiGradient",
-    "ideatek:UiAccessible", "ideatek:UiShader",
+    "ideatek:UiAccessible", "ideatek:UiShader", "ideatek:UiBlur",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -805,7 +814,7 @@ read = [
     "ideatek:ideatek_text_field_flags_t", "ideatek:ideatek_screen_flags_t",
     "ideatek:ideatek_anchor_flags_t", "ideatek:ideatek_gradient_kind_t",
     "ideatek:ideatek_ease_t", "ideatek:ideatek_ease_direction_t",
-    "ideatek:UiBlur",
+    "ideatek:UiMask",
 ]
 '''
 
@@ -863,7 +872,7 @@ read = [
     "ideatek:UiPointer", "ideatek:UiGrid", "ideatek:UiGridItem",
     "ideatek:UiTransform", "ideatek:UiOpacity", "ideatek:UiGradient",
     "ideatek:UiAccessible", "ideatek:UiShader", "ideatek:UiBlur",
-    "ideatek:WorldTransform",
+    "ideatek:UiMask", "ideatek:WorldTransform", "ideatek:AnimationCurves",
 ]
 '''
 
@@ -912,7 +921,8 @@ read = [
     "ideatek:UiPointer", "ideatek:UiGrid", "ideatek:UiGridItem",
     "ideatek:UiTransform", "ideatek:UiOpacity", "ideatek:UiGradient",
     "ideatek:UiAccessible", "ideatek:UiShader", "ideatek:UiBlur",
-    "ideatek:WorldTransform", "ideatek:UiAnchorState",
+    "ideatek:UiMask", "ideatek:WorldTransform", "ideatek:AnimationCurves",
+    "ideatek:UiAnchorState",
 ]
 '''
 

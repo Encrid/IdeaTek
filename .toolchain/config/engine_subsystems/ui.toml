@@ -1,7 +1,7 @@
 [parts.ui]
 name = "BC-IdeaTek-Ui"
 folder = "engine_subsystems/ui"
-uses = ["world", "space", "window", "input", "rendering", "input_mapping"]
+uses = ["world", "space", "window", "input", "rendering", "input_mapping", "animation"]
 third_party = []
 
 [parts.ui.package]

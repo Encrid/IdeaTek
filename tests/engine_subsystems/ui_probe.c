@@ -4,6 +4,7 @@
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
 #include "bridge_native.h"
+#include "ideatek_animation.h"
 #include "ideatek_ui.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -116,6 +117,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:UiAccessible", ideatek_ui_accessible_t);
     STRUCT(api, "ideatek:UiShader", ideatek_ui_shader_t);
     STRUCT(api, "ideatek:UiBlur", ideatek_ui_blur_t);
+    STRUCT(api, "ideatek:UiMask", ideatek_ui_mask_t);
     STRUCT(api, "ideatek:UiStyle", ideatek_ui_style_t);
 }
 
@@ -221,6 +223,8 @@ static const char WHO[] = MANIFEST;
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:UiBlur", ideatek_ui_blur_t),
         BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:UiMask", ideatek_ui_mask_t),
+        BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_module(const bridge_api_t *api)
@@ -300,8 +304,12 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:UiAccessible", ideatek_ui_accessible_t);
     STRUCT(api, "ideatek:UiShader", ideatek_ui_shader_t);
     STRUCT(api, "ideatek:UiBlur", ideatek_ui_blur_t);
+    STRUCT(api, "ideatek:UiMask", ideatek_ui_mask_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:WorldTransform",
         ideatek_world_transform_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:AnimationCurves",
+        ideatek_animation_curves_t, BRIDGE_STRIP, BRIDGE_TABLE,
         BRIDGE_ON_DESTROY_REMOVE);
     api->attach(api, id, STRUCT(api, "ideatek:UiRect", ideatek_ui_rect_t),
         BRIDGE_ZEROED);
