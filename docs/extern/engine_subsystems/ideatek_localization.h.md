@@ -1,6 +1,6 @@
-# include/kernel/ideatek_localization.h
+# include/engine_subsystems/ideatek_localization.h
 
-`include/kernel/ideatek_localization.h` gives the types of the localization: the locale, the string tables, the keys of the texts and the localized texts.
+`include/engine_subsystems/ideatek_localization.h` gives the types of the localization: the locale, the string tables, the keys of the texts and the localized texts.
 `readme.md`, *The contracts*, tells the rules of each contract.
 Its fields name entities, so its header includes `ideatek_world.h`.
 
@@ -50,7 +50,7 @@ A `source_hash` above 0 is the hash of the source string that the game expects. 
 
 ## The localized assets
 
-A path of the resources part can hold `{locale}`, and the resources module fills it from `ideatek:Locale`.
+The localization module writes `ideatek:ResourceVariable` of the resources part with the name `locale`. Its value is `code` of `ideatek:Locale`, and its fallback is `fallback`.
 So the voice lines and the clips of the lip sync of each language are files with `{locale}` in their paths.
 
 ## Right to left and the fonts
@@ -167,4 +167,4 @@ Bytes 18 to 19 hold no field.
 | --- | --- | --- |
 | The game | `ideatek:Locale`, `ideatek:TextKey` | `ideatek:LocalizedText`, and the types of the fields |
 | A loader | `ideatek:StringTable` | The types of the fields |
-| The localization module | `ideatek:LocalizedText` | `ideatek:Locale`, `ideatek:StringTable`, `ideatek:TextKey`, and the types of the fields |
+| The localization module | `ideatek:LocalizedText`, `ideatek:ResourceVariable` | `ideatek:Locale`, `ideatek:StringTable`, `ideatek:TextKey`, and the types of the fields |

@@ -74,8 +74,10 @@ A path with no source names the default source. The default source is the conten
 
 A name of a source holds only `a` to `z`, `0` to `9` and `_`. A path with an unknown source gets `IDEATEK_RESOURCE_ERROR_NOT_FOUND`.
 When 2 sources have the same name, the resources module keeps the first, and the log gets 1 line.
-A path can hold `{locale}`. The resources module puts `code` of `ideatek:Locale` of the localization part in its place, or `fallback` when that file is missing.
-When the locale changes, the resources module reloads each resource whose path holds `{locale}`.
+A path can hold `{name}` of an `ideatek:ResourceVariable`. The resources module puts `value` in its place, or `fallback` when that file is missing. An empty `fallback` means none.
+
+A path with a name that no variable has gets `IDEATEK_RESOURCE_ERROR_NOT_FOUND`. When 2 variables have the same name, the resources module keeps the first, and the log gets 1 line.
+When a variable changes, the resources module reloads each resource whose path holds its name.
 
 ## The source modules
 
@@ -389,6 +391,17 @@ Bytes 17 to 23 hold no field.
 
 `ideatek:ResourceFailed` is a tag. The resources module attaches it for 1 round, when a state becomes `IDEATEK_LOAD_STATE_FAILED`.
 
+## ideatek:ResourceVariable
+
+`ideatek:ResourceVariable` gives the value of a name in the paths: *The paths*.
+`ideatek_resource_variable_t` takes 24 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `name` | `bridge_text_t` | 0 | The name of the variable in a path, for example `locale`. |
+| `value` | `bridge_text_t` | 8 | The text that takes the place of the name. |
+| `fallback` | `bridge_text_t` | 16 | The text when no file has `value`. Empty means none. |
+
 ## The C types
 
 | Type of Bridge | C type | Descriptor | Macro of the text |
@@ -408,6 +421,7 @@ Bytes 17 to 23 hold no field.
 | `ideatek:ResourceSource` | `ideatek_resource_source_t` | `ideatek_resource_source_t_desc` | `IDEATEK_RESOURCE_SOURCE_FIELDS` |
 | `ideatek:ResourceSourceRead` | `ideatek_resource_source_read_t` | `ideatek_resource_source_read_t_desc` | `IDEATEK_RESOURCE_SOURCE_READ_FIELDS` |
 | `ideatek:ResourceSourceResult` | `ideatek_resource_source_result_t` | `ideatek_resource_source_result_t_desc` | `IDEATEK_RESOURCE_SOURCE_RESULT_FIELDS` |
+| `ideatek:ResourceVariable` | `ideatek_resource_variable_t` | `ideatek_resource_variable_t_desc` | `IDEATEK_RESOURCE_VARIABLE_FIELDS` |
 
 ```text
 { IDEATEK_LOAD_STATE_NOT_LOADED = 0, IDEATEK_LOAD_STATE_LOADING = 1, IDEATEK_LOAD_STATE_LOADED = 2, IDEATEK_LOAD_STATE_FAILED = 3 }
@@ -425,6 +439,7 @@ Bytes 17 to 23 hold no field.
 { bridge_text_t name; }
 { ideatek_entity_t source; uint64_t offset; uint64_t length; bridge_text_t path; uint8_t priority; }
 { uint64_t size; bridge_text_t data; ideatek_resource_error_t error; }
+{ bridge_text_t name; bridge_text_t value; bridge_text_t fallback; }
 ```
 
 ## The declarations
@@ -451,12 +466,13 @@ Bytes 17 to 23 hold no field.
 | `ideatek:ResourceModified` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ResourceReady` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ResourceFailed` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ResourceVariable` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
 
 | Role | `write` | `read` |
 | --- | --- | --- |
-| The game | `ideatek:ResourceAdd`, `ideatek:ResourceReload`, `ideatek:ResourceLoad` | `ideatek:ResourceHandle`, `ideatek:Resource`, `ideatek:ResourceLabel`, `ideatek:ResourceModified`, `ideatek:ResourceReady`, `ideatek:ResourceFailed`, and the types of the fields |
+| The game | `ideatek:ResourceAdd`, `ideatek:ResourceReload`, `ideatek:ResourceLoad`, `ideatek:ResourceVariable` | `ideatek:ResourceHandle`, `ideatek:Resource`, `ideatek:ResourceLabel`, `ideatek:ResourceModified`, `ideatek:ResourceReady`, `ideatek:ResourceFailed`, and the types of the fields |
 | A loader module | `ideatek:ResourceLoad`, `ideatek:ResourceAdd`, `ideatek:ResourceRead`, `ideatek:ResourceOutcome`, `ideatek:ResourceLabel`, `ideatek:ResourceLoader` | `ideatek:ResourceHandle`, `ideatek:Resource`, `ideatek:ResourceBytes`, `ideatek:RawBytes`, and the types of the fields |
 | A source module | `ideatek:ResourceSourceResult`, `ideatek:ResourceSource` | `ideatek:ResourceSourceRead`, and the types of the fields |
-| The resources module | `ideatek:FileRequest`, `ideatek:ResourceHandle`, `ideatek:Resource`, `ideatek:ResourceBytes`, `ideatek:ResourceOutcome`, `ideatek:ResourceRead`, `ideatek:RawBytes`, `ideatek:ResourceSourceRead`, `ideatek:ResourceReload`, `ideatek:ResourceModified`, `ideatek:ResourceReady`, `ideatek:ResourceFailed` | `ideatek:Locale`, `ideatek:ResourceLoad`, `ideatek:ResourceAdd`, `ideatek:ResourceLoader`, `ideatek:ResourceLabel`, `ideatek:ResourceSource`, `ideatek:ResourceSourceResult`, `ideatek:FileResult`, `ideatek:FileChange`, and the types of the fields |
+| The resources module | `ideatek:FileRequest`, `ideatek:ResourceHandle`, `ideatek:Resource`, `ideatek:ResourceBytes`, `ideatek:ResourceOutcome`, `ideatek:ResourceRead`, `ideatek:RawBytes`, `ideatek:ResourceSourceRead`, `ideatek:ResourceReload`, `ideatek:ResourceModified`, `ideatek:ResourceReady`, `ideatek:ResourceFailed` | `ideatek:ResourceVariable`, `ideatek:ResourceLoad`, `ideatek:ResourceAdd`, `ideatek:ResourceLoader`, `ideatek:ResourceLabel`, `ideatek:ResourceSource`, `ideatek:ResourceSourceResult`, `ideatek:FileResult`, `ideatek:FileChange`, and the types of the fields |

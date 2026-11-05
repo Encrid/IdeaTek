@@ -1,6 +1,6 @@
-# include/kernel/ideatek_changes.h
+# include/engine_subsystems/ideatek_changes.h
 
-`include/kernel/ideatek_changes.h` gives the types of the changes of the rows: ids, the stream, the rows in, the durability, the store and the recordings.
+`include/engine_subsystems/ideatek_changes.h` gives the types of the changes of the rows: ids, the stream, the rows in, the durability, the store and the recordings.
 `readme.md`, *The contracts*, tells the rules of each contract.
 The header includes the world part, because the requests and the sources are entities.
 

@@ -11,7 +11,7 @@ that place a type on a layer. Each part of the project is on 1 layer.
 | 1 | Foundation | Memory, containers, math, threads, logs, configuration, reflection, serialization, compression and cryptography. |
 | 2 | Platform abstraction | Windows, displays, the clipboard, input devices, audio devices, the GPU device, files, sockets, the time source and the life cycle. |
 | 3 | Kernel | The main loop, the time steps, the scheduler, the world model, queries, observers, the load of modules, the states of the application and the resources. |
-| 4 | Engine subsystems | Rendering, the scene, animation, physics, audio, the map of inputs, UI, networking, navigation, effects, scripting, media, XR, persistence and the services of a platform. |
+| 4 | Engine subsystems | Rendering, the scene, animation, physics, audio, the map of inputs, UI, networking, navigation, effects, scripting, media, XR, persistence and the services of a platform. It also holds the stream of the changes of the rows, and the localization. |
 | 5 | Gameplay foundations | Prefabs, the flow of a game, triggers, abilities, inventory, dialogue, the behavior of non-player characters, camera rigs and the movement of a character. |
 | 6 | Game systems | The code of 1 game. |
 | 7 | Game | The content and the data of 1 game. |
@@ -43,16 +43,16 @@ platform_abstraction/
     ideatek_window_clipboard.h
     ideatek_world.h
 kernel/
-    ideatek_changes.h
     ideatek_frame.h
-    ideatek_localization.h
     ideatek_resources.h
     ideatek_states.h
 engine_subsystems/
     ideatek_animation.h
+    ideatek_changes.h
     ideatek_debug_draw.h
     ideatek_effects.h
     ideatek_input_mapping.h
+    ideatek_localization.h
     ideatek_navigation.h
     ideatek_networking.h
     ideatek_persistence.h
