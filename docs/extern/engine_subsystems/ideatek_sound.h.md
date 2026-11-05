@@ -15,6 +15,7 @@
 A volume is a linear gain: 1 keeps the signal, and 0 mutes it. The gain in dB is `20 log10(volume)`.
 A threshold and a ceiling are in dB. A time is in seconds, and a frequency in hertz.
 A position in a sound and a length of a sound are in frames.
+The module ramps each change of a volume, a gain or a cutoff over 1 round, so a change does not click.
 
 ## The sounds
 
@@ -28,6 +29,8 @@ A change from STOPPED to PLAYING starts at `start_offset`. A change from PAUSED 
 At the end of a sound with no loop, the module sets the state to STOPPED and spawns `ideatek:SoundEnded`.
 With `IDEATEK_SOUND_PLAYER_FLAGS_DESTROY_AT_END`, it destroys the player after the event. `pitch` changes the pitch and the speed together.
 
+A start fades in over `fade_in`. A change to STOPPED or PAUSED first fades out over `fade_out`, and `ideatek:SoundEnded` comes after the fade.
+
 ## The spatial sound
 
 A player with `ideatek:SoundSpatial` is at the place of its `ideatek:WorldTransform`. The gain at a distance `d`, with `r` the reference distance and `f` the rolloff:
@@ -37,20 +40,53 @@ INVERSE:        r / (r + f (max(d, r) - r))
 INVERSE_SQUARE: (r / (r + f (max(d, r) - r))) ^ 2
 LINEAR:         1 - f (min(d, m) - r) / (m - r), with m the max distance
 NONE:           1
+CURVE:          the gain of rolloff_curve at d
 ```
 
+A record of `rolloff_curve` is 2 floats: a distance and a gain, by rising distance, with no bytes between them. The gain between 2 records is a straight blend, and the gain of the first or the last record stays beyond it.
 A max distance above 0 gives a gain of 0 beyond it. The cone points along -Z. The gain is 1 inside the inner angle, and the outer gain outside the outer angle. Between them, it is a straight blend.
+
 The Doppler shift takes the speed from `ideatek:WorldTransform` and `ideatek:PreviousWorldTransform` of the player and the listener.
+`doppler` scales the shift: 0 gives none, and 1 the physical shift. The references do not agree on a default, so it is 0.
+`spatial_blend` mixes the 2D sound and the spatial sound: 0 is 2D, and 1 is fully spatial. `radius` is the size of the source, for the occlusion and the spread.
 
 The module computes each spatial player against the closest listener, and multiplies by its volume. With no listener, no spatial player is heard.
 
 ## The buses and the effects
 
 A bus sums its players and its child buses, and multiplies by its volume. A bus with a parent of 0, and a player with a bus of 0, go to the main bus.
-A cycle of parents goes to the main bus, and the module logs the bus once.
-The effects of a bus apply by rising `order`. Equal orders apply in the order of the entities. An equalizer is a chain of filters.
+A cycle of parents goes to the main bus, and the module logs the bus once. A change of the volume of a bus glides over its `fade`.
+A send adds the signal of its player, after the volume and the spatial gain of the player, times its own volume, to its bus. A player can have many sends.
 
+The effects of a bus apply by rising `order`. Equal orders apply in the order of the entities. An equalizer is a chain of filters.
 The filters are the biquads of the cookbook of Robert Bristow-Johnson. The reverb technique is a choice of the module.
+
+## The binaural sound
+
+With `IDEATEK_SPATIAL_FLAGS_BINAURAL`, the module renders the player through a head-related transfer function, for headphones.
+`hrtf` of `ideatek:SoundListener` names an entity with `ideatek:SoundHrtf`. 0 means the function of the module.
+
+## The baked sound
+
+A bake tool of the module makes `ideatek:SoundProbes` for the reflections and the paths of a place. The bytes are in the format of the module.
+The module uses each `ideatek:SoundProbes` in the world. A module that does not know the format logs it once, and simulates in real time or without paths.
+
+## The random containers
+
+A player whose `sound` names an entity with `ideatek:SoundRandom` picks 1 of its sounds at each start and at each change of `cue`. A record of `sounds`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `sound` | `uint64_t` | 0 | The entity of an `ideatek:Sound`. |
+| `weight` | `float` | 8 | The part of the picks, against the sum of the weights. |
+
+The records have no bytes between them. A play takes a pitch from `1 / pitch_scale` to `pitch_scale`, and a gain of up to `volume_offset` dB more or less.
+A loop repeats the sound that the player picked.
+
+## The ambisonic sounds
+
+A sound with `IDEATEK_SOUND_FLAGS_AMBISONIC` is a sound field of order 1, 2 or 3, with 4, 9 or 16 channels. Its layout is AmbiX: the ACN order with SN3D.
+The field has the axes of the world, or of the `ideatek:WorldTransform` of the player if it has one. The module decodes it for the listener.
 
 ## The zones
 
@@ -133,6 +169,7 @@ A band measures the highest magnitude between its low and high frequency. The wi
 | Bit | Name | Meaning |
 | --- | --- | --- |
 | 0x01 | `IDEATEK_SOUND_FLAGS_STREAM` | The module decodes while it plays. |
+| 0x02 | `IDEATEK_SOUND_FLAGS_AMBISONIC` | The sound is a sound field: *The ambisonic sounds*. |
 
 ## ideatek:Sound
 
@@ -152,6 +189,65 @@ A band measures the highest magnitude between its low and high frequency. The wi
 | `flags` | `ideatek_sound_flags_t` | 42 | 0 | The options. |
 
 Bytes 43 to 47 hold no field.
+
+## ideatek:SoundHrtf
+
+`ideatek:SoundHrtf` is a head-related transfer function on a resource entity: *The binaural sound*.
+`ideatek_sound_hrtf_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `bytes` | `bridge_text_t` | 0 | The bytes of a SOFA file. |
+| `revision` | `uint32_t` | 8 | Raised at each change. |
+
+## ideatek:SoundProbes
+
+`ideatek:SoundProbes` holds baked reflections and paths on a resource entity: *The baked sound*.
+`ideatek_sound_probes_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `bytes` | `bridge_text_t` | 0 | The baked data, in the format of the module. |
+| `revision` | `uint32_t` | 8 | Raised at each change. |
+
+## ideatek:SoundSend
+
+`ideatek:SoundSend` sends the signal of a player to a bus: *The buses and the effects*.
+`ideatek_sound_send_t` takes 24 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `player` | `ideatek_entity_t` | 0 | No default | The player. |
+| `bus` | `ideatek_entity_t` | 8 | No default | The bus that takes the signal. |
+| `volume` | `float` | 16 | 1 | The gain of the send. |
+
+Bytes 20 to 23 hold no field.
+
+## ideatek:ideatek_random_mode_t
+
+`ideatek_random_mode_t` tells how a random container picks.
+`ideatek_random_mode_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_RANDOM_MODE_RANDOM_NO_REPEATS` | A random sound, never the last one twice. |
+| 1 | `IDEATEK_RANDOM_MODE_RANDOM` | A random sound. |
+| 2 | `IDEATEK_RANDOM_MODE_SEQUENTIAL` | The next sound in the order of the records. |
+
+## ideatek:SoundRandom
+
+`ideatek:SoundRandom` picks a sound at each start, on a resource entity: *The random containers*.
+`ideatek_sound_random_t` takes 24 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `sounds` | `bridge_text_t` | 0 | No default | The records of the sounds: *The random containers*. |
+| `count` | `uint32_t` | 8 | No default | The records in `sounds`. |
+| `pitch_scale` | `float` | 12 | 1 | The largest factor of the pitch, 1 or more. |
+| `volume_offset` | `float` | 16 | 0 | The most dB that a play adds or takes away. |
+| `mode` | `ideatek_random_mode_t` | 20 | `IDEATEK_RANDOM_MODE_RANDOM_NO_REPEATS` | How it picks. |
+
+Bytes 21 to 23 hold no field.
 
 ## ideatek:ideatek_sound_state_t
 
@@ -177,20 +273,22 @@ Bytes 43 to 47 hold no field.
 ## ideatek:SoundPlayer
 
 `ideatek:SoundPlayer` plays a sound.
-`ideatek_sound_player_t` takes 40 bytes. Its alignment is 8.
+`ideatek_sound_player_t` takes 48 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
-| `sound` | `ideatek_entity_t` | 0 | No default | The sound. |
+| `sound` | `ideatek_entity_t` | 0 | No default | The sound, or a random container. |
 | `bus` | `ideatek_entity_t` | 8 | 0 | The bus. 0 means the main bus. |
 | `start_offset` | `uint64_t` | 16 | 0 | The frame of the start. |
 | `volume` | `float` | 24 | 1 | The gain. |
 | `pitch` | `float` | 28 | 1 | The factor of the speed. |
-| `cue` | `uint32_t` | 32 | 0 | A number that starts the sound again when it changes. |
-| `state` | `ideatek_sound_state_t` | 36 | `IDEATEK_SOUND_STATE_STOPPED` | The state. |
-| `flags` | `ideatek_sound_player_flags_t` | 37 | 0 | The options. |
+| `fade_in` | `float` | 32 | 0 | The time of the fade at a start. |
+| `fade_out` | `float` | 36 | 0 | The time of the fade at a stop or a pause. |
+| `cue` | `uint32_t` | 40 | 0 | A number that starts the sound again when it changes. |
+| `state` | `ideatek_sound_state_t` | 44 | `IDEATEK_SOUND_STATE_STOPPED` | The state. |
+| `flags` | `ideatek_sound_player_flags_t` | 45 | 0 | The options. |
 
-Bytes 38 to 39 hold no field.
+Bytes 46 to 47 hold no field.
 
 ## ideatek:SoundPlayback
 
@@ -227,6 +325,7 @@ Bytes 12 to 15 hold no field.
 | 1 | `IDEATEK_ATTENUATION_INVERSE_SQUARE` | The inverse square of the distance. |
 | 2 | `IDEATEK_ATTENUATION_LINEAR` | A straight fall to the max distance. |
 | 3 | `IDEATEK_ATTENUATION_NONE` | No fall. |
+| 4 | `IDEATEK_ATTENUATION_CURVE` | The gains of `rolloff_curve`. |
 
 ## ideatek:ideatek_spatial_flags_t
 
@@ -235,41 +334,48 @@ Bytes 12 to 15 hold no field.
 
 | Bit | Name | Meaning |
 | --- | --- | --- |
-| 0x01 | `IDEATEK_SPATIAL_FLAGS_DOPPLER` | The Doppler shift. |
-| 0x02 | `IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION` | The loss of high frequencies in the air. |
-| 0x04 | `IDEATEK_SPATIAL_FLAGS_OCCLUSION` | The shapes between block the sound. |
-| 0x08 | `IDEATEK_SPATIAL_FLAGS_TRANSMISSION` | The sound passes through the shapes, by band. It needs OCCLUSION. |
-| 0x10 | `IDEATEK_SPATIAL_FLAGS_REFLECTIONS` | The echoes of the shapes. |
-| 0x20 | `IDEATEK_SPATIAL_FLAGS_PATHING` | The sound goes around the shapes. |
+| 0x01 | `IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION` | The loss of high frequencies in the air. |
+| 0x02 | `IDEATEK_SPATIAL_FLAGS_OCCLUSION` | The shapes between block the sound. |
+| 0x04 | `IDEATEK_SPATIAL_FLAGS_TRANSMISSION` | The sound passes through the shapes, by band. It needs OCCLUSION. |
+| 0x08 | `IDEATEK_SPATIAL_FLAGS_REFLECTIONS` | The echoes of the shapes. |
+| 0x10 | `IDEATEK_SPATIAL_FLAGS_PATHING` | The sound goes around the shapes. |
+| 0x20 | `IDEATEK_SPATIAL_FLAGS_BINAURAL` | The module renders through an HRTF: *The binaural sound*. |
 
 ## ideatek:SoundSpatial
 
 `ideatek:SoundSpatial` places a player in the world: *The spatial sound*.
-`ideatek_sound_spatial_t` takes 28 bytes. Its alignment is 4.
+`ideatek_sound_spatial_t` takes 48 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
-| `reference_distance` | `float` | 0 | 1 | The distance of the full gain. |
-| `max_distance` | `float` | 4 | 0 | The distance of a gain of 0. 0 means no limit. |
-| `rolloff` | `float` | 8 | 1 | The speed of the fall. |
-| `cone_inner` | `float` | 12 | 2 pi | The inner angle of the cone. |
-| `cone_outer` | `float` | 16 | 2 pi | The outer angle of the cone. |
-| `cone_outer_gain` | `float` | 20 | 0 | The gain outside the cone. |
-| `model` | `ideatek_attenuation_t` | 24 | `IDEATEK_ATTENUATION_INVERSE` | The fall. |
-| `flags` | `ideatek_spatial_flags_t` | 25 | 0 | The effects. |
+| `rolloff_curve` | `bridge_text_t` | 0 | No default | The records of `IDEATEK_ATTENUATION_CURVE`: *The spatial sound*. |
+| `reference_distance` | `float` | 8 | 1 | The distance of the full gain. |
+| `max_distance` | `float` | 12 | 0 | The distance of a gain of 0. 0 means no limit. |
+| `rolloff` | `float` | 16 | 1 | The speed of the fall. |
+| `cone_inner` | `float` | 20 | 2 pi | The inner angle of the cone. |
+| `cone_outer` | `float` | 24 | 2 pi | The outer angle of the cone. |
+| `cone_outer_gain` | `float` | 28 | 0 | The gain outside the cone. |
+| `radius` | `float` | 32 | 0 | The size of the source, in m. 0 means a point. |
+| `spatial_blend` | `float` | 36 | 1 | The part of spatial sound, from 0 to 1. |
+| `doppler` | `float` | 40 | 0 | The factor of the Doppler shift. |
+| `model` | `ideatek_attenuation_t` | 44 | `IDEATEK_ATTENUATION_INVERSE` | The fall. |
+| `flags` | `ideatek_spatial_flags_t` | 45 | 0 | The effects. |
 
-Bytes 26 to 27 hold no field.
+Bytes 46 to 47 hold no field.
 
 A cone of 2 pi is no cone. A player with no `ideatek:SoundSpatial` is not spatial.
 
 ## ideatek:SoundListener
 
 `ideatek:SoundListener` hears at the place of its entity. Its forward is -Z, its right +X, and its up +Y.
-`ideatek_sound_listener_t` takes 4 bytes. Its alignment is 4.
+`ideatek_sound_listener_t` takes 16 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
-| `volume` | `float` | 0 | 1 | The gain of what the listener hears. |
+| `hrtf` | `ideatek_entity_t` | 0 | 0 | The HRTF. 0 means that of the module. |
+| `volume` | `float` | 8 | 1 | The gain of what the listener hears. |
+
+Bytes 12 to 15 hold no field.
 
 ## ideatek:ideatek_bus_flags_t
 
@@ -285,15 +391,16 @@ A cone of 2 pi is no cone. A player with no `ideatek:SoundSpatial` is not spatia
 ## ideatek:SoundBus
 
 `ideatek:SoundBus` mixes players and buses: *The buses and the effects*.
-`ideatek_sound_bus_t` takes 16 bytes. Its alignment is 8.
+`ideatek_sound_bus_t` takes 24 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
 | `parent` | `ideatek_entity_t` | 0 | 0 | The bus that it goes to. 0 means the main bus. |
 | `volume` | `float` | 8 | 1 | The gain. |
-| `flags` | `ideatek_bus_flags_t` | 12 | 0 | The options. |
+| `fade` | `float` | 12 | 0 | The time of a change of the volume. |
+| `flags` | `ideatek_bus_flags_t` | 16 | 0 | The options. |
 
-Bytes 13 to 15 hold no field.
+Bytes 17 to 23 hold no field.
 
 ## ideatek:ideatek_effect_flags_t
 
@@ -613,6 +720,11 @@ Bytes 28 to 31 hold no field.
 | `ideatek:ideatek_sound_format_t` | `ideatek_sound_format_t` | `ideatek_sound_format_t_desc` | `IDEATEK_SOUND_FORMAT_VALUES` |
 | `ideatek:ideatek_sound_flags_t` | `ideatek_sound_flags_t` | `ideatek_sound_flags_t_desc` | `IDEATEK_SOUND_FLAGS_VALUES` |
 | `ideatek:Sound` | `ideatek_sound_t` | `ideatek_sound_t_desc` | `IDEATEK_SOUND_FIELDS` |
+| `ideatek:SoundHrtf` | `ideatek_sound_hrtf_t` | `ideatek_sound_hrtf_t_desc` | `IDEATEK_SOUND_HRTF_FIELDS` |
+| `ideatek:SoundProbes` | `ideatek_sound_probes_t` | `ideatek_sound_probes_t_desc` | `IDEATEK_SOUND_PROBES_FIELDS` |
+| `ideatek:SoundSend` | `ideatek_sound_send_t` | `ideatek_sound_send_t_desc` | `IDEATEK_SOUND_SEND_FIELDS` |
+| `ideatek:ideatek_random_mode_t` | `ideatek_random_mode_t` | `ideatek_random_mode_t_desc` | `IDEATEK_RANDOM_MODE_VALUES` |
+| `ideatek:SoundRandom` | `ideatek_sound_random_t` | `ideatek_sound_random_t_desc` | `IDEATEK_SOUND_RANDOM_FIELDS` |
 | `ideatek:ideatek_sound_state_t` | `ideatek_sound_state_t` | `ideatek_sound_state_t_desc` | `IDEATEK_SOUND_STATE_VALUES` |
 | `ideatek:ideatek_sound_player_flags_t` | `ideatek_sound_player_flags_t` | `ideatek_sound_player_flags_t_desc` | `IDEATEK_SOUND_PLAYER_FLAGS_VALUES` |
 | `ideatek:SoundPlayer` | `ideatek_sound_player_t` | `ideatek_sound_player_t_desc` | `IDEATEK_SOUND_PLAYER_FIELDS` |
@@ -652,19 +764,24 @@ Bytes 28 to 31 hold no field.
 
 ```text
 { IDEATEK_SOUND_FORMAT_PCM_I16 = 0, IDEATEK_SOUND_FORMAT_PCM_F32 = 1, IDEATEK_SOUND_FORMAT_VORBIS = 2, IDEATEK_SOUND_FORMAT_OPUS = 3, IDEATEK_SOUND_FORMAT_FLAC = 4, IDEATEK_SOUND_FORMAT_MP3 = 5 }
-{ IDEATEK_SOUND_FLAGS_STREAM = 0x01 }
+{ IDEATEK_SOUND_FLAGS_STREAM = 0x01, IDEATEK_SOUND_FLAGS_AMBISONIC = 0x02 }
 { bridge_text_t bytes; uint64_t frames; uint64_t loop_begin; uint64_t loop_end; uint32_t rate; uint32_t revision; uint8_t channels; ideatek_sound_format_t format; ideatek_sound_flags_t flags; }
+{ bridge_text_t bytes; uint32_t revision; }
+{ bridge_text_t bytes; uint32_t revision; }
+{ ideatek_entity_t player; ideatek_entity_t bus; float volume; }
+{ IDEATEK_RANDOM_MODE_RANDOM_NO_REPEATS = 0, IDEATEK_RANDOM_MODE_RANDOM = 1, IDEATEK_RANDOM_MODE_SEQUENTIAL = 2 }
+{ bridge_text_t sounds; uint32_t count; float pitch_scale; float volume_offset; ideatek_random_mode_t mode; }
 { IDEATEK_SOUND_STATE_STOPPED = 0, IDEATEK_SOUND_STATE_PLAYING = 1, IDEATEK_SOUND_STATE_PAUSED = 2 }
 { IDEATEK_SOUND_PLAYER_FLAGS_LOOP = 0x01, IDEATEK_SOUND_PLAYER_FLAGS_DESTROY_AT_END = 0x02 }
-{ ideatek_entity_t sound; ideatek_entity_t bus; uint64_t start_offset; float volume; float pitch; uint32_t cue; ideatek_sound_state_t state; ideatek_sound_player_flags_t flags; }
+{ ideatek_entity_t sound; ideatek_entity_t bus; uint64_t start_offset; float volume; float pitch; float fade_in; float fade_out; uint32_t cue; ideatek_sound_state_t state; ideatek_sound_player_flags_t flags; }
 { uint64_t position; ideatek_sound_state_t state; }
 { ideatek_entity_t player; uint32_t order; }
-{ IDEATEK_ATTENUATION_INVERSE = 0, IDEATEK_ATTENUATION_INVERSE_SQUARE = 1, IDEATEK_ATTENUATION_LINEAR = 2, IDEATEK_ATTENUATION_NONE = 3 }
-{ IDEATEK_SPATIAL_FLAGS_DOPPLER = 0x01, IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION = 0x02, IDEATEK_SPATIAL_FLAGS_OCCLUSION = 0x04, IDEATEK_SPATIAL_FLAGS_TRANSMISSION = 0x08, IDEATEK_SPATIAL_FLAGS_REFLECTIONS = 0x10, IDEATEK_SPATIAL_FLAGS_PATHING = 0x20 }
-{ float reference_distance; float max_distance; float rolloff; float cone_inner; float cone_outer; float cone_outer_gain; ideatek_attenuation_t model; ideatek_spatial_flags_t flags; }
-{ float volume; }
+{ IDEATEK_ATTENUATION_INVERSE = 0, IDEATEK_ATTENUATION_INVERSE_SQUARE = 1, IDEATEK_ATTENUATION_LINEAR = 2, IDEATEK_ATTENUATION_NONE = 3, IDEATEK_ATTENUATION_CURVE = 4 }
+{ IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION = 0x01, IDEATEK_SPATIAL_FLAGS_OCCLUSION = 0x02, IDEATEK_SPATIAL_FLAGS_TRANSMISSION = 0x04, IDEATEK_SPATIAL_FLAGS_REFLECTIONS = 0x08, IDEATEK_SPATIAL_FLAGS_PATHING = 0x10, IDEATEK_SPATIAL_FLAGS_BINAURAL = 0x20 }
+{ bridge_text_t rolloff_curve; float reference_distance; float max_distance; float rolloff; float cone_inner; float cone_outer; float cone_outer_gain; float radius; float spatial_blend; float doppler; ideatek_attenuation_t model; ideatek_spatial_flags_t flags; }
+{ ideatek_entity_t hrtf; float volume; }
 { IDEATEK_BUS_FLAGS_MUTE = 0x01, IDEATEK_BUS_FLAGS_BYPASS = 0x02, IDEATEK_BUS_FLAGS_MAIN = 0x04 }
-{ ideatek_entity_t parent; float volume; ideatek_bus_flags_t flags; }
+{ ideatek_entity_t parent; float volume; float fade; ideatek_bus_flags_t flags; }
 { IDEATEK_EFFECT_FLAGS_BYPASS = 0x01 }
 { ideatek_entity_t bus; uint32_t order; ideatek_effect_flags_t flags; }
 { IDEATEK_FILTER_MODE_LOW_PASS = 0, IDEATEK_FILTER_MODE_HIGH_PASS = 1, IDEATEK_FILTER_MODE_BAND_PASS = 2, IDEATEK_FILTER_MODE_NOTCH = 3, IDEATEK_FILTER_MODE_PEAK = 4, IDEATEK_FILTER_MODE_LOW_SHELF = 5, IDEATEK_FILTER_MODE_HIGH_SHELF = 6 }
@@ -698,6 +815,7 @@ Bytes 28 to 31 hold no field.
 | `ideatek:ideatek_entity_t` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_sound_format_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_sound_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_random_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_sound_state_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_sound_player_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_attenuation_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -709,6 +827,10 @@ Bytes 28 to 31 hold no field.
 | `ideatek:ideatek_clock_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_quantum_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Sound` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:SoundHrtf` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:SoundProbes` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:SoundSend` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:SoundRandom` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SoundPlayer` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SoundPlayback` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SoundEnded` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -740,5 +862,5 @@ Bytes 28 to 31 hold no field.
 
 | Role | `write` | `read` |
 | --- | --- | --- |
-| The game | The sounds, the players, the buses, the effects, the zones, the materials, the groups, the streams, the clocks and the meters | The types of the fields |
+| The game | The sounds, the players, the buses, the effects, the zones, the materials, the streams, the clocks, the meters and the other requests | The types of the fields |
 | The sound module | `ideatek:SoundPlayback`, `ideatek:SoundEnded`, `ideatek:SoundBus`, `ideatek:SoundStreamState`, `ideatek:SoundBeat`, `ideatek:SoundLevel` and `ideatek:SoundBandLevel` | Each type that the game writes, `ideatek:WorldTransform`, `ideatek:Shape`, and the types of the fields |
