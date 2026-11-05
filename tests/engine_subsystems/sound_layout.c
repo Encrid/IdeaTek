@@ -43,6 +43,43 @@ static void show_sound(void)
     AT(ideatek_sound_t, flags);
 }
 
+static void show_sound_hrtf(void)
+{
+    SIZE(ideatek_sound_hrtf_t);
+    AT(ideatek_sound_hrtf_t, bytes);
+    AT(ideatek_sound_hrtf_t, revision);
+}
+
+static void show_sound_probes(void)
+{
+    SIZE(ideatek_sound_probes_t);
+    AT(ideatek_sound_probes_t, bytes);
+    AT(ideatek_sound_probes_t, revision);
+}
+
+static void show_sound_send(void)
+{
+    SIZE(ideatek_sound_send_t);
+    AT(ideatek_sound_send_t, player);
+    AT(ideatek_sound_send_t, bus);
+    AT(ideatek_sound_send_t, volume);
+}
+
+static void show_random_mode(void)
+{
+    SIZE(ideatek_random_mode_t);
+}
+
+static void show_sound_random(void)
+{
+    SIZE(ideatek_sound_random_t);
+    AT(ideatek_sound_random_t, sounds);
+    AT(ideatek_sound_random_t, count);
+    AT(ideatek_sound_random_t, pitch_scale);
+    AT(ideatek_sound_random_t, volume_offset);
+    AT(ideatek_sound_random_t, mode);
+}
+
 static void show_sound_state(void)
 {
     SIZE(ideatek_sound_state_t);
@@ -61,6 +98,8 @@ static void show_sound_player(void)
     AT(ideatek_sound_player_t, start_offset);
     AT(ideatek_sound_player_t, volume);
     AT(ideatek_sound_player_t, pitch);
+    AT(ideatek_sound_player_t, fade_in);
+    AT(ideatek_sound_player_t, fade_out);
     AT(ideatek_sound_player_t, cue);
     AT(ideatek_sound_player_t, state);
     AT(ideatek_sound_player_t, flags);
@@ -93,12 +132,16 @@ static void show_spatial_flags(void)
 static void show_sound_spatial(void)
 {
     SIZE(ideatek_sound_spatial_t);
+    AT(ideatek_sound_spatial_t, rolloff_curve);
     AT(ideatek_sound_spatial_t, reference_distance);
     AT(ideatek_sound_spatial_t, max_distance);
     AT(ideatek_sound_spatial_t, rolloff);
     AT(ideatek_sound_spatial_t, cone_inner);
     AT(ideatek_sound_spatial_t, cone_outer);
     AT(ideatek_sound_spatial_t, cone_outer_gain);
+    AT(ideatek_sound_spatial_t, radius);
+    AT(ideatek_sound_spatial_t, spatial_blend);
+    AT(ideatek_sound_spatial_t, doppler);
     AT(ideatek_sound_spatial_t, model);
     AT(ideatek_sound_spatial_t, flags);
 }
@@ -106,6 +149,7 @@ static void show_sound_spatial(void)
 static void show_sound_listener(void)
 {
     SIZE(ideatek_sound_listener_t);
+    AT(ideatek_sound_listener_t, hrtf);
     AT(ideatek_sound_listener_t, volume);
 }
 
@@ -119,6 +163,7 @@ static void show_sound_bus(void)
     SIZE(ideatek_sound_bus_t);
     AT(ideatek_sound_bus_t, parent);
     AT(ideatek_sound_bus_t, volume);
+    AT(ideatek_sound_bus_t, fade);
     AT(ideatek_sound_bus_t, flags);
 }
 
@@ -320,24 +365,27 @@ static void show_descriptors(void)
 {
     const char *descriptors[] = {
         ideatek_sound_format_t_desc, ideatek_sound_flags_t_desc,
-        ideatek_sound_t_desc, ideatek_sound_state_t_desc,
-        ideatek_sound_player_flags_t_desc, ideatek_sound_player_t_desc,
-        ideatek_sound_playback_t_desc, ideatek_sound_ended_t_desc,
-        ideatek_attenuation_t_desc, ideatek_spatial_flags_t_desc,
-        ideatek_sound_spatial_t_desc, ideatek_sound_listener_t_desc,
-        ideatek_bus_flags_t_desc, ideatek_sound_bus_t_desc,
-        ideatek_effect_flags_t_desc, ideatek_sound_effect_t_desc,
-        ideatek_filter_mode_t_desc, ideatek_sound_filter_t_desc,
-        ideatek_sound_compressor_t_desc, ideatek_sound_limiter_t_desc,
-        ideatek_sound_reverb_t_desc, ideatek_sound_delay_t_desc,
-        ideatek_sound_zone_t_desc, ideatek_sound_material_t_desc,
-        ideatek_voice_rule_t_desc, ideatek_sound_group_t_desc,
-        ideatek_sound_voice_t_desc, ideatek_sound_stream_t_desc,
-        ideatek_sound_stream_state_t_desc, ideatek_clock_flags_t_desc,
-        ideatek_sound_clock_t_desc, ideatek_quantum_t_desc,
-        ideatek_sound_sync_t_desc, ideatek_sound_beat_t_desc,
-        ideatek_sound_meter_t_desc, ideatek_sound_level_t_desc,
-        ideatek_sound_band_t_desc, ideatek_sound_band_level_t_desc };
+        ideatek_sound_t_desc, ideatek_sound_hrtf_t_desc,
+        ideatek_sound_probes_t_desc, ideatek_sound_send_t_desc,
+        ideatek_random_mode_t_desc, ideatek_sound_random_t_desc,
+        ideatek_sound_state_t_desc, ideatek_sound_player_flags_t_desc,
+        ideatek_sound_player_t_desc, ideatek_sound_playback_t_desc,
+        ideatek_sound_ended_t_desc, ideatek_attenuation_t_desc,
+        ideatek_spatial_flags_t_desc, ideatek_sound_spatial_t_desc,
+        ideatek_sound_listener_t_desc, ideatek_bus_flags_t_desc,
+        ideatek_sound_bus_t_desc, ideatek_effect_flags_t_desc,
+        ideatek_sound_effect_t_desc, ideatek_filter_mode_t_desc,
+        ideatek_sound_filter_t_desc, ideatek_sound_compressor_t_desc,
+        ideatek_sound_limiter_t_desc, ideatek_sound_reverb_t_desc,
+        ideatek_sound_delay_t_desc, ideatek_sound_zone_t_desc,
+        ideatek_sound_material_t_desc, ideatek_voice_rule_t_desc,
+        ideatek_sound_group_t_desc, ideatek_sound_voice_t_desc,
+        ideatek_sound_stream_t_desc, ideatek_sound_stream_state_t_desc,
+        ideatek_clock_flags_t_desc, ideatek_sound_clock_t_desc,
+        ideatek_quantum_t_desc, ideatek_sound_sync_t_desc,
+        ideatek_sound_beat_t_desc, ideatek_sound_meter_t_desc,
+        ideatek_sound_level_t_desc, ideatek_sound_band_t_desc,
+        ideatek_sound_band_level_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -348,6 +396,10 @@ static void show_texts(void)
     const char *texts[] = {
         TEXT_OF(IDEATEK_SOUND_FORMAT_VALUES),
         TEXT_OF(IDEATEK_SOUND_FLAGS_VALUES), TEXT_OF(IDEATEK_SOUND_FIELDS),
+        TEXT_OF(IDEATEK_SOUND_HRTF_FIELDS),
+        TEXT_OF(IDEATEK_SOUND_PROBES_FIELDS),
+        TEXT_OF(IDEATEK_SOUND_SEND_FIELDS), TEXT_OF(IDEATEK_RANDOM_MODE_VALUES),
+        TEXT_OF(IDEATEK_SOUND_RANDOM_FIELDS),
         TEXT_OF(IDEATEK_SOUND_STATE_VALUES),
         TEXT_OF(IDEATEK_SOUND_PLAYER_FLAGS_VALUES),
         TEXT_OF(IDEATEK_SOUND_PLAYER_FIELDS),
@@ -387,6 +439,10 @@ int main(int argc, char **argv)
     static const show_mode_t MODES[] = {
         { "sound_format", show_sound_format },
         { "sound_flags", show_sound_flags }, { "sound", show_sound },
+        { "sound_hrtf", show_sound_hrtf },
+        { "sound_probes", show_sound_probes },
+        { "sound_send", show_sound_send }, { "random_mode", show_random_mode },
+        { "sound_random", show_sound_random },
         { "sound_state", show_sound_state },
         { "sound_player_flags", show_sound_player_flags },
         { "sound_player", show_sound_player },

@@ -25,6 +25,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     ENUM(api, "ideatek:ideatek_sound_format_t", ideatek_sound_format_t);
     MASK(api, "ideatek:ideatek_sound_flags_t", ideatek_sound_flags_t);
+    ENUM(api, "ideatek:ideatek_random_mode_t", ideatek_random_mode_t);
     ENUM(api, "ideatek:ideatek_sound_state_t", ideatek_sound_state_t);
     MASK(api, "ideatek:ideatek_sound_player_flags_t",
         ideatek_sound_player_flags_t);
@@ -48,6 +49,10 @@ static const char WHO[] = MANIFEST;
 {
     declare_fields(api);
     STRUCT(api, "ideatek:Sound", ideatek_sound_t);
+    STRUCT(api, "ideatek:SoundHrtf", ideatek_sound_hrtf_t);
+    STRUCT(api, "ideatek:SoundProbes", ideatek_sound_probes_t);
+    STRUCT(api, "ideatek:SoundSend", ideatek_sound_send_t);
+    STRUCT(api, "ideatek:SoundRandom", ideatek_sound_random_t);
     STRUCT(api, "ideatek:SoundPlayer", ideatek_sound_player_t);
     STRUCT(api, "ideatek:SoundPlayback", ideatek_sound_playback_t);
     STRUCT(api, "ideatek:SoundEnded", ideatek_sound_ended_t);
@@ -83,6 +88,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     ENUM(api, "ideatek:ideatek_sound_format_t", ideatek_sound_format_t);
     MASK(api, "ideatek:ideatek_sound_flags_t", ideatek_sound_flags_t);
+    ENUM(api, "ideatek:ideatek_random_mode_t", ideatek_random_mode_t);
     ENUM(api, "ideatek:ideatek_sound_state_t", ideatek_sound_state_t);
     MASK(api, "ideatek:ideatek_sound_player_flags_t",
         ideatek_sound_player_flags_t);
@@ -95,6 +101,14 @@ static const char WHO[] = MANIFEST;
     MASK(api, "ideatek:ideatek_clock_flags_t", ideatek_clock_flags_t);
     ENUM(api, "ideatek:ideatek_quantum_t", ideatek_quantum_t);
     api->attach(api, id, STRUCT(api, "ideatek:Sound", ideatek_sound_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:SoundHrtf", ideatek_sound_hrtf_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:SoundProbes",
+        ideatek_sound_probes_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:SoundRandom",
+        ideatek_sound_random_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:SoundSend", ideatek_sound_send_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:SoundPlayer",
         ideatek_sound_player_t), BRIDGE_ZEROED);
@@ -149,6 +163,7 @@ static const char WHO[] = MANIFEST;
     MASK(api, "ideatek:ideatek_shape_flags_t", ideatek_shape_flags_t);
     ENUM(api, "ideatek:ideatek_sound_format_t", ideatek_sound_format_t);
     MASK(api, "ideatek:ideatek_sound_flags_t", ideatek_sound_flags_t);
+    ENUM(api, "ideatek:ideatek_random_mode_t", ideatek_random_mode_t);
     ENUM(api, "ideatek:ideatek_sound_state_t", ideatek_sound_state_t);
     MASK(api, "ideatek:ideatek_sound_player_flags_t",
         ideatek_sound_player_flags_t);
@@ -161,6 +176,10 @@ static const char WHO[] = MANIFEST;
     MASK(api, "ideatek:ideatek_clock_flags_t", ideatek_clock_flags_t);
     ENUM(api, "ideatek:ideatek_quantum_t", ideatek_quantum_t);
     STRUCT(api, "ideatek:Sound", ideatek_sound_t);
+    STRUCT(api, "ideatek:SoundHrtf", ideatek_sound_hrtf_t);
+    STRUCT(api, "ideatek:SoundProbes", ideatek_sound_probes_t);
+    STRUCT(api, "ideatek:SoundRandom", ideatek_sound_random_t);
+    STRUCT(api, "ideatek:SoundSend", ideatek_sound_send_t);
     STRUCT(api, "ideatek:SoundPlayer", ideatek_sound_player_t);
     STRUCT(api, "ideatek:SoundSpatial", ideatek_sound_spatial_t);
     STRUCT(api, "ideatek:SoundListener", ideatek_sound_listener_t);

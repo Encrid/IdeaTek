@@ -14,6 +14,36 @@ false = { run = ["{out}/sound_layout{exe}", "sound"] }
 name = "ideatek_sound_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sound_layout{exe}", "sound"]
 claims = { status = 0, order = ["size 48", "alignment 8", "bytes 0", "frames 8", "loop_begin 16", "loop_end 24", "rate 32", "revision 36", "channels 40", "format 41", "flags 42"] }
+false = { run = ["{out}/sound_layout{exe}", "sound_hrtf"] }
+
+[[case]]
+name = "ideatek_sound_hrtf_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sound_layout{exe}", "sound_hrtf"]
+claims = { status = 0, order = ["size 12", "alignment 4", "bytes 0", "revision 8"] }
+false = { run = ["{out}/sound_layout{exe}", "sound_send"] }
+
+[[case]]
+name = "ideatek_sound_probes_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sound_layout{exe}", "sound_probes"]
+claims = { status = 0, order = ["size 12", "alignment 4", "bytes 0", "revision 8"] }
+false = { run = ["{out}/sound_layout{exe}", "sound_send"] }
+
+[[case]]
+name = "ideatek_sound_send_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sound_layout{exe}", "sound_send"]
+claims = { status = 0, order = ["size 24", "alignment 8", "player 0", "bus 8", "volume 16"] }
+false = { run = ["{out}/sound_layout{exe}", "random_mode"] }
+
+[[case]]
+name = "ideatek_random_mode_t is 1 byte"
+run = ["{out}/sound_layout{exe}", "random_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/sound_layout{exe}", "sound_random"] }
+
+[[case]]
+name = "ideatek_sound_random_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/sound_layout{exe}", "sound_random"]
+claims = { status = 0, order = ["size 24", "alignment 4", "sounds 0", "count 8", "pitch_scale 12", "volume_offset 16", "mode 20"] }
 false = { run = ["{out}/sound_layout{exe}", "sound_state"] }
 
 [[case]]
@@ -31,7 +61,7 @@ false = { run = ["{out}/sound_layout{exe}", "sound_player"] }
 [[case]]
 name = "ideatek_sound_player_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sound_layout{exe}", "sound_player"]
-claims = { status = 0, order = ["size 40", "alignment 8", "sound 0", "bus 8", "start_offset 16", "volume 24", "pitch 28", "cue 32", "state 36", "flags 37"] }
+claims = { status = 0, order = ["size 48", "alignment 8", "sound 0", "bus 8", "start_offset 16", "volume 24", "pitch 28", "fade_in 32", "fade_out 36", "cue 40", "state 44", "flags 45"] }
 false = { run = ["{out}/sound_layout{exe}", "sound_playback"] }
 
 [[case]]
@@ -61,13 +91,13 @@ false = { run = ["{out}/sound_layout{exe}", "sound_spatial"] }
 [[case]]
 name = "ideatek_sound_spatial_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sound_layout{exe}", "sound_spatial"]
-claims = { status = 0, order = ["size 28", "alignment 4", "reference_distance 0", "max_distance 4", "rolloff 8", "cone_inner 12", "cone_outer 16", "cone_outer_gain 20", "model 24", "flags 25"] }
+claims = { status = 0, order = ["size 48", "alignment 4", "rolloff_curve 0", "reference_distance 8", "max_distance 12", "rolloff 16", "cone_inner 20", "cone_outer 24", "cone_outer_gain 28", "radius 32", "spatial_blend 36", "doppler 40", "model 44", "flags 45"] }
 false = { run = ["{out}/sound_layout{exe}", "sound_listener"] }
 
 [[case]]
 name = "ideatek_sound_listener_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sound_layout{exe}", "sound_listener"]
-claims = { status = 0, order = ["size 4", "alignment 4", "volume 0"] }
+claims = { status = 0, order = ["size 16", "alignment 8", "hrtf 0", "volume 8"] }
 false = { run = ["{out}/sound_layout{exe}", "bus_flags"] }
 
 [[case]]
@@ -79,7 +109,7 @@ false = { run = ["{out}/sound_layout{exe}", "sound_bus"] }
 [[case]]
 name = "ideatek_sound_bus_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/sound_layout{exe}", "sound_bus"]
-claims = { status = 0, order = ["size 16", "alignment 8", "parent 0", "volume 8", "flags 12"] }
+claims = { status = 0, order = ["size 24", "alignment 8", "parent 0", "volume 8", "fade 12", "flags 16"] }
 false = { run = ["{out}/sound_layout{exe}", "effect_flags"] }
 
 [[case]]
@@ -231,19 +261,24 @@ name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/sound_layout{exe}", "descriptors"]
 claims = { status = 0, line = [
     "uint8_t { IDEATEK_SOUND_FORMAT_PCM_I16 = 0, IDEATEK_SOUND_FORMAT_PCM_F32 = 1, IDEATEK_SOUND_FORMAT_VORBIS = 2, IDEATEK_SOUND_FORMAT_OPUS = 3, IDEATEK_SOUND_FORMAT_FLAC = 4, IDEATEK_SOUND_FORMAT_MP3 = 5 }",
-    "uint8_t { IDEATEK_SOUND_FLAGS_STREAM = 0x01 }",
+    "uint8_t { IDEATEK_SOUND_FLAGS_STREAM = 0x01, IDEATEK_SOUND_FLAGS_AMBISONIC = 0x02 }",
     "{ bridge_text_t bytes; uint64_t frames; uint64_t loop_begin; uint64_t loop_end; uint32_t rate; uint32_t revision; uint8_t channels; ideatek_sound_format_t format; ideatek_sound_flags_t flags; }",
+    "{ bridge_text_t bytes; uint32_t revision; }",
+    "{ bridge_text_t bytes; uint32_t revision; }",
+    "{ ideatek_entity_t player; ideatek_entity_t bus; float volume; }",
+    "uint8_t { IDEATEK_RANDOM_MODE_RANDOM_NO_REPEATS = 0, IDEATEK_RANDOM_MODE_RANDOM = 1, IDEATEK_RANDOM_MODE_SEQUENTIAL = 2 }",
+    "{ bridge_text_t sounds; uint32_t count; float pitch_scale; float volume_offset; ideatek_random_mode_t mode; }",
     "uint8_t { IDEATEK_SOUND_STATE_STOPPED = 0, IDEATEK_SOUND_STATE_PLAYING = 1, IDEATEK_SOUND_STATE_PAUSED = 2 }",
     "uint8_t { IDEATEK_SOUND_PLAYER_FLAGS_LOOP = 0x01, IDEATEK_SOUND_PLAYER_FLAGS_DESTROY_AT_END = 0x02 }",
-    "{ ideatek_entity_t sound; ideatek_entity_t bus; uint64_t start_offset; float volume; float pitch; uint32_t cue; ideatek_sound_state_t state; ideatek_sound_player_flags_t flags; }",
+    "{ ideatek_entity_t sound; ideatek_entity_t bus; uint64_t start_offset; float volume; float pitch; float fade_in; float fade_out; uint32_t cue; ideatek_sound_state_t state; ideatek_sound_player_flags_t flags; }",
     "{ uint64_t position; ideatek_sound_state_t state; }",
     "{ ideatek_entity_t player; uint32_t order; }",
-    "uint8_t { IDEATEK_ATTENUATION_INVERSE = 0, IDEATEK_ATTENUATION_INVERSE_SQUARE = 1, IDEATEK_ATTENUATION_LINEAR = 2, IDEATEK_ATTENUATION_NONE = 3 }",
-    "uint8_t { IDEATEK_SPATIAL_FLAGS_DOPPLER = 0x01, IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION = 0x02, IDEATEK_SPATIAL_FLAGS_OCCLUSION = 0x04, IDEATEK_SPATIAL_FLAGS_TRANSMISSION = 0x08, IDEATEK_SPATIAL_FLAGS_REFLECTIONS = 0x10, IDEATEK_SPATIAL_FLAGS_PATHING = 0x20 }",
-    "{ float reference_distance; float max_distance; float rolloff; float cone_inner; float cone_outer; float cone_outer_gain; ideatek_attenuation_t model; ideatek_spatial_flags_t flags; }",
-    "{ float volume; }",
+    "uint8_t { IDEATEK_ATTENUATION_INVERSE = 0, IDEATEK_ATTENUATION_INVERSE_SQUARE = 1, IDEATEK_ATTENUATION_LINEAR = 2, IDEATEK_ATTENUATION_NONE = 3, IDEATEK_ATTENUATION_CURVE = 4 }",
+    "uint8_t { IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION = 0x01, IDEATEK_SPATIAL_FLAGS_OCCLUSION = 0x02, IDEATEK_SPATIAL_FLAGS_TRANSMISSION = 0x04, IDEATEK_SPATIAL_FLAGS_REFLECTIONS = 0x08, IDEATEK_SPATIAL_FLAGS_PATHING = 0x10, IDEATEK_SPATIAL_FLAGS_BINAURAL = 0x20 }",
+    "{ bridge_text_t rolloff_curve; float reference_distance; float max_distance; float rolloff; float cone_inner; float cone_outer; float cone_outer_gain; float radius; float spatial_blend; float doppler; ideatek_attenuation_t model; ideatek_spatial_flags_t flags; }",
+    "{ ideatek_entity_t hrtf; float volume; }",
     "uint8_t { IDEATEK_BUS_FLAGS_MUTE = 0x01, IDEATEK_BUS_FLAGS_BYPASS = 0x02, IDEATEK_BUS_FLAGS_MAIN = 0x04 }",
-    "{ ideatek_entity_t parent; float volume; ideatek_bus_flags_t flags; }",
+    "{ ideatek_entity_t parent; float volume; float fade; ideatek_bus_flags_t flags; }",
     "uint8_t { IDEATEK_EFFECT_FLAGS_BYPASS = 0x01 }",
     "{ ideatek_entity_t bus; uint32_t order; ideatek_effect_flags_t flags; }",
     "uint8_t { IDEATEK_FILTER_MODE_LOW_PASS = 0, IDEATEK_FILTER_MODE_HIGH_PASS = 1, IDEATEK_FILTER_MODE_BAND_PASS = 2, IDEATEK_FILTER_MODE_NOTCH = 3, IDEATEK_FILTER_MODE_PEAK = 4, IDEATEK_FILTER_MODE_LOW_SHELF = 5, IDEATEK_FILTER_MODE_HIGH_SHELF = 6 }",
@@ -276,19 +311,24 @@ name = "each macro of a text gives the braces of its type and the text between t
 run = ["{out}/sound_layout{exe}", "texts"]
 claims = { status = 0, line = [
     "{ IDEATEK_SOUND_FORMAT_PCM_I16 = 0, IDEATEK_SOUND_FORMAT_PCM_F32 = 1, IDEATEK_SOUND_FORMAT_VORBIS = 2, IDEATEK_SOUND_FORMAT_OPUS = 3, IDEATEK_SOUND_FORMAT_FLAC = 4, IDEATEK_SOUND_FORMAT_MP3 = 5 }",
-    "{ IDEATEK_SOUND_FLAGS_STREAM = 0x01 }",
+    "{ IDEATEK_SOUND_FLAGS_STREAM = 0x01, IDEATEK_SOUND_FLAGS_AMBISONIC = 0x02 }",
     "{ bridge_text_t bytes; uint64_t frames; uint64_t loop_begin; uint64_t loop_end; uint32_t rate; uint32_t revision; uint8_t channels; ideatek_sound_format_t format; ideatek_sound_flags_t flags; }",
+    "{ bridge_text_t bytes; uint32_t revision; }",
+    "{ bridge_text_t bytes; uint32_t revision; }",
+    "{ ideatek_entity_t player; ideatek_entity_t bus; float volume; }",
+    "{ IDEATEK_RANDOM_MODE_RANDOM_NO_REPEATS = 0, IDEATEK_RANDOM_MODE_RANDOM = 1, IDEATEK_RANDOM_MODE_SEQUENTIAL = 2 }",
+    "{ bridge_text_t sounds; uint32_t count; float pitch_scale; float volume_offset; ideatek_random_mode_t mode; }",
     "{ IDEATEK_SOUND_STATE_STOPPED = 0, IDEATEK_SOUND_STATE_PLAYING = 1, IDEATEK_SOUND_STATE_PAUSED = 2 }",
     "{ IDEATEK_SOUND_PLAYER_FLAGS_LOOP = 0x01, IDEATEK_SOUND_PLAYER_FLAGS_DESTROY_AT_END = 0x02 }",
-    "{ ideatek_entity_t sound; ideatek_entity_t bus; uint64_t start_offset; float volume; float pitch; uint32_t cue; ideatek_sound_state_t state; ideatek_sound_player_flags_t flags; }",
+    "{ ideatek_entity_t sound; ideatek_entity_t bus; uint64_t start_offset; float volume; float pitch; float fade_in; float fade_out; uint32_t cue; ideatek_sound_state_t state; ideatek_sound_player_flags_t flags; }",
     "{ uint64_t position; ideatek_sound_state_t state; }",
     "{ ideatek_entity_t player; uint32_t order; }",
-    "{ IDEATEK_ATTENUATION_INVERSE = 0, IDEATEK_ATTENUATION_INVERSE_SQUARE = 1, IDEATEK_ATTENUATION_LINEAR = 2, IDEATEK_ATTENUATION_NONE = 3 }",
-    "{ IDEATEK_SPATIAL_FLAGS_DOPPLER = 0x01, IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION = 0x02, IDEATEK_SPATIAL_FLAGS_OCCLUSION = 0x04, IDEATEK_SPATIAL_FLAGS_TRANSMISSION = 0x08, IDEATEK_SPATIAL_FLAGS_REFLECTIONS = 0x10, IDEATEK_SPATIAL_FLAGS_PATHING = 0x20 }",
-    "{ float reference_distance; float max_distance; float rolloff; float cone_inner; float cone_outer; float cone_outer_gain; ideatek_attenuation_t model; ideatek_spatial_flags_t flags; }",
-    "{ float volume; }",
+    "{ IDEATEK_ATTENUATION_INVERSE = 0, IDEATEK_ATTENUATION_INVERSE_SQUARE = 1, IDEATEK_ATTENUATION_LINEAR = 2, IDEATEK_ATTENUATION_NONE = 3, IDEATEK_ATTENUATION_CURVE = 4 }",
+    "{ IDEATEK_SPATIAL_FLAGS_AIR_ABSORPTION = 0x01, IDEATEK_SPATIAL_FLAGS_OCCLUSION = 0x02, IDEATEK_SPATIAL_FLAGS_TRANSMISSION = 0x04, IDEATEK_SPATIAL_FLAGS_REFLECTIONS = 0x08, IDEATEK_SPATIAL_FLAGS_PATHING = 0x10, IDEATEK_SPATIAL_FLAGS_BINAURAL = 0x20 }",
+    "{ bridge_text_t rolloff_curve; float reference_distance; float max_distance; float rolloff; float cone_inner; float cone_outer; float cone_outer_gain; float radius; float spatial_blend; float doppler; ideatek_attenuation_t model; ideatek_spatial_flags_t flags; }",
+    "{ ideatek_entity_t hrtf; float volume; }",
     "{ IDEATEK_BUS_FLAGS_MUTE = 0x01, IDEATEK_BUS_FLAGS_BYPASS = 0x02, IDEATEK_BUS_FLAGS_MAIN = 0x04 }",
-    "{ ideatek_entity_t parent; float volume; ideatek_bus_flags_t flags; }",
+    "{ ideatek_entity_t parent; float volume; float fade; ideatek_bus_flags_t flags; }",
     "{ IDEATEK_EFFECT_FLAGS_BYPASS = 0x01 }",
     "{ ideatek_entity_t bus; uint32_t order; ideatek_effect_flags_t flags; }",
     "{ IDEATEK_FILTER_MODE_LOW_PASS = 0, IDEATEK_FILTER_MODE_HIGH_PASS = 1, IDEATEK_FILTER_MODE_BAND_PASS = 2, IDEATEK_FILTER_MODE_NOTCH = 3, IDEATEK_FILTER_MODE_PEAK = 4, IDEATEK_FILTER_MODE_LOW_SHELF = 5, IDEATEK_FILTER_MODE_HIGH_SHELF = 6 }",
@@ -323,7 +363,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/sound_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 40 types, each type after the types of its fields"
+name = "a module declares the 45 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/sound_probe{library}"] }
 
@@ -340,12 +380,14 @@ library = "{bb_native}/bridge_native"
 [module."test:probe@1.0.0"]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_sound_format_t",
-    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_sound_state_t",
-    "ideatek:ideatek_sound_player_flags_t", "ideatek:ideatek_attenuation_t",
-    "ideatek:ideatek_spatial_flags_t", "ideatek:ideatek_bus_flags_t",
-    "ideatek:ideatek_effect_flags_t", "ideatek:ideatek_filter_mode_t",
-    "ideatek:ideatek_voice_rule_t", "ideatek:ideatek_clock_flags_t",
-    "ideatek:ideatek_quantum_t", "ideatek:Sound", "ideatek:SoundPlayer",
+    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_random_mode_t",
+    "ideatek:ideatek_sound_state_t", "ideatek:ideatek_sound_player_flags_t",
+    "ideatek:ideatek_attenuation_t", "ideatek:ideatek_spatial_flags_t",
+    "ideatek:ideatek_bus_flags_t", "ideatek:ideatek_effect_flags_t",
+    "ideatek:ideatek_filter_mode_t", "ideatek:ideatek_voice_rule_t",
+    "ideatek:ideatek_clock_flags_t", "ideatek:ideatek_quantum_t",
+    "ideatek:Sound", "ideatek:SoundHrtf", "ideatek:SoundProbes",
+    "ideatek:SoundSend", "ideatek:SoundRandom", "ideatek:SoundPlayer",
     "ideatek:SoundPlayback", "ideatek:SoundEnded", "ideatek:SoundSpatial",
     "ideatek:SoundListener", "ideatek:SoundBus", "ideatek:SoundEffect",
     "ideatek:SoundFilter", "ideatek:SoundCompressor", "ideatek:SoundLimiter",
@@ -378,22 +420,24 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:author@1.0.0"]
 write = [
-    "ideatek:Sound", "ideatek:SoundPlayer", "ideatek:SoundSpatial",
-    "ideatek:SoundListener", "ideatek:SoundBus", "ideatek:SoundEffect",
-    "ideatek:SoundFilter", "ideatek:SoundCompressor", "ideatek:SoundLimiter",
-    "ideatek:SoundReverb", "ideatek:SoundDelay", "ideatek:SoundZone",
-    "ideatek:SoundMaterial", "ideatek:SoundGroup", "ideatek:SoundVoice",
-    "ideatek:SoundStream", "ideatek:SoundFrames", "ideatek:SoundClock",
-    "ideatek:SoundSync", "ideatek:SoundMeter", "ideatek:SoundBand",
+    "ideatek:Sound", "ideatek:SoundHrtf", "ideatek:SoundProbes",
+    "ideatek:SoundRandom", "ideatek:SoundSend", "ideatek:SoundPlayer",
+    "ideatek:SoundSpatial", "ideatek:SoundListener", "ideatek:SoundBus",
+    "ideatek:SoundEffect", "ideatek:SoundFilter", "ideatek:SoundCompressor",
+    "ideatek:SoundLimiter", "ideatek:SoundReverb", "ideatek:SoundDelay",
+    "ideatek:SoundZone", "ideatek:SoundMaterial", "ideatek:SoundGroup",
+    "ideatek:SoundVoice", "ideatek:SoundStream", "ideatek:SoundFrames",
+    "ideatek:SoundClock", "ideatek:SoundSync", "ideatek:SoundMeter",
+    "ideatek:SoundBand",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_sound_format_t",
-    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_sound_state_t",
-    "ideatek:ideatek_sound_player_flags_t", "ideatek:ideatek_attenuation_t",
-    "ideatek:ideatek_spatial_flags_t", "ideatek:ideatek_bus_flags_t",
-    "ideatek:ideatek_effect_flags_t", "ideatek:ideatek_filter_mode_t",
-    "ideatek:ideatek_voice_rule_t", "ideatek:ideatek_clock_flags_t",
-    "ideatek:ideatek_quantum_t",
+    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_random_mode_t",
+    "ideatek:ideatek_sound_state_t", "ideatek:ideatek_sound_player_flags_t",
+    "ideatek:ideatek_attenuation_t", "ideatek:ideatek_spatial_flags_t",
+    "ideatek:ideatek_bus_flags_t", "ideatek:ideatek_effect_flags_t",
+    "ideatek:ideatek_filter_mode_t", "ideatek:ideatek_voice_rule_t",
+    "ideatek:ideatek_clock_flags_t", "ideatek:ideatek_quantum_t",
 ]
 '''
 
@@ -406,22 +450,24 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:author@1.0.0"]
 write = [
-    "ideatek:Sound", "ideatek:SoundPlayer", "ideatek:SoundSpatial",
-    "ideatek:SoundListener", "ideatek:SoundBus", "ideatek:SoundEffect",
-    "ideatek:SoundFilter", "ideatek:SoundCompressor", "ideatek:SoundLimiter",
-    "ideatek:SoundReverb", "ideatek:SoundDelay", "ideatek:SoundZone",
-    "ideatek:SoundMaterial", "ideatek:SoundGroup", "ideatek:SoundVoice",
-    "ideatek:SoundStream", "ideatek:SoundFrames", "ideatek:SoundClock",
-    "ideatek:SoundSync", "ideatek:SoundMeter",
+    "ideatek:Sound", "ideatek:SoundHrtf", "ideatek:SoundProbes",
+    "ideatek:SoundRandom", "ideatek:SoundSend", "ideatek:SoundPlayer",
+    "ideatek:SoundSpatial", "ideatek:SoundListener", "ideatek:SoundBus",
+    "ideatek:SoundEffect", "ideatek:SoundFilter", "ideatek:SoundCompressor",
+    "ideatek:SoundLimiter", "ideatek:SoundReverb", "ideatek:SoundDelay",
+    "ideatek:SoundZone", "ideatek:SoundMaterial", "ideatek:SoundGroup",
+    "ideatek:SoundVoice", "ideatek:SoundStream", "ideatek:SoundFrames",
+    "ideatek:SoundClock", "ideatek:SoundSync", "ideatek:SoundMeter",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_sound_format_t",
-    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_sound_state_t",
-    "ideatek:ideatek_sound_player_flags_t", "ideatek:ideatek_attenuation_t",
-    "ideatek:ideatek_spatial_flags_t", "ideatek:ideatek_bus_flags_t",
-    "ideatek:ideatek_effect_flags_t", "ideatek:ideatek_filter_mode_t",
-    "ideatek:ideatek_voice_rule_t", "ideatek:ideatek_clock_flags_t",
-    "ideatek:ideatek_quantum_t", "ideatek:SoundBand",
+    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_random_mode_t",
+    "ideatek:ideatek_sound_state_t", "ideatek:ideatek_sound_player_flags_t",
+    "ideatek:ideatek_attenuation_t", "ideatek:ideatek_spatial_flags_t",
+    "ideatek:ideatek_bus_flags_t", "ideatek:ideatek_effect_flags_t",
+    "ideatek:ideatek_filter_mode_t", "ideatek:ideatek_voice_rule_t",
+    "ideatek:ideatek_clock_flags_t", "ideatek:ideatek_quantum_t",
+    "ideatek:SoundBand",
 ]
 '''
 
@@ -450,12 +496,14 @@ read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_position_t", "ideatek:ideatek_shape_kind_t",
     "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_sound_format_t",
-    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_sound_state_t",
-    "ideatek:ideatek_sound_player_flags_t", "ideatek:ideatek_attenuation_t",
-    "ideatek:ideatek_spatial_flags_t", "ideatek:ideatek_bus_flags_t",
-    "ideatek:ideatek_effect_flags_t", "ideatek:ideatek_filter_mode_t",
-    "ideatek:ideatek_voice_rule_t", "ideatek:ideatek_clock_flags_t",
-    "ideatek:ideatek_quantum_t", "ideatek:Sound", "ideatek:SoundPlayer",
+    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_random_mode_t",
+    "ideatek:ideatek_sound_state_t", "ideatek:ideatek_sound_player_flags_t",
+    "ideatek:ideatek_attenuation_t", "ideatek:ideatek_spatial_flags_t",
+    "ideatek:ideatek_bus_flags_t", "ideatek:ideatek_effect_flags_t",
+    "ideatek:ideatek_filter_mode_t", "ideatek:ideatek_voice_rule_t",
+    "ideatek:ideatek_clock_flags_t", "ideatek:ideatek_quantum_t",
+    "ideatek:Sound", "ideatek:SoundHrtf", "ideatek:SoundProbes",
+    "ideatek:SoundRandom", "ideatek:SoundSend", "ideatek:SoundPlayer",
     "ideatek:SoundSpatial", "ideatek:SoundListener", "ideatek:SoundEffect",
     "ideatek:SoundFilter", "ideatek:SoundCompressor", "ideatek:SoundLimiter",
     "ideatek:SoundReverb", "ideatek:SoundDelay", "ideatek:SoundZone",
@@ -482,12 +530,14 @@ read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_position_t", "ideatek:ideatek_shape_kind_t",
     "ideatek:ideatek_shape_flags_t", "ideatek:ideatek_sound_format_t",
-    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_sound_state_t",
-    "ideatek:ideatek_sound_player_flags_t", "ideatek:ideatek_attenuation_t",
-    "ideatek:ideatek_spatial_flags_t", "ideatek:ideatek_bus_flags_t",
-    "ideatek:ideatek_effect_flags_t", "ideatek:ideatek_filter_mode_t",
-    "ideatek:ideatek_voice_rule_t", "ideatek:ideatek_clock_flags_t",
-    "ideatek:ideatek_quantum_t", "ideatek:Sound", "ideatek:SoundPlayer",
+    "ideatek:ideatek_sound_flags_t", "ideatek:ideatek_random_mode_t",
+    "ideatek:ideatek_sound_state_t", "ideatek:ideatek_sound_player_flags_t",
+    "ideatek:ideatek_attenuation_t", "ideatek:ideatek_spatial_flags_t",
+    "ideatek:ideatek_bus_flags_t", "ideatek:ideatek_effect_flags_t",
+    "ideatek:ideatek_filter_mode_t", "ideatek:ideatek_voice_rule_t",
+    "ideatek:ideatek_clock_flags_t", "ideatek:ideatek_quantum_t",
+    "ideatek:Sound", "ideatek:SoundHrtf", "ideatek:SoundProbes",
+    "ideatek:SoundRandom", "ideatek:SoundSend", "ideatek:SoundPlayer",
     "ideatek:SoundSpatial", "ideatek:SoundListener", "ideatek:SoundEffect",
     "ideatek:SoundFilter", "ideatek:SoundCompressor", "ideatek:SoundLimiter",
     "ideatek:SoundReverb", "ideatek:SoundDelay", "ideatek:SoundZone",
