@@ -29,13 +29,9 @@ A context with `IDEATEK_CONTEXT_FLAGS_REAL_TIME` is mapped in each round instead
 | `IDEATEK_INPUT_SOURCE_GAMEPAD_BUTTON` | 1 bit of `ideatek_gamepad_button_t` | 0 or 1 |
 | `IDEATEK_INPUT_SOURCE_GAMEPAD_STICK` | 0 for the left stick, 1 for the right stick | x and y |
 | `IDEATEK_INPUT_SOURCE_GAMEPAD_TRIGGER` | 0 for the left trigger, 1 for the right trigger | x, from 0 to 1 |
-| `IDEATEK_INPUT_SOURCE_GAMEPAD_GYRO` | 0 | The turn of the step about x, y and z in radians, from `turn` of `ideatek:GamepadMotion` |
-| `IDEATEK_INPUT_SOURCE_GAMEPAD_ACCEL` | 0 | x, y and z in m / s^2, from `accel` of `ideatek:GamepadMotion` |
 | `IDEATEK_INPUT_SOURCE_TOUCH` | The rank of the finger among the fingers that are down, from 0 | 0 or 1 |
 | `IDEATEK_INPUT_SOURCE_TOUCH_MOTION` | The rank of the finger | The motion in pixels on x and y |
 | `IDEATEK_INPUT_SOURCE_EXTERNAL` | 0 | x, y and z of `ideatek:InputExternal`: *The external sources* |
-
-A gyro or accel binding needs `ideatek:GamepadSensorRequest` with `enabled` on its gamepad, as the input part tells.
 
 ## The modifiers
 
@@ -74,7 +70,7 @@ While an `ideatek:InputCapture` exists, each control of the devices of its playe
 While a capture exists, the module reads no binding of that player. With a player of 0, it reads no binding at all.
 The game takes the first event, writes the binding, and removes the capture. To cancel, the game ignores the event of its cancel control.
 
-The game finds the conflicts in the bindings of the context. No touch, gyro, accel or external source is captured.
+The game finds the conflicts in the bindings of the context. No touch or external source is captured.
 
 ## The external sources
 
@@ -212,11 +208,9 @@ Bytes 18 to 19 hold no field.
 | 5 | `IDEATEK_INPUT_SOURCE_GAMEPAD_BUTTON` | A gamepad button. |
 | 6 | `IDEATEK_INPUT_SOURCE_GAMEPAD_STICK` | A stick. |
 | 7 | `IDEATEK_INPUT_SOURCE_GAMEPAD_TRIGGER` | A trigger of a gamepad. |
-| 8 | `IDEATEK_INPUT_SOURCE_GAMEPAD_GYRO` | The gyroscope of a gamepad. |
-| 9 | `IDEATEK_INPUT_SOURCE_GAMEPAD_ACCEL` | The accelerometer of a gamepad. |
-| 10 | `IDEATEK_INPUT_SOURCE_TOUCH` | A finger on a screen. |
-| 11 | `IDEATEK_INPUT_SOURCE_TOUCH_MOTION` | The motion of a finger. |
-| 12 | `IDEATEK_INPUT_SOURCE_EXTERNAL` | A value from another module. |
+| 8 | `IDEATEK_INPUT_SOURCE_TOUCH` | A finger on a screen. |
+| 9 | `IDEATEK_INPUT_SOURCE_TOUCH_MOTION` | The motion of a finger. |
+| 10 | `IDEATEK_INPUT_SOURCE_EXTERNAL` | A value from another module. |
 
 ## ideatek:InputBinding
 
@@ -723,7 +717,7 @@ The game picks the glyph of a prompt from the binding whose source fits `kind`. 
 { IDEATEK_ACTION_STATE_IDLE = 0, IDEATEK_ACTION_STATE_ONGOING = 1, IDEATEK_ACTION_STATE_TRIGGERED = 2 }
 { IDEATEK_ACTION_EDGES_STARTED = 0x01, IDEATEK_ACTION_EDGES_TRIGGERED = 0x02, IDEATEK_ACTION_EDGES_CANCELED = 0x04, IDEATEK_ACTION_EDGES_COMPLETED = 0x08 }
 { float x; float y; float z; float held; ideatek_action_state_t state; ideatek_action_edges_t edges; }
-{ IDEATEK_INPUT_SOURCE_KEY = 0, IDEATEK_INPUT_SOURCE_KEY_LAYOUT = 1, IDEATEK_INPUT_SOURCE_MOUSE_BUTTON = 2, IDEATEK_INPUT_SOURCE_MOUSE_MOTION = 3, IDEATEK_INPUT_SOURCE_MOUSE_WHEEL = 4, IDEATEK_INPUT_SOURCE_GAMEPAD_BUTTON = 5, IDEATEK_INPUT_SOURCE_GAMEPAD_STICK = 6, IDEATEK_INPUT_SOURCE_GAMEPAD_TRIGGER = 7, IDEATEK_INPUT_SOURCE_GAMEPAD_GYRO = 8, IDEATEK_INPUT_SOURCE_GAMEPAD_ACCEL = 9, IDEATEK_INPUT_SOURCE_TOUCH = 10, IDEATEK_INPUT_SOURCE_TOUCH_MOTION = 11, IDEATEK_INPUT_SOURCE_EXTERNAL = 12 }
+{ IDEATEK_INPUT_SOURCE_KEY = 0, IDEATEK_INPUT_SOURCE_KEY_LAYOUT = 1, IDEATEK_INPUT_SOURCE_MOUSE_BUTTON = 2, IDEATEK_INPUT_SOURCE_MOUSE_MOTION = 3, IDEATEK_INPUT_SOURCE_MOUSE_WHEEL = 4, IDEATEK_INPUT_SOURCE_GAMEPAD_BUTTON = 5, IDEATEK_INPUT_SOURCE_GAMEPAD_STICK = 6, IDEATEK_INPUT_SOURCE_GAMEPAD_TRIGGER = 7, IDEATEK_INPUT_SOURCE_TOUCH = 8, IDEATEK_INPUT_SOURCE_TOUCH_MOTION = 9, IDEATEK_INPUT_SOURCE_EXTERNAL = 10 }
 { ideatek_entity_t context; ideatek_entity_t action; uint32_t control; ideatek_input_source_t source; }
 { IDEATEK_DEAD_ZONE_KIND_AXIAL = 0, IDEATEK_DEAD_ZONE_KIND_RADIAL = 1, IDEATEK_DEAD_ZONE_KIND_UNSCALED_RADIAL = 2 }
 { float lower; float upper; ideatek_dead_zone_kind_t kind; }

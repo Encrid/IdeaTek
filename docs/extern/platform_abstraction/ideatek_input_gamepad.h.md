@@ -17,36 +17,16 @@ The game attaches `ideatek:GamepadRequest` to the gamepad entity for a rumble.
 
 Comes back: a model type when a game shows button prompts per model; raw joysticks when a game supports flight sticks or wheels.
 
-## The sensors
-
-`features` of `ideatek:Gamepad` tells if the gamepad has a gyroscope and an accelerometer.
-The sensors are off at the start. The game attaches `ideatek:GamepadSensorRequest` with `enabled` at `true` to turn them on.
-While they are on, the input module writes `ideatek:GamepadMotion` on the gamepad entity in each round.
-
-The axes are those of a gamepad in front of the player: x to the right, y to the top, and z toward the player.
-The gyroscope gives radians in each second, counter-clockwise about each axis. The accelerometer gives m / s^2, with the gravity.
-`turn` is the sum of all samples of the round, so an aim that reads it loses no sample.
-
 ## ideatek:Gamepad
 
 `ideatek:Gamepad` names a gamepad.
-`ideatek_gamepad_t` takes 380 bytes. Its alignment is 1.
+`ideatek_gamepad_t` takes 379 bytes. Its alignment is 1.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `name` | `char[379]` | 0 | The name of the gamepad in UTF-8, with a null at the end. |
-| `features` | `ideatek_gamepad_features_t` | 379 | The sensors of the gamepad: *The sensors*. |
 
 A string descriptor of USB holds at most 126 code units of UTF-16. Each unit gives at most 3 bytes of UTF-8, so a name has at most 378 bytes and a null. A Bluetooth device name has at most 248 bytes of UTF-8. The input module cuts a longer name at the last whole code point.
-
-### ideatek:ideatek_gamepad_features_t
-
-`ideatek_gamepad_features_t` is a bitmask of `uint8_t`. Its size and its alignment are 1.
-
-| Constant | Value | The feature |
-| --- | --- | --- |
-| `IDEATEK_GAMEPAD_FEATURES_GYRO` | 0x01 | A gyroscope. |
-| `IDEATEK_GAMEPAD_FEATURES_ACCEL` | 0x02 | An accelerometer. |
 
 ## ideatek:GamepadState
 
@@ -112,48 +92,22 @@ Bytes 17 to 23 hold no field.
 | `strong` | `float` | 4 | The force of the motor of low frequency, from 0 to 1. |
 | `duration_ms` | `uint32_t` | 8 | The length of a rumble, in milliseconds. |
 
-## ideatek:GamepadSensorRequest
-
-`ideatek:GamepadSensorRequest` turns the sensors of a gamepad on or off: *The sensors*.
-`ideatek_gamepad_sensor_request_t` takes 1 byte. Its alignment is 1.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `enabled` | `bool` | 0 | `true` turns the sensors on, and `false` turns them off. |
-
-## ideatek:GamepadMotion
-
-`ideatek:GamepadMotion` holds the samples of the sensors of a gamepad: *The sensors*.
-`ideatek_gamepad_motion_t` takes 36 bytes. Its alignment is 4.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `gyro` | `float[3]` | 0 | The last speed of the turn about x, y and z, in radians in each second. |
-| `accel` | `float[3]` | 12 | The last acceleration on x, y and z, in m / s^2. |
-| `turn` | `float[3]` | 24 | The turn about x, y and z over the round, in radians. |
-
 ## The C types
 
 | Type of Bridge | C type | Descriptor | Macro of the text |
 | --- | --- | --- | --- |
 | `ideatek:ideatek_gamepad_button_t` | `ideatek_gamepad_button_t` | `ideatek_gamepad_button_t_desc` | `IDEATEK_GAMEPAD_BUTTON_VALUES` |
-| `ideatek:ideatek_gamepad_features_t` | `ideatek_gamepad_features_t` | `ideatek_gamepad_features_t_desc` | `IDEATEK_GAMEPAD_FEATURES_VALUES` |
 | `ideatek:Gamepad` | `ideatek_gamepad_t` | `ideatek_gamepad_t_desc` | `IDEATEK_GAMEPAD_FIELDS` |
 | `ideatek:GamepadState` | `ideatek_gamepad_state_t` | `ideatek_gamepad_state_t_desc` | `IDEATEK_GAMEPAD_STATE_FIELDS` |
 | `ideatek:GamepadEvent` | `ideatek_gamepad_event_t` | `ideatek_gamepad_event_t_desc` | `IDEATEK_GAMEPAD_EVENT_FIELDS` |
 | `ideatek:GamepadRequest` | `ideatek_gamepad_request_t` | `ideatek_gamepad_request_t_desc` | `IDEATEK_GAMEPAD_REQUEST_FIELDS` |
-| `ideatek:GamepadSensorRequest` | `ideatek_gamepad_sensor_request_t` | `ideatek_gamepad_sensor_request_t_desc` | `IDEATEK_GAMEPAD_SENSOR_REQUEST_FIELDS` |
-| `ideatek:GamepadMotion` | `ideatek_gamepad_motion_t` | `ideatek_gamepad_motion_t_desc` | `IDEATEK_GAMEPAD_MOTION_FIELDS` |
 
 ```text
 { IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x00001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x00002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x00004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x00008, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x00010, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x00020, IDEATEK_GAMEPAD_BUTTON_BACK = 0x00100, IDEATEK_GAMEPAD_BUTTON_START = 0x00200, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x00400, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x00800, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x01000, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x02000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x04000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x08000, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x10000 }
-{ IDEATEK_GAMEPAD_FEATURES_GYRO = 0x01, IDEATEK_GAMEPAD_FEATURES_ACCEL = 0x02 }
-{ char name[379]; ideatek_gamepad_features_t features; }
+{ char name[379]; }
 { float left_x; float left_y; float right_x; float right_y; float left_trigger; float right_trigger; ideatek_gamepad_button_t buttons; }
 { ideatek_entity_t gamepad; uint32_t order; ideatek_gamepad_button_t button; bool down; }
 { float weak; float strong; uint32_t duration_ms; }
-{ bool enabled; }
-{ float gyro[3]; float accel[3]; float turn[3]; }
 ```
 
 ## The declarations
@@ -162,13 +116,10 @@ Bytes 17 to 23 hold no field.
 | --- | --- | --- | --- |
 | `ideatek:ideatek_entity_t` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_gamepad_button_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:ideatek_gamepad_features_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Gamepad` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:GamepadState` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:GamepadEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:GamepadRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:GamepadSensorRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:GamepadMotion` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 `docs/extern/platform_abstraction/ideatek_input.h.md`, *The declarations*, tells the order of the declarations.
 
@@ -176,6 +127,6 @@ Bytes 17 to 23 hold no field.
 
 | Role | `write` | `read` |
 | --- | --- | --- |
-| The game | `ideatek:GamepadRequest` and `ideatek:GamepadSensorRequest` | The field types |
-| The input module | `ideatek:Gamepad`, `ideatek:GamepadState`, `ideatek:GamepadEvent` and `ideatek:GamepadMotion` | `ideatek:GamepadRequest`, `ideatek:GamepadSensorRequest` and the field types |
+| The game | `ideatek:GamepadRequest` | The field types |
+| The input module | `ideatek:Gamepad`, `ideatek:GamepadState` and `ideatek:GamepadEvent` | `ideatek:GamepadRequest` and the field types |
 | A reader | No type. | Its types and the field types |
