@@ -15,6 +15,8 @@ The mapping module runs first in each fixed step. The input of a round goes into
 A round with no step keeps the edges until the next step. A press and a release in 1 round give STARTED and COMPLETED together.
 The times of the triggers count with `elapsed` of `ideatek:Tick`.
 
+A context with `IDEATEK_CONTEXT_FLAGS_REAL_TIME` is mapped in each round instead, also in a pause. Its times count with `real_delta` of `ideatek:Frame`.
+
 ## The sources
 
 | Source | `control` | Value |
@@ -30,12 +32,18 @@ The times of the triggers count with `elapsed` of `ideatek:Tick`.
 | `IDEATEK_INPUT_SOURCE_XR_BOOLEAN` | 0 | 0 or 1, from `ideatek:XrControlState` |
 | `IDEATEK_INPUT_SOURCE_XR_FLOAT` | 0 | x, from `ideatek:XrControlState` |
 | `IDEATEK_INPUT_SOURCE_XR_VECTOR2` | 0 | x and y, from `ideatek:XrControlState` |
+| `IDEATEK_INPUT_SOURCE_GAMEPAD_GYRO` | 0 | The turn of the step about x, y and z in radians, from `turn` of `ideatek:GamepadMotion` |
+| `IDEATEK_INPUT_SOURCE_GAMEPAD_ACCEL` | 0 | x, y and z in m / s^2, from `accel` of `ideatek:GamepadMotion` |
+| `IDEATEK_INPUT_SOURCE_TOUCH` | The rank of the finger among the fingers that are down, from 0 | 0 or 1 |
+| `IDEATEK_INPUT_SOURCE_TOUCH_MOTION` | The rank of the finger | The motion in pixels on x and y |
+| `IDEATEK_INPUT_SOURCE_EXTERNAL` | 0 | x, y and z of `ideatek:InputExternal`: *The external sources* |
 
 An XR binding also has `ideatek:XrBindingPath` of the xr part, and the XR module writes its value.
+A gyro or accel binding needs `ideatek:GamepadSensorRequest` with `enabled` on its gamepad, as the input part tells.
 
 ## The modifiers
 
-The modifiers of a binding are optional types on the binding entity. They apply in this order: dead zone, curve, scale, negate, swizzle.
+The modifiers of a binding are optional types on the binding entity. They apply in this order: dead zone, curve, response curve, scale, negate, swizzle, clamp, smooth, linear step.
 
 Keys W, A, S and D give 1 action of 2 axes with 4 bindings. D is the key. A adds a negate of X. W adds a swizzle. S adds a negate of X and a swizzle.
 The y of a stick of the input part points down, so a forward stick needs a negate of Y.
@@ -44,8 +52,11 @@ The y of a stick of the input part points down, so a forward stick needs a negat
 
 The triggers of a binding are optional types on the binding entity, as the modifiers are. A binding has at most 1 type of each kind.
 A control is actuated when its magnitude is at least the threshold.
-The action is TRIGGERED when 1 of the pressed, released, hold, tap and pulse triggers triggers, and each chord is true.
-With none of these 5, the binding acts as down: TRIGGERED while its value is not 0.
+The action is TRIGGERED when 1 of its explicit triggers triggers, and each chord is true.
+The explicit triggers are pressed, released, hold, hold and release, tap, multi tap, pulse, toggle, flick and cooldown.
+With none of these 10, the binding acts as down: TRIGGERED while its value is not 0.
+
+The references do not agree on some times and rates, so they have no default and the game sets them.
 A tap that is longer than its time gives CANCELED.
 
 ## The contexts
@@ -67,7 +78,48 @@ While an `ideatek:InputCapture` exists, each control of the devices of its playe
 While a capture exists, the module reads no binding of that player. With a player of 0, it reads no binding at all.
 The game takes the first event, writes the binding, and removes the capture. To cancel, the game ignores the event of its cancel control.
 
-The game finds the conflicts in the bindings of the context. No XR source is captured: the runtime of XR rebinds them.
+The game finds the conflicts in the bindings of the context. No XR source is captured: the runtime of XR rebinds them. No touch, gyro, accel or external source is captured either.
+
+## The external sources
+
+A binding of `IDEATEK_INPUT_SOURCE_EXTERNAL` reads `ideatek:InputExternal` on its own entity. Another module writes it, for example a module of Steam Input.
+That module finds the actions and the contexts by their `name`. A binding with no `ideatek:InputExternal` gives 0.
+The modifiers and the triggers of an external binding apply as for any binding.
+
+## The origins
+
+The mapping module writes `ideatek:InputActionOrigins` on each action in each step. A record of `origins`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `control` | `uint32_t` | 0 | The control, or `origin` of `ideatek:InputExternal` for an external binding. |
+| `source` | `uint8_t` | 4 | The `ideatek_input_source_t` of the binding. |
+
+The records have no bytes between them. They are the bindings of the active contexts whose source fits the kind of `ideatek:InputLastDevice` of their context.
+
+## The combos
+
+An action with `ideatek:InputCombo` needs no binding. A record of `steps`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `action` | `uint64_t` | 0 | The entity of the action of the step. |
+| `timeout` | `float` | 8 | The longest wait after the step before, in seconds. |
+| `edges` | `ideatek_action_edges_t` | 12 | The edges of the action that end the step. |
+
+A record of `cancels` is `action` at offset 0 and `edges` at offset 8. The records have no bytes between them.
+The action triggers in the step where the last step ends. A step that misses its timeout, or the edges of a cancel, start again at the first step.
+The timeout of the first step is not read.
+
+## The cardinal bindings
+
+A binding with `ideatek:InputCardinal` reads 4 controls of its source: a key, a key of the layout, or a gamepad button. Its own `control` is not read.
+x is `right` minus `left`, and y is `up` minus `down`.
+
+## The response curves
+
+A record of a field of `ideatek:InputResponseCurve` is 2 floats, an input magnitude and an output magnitude, by rising input, with no bytes between them.
+The output between 2 records is a straight blend. Before the first record and after the last, the output of that record stays. An axis with no bytes does not change.
 
 ## The last device
 
@@ -100,12 +152,15 @@ When a finger event and a mouse event come in 1 step, TOUCH wins. So a touch tha
 ## ideatek:InputAction
 
 `ideatek:InputAction` is an action of the game, for example jump or move.
-`ideatek_input_action_t` takes 2 bytes. Its alignment is 1.
+`ideatek_input_action_t` takes 12 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
-| `type` | `ideatek_action_type_t` | 0 | No default | The value. |
-| `accumulate` | `ideatek_accumulate_t` | 1 | `IDEATEK_ACCUMULATE_HIGHEST` | The join of the bindings. |
+| `name` | `bridge_text_t` | 0 | No default | The name, for an external module and the saved bindings. |
+| `type` | `ideatek_action_type_t` | 8 | No default | The value. |
+| `accumulate` | `ideatek_accumulate_t` | 9 | `IDEATEK_ACCUMULATE_HIGHEST` | The join of the bindings. |
+
+Bytes 10 to 11 hold no field.
 
 ## ideatek:ideatek_action_state_t
 
@@ -164,6 +219,11 @@ Bytes 18 to 19 hold no field.
 | 8 | `IDEATEK_INPUT_SOURCE_XR_BOOLEAN` | A button of an XR controller. |
 | 9 | `IDEATEK_INPUT_SOURCE_XR_FLOAT` | A trigger of an XR controller. |
 | 10 | `IDEATEK_INPUT_SOURCE_XR_VECTOR2` | A stick or a pad of an XR controller. |
+| 11 | `IDEATEK_INPUT_SOURCE_GAMEPAD_GYRO` | The gyroscope of a gamepad. |
+| 12 | `IDEATEK_INPUT_SOURCE_GAMEPAD_ACCEL` | The accelerometer of a gamepad. |
+| 13 | `IDEATEK_INPUT_SOURCE_TOUCH` | A finger on a screen. |
+| 14 | `IDEATEK_INPUT_SOURCE_TOUCH_MOTION` | The motion of a finger. |
+| 15 | `IDEATEK_INPUT_SOURCE_EXTERNAL` | A value from another module. |
 
 ## ideatek:InputBinding
 
@@ -267,6 +327,46 @@ Bytes 9 to 11 hold no field.
 | --- | --- | --- | --- | --- |
 | `order` | `ideatek_swizzle_t` | 0 | `IDEATEK_SWIZZLE_YXZ` | The new order. |
 
+## ideatek:InputResponseCurve
+
+`ideatek:InputResponseCurve` maps the magnitude of each axis through points, with its sign kept.
+`ideatek_input_response_curve_t` takes 24 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `x_points` | `bridge_text_t` | 0 | The points of x: *The response curves*. |
+| `y_points` | `bridge_text_t` | 8 | The points of y. |
+| `z_points` | `bridge_text_t` | 16 | The points of z. |
+
+## ideatek:InputClamp
+
+`ideatek:InputClamp` keeps each axis between 2 values.
+`ideatek_input_clamp_t` takes 24 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `min` | `float[3]` | 0 | No default | The lowest value of x, y and z. |
+| `max` | `float[3]` | 12 | No default | The highest value of x, y and z. |
+
+## ideatek:InputSmooth
+
+`ideatek:InputSmooth` smooths the value: `value = target + (value - target) exp(-decay_rate dt)`.
+`ideatek_input_smooth_t` takes 4 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `decay_rate` | `float` | 0 | No default | The speed of the approach, in 1 / s. |
+
+## ideatek:InputLinearStep
+
+`ideatek:InputLinearStep` moves the value toward the input at a fixed rate.
+`ideatek_input_linear_step_t` takes 8 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `accel_rate` | `float` | 0 | No default | The rise of the magnitude in each second. |
+| `decel_rate` | `float` | 4 | No default | The fall of the magnitude in each second. |
+
 ## ideatek:InputPressed
 
 `ideatek:InputPressed` triggers once when the control becomes actuated.
@@ -340,6 +440,58 @@ Bytes 9 to 11 hold no field.
 
 Bytes 13 to 15 hold no field.
 
+## ideatek:InputHoldRelease
+
+`ideatek:InputHoldRelease` triggers at the release after a hold of at least `time`, as a charged attack.
+`ideatek_input_hold_release_t` takes 8 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `threshold` | `float` | 0 | 0.5 | The magnitude at which the control is actuated. |
+| `time` | `float` | 4 | No default | The shortest hold, in seconds. |
+
+## ideatek:InputMultiTap
+
+`ideatek:InputMultiTap` triggers after `count` taps, as a double tap.
+`ideatek_input_multi_tap_t` takes 16 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `threshold` | `float` | 0 | 0.5 | The magnitude at which the control is actuated. |
+| `time` | `float` | 4 | 0.2 | The longest tap. |
+| `gap` | `float` | 8 | No default | The longest wait between 2 taps. |
+| `count` | `uint32_t` | 12 | 2 | The taps. |
+
+## ideatek:InputToggle
+
+`ideatek:InputToggle` turns on at a press and off at the next press. It triggers in each step while it is on.
+`ideatek_input_toggle_t` takes 4 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `threshold` | `float` | 0 | 0.5 | The magnitude at which the control is actuated. |
+
+## ideatek:InputFlick
+
+`ideatek:InputFlick` triggers when the control goes from rest to actuated within a time.
+`ideatek_input_flick_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `threshold` | `float` | 0 | 0.5 | The magnitude at which the control is actuated. |
+| `rest` | `float` | 4 | No default | The magnitude under which the control rests. |
+| `time` | `float` | 8 | No default | The longest move from `rest` to `threshold`. |
+
+## ideatek:InputCooldown
+
+`ideatek:InputCooldown` triggers when the control becomes actuated, then waits for a time.
+`ideatek_input_cooldown_t` takes 8 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `threshold` | `float` | 0 | 0.5 | The magnitude at which the control is actuated. |
+| `time` | `float` | 4 | No default | The seconds before it can trigger again. |
+
 ## ideatek:ideatek_chord_flags_t
 
 `ideatek_chord_flags_t` names the options of a chord.
@@ -361,6 +513,52 @@ Bytes 13 to 15 hold no field.
 
 Bytes 9 to 15 hold no field.
 
+## ideatek:InputCombo
+
+`ideatek:InputCombo` makes its action trigger after a sequence of other actions: *The combos*.
+`ideatek_input_combo_t` takes 24 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `steps` | `bridge_text_t` | 0 | The records of the steps: *The combos*. |
+| `cancels` | `bridge_text_t` | 8 | The records of the cancels. |
+| `steps_count` | `uint32_t` | 16 | The records in `steps`. |
+| `cancels_count` | `uint32_t` | 20 | The records in `cancels`. |
+
+## ideatek:InputCardinal
+
+`ideatek:InputCardinal` makes 1 binding of 4 keys or buttons: *The cardinal bindings*.
+`ideatek_input_cardinal_t` takes 16 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `up` | `uint32_t` | 0 | The control of +y. |
+| `down` | `uint32_t` | 4 | The control of -y. |
+| `left` | `uint32_t` | 8 | The control of -x. |
+| `right` | `uint32_t` | 12 | The control of +x. |
+
+## ideatek:InputExternal
+
+`ideatek:InputExternal` is the value of an external binding: *The external sources*.
+`ideatek_input_external_t` takes 16 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `x` | `float` | 0 | 0 | The first axis. |
+| `y` | `float` | 4 | 0 | The second axis. |
+| `z` | `float` | 8 | 0 | The third axis. |
+| `origin` | `uint32_t` | 12 | 0 | The control of the external module, for the prompts. |
+
+## ideatek:InputActionOrigins
+
+`ideatek:InputActionOrigins` names the controls that drive an action now. The mapping module writes it.
+`ideatek_input_action_origins_t` takes 12 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `origins` | `bridge_text_t` | 0 | The records of the controls: *The origins*. |
+| `count` | `uint32_t` | 8 | The records in `origins`. |
+
 ## ideatek:ideatek_context_flags_t
 
 `ideatek_context_flags_t` names the options of a context.
@@ -371,19 +569,21 @@ Bytes 9 to 15 hold no field.
 | 0x01 | `IDEATEK_CONTEXT_FLAGS_ACTIVE` | The context is read. |
 | 0x02 | `IDEATEK_CONTEXT_FLAGS_CONSUME` | Its controls block the contexts of a lower priority. |
 | 0x04 | `IDEATEK_CONTEXT_FLAGS_IGNORE_HELD` | A held button waits for its release. |
+| 0x08 | `IDEATEK_CONTEXT_FLAGS_REAL_TIME` | The context is mapped in each round, also in a pause. |
 
 ## ideatek:InputContext
 
 `ideatek:InputContext` is a set of bindings that turns on and off: *The contexts*.
-`ideatek_input_context_t` takes 16 bytes. Its alignment is 8.
+`ideatek_input_context_t` takes 24 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
-| `player` | `ideatek_entity_t` | 0 | 0 | The player. 0 means each device. |
-| `priority` | `int32_t` | 8 | 0 | The rank against other contexts. |
-| `flags` | `ideatek_context_flags_t` | 12 | ACTIVE, CONSUME and IGNORE_HELD | The options. |
+| `name` | `bridge_text_t` | 0 | No default | The name, for an external module. |
+| `player` | `ideatek_entity_t` | 8 | 0 | The player. 0 means each device. |
+| `priority` | `int32_t` | 16 | 0 | The rank against other contexts. |
+| `flags` | `ideatek_context_flags_t` | 20 | ACTIVE, CONSUME and IGNORE_HELD | The options. |
 
-Bytes 13 to 15 hold no field.
+Bytes 21 to 23 hold no field.
 
 ## ideatek:InputPlayer
 
@@ -491,6 +691,10 @@ The game picks the glyph of a prompt from the binding whose source fits `kind`. 
 | `ideatek:InputNegate` | `ideatek_input_negate_t` | `ideatek_input_negate_t_desc` | `IDEATEK_INPUT_NEGATE_FIELDS` |
 | `ideatek:ideatek_swizzle_t` | `ideatek_swizzle_t` | `ideatek_swizzle_t_desc` | `IDEATEK_SWIZZLE_VALUES` |
 | `ideatek:InputSwizzle` | `ideatek_input_swizzle_t` | `ideatek_input_swizzle_t_desc` | `IDEATEK_INPUT_SWIZZLE_FIELDS` |
+| `ideatek:InputResponseCurve` | `ideatek_input_response_curve_t` | `ideatek_input_response_curve_t_desc` | `IDEATEK_INPUT_RESPONSE_CURVE_FIELDS` |
+| `ideatek:InputClamp` | `ideatek_input_clamp_t` | `ideatek_input_clamp_t_desc` | `IDEATEK_INPUT_CLAMP_FIELDS` |
+| `ideatek:InputSmooth` | `ideatek_input_smooth_t` | `ideatek_input_smooth_t_desc` | `IDEATEK_INPUT_SMOOTH_FIELDS` |
+| `ideatek:InputLinearStep` | `ideatek_input_linear_step_t` | `ideatek_input_linear_step_t_desc` | `IDEATEK_INPUT_LINEAR_STEP_FIELDS` |
 | `ideatek:InputPressed` | `ideatek_input_pressed_t` | `ideatek_input_pressed_t_desc` | `IDEATEK_INPUT_PRESSED_FIELDS` |
 | `ideatek:InputReleased` | `ideatek_input_released_t` | `ideatek_input_released_t_desc` | `IDEATEK_INPUT_RELEASED_FIELDS` |
 | `ideatek:ideatek_hold_flags_t` | `ideatek_hold_flags_t` | `ideatek_hold_flags_t_desc` | `IDEATEK_HOLD_FLAGS_VALUES` |
@@ -498,8 +702,17 @@ The game picks the glyph of a prompt from the binding whose source fits `kind`. 
 | `ideatek:InputTap` | `ideatek_input_tap_t` | `ideatek_input_tap_t_desc` | `IDEATEK_INPUT_TAP_FIELDS` |
 | `ideatek:ideatek_pulse_flags_t` | `ideatek_pulse_flags_t` | `ideatek_pulse_flags_t_desc` | `IDEATEK_PULSE_FLAGS_VALUES` |
 | `ideatek:InputPulse` | `ideatek_input_pulse_t` | `ideatek_input_pulse_t_desc` | `IDEATEK_INPUT_PULSE_FIELDS` |
+| `ideatek:InputHoldRelease` | `ideatek_input_hold_release_t` | `ideatek_input_hold_release_t_desc` | `IDEATEK_INPUT_HOLD_RELEASE_FIELDS` |
+| `ideatek:InputMultiTap` | `ideatek_input_multi_tap_t` | `ideatek_input_multi_tap_t_desc` | `IDEATEK_INPUT_MULTI_TAP_FIELDS` |
+| `ideatek:InputToggle` | `ideatek_input_toggle_t` | `ideatek_input_toggle_t_desc` | `IDEATEK_INPUT_TOGGLE_FIELDS` |
+| `ideatek:InputFlick` | `ideatek_input_flick_t` | `ideatek_input_flick_t_desc` | `IDEATEK_INPUT_FLICK_FIELDS` |
+| `ideatek:InputCooldown` | `ideatek_input_cooldown_t` | `ideatek_input_cooldown_t_desc` | `IDEATEK_INPUT_COOLDOWN_FIELDS` |
 | `ideatek:ideatek_chord_flags_t` | `ideatek_chord_flags_t` | `ideatek_chord_flags_t_desc` | `IDEATEK_CHORD_FLAGS_VALUES` |
 | `ideatek:InputChord` | `ideatek_input_chord_t` | `ideatek_input_chord_t_desc` | `IDEATEK_INPUT_CHORD_FIELDS` |
+| `ideatek:InputCombo` | `ideatek_input_combo_t` | `ideatek_input_combo_t_desc` | `IDEATEK_INPUT_COMBO_FIELDS` |
+| `ideatek:InputCardinal` | `ideatek_input_cardinal_t` | `ideatek_input_cardinal_t_desc` | `IDEATEK_INPUT_CARDINAL_FIELDS` |
+| `ideatek:InputExternal` | `ideatek_input_external_t` | `ideatek_input_external_t_desc` | `IDEATEK_INPUT_EXTERNAL_FIELDS` |
+| `ideatek:InputActionOrigins` | `ideatek_input_action_origins_t` | `ideatek_input_action_origins_t_desc` | `IDEATEK_INPUT_ACTION_ORIGINS_FIELDS` |
 | `ideatek:ideatek_context_flags_t` | `ideatek_context_flags_t` | `ideatek_context_flags_t_desc` | `IDEATEK_CONTEXT_FLAGS_VALUES` |
 | `ideatek:InputContext` | `ideatek_input_context_t` | `ideatek_input_context_t_desc` | `IDEATEK_INPUT_CONTEXT_FIELDS` |
 | `ideatek:InputPlayer` | `ideatek_input_player_t` | `ideatek_input_player_t_desc` | `IDEATEK_INPUT_PLAYER_FIELDS` |
@@ -513,11 +726,11 @@ The game picks the glyph of a prompt from the binding whose source fits `kind`. 
 ```text
 { IDEATEK_ACTION_TYPE_BUTTON = 0, IDEATEK_ACTION_TYPE_AXIS_1 = 1, IDEATEK_ACTION_TYPE_AXIS_2 = 2, IDEATEK_ACTION_TYPE_AXIS_3 = 3 }
 { IDEATEK_ACCUMULATE_HIGHEST = 0, IDEATEK_ACCUMULATE_SUM = 1 }
-{ ideatek_action_type_t type; ideatek_accumulate_t accumulate; }
+{ bridge_text_t name; ideatek_action_type_t type; ideatek_accumulate_t accumulate; }
 { IDEATEK_ACTION_STATE_IDLE = 0, IDEATEK_ACTION_STATE_ONGOING = 1, IDEATEK_ACTION_STATE_TRIGGERED = 2 }
 { IDEATEK_ACTION_EDGES_STARTED = 0x01, IDEATEK_ACTION_EDGES_TRIGGERED = 0x02, IDEATEK_ACTION_EDGES_CANCELED = 0x04, IDEATEK_ACTION_EDGES_COMPLETED = 0x08 }
 { float x; float y; float z; float held; ideatek_action_state_t state; ideatek_action_edges_t edges; }
-{ IDEATEK_INPUT_SOURCE_KEY = 0, IDEATEK_INPUT_SOURCE_KEY_LAYOUT = 1, IDEATEK_INPUT_SOURCE_MOUSE_BUTTON = 2, IDEATEK_INPUT_SOURCE_MOUSE_MOTION = 3, IDEATEK_INPUT_SOURCE_MOUSE_WHEEL = 4, IDEATEK_INPUT_SOURCE_GAMEPAD_BUTTON = 5, IDEATEK_INPUT_SOURCE_GAMEPAD_STICK = 6, IDEATEK_INPUT_SOURCE_GAMEPAD_TRIGGER = 7, IDEATEK_INPUT_SOURCE_XR_BOOLEAN = 8, IDEATEK_INPUT_SOURCE_XR_FLOAT = 9, IDEATEK_INPUT_SOURCE_XR_VECTOR2 = 10 }
+{ IDEATEK_INPUT_SOURCE_KEY = 0, IDEATEK_INPUT_SOURCE_KEY_LAYOUT = 1, IDEATEK_INPUT_SOURCE_MOUSE_BUTTON = 2, IDEATEK_INPUT_SOURCE_MOUSE_MOTION = 3, IDEATEK_INPUT_SOURCE_MOUSE_WHEEL = 4, IDEATEK_INPUT_SOURCE_GAMEPAD_BUTTON = 5, IDEATEK_INPUT_SOURCE_GAMEPAD_STICK = 6, IDEATEK_INPUT_SOURCE_GAMEPAD_TRIGGER = 7, IDEATEK_INPUT_SOURCE_XR_BOOLEAN = 8, IDEATEK_INPUT_SOURCE_XR_FLOAT = 9, IDEATEK_INPUT_SOURCE_XR_VECTOR2 = 10, IDEATEK_INPUT_SOURCE_GAMEPAD_GYRO = 11, IDEATEK_INPUT_SOURCE_GAMEPAD_ACCEL = 12, IDEATEK_INPUT_SOURCE_TOUCH = 13, IDEATEK_INPUT_SOURCE_TOUCH_MOTION = 14, IDEATEK_INPUT_SOURCE_EXTERNAL = 15 }
 { ideatek_entity_t context; ideatek_entity_t action; uint32_t control; ideatek_input_source_t source; }
 { IDEATEK_DEAD_ZONE_KIND_AXIAL = 0, IDEATEK_DEAD_ZONE_KIND_RADIAL = 1, IDEATEK_DEAD_ZONE_KIND_UNSCALED_RADIAL = 2 }
 { float lower; float upper; ideatek_dead_zone_kind_t kind; }
@@ -527,6 +740,10 @@ The game picks the glyph of a prompt from the binding whose source fits `kind`. 
 { ideatek_axes_t axes; }
 { IDEATEK_SWIZZLE_YXZ = 0, IDEATEK_SWIZZLE_ZYX = 1, IDEATEK_SWIZZLE_XZY = 2, IDEATEK_SWIZZLE_YZX = 3, IDEATEK_SWIZZLE_ZXY = 4 }
 { ideatek_swizzle_t order; }
+{ bridge_text_t x_points; bridge_text_t y_points; bridge_text_t z_points; }
+{ float min[3]; float max[3]; }
+{ float decay_rate; }
+{ float accel_rate; float decel_rate; }
 { float threshold; }
 { float threshold; }
 { IDEATEK_HOLD_FLAGS_ONE_SHOT = 0x01 }
@@ -534,10 +751,19 @@ The game picks the glyph of a prompt from the binding whose source fits `kind`. 
 { float threshold; float time; }
 { IDEATEK_PULSE_FLAGS_ON_START = 0x01 }
 { float threshold; float interval; uint32_t limit; ideatek_pulse_flags_t flags; }
+{ float threshold; float time; }
+{ float threshold; float time; float gap; uint32_t count; }
+{ float threshold; }
+{ float threshold; float rest; float time; }
+{ float threshold; float time; }
 { IDEATEK_CHORD_FLAGS_BLOCK = 0x01 }
 { ideatek_entity_t action; ideatek_chord_flags_t flags; }
-{ IDEATEK_CONTEXT_FLAGS_ACTIVE = 0x01, IDEATEK_CONTEXT_FLAGS_CONSUME = 0x02, IDEATEK_CONTEXT_FLAGS_IGNORE_HELD = 0x04 }
-{ ideatek_entity_t player; int32_t priority; ideatek_context_flags_t flags; }
+{ bridge_text_t steps; bridge_text_t cancels; uint32_t steps_count; uint32_t cancels_count; }
+{ uint32_t up; uint32_t down; uint32_t left; uint32_t right; }
+{ float x; float y; float z; uint32_t origin; }
+{ bridge_text_t origins; uint32_t count; }
+{ IDEATEK_CONTEXT_FLAGS_ACTIVE = 0x01, IDEATEK_CONTEXT_FLAGS_CONSUME = 0x02, IDEATEK_CONTEXT_FLAGS_IGNORE_HELD = 0x04, IDEATEK_CONTEXT_FLAGS_REAL_TIME = 0x08 }
+{ bridge_text_t name; ideatek_entity_t player; int32_t priority; ideatek_context_flags_t flags; }
 { uint8_t flags; }
 { ideatek_entity_t player; }
 { IDEATEK_CAPTURE_SOURCES_KEY = 0x01, IDEATEK_CAPTURE_SOURCES_KEY_LAYOUT = 0x02, IDEATEK_CAPTURE_SOURCES_MOUSE_BUTTON = 0x04, IDEATEK_CAPTURE_SOURCES_MOUSE_MOTION = 0x08, IDEATEK_CAPTURE_SOURCES_MOUSE_WHEEL = 0x10, IDEATEK_CAPTURE_SOURCES_GAMEPAD_BUTTON = 0x20, IDEATEK_CAPTURE_SOURCES_GAMEPAD_STICK = 0x40, IDEATEK_CAPTURE_SOURCES_GAMEPAD_TRIGGER = 0x80 }
@@ -574,12 +800,25 @@ The game picks the glyph of a prompt from the binding whose source fits `kind`. 
 | `ideatek:InputScale` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputNegate` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputSwizzle` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputResponseCurve` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputClamp` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputSmooth` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputLinearStep` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputPressed` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputReleased` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputHold` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputTap` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputPulse` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputHoldRelease` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputMultiTap` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputToggle` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputFlick` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputCooldown` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputChord` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputCombo` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputCardinal` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputExternal` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:InputActionOrigins` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputContext` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputPlayer` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:InputDevice` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -592,4 +831,5 @@ The game picks the glyph of a prompt from the binding whose source fits `kind`. 
 | Role | `write` | `read` |
 | --- | --- | --- |
 | The game | The actions, the bindings with their modifiers and triggers, the contexts, the players, the devices and the captures | The types of the fields |
-| The mapping module | `ideatek:InputActionState`, `ideatek:InputCaptured`, `ideatek:InputLastDevice` | The types of the game, `ideatek:Tick`, and the types of the fields |
+| The mapping module | `ideatek:InputActionState`, `ideatek:InputCaptured`, `ideatek:InputLastDevice`, `ideatek:InputActionOrigins` | The types of the game, `ideatek:Tick`, `ideatek:Frame`, `ideatek:InputExternal`, and the types of the fields |
+| An external module | `ideatek:InputExternal` | The types of the game, and the types of the fields |
