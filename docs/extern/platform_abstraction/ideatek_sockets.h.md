@@ -154,7 +154,7 @@ The records of `ideatek:SessionMessagesOut` and `ideatek:SessionMessagesIn`:
 ## The signals
 
 A P2P connection starts with signals: small messages through a channel of the game, before the peers find a route.
-The game carries the signals, for example through its own server, the web part or a platform module.
+The game carries the signals, for example through its own server or a platform module.
 A channel of signals can lose, repeat or swap signals.
 
 In each round with signals, the sockets module attaches `ideatek:SignalsOut` again. A record of `ideatek:SignalsOut`:

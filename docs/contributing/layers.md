@@ -63,7 +63,6 @@ engine_subsystems/
     ideatek_subtitles.h
     ideatek_terrain.h
     ideatek_ui.h
-    ideatek_web.h
     ideatek_xr.h
 ```
 
