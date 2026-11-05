@@ -53,6 +53,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:Skin", ideatek_skin_t);
     STRUCT(api, "ideatek:SkinBinds", ideatek_skin_binds_t);
     STRUCT(api, "ideatek:MorphWeights", ideatek_morph_weights_t);
+    STRUCT(api, "ideatek:HiddenJoint", ideatek_hidden_joint_t);
     STRUCT(api, "ideatek:Clip", ideatek_clip_t);
     STRUCT(api, "ideatek:AnimationTarget", ideatek_animation_target_t);
     TAG(api, "ideatek:AnimationPlayer");
@@ -148,6 +149,8 @@ static const char WHO[] = MANIFEST;
         ideatek_trajectory_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:MotionMatch",
         ideatek_motion_match_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:HiddenJoint",
+        ideatek_hidden_joint_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_animator(const bridge_api_t *api)
@@ -274,6 +277,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:Skin", ideatek_skin_t);
     STRUCT(api, "ideatek:SkinBinds", ideatek_skin_binds_t);
     STRUCT(api, "ideatek:MorphWeights", ideatek_morph_weights_t);
+    STRUCT(api, "ideatek:HiddenJoint", ideatek_hidden_joint_t);
 }
 
 BRIDGE_NATIVE(init)

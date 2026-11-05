@@ -137,9 +137,6 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:DestructibleAsset", ideatek_destructible_asset_t);
     STRUCT(api, "ideatek:Damage", ideatek_damage_t);
     STRUCT(api, "ideatek:BreakEvent", ideatek_break_event_t);
-    STRUCT(api, "ideatek:HiddenJoint", ideatek_hidden_joint_t);
-    STRUCT(api, "ideatek:Cut", ideatek_cut_t);
-    STRUCT(api, "ideatek:CutEvent", ideatek_cut_event_t);
     STRUCT(api, "ideatek:SoftBody", ideatek_soft_body_t);
     STRUCT(api, "ideatek:SoftBodyAttachment", ideatek_soft_body_attachment_t);
     STRUCT(api, "ideatek:SoftBodyReset", ideatek_soft_body_reset_t);
@@ -244,10 +241,6 @@ static const char WHO[] = MANIFEST;
     api->attach(api, id, STRUCT(api, "ideatek:Destructible",
         ideatek_destructible_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:Damage", ideatek_damage_t),
-        BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:HiddenJoint",
-        ideatek_hidden_joint_t), BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:Cut", ideatek_cut_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:SoftBody", ideatek_soft_body_t),
         BRIDGE_ZEROED);
@@ -397,8 +390,6 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:PoseDrive", ideatek_pose_drive_t);
     STRUCT(api, "ideatek:Destructible", ideatek_destructible_t);
     STRUCT(api, "ideatek:Damage", ideatek_damage_t);
-    STRUCT(api, "ideatek:HiddenJoint", ideatek_hidden_joint_t);
-    STRUCT(api, "ideatek:Cut", ideatek_cut_t);
     STRUCT(api, "ideatek:SoftBody", ideatek_soft_body_t);
     STRUCT(api, "ideatek:SoftBodyReset", ideatek_soft_body_reset_t);
     STRUCT(api, "ideatek:Rope", ideatek_rope_t);
@@ -457,8 +448,6 @@ static const char WHO[] = MANIFEST;
         ideatek_wheel_state_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:BreakEvent",
         ideatek_break_event_t), BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:CutEvent", ideatek_cut_event_t),
-        BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:WaterSample",
         ideatek_water_sample_t), BRIDGE_ZEROED);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Mesh",
@@ -494,7 +483,6 @@ static const char WHO[] = MANIFEST;
 {
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
     STRUCT(api, "ideatek:ideatek_vec3_t", ideatek_vec3_t);
-    STRUCT(api, "ideatek:HiddenJoint", ideatek_hidden_joint_t);
     STRUCT(api, "ideatek:Water", ideatek_water_t);
     STRUCT(api, "ideatek:Wave", ideatek_wave_t);
     STRUCT(api, "ideatek:LiquidParticles", ideatek_liquid_particles_t);

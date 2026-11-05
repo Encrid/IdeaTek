@@ -98,6 +98,12 @@ false = { run = ["{out}/animation_layout{exe}", "morph_weights"] }
 name = "ideatek_morph_weights_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/animation_layout{exe}", "morph_weights"]
 claims = { status = 0, order = ["size 12", "alignment 4", "weights 0", "count 8"] }
+false = { run = ["{out}/animation_layout{exe}", "hidden_joint"] }
+
+[[case]]
+name = "ideatek_hidden_joint_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/animation_layout{exe}", "hidden_joint"]
+claims = { status = 0, order = ["size 8", "alignment 8", "cap 0"] }
 false = { run = ["{out}/animation_layout{exe}", "clip"] }
 
 [[case]]
@@ -283,6 +289,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t skeleton; ideatek_entity_t binds; }",
     "{ bridge_text_t matrices; uint32_t count; uint32_t revision; }",
     "{ bridge_text_t weights; uint32_t count; }",
+    "{ ideatek_entity_t cap; }",
     "{ bridge_text_t bytes; float duration; uint32_t channel_count; uint32_t event_count; uint32_t revision; bool additive; }",
     "{ uint64_t id; ideatek_entity_t player; }",
     "{ ideatek_entity_t player; ideatek_entity_t clip; ideatek_entity_t mask; uint64_t sync_group; float time; float speed; float weight; float event_weight; int32_t layer; ideatek_repeat_t repeat; bool paused; bool real_time; ideatek_layer_blend_t blend; }",
@@ -334,6 +341,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t skeleton; ideatek_entity_t binds; }",
     "{ bridge_text_t matrices; uint32_t count; uint32_t revision; }",
     "{ bridge_text_t weights; uint32_t count; }",
+    "{ ideatek_entity_t cap; }",
     "{ bridge_text_t bytes; float duration; uint32_t channel_count; uint32_t event_count; uint32_t revision; bool additive; }",
     "{ uint64_t id; ideatek_entity_t player; }",
     "{ ideatek_entity_t player; ideatek_entity_t clip; ideatek_entity_t mask; uint64_t sync_group; float time; float speed; float weight; float event_weight; int32_t layer; ideatek_repeat_t repeat; bool paused; bool real_time; ideatek_layer_blend_t blend; }",
@@ -371,7 +379,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/animation_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 48 types, each type after the types of its fields"
+name = "a module declares the 49 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/animation_probe{library}"] }
 
@@ -396,16 +404,17 @@ read = [
     "ideatek:ideatek_event_phase_t", "ideatek:ideatek_motion_axes_t",
     "ideatek:ideatek_axis_t", "ideatek:ideatek_collider_shape_t",
     "ideatek:Joint", "ideatek:Skin", "ideatek:SkinBinds",
-    "ideatek:MorphWeights", "ideatek:Clip", "ideatek:AnimationTarget",
-    "ideatek:AnimationPlayer", "ideatek:ClipPlay", "ideatek:BlendSpace",
-    "ideatek:BlendPoint", "ideatek:AnimationStates", "ideatek:AnimationState",
-    "ideatek:ClipEvent", "ideatek:RootMotion", "ideatek:RootMotionDelta",
-    "ideatek:PoseModifier", "ideatek:TwoBoneIK", "ideatek:ChainIK",
-    "ideatek:LookAt", "ideatek:CopyTransform", "ideatek:SpringChain",
-    "ideatek:SpringCollider", "ideatek:BoneMask", "ideatek:AnimationCurves",
-    "ideatek:AnimationParameters", "ideatek:WarpTargets",
-    "ideatek:OrientationWarp", "ideatek:AnimationLod", "ideatek:Trajectory",
-    "ideatek:MotionMatch", "ideatek:Inertialize", "ideatek:PlayLink",
+    "ideatek:MorphWeights", "ideatek:HiddenJoint", "ideatek:Clip",
+    "ideatek:AnimationTarget", "ideatek:AnimationPlayer", "ideatek:ClipPlay",
+    "ideatek:BlendSpace", "ideatek:BlendPoint", "ideatek:AnimationStates",
+    "ideatek:AnimationState", "ideatek:ClipEvent", "ideatek:RootMotion",
+    "ideatek:RootMotionDelta", "ideatek:PoseModifier", "ideatek:TwoBoneIK",
+    "ideatek:ChainIK", "ideatek:LookAt", "ideatek:CopyTransform",
+    "ideatek:SpringChain", "ideatek:SpringCollider", "ideatek:BoneMask",
+    "ideatek:AnimationCurves", "ideatek:AnimationParameters",
+    "ideatek:WarpTargets", "ideatek:OrientationWarp", "ideatek:AnimationLod",
+    "ideatek:Trajectory", "ideatek:MotionMatch", "ideatek:Inertialize",
+    "ideatek:PlayLink",
 ]
 '''
 
@@ -437,7 +446,7 @@ write = [
     "ideatek:CopyTransform", "ideatek:SpringChain", "ideatek:SpringCollider",
     "ideatek:PlayLink", "ideatek:BoneMask", "ideatek:AnimationParameters",
     "ideatek:WarpTargets", "ideatek:OrientationWarp", "ideatek:AnimationLod",
-    "ideatek:Trajectory", "ideatek:MotionMatch",
+    "ideatek:Trajectory", "ideatek:MotionMatch", "ideatek:HiddenJoint",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -464,14 +473,14 @@ write = [
     "ideatek:CopyTransform", "ideatek:SpringChain", "ideatek:SpringCollider",
     "ideatek:PlayLink", "ideatek:BoneMask", "ideatek:AnimationParameters",
     "ideatek:WarpTargets", "ideatek:OrientationWarp", "ideatek:AnimationLod",
-    "ideatek:Trajectory",
+    "ideatek:Trajectory", "ideatek:MotionMatch",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_layer_blend_t", "ideatek:ideatek_repeat_t",
     "ideatek:ideatek_state_switch_t", "ideatek:ideatek_motion_axes_t",
     "ideatek:ideatek_axis_t", "ideatek:ideatek_collider_shape_t",
-    "ideatek:MotionMatch",
+    "ideatek:HiddenJoint",
 ]
 '''
 
@@ -676,7 +685,7 @@ read = [
 '''
 
 [[case]]
-name = "the render module loads with read on the skins and the weights"
+name = "the render module loads with read on the skins, the weights and the hidden joints"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:renderer@1.0.0, native, m/animation_renderer{library}"] }
 
@@ -693,7 +702,7 @@ library = "{bb_native}/bridge_native"
 [module."test:renderer@1.0.0"]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:Joint", "ideatek:Skin",
-    "ideatek:SkinBinds", "ideatek:MorphWeights",
+    "ideatek:SkinBinds", "ideatek:MorphWeights", "ideatek:HiddenJoint",
 ]
 '''
 
@@ -707,7 +716,7 @@ library = "{bb_native}/bridge_native"
 [module."test:renderer@1.0.0"]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:Joint", "ideatek:Skin",
-    "ideatek:SkinBinds",
+    "ideatek:SkinBinds", "ideatek:MorphWeights",
 ]
 '''
 

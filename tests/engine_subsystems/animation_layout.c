@@ -124,6 +124,12 @@ static void show_morph_weights(void)
     AT(ideatek_morph_weights_t, count);
 }
 
+static void show_hidden_joint(void)
+{
+    SIZE(ideatek_hidden_joint_t);
+    AT(ideatek_hidden_joint_t, cap);
+}
+
 static void show_clip(void)
 {
     SIZE(ideatek_clip_t);
@@ -371,20 +377,21 @@ static void show_descriptors(void)
         ideatek_motion_axes_t_desc, ideatek_axis_t_desc,
         ideatek_collider_shape_t_desc, ideatek_joint_t_desc,
         ideatek_skin_t_desc, ideatek_skin_binds_t_desc,
-        ideatek_morph_weights_t_desc, ideatek_clip_t_desc,
-        ideatek_animation_target_t_desc, ideatek_clip_play_t_desc,
-        ideatek_blend_space_t_desc, ideatek_blend_point_t_desc,
-        ideatek_animation_states_t_desc, ideatek_animation_state_t_desc,
-        ideatek_clip_event_record_t_desc, ideatek_root_motion_t_desc,
-        ideatek_root_motion_delta_t_desc, ideatek_pose_modifier_t_desc,
-        ideatek_two_bone_ik_t_desc, ideatek_chain_ik_t_desc,
-        ideatek_look_at_t_desc, ideatek_copy_transform_t_desc,
-        ideatek_spring_chain_t_desc, ideatek_spring_collider_t_desc,
-        ideatek_bone_mask_t_desc, ideatek_animation_curves_t_desc,
-        ideatek_animation_parameters_t_desc, ideatek_warp_targets_t_desc,
-        ideatek_orientation_warp_t_desc, ideatek_animation_lod_t_desc,
-        ideatek_trajectory_t_desc, ideatek_motion_match_t_desc,
-        ideatek_inertialize_t_desc, ideatek_play_link_t_desc };
+        ideatek_morph_weights_t_desc, ideatek_hidden_joint_t_desc,
+        ideatek_clip_t_desc, ideatek_animation_target_t_desc,
+        ideatek_clip_play_t_desc, ideatek_blend_space_t_desc,
+        ideatek_blend_point_t_desc, ideatek_animation_states_t_desc,
+        ideatek_animation_state_t_desc, ideatek_clip_event_record_t_desc,
+        ideatek_root_motion_t_desc, ideatek_root_motion_delta_t_desc,
+        ideatek_pose_modifier_t_desc, ideatek_two_bone_ik_t_desc,
+        ideatek_chain_ik_t_desc, ideatek_look_at_t_desc,
+        ideatek_copy_transform_t_desc, ideatek_spring_chain_t_desc,
+        ideatek_spring_collider_t_desc, ideatek_bone_mask_t_desc,
+        ideatek_animation_curves_t_desc, ideatek_animation_parameters_t_desc,
+        ideatek_warp_targets_t_desc, ideatek_orientation_warp_t_desc,
+        ideatek_animation_lod_t_desc, ideatek_trajectory_t_desc,
+        ideatek_motion_match_t_desc, ideatek_inertialize_t_desc,
+        ideatek_play_link_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -405,7 +412,8 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_MOTION_AXES_VALUES), TEXT_OF(IDEATEK_AXIS_VALUES),
         TEXT_OF(IDEATEK_COLLIDER_SHAPE_VALUES), TEXT_OF(IDEATEK_JOINT_FIELDS),
         TEXT_OF(IDEATEK_SKIN_FIELDS), TEXT_OF(IDEATEK_SKIN_BINDS_FIELDS),
-        TEXT_OF(IDEATEK_MORPH_WEIGHTS_FIELDS), TEXT_OF(IDEATEK_CLIP_FIELDS),
+        TEXT_OF(IDEATEK_MORPH_WEIGHTS_FIELDS),
+        TEXT_OF(IDEATEK_HIDDEN_JOINT_FIELDS), TEXT_OF(IDEATEK_CLIP_FIELDS),
         TEXT_OF(IDEATEK_ANIMATION_TARGET_FIELDS),
         TEXT_OF(IDEATEK_CLIP_PLAY_FIELDS), TEXT_OF(IDEATEK_BLEND_SPACE_FIELDS),
         TEXT_OF(IDEATEK_BLEND_POINT_FIELDS),
@@ -448,7 +456,8 @@ int main(int argc, char **argv)
         { "motion_axes", show_motion_axes }, { "axis", show_axis },
         { "collider_shape", show_collider_shape }, { "joint", show_joint },
         { "skin", show_skin }, { "skin_binds", show_skin_binds },
-        { "morph_weights", show_morph_weights }, { "clip", show_clip },
+        { "morph_weights", show_morph_weights },
+        { "hidden_joint", show_hidden_joint }, { "clip", show_clip },
         { "animation_target", show_animation_target },
         { "clip_play", show_clip_play }, { "blend_space", show_blend_space },
         { "blend_point", show_blend_point },

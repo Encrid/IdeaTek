@@ -482,24 +482,6 @@ false = { run = ["{out}/physics_layout{exe}", "break_event"] }
 name = "ideatek_break_event_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "break_event"]
 claims = { status = 0, order = ["size 64", "alignment 8", "body 0", "piece 8", "point 16", "excess_force 40", "chunks 52", "order 60"] }
-false = { run = ["{out}/physics_layout{exe}", "hidden_joint"] }
-
-[[case]]
-name = "ideatek_hidden_joint_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/physics_layout{exe}", "hidden_joint"]
-claims = { status = 0, order = ["size 8", "alignment 8", "cap 0"] }
-false = { run = ["{out}/physics_layout{exe}", "cut"] }
-
-[[case]]
-name = "ideatek_cut_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/physics_layout{exe}", "cut"]
-claims = { status = 0, order = ["size 48", "alignment 8", "drawn 0", "point 8", "normal 32", "order 44"] }
-false = { run = ["{out}/physics_layout{exe}", "cut_event"] }
-
-[[case]]
-name = "ideatek_cut_event_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/physics_layout{exe}", "cut_event"]
-claims = { status = 0, order = ["size 24", "alignment 8", "drawn 0", "piece 8", "order 16"] }
 false = { run = ["{out}/physics_layout{exe}", "bend"] }
 
 [[case]]
@@ -767,9 +749,6 @@ claims = { status = 0, line = [
     "uint8_t { IDEATEK_DAMAGE_SHAPE_RADIAL = 0, IDEATEK_DAMAGE_SHAPE_CAPSULE = 1, IDEATEK_DAMAGE_SHAPE_SHEAR = 2, IDEATEK_DAMAGE_SHAPE_TRIANGLE = 3, IDEATEK_DAMAGE_SHAPE_IMPACT = 4 }",
     "{ ideatek_position_t point; ideatek_position_t point_b; ideatek_position_t point_c; ideatek_vec3_t normal; float min_radius; float radius; float pressure; uint32_t order; ideatek_damage_shape_t shape; }",
     "{ ideatek_entity_t body; ideatek_entity_t piece; ideatek_position_t point; ideatek_vec3_t excess_force; bridge_text_t chunks; uint32_t order; }",
-    "{ ideatek_entity_t cap; }",
-    "{ ideatek_entity_t drawn; ideatek_position_t point; ideatek_vec3_t normal; uint32_t order; }",
-    "{ ideatek_entity_t drawn; ideatek_entity_t piece; uint32_t order; }",
     "uint8_t { IDEATEK_BEND_NONE = 0, IDEATEK_BEND_DISTANCE = 1, IDEATEK_BEND_DIHEDRAL = 2 }",
     "uint8_t { IDEATEK_LRA_NONE = 0, IDEATEK_LRA_EUCLIDEAN = 1, IDEATEK_LRA_GEODESIC = 2 }",
     "{ ideatek_entity_t source; uint64_t categories; uint64_t touches; float edge_compliance; float shear_compliance; float bend_compliance; float vertex_mass; float linear_damping; float friction; float gravity_scale; float vertex_radius; float pressure; float restitution; float volume_compliance; float lra_scale; float skin_distance_scale; uint32_t iterations; ideatek_bend_t bend; ideatek_lra_t lra; bool double_sided; }",
@@ -888,9 +867,6 @@ claims = { status = 0, line = [
     "{ IDEATEK_DAMAGE_SHAPE_RADIAL = 0, IDEATEK_DAMAGE_SHAPE_CAPSULE = 1, IDEATEK_DAMAGE_SHAPE_SHEAR = 2, IDEATEK_DAMAGE_SHAPE_TRIANGLE = 3, IDEATEK_DAMAGE_SHAPE_IMPACT = 4 }",
     "{ ideatek_position_t point; ideatek_position_t point_b; ideatek_position_t point_c; ideatek_vec3_t normal; float min_radius; float radius; float pressure; uint32_t order; ideatek_damage_shape_t shape; }",
     "{ ideatek_entity_t body; ideatek_entity_t piece; ideatek_position_t point; ideatek_vec3_t excess_force; bridge_text_t chunks; uint32_t order; }",
-    "{ ideatek_entity_t cap; }",
-    "{ ideatek_entity_t drawn; ideatek_position_t point; ideatek_vec3_t normal; uint32_t order; }",
-    "{ ideatek_entity_t drawn; ideatek_entity_t piece; uint32_t order; }",
     "{ IDEATEK_BEND_NONE = 0, IDEATEK_BEND_DISTANCE = 1, IDEATEK_BEND_DIHEDRAL = 2 }",
     "{ IDEATEK_LRA_NONE = 0, IDEATEK_LRA_EUCLIDEAN = 1, IDEATEK_LRA_GEODESIC = 2 }",
     "{ ideatek_entity_t source; uint64_t categories; uint64_t touches; float edge_compliance; float shear_compliance; float bend_compliance; float vertex_mass; float linear_damping; float friction; float gravity_scale; float vertex_radius; float pressure; float restitution; float volume_compliance; float lra_scale; float skin_distance_scale; uint32_t iterations; ideatek_bend_t bend; ideatek_lra_t lra; bool double_sided; }",
@@ -931,7 +907,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/physics_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 121 types, each type after the types of its fields"
+name = "a module declares the 118 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/physics_probe{library}"] }
 
@@ -989,8 +965,7 @@ read = [
     "ideatek:AntiRollBar", "ideatek:Wheel", "ideatek:VehicleInput",
     "ideatek:WheelState", "ideatek:VehicleState", "ideatek:PoseDrive",
     "ideatek:Destructible", "ideatek:DestructibleAsset", "ideatek:Damage",
-    "ideatek:BreakEvent", "ideatek:HiddenJoint", "ideatek:Cut",
-    "ideatek:CutEvent", "ideatek:SoftBody", "ideatek:SoftBodyAttachment",
+    "ideatek:BreakEvent", "ideatek:SoftBody", "ideatek:SoftBodyAttachment",
     "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
     "ideatek:WaterSample", "ideatek:Buoyancy", "ideatek:Liquid",
     "ideatek:LiquidEmitter", "ideatek:LiquidParticles", "ideatek:LiquidFoam",
@@ -1026,11 +1001,10 @@ write = [
     "ideatek:DistanceJoint", "ideatek:SwingTwistJoint", "ideatek:SixDofJoint",
     "ideatek:Vehicle", "ideatek:Wheel", "ideatek:VehicleInput",
     "ideatek:PoseDrive", "ideatek:Destructible", "ideatek:Damage",
-    "ideatek:HiddenJoint", "ideatek:Cut", "ideatek:SoftBody",
-    "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
-    "ideatek:Buoyancy", "ideatek:Liquid", "ideatek:LiquidEmitter",
-    "ideatek:LagHistory", "ideatek:KinematicTarget", "ideatek:ShapeMaterials",
-    "ideatek:Character", "ideatek:CharacterMove",
+    "ideatek:SoftBody", "ideatek:SoftBodyReset", "ideatek:Rope",
+    "ideatek:Water", "ideatek:Wave", "ideatek:Buoyancy", "ideatek:Liquid",
+    "ideatek:LiquidEmitter", "ideatek:LagHistory", "ideatek:KinematicTarget",
+    "ideatek:ShapeMaterials", "ideatek:Character", "ideatek:CharacterMove",
     "ideatek:PhysicsSnapshotRequest", "ideatek:DestructibleAsset",
     "ideatek:GearJoint", "ideatek:RackAndPinionJoint", "ideatek:PulleyJoint",
     "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
@@ -1081,11 +1055,10 @@ write = [
     "ideatek:DistanceJoint", "ideatek:SwingTwistJoint", "ideatek:SixDofJoint",
     "ideatek:Vehicle", "ideatek:Wheel", "ideatek:VehicleInput",
     "ideatek:PoseDrive", "ideatek:Destructible", "ideatek:Damage",
-    "ideatek:HiddenJoint", "ideatek:Cut", "ideatek:SoftBody",
-    "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
-    "ideatek:Buoyancy", "ideatek:Liquid", "ideatek:LiquidEmitter",
-    "ideatek:LagHistory", "ideatek:KinematicTarget", "ideatek:ShapeMaterials",
-    "ideatek:Character", "ideatek:CharacterMove",
+    "ideatek:SoftBody", "ideatek:SoftBodyReset", "ideatek:Rope",
+    "ideatek:Water", "ideatek:Wave", "ideatek:Buoyancy", "ideatek:Liquid",
+    "ideatek:LiquidEmitter", "ideatek:LagHistory", "ideatek:KinematicTarget",
+    "ideatek:ShapeMaterials", "ideatek:Character", "ideatek:CharacterMove",
     "ideatek:PhysicsSnapshotRequest", "ideatek:DestructibleAsset",
     "ideatek:GearJoint", "ideatek:RackAndPinionJoint", "ideatek:PulleyJoint",
     "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
@@ -1141,9 +1114,9 @@ write = [
     "ideatek:Transform", "ideatek:Motion", "ideatek:SensorEvent",
     "ideatek:ContactEvent", "ideatek:HitEvent", "ideatek:QueryHit",
     "ideatek:BodyJointEvent", "ideatek:WheelState", "ideatek:BreakEvent",
-    "ideatek:CutEvent", "ideatek:WaterSample", "ideatek:Mesh",
-    "ideatek:MeshInstance", "ideatek:WakeEvent", "ideatek:BodyJointState",
-    "ideatek:CharacterState", "ideatek:PhysicsSnapshot", "ideatek:VehicleState",
+    "ideatek:WaterSample", "ideatek:Mesh", "ideatek:MeshInstance",
+    "ideatek:WakeEvent", "ideatek:BodyJointState", "ideatek:CharacterState",
+    "ideatek:PhysicsSnapshot", "ideatek:VehicleState",
     "ideatek:LiquidParticles", "ideatek:LiquidFoam", "ideatek:SmokeGrid",
     "ideatek:ArticulationState", "ideatek:Texture",
 ]
@@ -1179,11 +1152,10 @@ read = [
     "ideatek:DistanceJoint", "ideatek:SwingTwistJoint", "ideatek:SixDofJoint",
     "ideatek:Vehicle", "ideatek:Wheel", "ideatek:VehicleInput",
     "ideatek:PoseDrive", "ideatek:Destructible", "ideatek:Damage",
-    "ideatek:HiddenJoint", "ideatek:Cut", "ideatek:SoftBody",
-    "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
-    "ideatek:Buoyancy", "ideatek:Liquid", "ideatek:LiquidEmitter",
-    "ideatek:LagHistory", "ideatek:KinematicTarget", "ideatek:ShapeMaterials",
-    "ideatek:Character", "ideatek:CharacterMove",
+    "ideatek:SoftBody", "ideatek:SoftBodyReset", "ideatek:Rope",
+    "ideatek:Water", "ideatek:Wave", "ideatek:Buoyancy", "ideatek:Liquid",
+    "ideatek:LiquidEmitter", "ideatek:LagHistory", "ideatek:KinematicTarget",
+    "ideatek:ShapeMaterials", "ideatek:Character", "ideatek:CharacterMove",
     "ideatek:PhysicsSnapshotRequest", "ideatek:DestructibleAsset",
     "ideatek:GearJoint", "ideatek:RackAndPinionJoint", "ideatek:PulleyJoint",
     "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
@@ -1208,9 +1180,9 @@ write = [
     "ideatek:Transform", "ideatek:Motion", "ideatek:SensorEvent",
     "ideatek:ContactEvent", "ideatek:HitEvent", "ideatek:QueryHit",
     "ideatek:BodyJointEvent", "ideatek:WheelState", "ideatek:BreakEvent",
-    "ideatek:CutEvent", "ideatek:WaterSample", "ideatek:Mesh",
-    "ideatek:MeshInstance", "ideatek:WakeEvent", "ideatek:BodyJointState",
-    "ideatek:CharacterState", "ideatek:PhysicsSnapshot", "ideatek:VehicleState",
+    "ideatek:WaterSample", "ideatek:Mesh", "ideatek:MeshInstance",
+    "ideatek:WakeEvent", "ideatek:BodyJointState", "ideatek:CharacterState",
+    "ideatek:PhysicsSnapshot", "ideatek:VehicleState",
     "ideatek:LiquidParticles", "ideatek:LiquidFoam", "ideatek:SmokeGrid",
     "ideatek:ArticulationState",
 ]
@@ -1246,11 +1218,10 @@ read = [
     "ideatek:DistanceJoint", "ideatek:SwingTwistJoint", "ideatek:SixDofJoint",
     "ideatek:Vehicle", "ideatek:Wheel", "ideatek:VehicleInput",
     "ideatek:PoseDrive", "ideatek:Destructible", "ideatek:Damage",
-    "ideatek:HiddenJoint", "ideatek:Cut", "ideatek:SoftBody",
-    "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
-    "ideatek:Buoyancy", "ideatek:Liquid", "ideatek:LiquidEmitter",
-    "ideatek:LagHistory", "ideatek:KinematicTarget", "ideatek:ShapeMaterials",
-    "ideatek:Character", "ideatek:CharacterMove",
+    "ideatek:SoftBody", "ideatek:SoftBodyReset", "ideatek:Rope",
+    "ideatek:Water", "ideatek:Wave", "ideatek:Buoyancy", "ideatek:Liquid",
+    "ideatek:LiquidEmitter", "ideatek:LagHistory", "ideatek:KinematicTarget",
+    "ideatek:ShapeMaterials", "ideatek:Character", "ideatek:CharacterMove",
     "ideatek:PhysicsSnapshotRequest", "ideatek:DestructibleAsset",
     "ideatek:GearJoint", "ideatek:RackAndPinionJoint", "ideatek:PulleyJoint",
     "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
@@ -1264,7 +1235,7 @@ read = [
 '''
 
 [[case]]
-name = "the render module loads with read on the hidden joints, the water, the liquids and the smoke"
+name = "the render module loads with read on the water, the liquids and the smoke"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:renderer@1.0.0, native, m/physics_renderer{library}"] }
 
@@ -1280,9 +1251,9 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:renderer@1.0.0"]
 read = [
-    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t", "ideatek:HiddenJoint",
-    "ideatek:Water", "ideatek:Wave", "ideatek:LiquidParticles",
-    "ideatek:LiquidFoam", "ideatek:SmokeGrid",
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t", "ideatek:Water",
+    "ideatek:Wave", "ideatek:LiquidParticles", "ideatek:LiquidFoam",
+    "ideatek:SmokeGrid",
 ]
 '''
 
@@ -1295,9 +1266,8 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:renderer@1.0.0"]
 read = [
-    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t", "ideatek:HiddenJoint",
-    "ideatek:Water", "ideatek:Wave", "ideatek:LiquidParticles",
-    "ideatek:LiquidFoam",
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t", "ideatek:Water",
+    "ideatek:Wave", "ideatek:LiquidParticles", "ideatek:LiquidFoam",
 ]
 '''
 

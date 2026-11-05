@@ -735,29 +735,6 @@ static void show_break_event(void)
     AT(ideatek_break_event_t, order);
 }
 
-static void show_hidden_joint(void)
-{
-    SIZE(ideatek_hidden_joint_t);
-    AT(ideatek_hidden_joint_t, cap);
-}
-
-static void show_cut(void)
-{
-    SIZE(ideatek_cut_t);
-    AT(ideatek_cut_t, drawn);
-    AT(ideatek_cut_t, point);
-    AT(ideatek_cut_t, normal);
-    AT(ideatek_cut_t, order);
-}
-
-static void show_cut_event(void)
-{
-    SIZE(ideatek_cut_event_t);
-    AT(ideatek_cut_event_t, drawn);
-    AT(ideatek_cut_event_t, piece);
-    AT(ideatek_cut_event_t, order);
-}
-
 static void show_bend(void)
 {
     SIZE(ideatek_bend_t);
@@ -1082,22 +1059,21 @@ static void show_descriptors(void)
         ideatek_vehicle_state_t_desc, ideatek_pose_drive_t_desc,
         ideatek_destructible_t_desc, ideatek_destructible_asset_t_desc,
         ideatek_damage_shape_t_desc, ideatek_damage_t_desc,
-        ideatek_break_event_t_desc, ideatek_hidden_joint_t_desc,
-        ideatek_cut_t_desc, ideatek_cut_event_t_desc, ideatek_bend_t_desc,
-        ideatek_lra_t_desc, ideatek_soft_body_t_desc,
-        ideatek_soft_body_attachment_t_desc, ideatek_soft_body_reset_t_desc,
-        ideatek_rope_flags_t_desc, ideatek_rope_t_desc, ideatek_water_t_desc,
-        ideatek_wave_t_desc, ideatek_water_sample_t_desc,
-        ideatek_buoyancy_t_desc, ideatek_liquid_flags_t_desc,
-        ideatek_liquid_technique_t_desc, ideatek_emitter_shape_t_desc,
-        ideatek_liquid_t_desc, ideatek_liquid_emitter_t_desc,
-        ideatek_liquid_particles_t_desc, ideatek_liquid_foam_t_desc,
-        ideatek_smoke_flags_t_desc, ideatek_smoke_volume_t_desc,
-        ideatek_smoke_emitter_t_desc, ideatek_smoke_grid_t_desc,
-        ideatek_lag_history_t_desc, ideatek_field_shape_t_desc,
-        ideatek_force_kind_t_desc, ideatek_field_target_t_desc,
-        ideatek_gravity_mode_t_desc, ideatek_wind_t_desc,
-        ideatek_force_field_t_desc, ideatek_gravity_area_t_desc };
+        ideatek_break_event_t_desc, ideatek_bend_t_desc, ideatek_lra_t_desc,
+        ideatek_soft_body_t_desc, ideatek_soft_body_attachment_t_desc,
+        ideatek_soft_body_reset_t_desc, ideatek_rope_flags_t_desc,
+        ideatek_rope_t_desc, ideatek_water_t_desc, ideatek_wave_t_desc,
+        ideatek_water_sample_t_desc, ideatek_buoyancy_t_desc,
+        ideatek_liquid_flags_t_desc, ideatek_liquid_technique_t_desc,
+        ideatek_emitter_shape_t_desc, ideatek_liquid_t_desc,
+        ideatek_liquid_emitter_t_desc, ideatek_liquid_particles_t_desc,
+        ideatek_liquid_foam_t_desc, ideatek_smoke_flags_t_desc,
+        ideatek_smoke_volume_t_desc, ideatek_smoke_emitter_t_desc,
+        ideatek_smoke_grid_t_desc, ideatek_lag_history_t_desc,
+        ideatek_field_shape_t_desc, ideatek_force_kind_t_desc,
+        ideatek_field_target_t_desc, ideatek_gravity_mode_t_desc,
+        ideatek_wind_t_desc, ideatek_force_field_t_desc,
+        ideatek_gravity_area_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -1173,9 +1149,7 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_DESTRUCTIBLE_FIELDS),
         TEXT_OF(IDEATEK_DESTRUCTIBLE_ASSET_FIELDS),
         TEXT_OF(IDEATEK_DAMAGE_SHAPE_VALUES), TEXT_OF(IDEATEK_DAMAGE_FIELDS),
-        TEXT_OF(IDEATEK_BREAK_EVENT_FIELDS),
-        TEXT_OF(IDEATEK_HIDDEN_JOINT_FIELDS), TEXT_OF(IDEATEK_CUT_FIELDS),
-        TEXT_OF(IDEATEK_CUT_EVENT_FIELDS), TEXT_OF(IDEATEK_BEND_VALUES),
+        TEXT_OF(IDEATEK_BREAK_EVENT_FIELDS), TEXT_OF(IDEATEK_BEND_VALUES),
         TEXT_OF(IDEATEK_LRA_VALUES), TEXT_OF(IDEATEK_SOFT_BODY_FIELDS),
         TEXT_OF(IDEATEK_SOFT_BODY_ATTACHMENT_FIELDS),
         TEXT_OF(IDEATEK_SOFT_BODY_RESET_FIELDS),
@@ -1272,9 +1246,7 @@ int main(int argc, char **argv)
         { "destructible", show_destructible },
         { "destructible_asset", show_destructible_asset },
         { "damage_shape", show_damage_shape }, { "damage", show_damage },
-        { "break_event", show_break_event },
-        { "hidden_joint", show_hidden_joint }, { "cut", show_cut },
-        { "cut_event", show_cut_event }, { "bend", show_bend },
+        { "break_event", show_break_event }, { "bend", show_bend },
         { "lra", show_lra }, { "soft_body", show_soft_body },
         { "soft_body_attachment", show_soft_body_attachment },
         { "soft_body_reset", show_soft_body_reset },
