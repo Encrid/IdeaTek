@@ -48,8 +48,8 @@ When the game attaches the request again, the input module applies each field th
 
 ## The roles
 
-- The game writes `ideatek:TextRequest`, `ideatek:MouseRequest` and `ideatek:GamepadRequest`.
-- The input module reads these 3 types, and writes each other struct of the part. A deployment has 1 input module.
+- The game writes `ideatek:TextRequest`, `ideatek:MouseRequest`, `ideatek:GamepadRequest` and `ideatek:GamepadSensorRequest`.
+- The input module reads these 4 types, and writes each other struct of the part. A deployment has 1 input module.
 - A reader reads the types that it needs. The game and the UI are readers.
 
 ## The settings of the input module
