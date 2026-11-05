@@ -32,6 +32,8 @@ The module keeps `ideatek:UiScroll` inside the size of the content. It measures 
 `ideatek:UiBox` draws a background, a border and a shadow. The border takes the widths of `ideatek:UiLayout`. A color with an alpha of 0 does not draw.
 `ideatek:UiImage` draws over the background and inside the border. A second shadow needs a child node. `ideatek:UiGradient` draws over the background and under the image.
 
+`ideatek:UiMask` clips the children by the alpha of its texture, or by the box of the node with its corner radii, for a round map. The overflow CLIP stays a rectangle.
+
 ## The text
 
 `ideatek:UiText` holds the string, and `ideatek:UiTextLook` holds its look. A span on a child entity changes a part of the string. The spans follow `order`.
@@ -90,7 +92,9 @@ A cell starts at 1, as a line of CSS grid. A child with `ideatek:UiGridItem` tak
 
 `ideatek:UiTransform` moves, scales and turns the draw and the hits of a node and its children, about its pivot. It does not change the layout.
 The pivot is a part of the size of the node, from 0 to 1. A pivot of 0.5 is the default of `transform-origin` of CSS and of RmlUi, as for a marker.
-`ideatek:UiOpacity` multiplies the alpha of a node and of its children.
+`rotation_x` and `rotation_y` turn the node in 3D about its pivot. A `perspective` above 0 is the distance of the eye, in UI units.
+
+The hits go through the inverse of the transform. `ideatek:UiOpacity` multiplies the alpha of a node and of its children.
 
 ## The accessibility
 
@@ -104,6 +108,23 @@ With `ideatek:UiShader`, the render module draws the box of the node with its ow
 A render module that does not know the name draws the box without the shader, and logs it once.
 `ideatek:UiBlur` with `backdrop` at `true` blurs what is behind the box, as frosted glass. With `false`, it blurs the node and its children.
 The references do not agree on a radius of the blur, so the game sets it.
+
+## The animations
+
+A node can hold a player of the animation part. The UI module reads `ideatek:AnimationCurves` on the node, and applies each curve of the table to the draw.
+The id of a curve is the FNV-1a hash of 64 bits of its name, as the animation part says. The value that the game wrote stays in its type.
+A play with `real_time` runs in a pause, so a menu of the pause can move. A loader of CSS turns `@keyframes` into a clip of these curves.
+
+| Name | The value |
+| --- | --- |
+| `ui.x`, `ui.y` | `x` and `y` of `ideatek:UiTransform` |
+| `ui.scale_x`, `ui.scale_y` | `scale_x` and `scale_y` of `ideatek:UiTransform` |
+| `ui.rotation`, `ui.rotation_x`, `ui.rotation_y` | The turns of `ideatek:UiTransform` |
+| `ui.opacity` | `value` of `ideatek:UiOpacity` |
+| `ui.background.r`, `ui.background.g`, `ui.background.b`, `ui.background.a` | `background` of `ideatek:UiBox` |
+| `ui.border.r`, `ui.border.g`, `ui.border.b`, `ui.border.a` | `border` of `ideatek:UiBox` |
+| `ui.tint.r`, `ui.tint.g`, `ui.tint.b`, `ui.tint.a` | `tint` of `ideatek:UiImage` |
+| `ui.text.r`, `ui.text.g`, `ui.text.b`, `ui.text.a` | `color` of `ideatek:UiTextLook` |
 
 ## The markers
 
@@ -1062,7 +1083,7 @@ Bytes 10 to 11 hold no field.
 ## ideatek:UiTransform
 
 `ideatek:UiTransform` moves the draw of a node without the layout: *The transforms and the opacity*.
-`ideatek_ui_transform_t` takes 28 bytes. Its alignment is 4.
+`ideatek_ui_transform_t` takes 40 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -1071,8 +1092,11 @@ Bytes 10 to 11 hold no field.
 | `scale_x` | `float` | 8 | 1 | The scale on X. |
 | `scale_y` | `float` | 12 | 1 | The scale on Y. |
 | `rotation` | `float` | 16 | 0 | The turn, in radians, clockwise. |
-| `pivot_x` | `float` | 20 | 0.5 | The center of the scale and the turn on X, from 0 to 1. |
-| `pivot_y` | `float` | 24 | 0.5 | The center on Y, from 0 to 1. |
+| `rotation_x` | `float` | 20 | 0 | The turn about X, in radians. |
+| `rotation_y` | `float` | 24 | 0 | The turn about Y, in radians. |
+| `perspective` | `float` | 28 | 0 | The distance of the eye, in UI units. 0 means none. |
+| `pivot_x` | `float` | 32 | 0.5 | The center of the scale and the turn on X, from 0 to 1. |
+| `pivot_y` | `float` | 36 | 0.5 | The center on Y, from 0 to 1. |
 
 ## ideatek:UiOpacity
 
@@ -1143,6 +1167,15 @@ The angle of pi points down, the default of `linear-gradient` of CSS.
 | `backdrop` | `bool` | 4 | `false` | `true` if it blurs what is behind the box. |
 
 Bytes 5 to 7 hold no field.
+
+## ideatek:UiMask
+
+`ideatek:UiMask` clips the children of a node by a shape: *The looks*.
+`ideatek_ui_mask_t` takes 8 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `texture` | `ideatek_entity_t` | 0 | 0 | The texture whose alpha clips the children. 0 means the box of the node. |
 
 ## ideatek:ideatek_ease_t
 
@@ -1274,6 +1307,7 @@ Bytes 46 to 47 hold no field.
 | `ideatek:UiAccessible` | `ideatek_ui_accessible_t` | `ideatek_ui_accessible_t_desc` | `IDEATEK_UI_ACCESSIBLE_FIELDS` |
 | `ideatek:UiShader` | `ideatek_ui_shader_t` | `ideatek_ui_shader_t_desc` | `IDEATEK_UI_SHADER_FIELDS` |
 | `ideatek:UiBlur` | `ideatek_ui_blur_t` | `ideatek_ui_blur_t_desc` | `IDEATEK_UI_BLUR_FIELDS` |
+| `ideatek:UiMask` | `ideatek_ui_mask_t` | `ideatek_ui_mask_t_desc` | `IDEATEK_UI_MASK_FIELDS` |
 | `ideatek:ideatek_ease_t` | `ideatek_ease_t` | `ideatek_ease_t_desc` | `IDEATEK_EASE_VALUES` |
 | `ideatek:ideatek_ease_direction_t` | `ideatek_ease_direction_t` | `ideatek_ease_direction_t_desc` | `IDEATEK_EASE_DIRECTION_VALUES` |
 | `ideatek:UiStyle` | `ideatek_ui_style_t` | `ideatek_ui_style_t_desc` | `IDEATEK_UI_STYLE_FIELDS` |
@@ -1350,13 +1384,14 @@ Bytes 46 to 47 hold no field.
 { float distance; float angle; bool visible; bool clamped; }
 { uint32_t columns; uint32_t rows; }
 { uint32_t column; uint32_t row; uint32_t column_span; uint32_t row_span; }
-{ float x; float y; float scale_x; float scale_y; float rotation; float pivot_x; float pivot_y; }
+{ float x; float y; float scale_x; float scale_y; float rotation; float rotation_x; float rotation_y; float perspective; float pivot_x; float pivot_y; }
 { float value; }
 { IDEATEK_GRADIENT_KIND_LINEAR = 0, IDEATEK_GRADIENT_KIND_RADIAL = 1, IDEATEK_GRADIENT_KIND_CONIC = 2 }
 { bridge_text_t stops; uint32_t count; float angle; ideatek_gradient_kind_t kind; }
 { bridge_text_t label; bridge_text_t description; }
 { bridge_text_t name; bridge_text_t params; }
 { float radius; bool backdrop; }
+{ ideatek_entity_t texture; }
 { IDEATEK_EASE_LINEAR = 0, IDEATEK_EASE_QUADRATIC = 1, IDEATEK_EASE_CUBIC = 2, IDEATEK_EASE_QUARTIC = 3, IDEATEK_EASE_QUINTIC = 4, IDEATEK_EASE_SINE = 5, IDEATEK_EASE_EXPONENTIAL = 6, IDEATEK_EASE_CIRCULAR = 7, IDEATEK_EASE_BACK = 8, IDEATEK_EASE_ELASTIC = 9, IDEATEK_EASE_BOUNCE = 10 }
 { IDEATEK_EASE_DIRECTION_IN = 0, IDEATEK_EASE_DIRECTION_OUT = 1, IDEATEK_EASE_DIRECTION_IN_OUT = 2 }
 { ideatek_entity_t normal; ideatek_entity_t hovered; ideatek_entity_t pressed; ideatek_entity_t disabled; ideatek_entity_t focus; float transition; ideatek_ease_t ease; ideatek_ease_direction_t ease_direction; }
@@ -1449,6 +1484,7 @@ Bytes 46 to 47 hold no field.
 | `ideatek:UiAccessible` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UiShader` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UiBlur` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:UiMask` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UiStyle` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
@@ -1456,4 +1492,4 @@ Bytes 46 to 47 hold no field.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | The game | The roots, the nodes, the looks, the texts, the fonts, the focus, the widgets, the screens, the markers, the styles and the labels | The types of the fields |
-| The UI module | The rectangles, the scrolls, the pointers, the hits, the states, the events and the carets | The types of the game, `ideatek:WorldTransform`, and the types of the fields |
+| The UI module | The rectangles, the scrolls, the pointers, the hits, the states, the events and the carets | The types of the game, `ideatek:WorldTransform`, `ideatek:AnimationCurves`, and the types of the fields |
