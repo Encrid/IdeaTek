@@ -13,6 +13,7 @@
 ## The roles
 
 - The clock module writes `ideatek:Frame`, `ideatek:Tick` and `ideatek:TimeRequest`. A deployment has one clock module.
+- With `sleeper` at `"events"`, the clock module also writes `ideatek:EventWait` of the window: *The limit of the rate*.
 - A game module writes `ideatek:TimeRequest`.
 - A reader reads `ideatek:Frame` or `ideatek:Tick`. Each other module is a reader.
 
@@ -60,7 +61,11 @@ Bridge starts each round when the last round ends. Only a module can wait betwee
 Exactly 1 module waits, and `sleeper` tells which module:
 
 - `"clock"`: the clock module waits at the start of its system, before it reads the real time. It waits until `1 / max_rate` passed since its last start. It does not wait at the first round. This works with no window.
-- `"events"`: the clock module does not wait. It writes `wait`, and the window module waits for the events of the system for at most `wait`. An event ends the wait at once.
+- `"events"`: the clock module does not wait. It writes `wait` of `ideatek:EventWait` on the entity of the window, and the window module waits for an event for at most `wait`. An event ends the wait at once.
+
+With `"events"`, `wait` is `1 / max_rate`, or 0 when `max_rate` is 0. With `"clock"`, the clock module writes no `ideatek:EventWait`.
+`docs/extern/platform_abstraction/ideatek_window.h.md`, *ideatek:EventWait*, gives the type and the round in which the clock module writes it.
+Without a window, no entity carries `ideatek:EventWait`, so `"events"` puts no limit on the rounds.
 
 `max_rate` is the limit of the frame rate that a settings menu sets. With vsync, the longer wait of `max_rate` and of the display is the wait of the round.
 In a web page, the browser starts each round, and no module waits. There, `max_rate` has no effect.
@@ -69,7 +74,7 @@ A wait takes at most 1 second. A timeout of the system that waits must be longer
 ## ideatek:Frame
 
 `ideatek:Frame` is the time of the round.
-Its C type `ideatek_frame_t` takes 64 bytes, with an alignment of 8.
+Its C type `ideatek_frame_t` takes 56 bytes, with an alignment of 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
@@ -78,9 +83,8 @@ Its C type `ideatek_frame_t` takes 64 bytes, with an alignment of 8.
 | `real_delta` | `double` | 16 | The real time since the last round. |
 | `real_elapsed` | `double` | 24 | The real time since the first round. |
 | `scale` | `double` | 32 | The time scale of the round. |
-| `wait` | `double` | 40 | The longest time that the window module waits for the events of the system. It is 0 when `sleeper` is `"clock"` or when `max_rate` is 0. |
-| `index` | `uint64_t` | 48 | The number of the round. The first round is 1. |
-| `paused` | `uint8_t` | 56 | 1 when the round is in a pause, else 0. |
+| `index` | `uint64_t` | 40 | The number of the round. The first round is 1. |
+| `paused` | `uint8_t` | 48 | 1 when the round is in a pause, else 0. |
 
 During a pause, `delta` and `steps` are 0, and `elapsed`, `tick` and `fraction` do not change.
 `real_delta`, `real_elapsed` and `index` advance in each round.
@@ -136,10 +140,6 @@ PROCEDURE start_round(real : F64)
    real_delta <- real
    real_elapsed <- real_elapsed + real
    index <- index + 1
-   wait <- 0
-   IF sleeper = "events" AND max_rate > 0 THEN
-      wait <- 1 / max_rate
-   ENDIF
    step <- 1 / rate
    IF paused THEN
       delta <- 0
@@ -201,7 +201,7 @@ ENDFUNCTION
 | `ideatek:TimeRequest` | `ideatek_time_request_t` | `ideatek_time_request_t_desc` | `IDEATEK_TIME_REQUEST_FIELDS` |
 
 ```text
-{ double delta; double elapsed; double real_delta; double real_elapsed; double scale; double wait; uint64_t index; uint8_t paused; }
+{ double delta; double elapsed; double real_delta; double real_elapsed; double scale; uint64_t index; uint8_t paused; }
 { double step; double elapsed; uint64_t tick; uint32_t steps; float fraction; }
 { double scale; uint32_t rate; uint32_t max_rate; uint8_t paused; }
 ```
@@ -223,3 +223,5 @@ The clock module attaches each singleton with the id 0 in its `init`.
 | The clock module | `ideatek:Frame`, `ideatek:Tick` and `ideatek:TimeRequest` | No type. |
 | A game module | `ideatek:TimeRequest` | No type. |
 | A reader | No type. | `ideatek:Frame` or `ideatek:Tick`, or both |
+
+With `sleeper` at `"events"`, the clock module also needs the grants of its role in `docs/extern/platform_abstraction/ideatek_window.h.md`, *The grants*.
