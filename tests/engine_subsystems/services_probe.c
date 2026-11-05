@@ -38,6 +38,13 @@ static const char WHO[] = MANIFEST;
         ideatek_voice_channel_flags_t);
     MASK(api, "ideatek:ideatek_store_flags_t", ideatek_store_flags_t);
     MASK(api, "ideatek:ideatek_ugc_state_t", ideatek_ugc_state_t);
+    ENUM(api, "ideatek:ideatek_server_list_t", ideatek_server_list_t);
+    MASK(api, "ideatek:ideatek_parental_t", ideatek_parental_t);
+    ENUM(api, "ideatek:ideatek_text_context_t", ideatek_text_context_t);
+    ENUM(api, "ideatek:ideatek_overlay_page_t", ideatek_overlay_page_t);
+    ENUM(api, "ideatek:ideatek_timeline_mode_t", ideatek_timeline_mode_t);
+    ENUM(api, "ideatek:ideatek_timeline_clip_t", ideatek_timeline_clip_t);
+    ENUM(api, "ideatek:ideatek_avatar_size_t", ideatek_avatar_size_t);
 }
 
 [[maybe_unused]] static void declare_late(const bridge_api_t *api)
@@ -50,7 +57,6 @@ static const char WHO[] = MANIFEST;
 {
     declare_fields(api);
     STRUCT(api, "ideatek:PlatformUser", ideatek_platform_user_t);
-    STRUCT(api, "ideatek:DeviceUser", ideatek_device_user_t);
     STRUCT(api, "ideatek:SignInRequest", ideatek_sign_in_request_t);
     STRUCT(api, "ideatek:TicketRequest", ideatek_ticket_request_t);
     STRUCT(api, "ideatek:Ticket", ideatek_ticket_t);
@@ -89,6 +95,20 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:UgcSubscribe", ideatek_ugc_subscribe_t);
     STRUCT(api, "ideatek:UgcPublish", ideatek_ugc_publish_t);
     STRUCT(api, "ideatek:UgcResult", ideatek_ugc_result_t);
+    STRUCT(api, "ideatek:GameServer", ideatek_game_server_t);
+    STRUCT(api, "ideatek:ServerSearch", ideatek_server_search_t);
+    STRUCT(api, "ideatek:ServerFound", ideatek_server_found_t);
+    STRUCT(api, "ideatek:ParentalLimits", ideatek_parental_limits_t);
+    STRUCT(api, "ideatek:TextFilter", ideatek_text_filter_t);
+    STRUCT(api, "ideatek:TextFiltered", ideatek_text_filtered_t);
+    STRUCT(api, "ideatek:OverlayRequest", ideatek_overlay_request_t);
+    STRUCT(api, "ideatek:PlatformInfo", ideatek_platform_info_t);
+    STRUCT(api, "ideatek:TimelineMode", ideatek_timeline_mode_record_t);
+    STRUCT(api, "ideatek:TimelineEvent", ideatek_timeline_event_t);
+    STRUCT(api, "ideatek:ScreenshotRequest", ideatek_screenshot_request_t);
+    STRUCT(api, "ideatek:ScreenshotTaken", ideatek_screenshot_taken_t);
+    STRUCT(api, "ideatek:AvatarRequest", ideatek_avatar_request_t);
+    STRUCT(api, "ideatek:Avatar", ideatek_avatar_t);
 }
 
 [[maybe_unused]] static void role_game(const bridge_api_t *api)
@@ -107,6 +127,12 @@ static const char WHO[] = MANIFEST;
     MASK(api, "ideatek:ideatek_voice_channel_flags_t",
         ideatek_voice_channel_flags_t);
     MASK(api, "ideatek:ideatek_store_flags_t", ideatek_store_flags_t);
+    ENUM(api, "ideatek:ideatek_server_list_t", ideatek_server_list_t);
+    ENUM(api, "ideatek:ideatek_text_context_t", ideatek_text_context_t);
+    ENUM(api, "ideatek:ideatek_overlay_page_t", ideatek_overlay_page_t);
+    ENUM(api, "ideatek:ideatek_timeline_mode_t", ideatek_timeline_mode_t);
+    ENUM(api, "ideatek:ideatek_timeline_clip_t", ideatek_timeline_clip_t);
+    ENUM(api, "ideatek:ideatek_avatar_size_t", ideatek_avatar_size_t);
     api->attach(api, id, STRUCT(api, "ideatek:SignInRequest",
         ideatek_sign_in_request_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:TicketRequest",
@@ -147,6 +173,22 @@ static const char WHO[] = MANIFEST;
         ideatek_ugc_subscribe_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:UgcPublish",
         ideatek_ugc_publish_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:GameServer",
+        ideatek_game_server_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ServerSearch",
+        ideatek_server_search_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:TextFilter",
+        ideatek_text_filter_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:OverlayRequest",
+        ideatek_overlay_request_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:TimelineMode",
+        ideatek_timeline_mode_record_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:TimelineEvent",
+        ideatek_timeline_event_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ScreenshotRequest",
+        ideatek_screenshot_request_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:AvatarRequest",
+        ideatek_avatar_request_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_module(const bridge_api_t *api)
@@ -171,6 +213,13 @@ static const char WHO[] = MANIFEST;
         ideatek_voice_channel_flags_t);
     MASK(api, "ideatek:ideatek_store_flags_t", ideatek_store_flags_t);
     MASK(api, "ideatek:ideatek_ugc_state_t", ideatek_ugc_state_t);
+    ENUM(api, "ideatek:ideatek_server_list_t", ideatek_server_list_t);
+    MASK(api, "ideatek:ideatek_parental_t", ideatek_parental_t);
+    ENUM(api, "ideatek:ideatek_text_context_t", ideatek_text_context_t);
+    ENUM(api, "ideatek:ideatek_overlay_page_t", ideatek_overlay_page_t);
+    ENUM(api, "ideatek:ideatek_timeline_mode_t", ideatek_timeline_mode_t);
+    ENUM(api, "ideatek:ideatek_timeline_clip_t", ideatek_timeline_clip_t);
+    ENUM(api, "ideatek:ideatek_avatar_size_t", ideatek_avatar_size_t);
     STRUCT(api, "ideatek:SignInRequest", ideatek_sign_in_request_t);
     STRUCT(api, "ideatek:TicketRequest", ideatek_ticket_request_t);
     STRUCT(api, "ideatek:TicketCheck", ideatek_ticket_check_t);
@@ -191,10 +240,16 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:StoreRequest", ideatek_store_request_t);
     STRUCT(api, "ideatek:UgcSubscribe", ideatek_ugc_subscribe_t);
     STRUCT(api, "ideatek:UgcPublish", ideatek_ugc_publish_t);
+    STRUCT(api, "ideatek:GameServer", ideatek_game_server_t);
+    STRUCT(api, "ideatek:ServerSearch", ideatek_server_search_t);
+    STRUCT(api, "ideatek:TextFilter", ideatek_text_filter_t);
+    STRUCT(api, "ideatek:OverlayRequest", ideatek_overlay_request_t);
+    STRUCT(api, "ideatek:TimelineMode", ideatek_timeline_mode_record_t);
+    STRUCT(api, "ideatek:TimelineEvent", ideatek_timeline_event_t);
+    STRUCT(api, "ideatek:ScreenshotRequest", ideatek_screenshot_request_t);
+    STRUCT(api, "ideatek:AvatarRequest", ideatek_avatar_request_t);
     api->attach(api, id, STRUCT(api, "ideatek:PlatformUser",
         ideatek_platform_user_t), BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:DeviceUser",
-        ideatek_device_user_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:Ticket", ideatek_ticket_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:TicketResult",
@@ -230,6 +285,18 @@ static const char WHO[] = MANIFEST;
     api->attach(api, id, STRUCT(api, "ideatek:UgcItem", ideatek_ugc_item_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:UgcResult", ideatek_ugc_result_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ServerFound",
+        ideatek_server_found_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ParentalLimits",
+        ideatek_parental_limits_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:TextFiltered",
+        ideatek_text_filtered_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:PlatformInfo",
+        ideatek_platform_info_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ScreenshotTaken",
+        ideatek_screenshot_taken_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:Avatar", ideatek_avatar_t),
         BRIDGE_ZEROED);
 }
 

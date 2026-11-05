@@ -1,7 +1,7 @@
 [parts.services]
 name = "BC-IdeaTek-Services"
 folder = "engine_subsystems/services"
-uses = ["world", "input", "audio", "files", "sockets"]
+uses = ["world", "audio", "files", "sockets"]
 third_party = []
 
 [parts.services.package]

@@ -20,12 +20,6 @@ false = { run = ["{out}/services_layout{exe}", "platform_user"] }
 name = "ideatek_platform_user_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/services_layout{exe}", "platform_user"]
 claims = { status = 0, order = ["size 24", "alignment 8", "account 0", "name 8", "platform 16", "status 17"] }
-false = { run = ["{out}/services_layout{exe}", "device_user"] }
-
-[[case]]
-name = "ideatek_device_user_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/services_layout{exe}", "device_user"]
-claims = { status = 0, order = ["size 8", "alignment 8", "user 0"] }
 false = { run = ["{out}/services_layout{exe}", "sign_in_flags"] }
 
 [[case]]
@@ -332,6 +326,132 @@ false = { run = ["{out}/services_layout{exe}", "ugc_result"] }
 name = "ideatek_ugc_result_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/services_layout{exe}", "ugc_result"]
 claims = { status = 0, order = ["size 12", "alignment 4", "id 0", "state 8"] }
+false = { run = ["{out}/services_layout{exe}", "game_server"] }
+
+[[case]]
+name = "ideatek_game_server_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "game_server"]
+claims = { status = 0, order = ["size 48", "alignment 4", "name 0", "map 8", "tags 16", "address 24", "players 32", "max_players 36", "bots 40", "password 44", "dedicated 45"] }
+false = { run = ["{out}/services_layout{exe}", "server_list"] }
+
+[[case]]
+name = "ideatek_server_list_t is 1 byte"
+run = ["{out}/services_layout{exe}", "server_list"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/services_layout{exe}", "server_search"] }
+
+[[case]]
+name = "ideatek_server_search_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "server_search"]
+claims = { status = 0, order = ["size 12", "alignment 4", "filter 0", "kind 8"] }
+false = { run = ["{out}/services_layout{exe}", "server_found"] }
+
+[[case]]
+name = "ideatek_server_found_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "server_found"]
+claims = { status = 0, order = ["size 64", "alignment 8", "search 0", "name 8", "map 16", "tags 24", "address 32", "players 40", "max_players 44", "bots 48", "ping 52", "password 56"] }
+false = { run = ["{out}/services_layout{exe}", "parental"] }
+
+[[case]]
+name = "ideatek_parental_t is 1 byte"
+run = ["{out}/services_layout{exe}", "parental"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/services_layout{exe}", "text_filter"] }
+
+[[case]]
+name = "ideatek_parental_limits_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "parental_limits"]
+claims = { status = 0, order = ["size 1", "alignment 1", "blocked 0"] }
+false = { run = ["{out}/services_layout{exe}", "text_context"] }
+
+[[case]]
+name = "ideatek_text_context_t is 1 byte"
+run = ["{out}/services_layout{exe}", "text_context"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/services_layout{exe}", "text_filter"] }
+
+[[case]]
+name = "ideatek_text_filter_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "text_filter"]
+claims = { status = 0, order = ["size 24", "alignment 8", "user 0", "text 8", "context 16"] }
+false = { run = ["{out}/services_layout{exe}", "text_filtered"] }
+
+[[case]]
+name = "ideatek_text_filtered_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "text_filtered"]
+claims = { status = 0, order = ["size 12", "alignment 4", "text 0", "state 8"] }
+false = { run = ["{out}/services_layout{exe}", "overlay_page"] }
+
+[[case]]
+name = "ideatek_overlay_page_t is 1 byte"
+run = ["{out}/services_layout{exe}", "overlay_page"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/services_layout{exe}", "overlay_request"] }
+
+[[case]]
+name = "ideatek_overlay_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "overlay_request"]
+claims = { status = 0, order = ["size 24", "alignment 8", "account 0", "lobby 8", "page 16"] }
+false = { run = ["{out}/services_layout{exe}", "platform_info"] }
+
+[[case]]
+name = "ideatek_platform_info_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "platform_info"]
+claims = { status = 0, order = ["size 20", "alignment 4", "language 0", "branch 8", "steam_deck 16", "big_picture 17"] }
+false = { run = ["{out}/services_layout{exe}", "timeline_mode"] }
+
+[[case]]
+name = "ideatek_timeline_mode_t is 1 byte"
+run = ["{out}/services_layout{exe}", "timeline_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/services_layout{exe}", "timeline_event"] }
+
+[[case]]
+name = "ideatek_timeline_mode_record_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "timeline_mode_record"]
+claims = { status = 0, order = ["size 1", "alignment 1", "mode 0"] }
+false = { run = ["{out}/services_layout{exe}", "timeline_clip"] }
+
+[[case]]
+name = "ideatek_timeline_clip_t is 1 byte"
+run = ["{out}/services_layout{exe}", "timeline_clip"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/services_layout{exe}", "timeline_event"] }
+
+[[case]]
+name = "ideatek_timeline_event_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "timeline_event"]
+claims = { status = 0, order = ["size 40", "alignment 4", "title 0", "description 8", "icon 16", "start_offset 24", "duration 28", "priority 32", "clip 36"] }
+false = { run = ["{out}/services_layout{exe}", "screenshot_request"] }
+
+[[case]]
+name = "ideatek_screenshot_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "screenshot_request"]
+claims = { status = 0, order = ["size 8", "alignment 4", "location 0"] }
+false = { run = ["{out}/services_layout{exe}", "screenshot_taken"] }
+
+[[case]]
+name = "ideatek_screenshot_taken_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "screenshot_taken"]
+claims = { status = 0, order = ["size 4", "alignment 4", "order 0"] }
+false = { run = ["{out}/services_layout{exe}", "avatar_size"] }
+
+[[case]]
+name = "ideatek_avatar_size_t is 1 byte"
+run = ["{out}/services_layout{exe}", "avatar_size"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/services_layout{exe}", "avatar_request"] }
+
+[[case]]
+name = "ideatek_avatar_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "avatar_request"]
+claims = { status = 0, order = ["size 16", "alignment 8", "account 0", "size 8"] }
+false = { run = ["{out}/services_layout{exe}", "avatar"] }
+
+[[case]]
+name = "ideatek_avatar_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/services_layout{exe}", "avatar"]
+claims = { status = 0, order = ["size 20", "alignment 4", "pixels 0", "width 8", "height 12", "state 16"] }
 false = { run = ["{out}/services_layout{exe}", "service_state"] }
 
 [[case]]
@@ -339,10 +459,9 @@ name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/services_layout{exe}", "descriptors"]
 claims = { status = 0, line = [
     "uint8_t { IDEATEK_SERVICE_STATE_PENDING = 0, IDEATEK_SERVICE_STATE_DONE = 1, IDEATEK_SERVICE_STATE_FAILED = 2 }",
-    "uint8_t { IDEATEK_PLATFORM_NONE = 0, IDEATEK_PLATFORM_STEAM = 1, IDEATEK_PLATFORM_EOS = 2, IDEATEK_PLATFORM_OTHER = 255 }",
+    "uint8_t { IDEATEK_PLATFORM_NONE = 0, IDEATEK_PLATFORM_STEAM = 1 }",
     "uint8_t { IDEATEK_SIGN_STATUS_SIGNED_OUT = 0, IDEATEK_SIGN_STATUS_SIGNED_IN = 1, IDEATEK_SIGN_STATUS_REDUCED = 2 }",
     "{ uint64_t account; bridge_text_t name; ideatek_platform_t platform; ideatek_sign_status_t status; }",
-    "{ ideatek_entity_t user; }",
     "uint8_t { IDEATEK_SIGN_IN_FLAGS_SHOW_UI = 0x01 }",
     "{ ideatek_sign_in_flags_t flags; }",
     "uint8_t { IDEATEK_TICKET_PURPOSE_SERVER = 0, IDEATEK_TICKET_PURPOSE_WEB = 1 }",
@@ -394,6 +513,27 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t user; bridge_text_t id; bool subscribe; }",
     "{ ideatek_entity_t user; bridge_text_t id; bridge_text_t title; bridge_text_t folder; bridge_text_t note; }",
     "{ bridge_text_t id; ideatek_service_state_t state; }",
+    "{ bridge_text_t name; bridge_text_t map; bridge_text_t tags; bridge_text_t address; uint32_t players; uint32_t max_players; uint32_t bots; bool password; bool dedicated; }",
+    "uint8_t { IDEATEK_SERVER_LIST_INTERNET = 0, IDEATEK_SERVER_LIST_LAN = 1, IDEATEK_SERVER_LIST_FAVORITES = 2, IDEATEK_SERVER_LIST_HISTORY = 3, IDEATEK_SERVER_LIST_FRIENDS = 4 }",
+    "{ bridge_text_t filter; ideatek_server_list_t kind; }",
+    "{ ideatek_entity_t search; bridge_text_t name; bridge_text_t map; bridge_text_t tags; bridge_text_t address; uint32_t players; uint32_t max_players; uint32_t bots; uint32_t ping; bool password; }",
+    "uint8_t { IDEATEK_PARENTAL_CHAT = 0x01, IDEATEK_PARENTAL_UGC = 0x02, IDEATEK_PARENTAL_ONLINE = 0x04, IDEATEK_PARENTAL_STORE = 0x08, IDEATEK_PARENTAL_PROFILES = 0x10 }",
+    "{ ideatek_parental_t blocked; }",
+    "uint8_t { IDEATEK_TEXT_CONTEXT_CONTENT = 0, IDEATEK_TEXT_CONTEXT_CHAT = 1, IDEATEK_TEXT_CONTEXT_NAME = 2 }",
+    "{ ideatek_entity_t user; bridge_text_t text; ideatek_text_context_t context; }",
+    "{ bridge_text_t text; ideatek_service_state_t state; }",
+    "uint8_t { IDEATEK_OVERLAY_PAGE_FRIENDS = 0, IDEATEK_OVERLAY_PAGE_PROFILE = 1, IDEATEK_OVERLAY_PAGE_INVITE = 2, IDEATEK_OVERLAY_PAGE_ACHIEVEMENTS = 3, IDEATEK_OVERLAY_PAGE_SETTINGS = 4 }",
+    "{ uint64_t account; ideatek_entity_t lobby; ideatek_overlay_page_t page; }",
+    "{ bridge_text_t language; bridge_text_t branch; bool steam_deck; bool big_picture; }",
+    "uint8_t { IDEATEK_TIMELINE_MODE_PLAYING = 0, IDEATEK_TIMELINE_MODE_STAGING = 1, IDEATEK_TIMELINE_MODE_MENUS = 2, IDEATEK_TIMELINE_MODE_LOADING = 3 }",
+    "{ ideatek_timeline_mode_t mode; }",
+    "uint8_t { IDEATEK_TIMELINE_CLIP_NONE = 0, IDEATEK_TIMELINE_CLIP_STANDARD = 1, IDEATEK_TIMELINE_CLIP_FEATURED = 2 }",
+    "{ bridge_text_t title; bridge_text_t description; bridge_text_t icon; float start_offset; float duration; uint32_t priority; ideatek_timeline_clip_t clip; }",
+    "{ bridge_text_t location; }",
+    "{ uint32_t order; }",
+    "uint8_t { IDEATEK_AVATAR_SIZE_SMALL = 0, IDEATEK_AVATAR_SIZE_MEDIUM = 1, IDEATEK_AVATAR_SIZE_LARGE = 2 }",
+    "{ uint64_t account; ideatek_avatar_size_t size; }",
+    "{ bridge_text_t pixels; uint32_t width; uint32_t height; ideatek_service_state_t state; }",
 ] }
 false = { run = ["{out}/services_layout{exe}", "texts"] }
 
@@ -402,10 +542,9 @@ name = "each macro of a text gives the braces of its type and the text between t
 run = ["{out}/services_layout{exe}", "texts"]
 claims = { status = 0, line = [
     "{ IDEATEK_SERVICE_STATE_PENDING = 0, IDEATEK_SERVICE_STATE_DONE = 1, IDEATEK_SERVICE_STATE_FAILED = 2 }",
-    "{ IDEATEK_PLATFORM_NONE = 0, IDEATEK_PLATFORM_STEAM = 1, IDEATEK_PLATFORM_EOS = 2, IDEATEK_PLATFORM_OTHER = 255 }",
+    "{ IDEATEK_PLATFORM_NONE = 0, IDEATEK_PLATFORM_STEAM = 1 }",
     "{ IDEATEK_SIGN_STATUS_SIGNED_OUT = 0, IDEATEK_SIGN_STATUS_SIGNED_IN = 1, IDEATEK_SIGN_STATUS_REDUCED = 2 }",
     "{ uint64_t account; bridge_text_t name; ideatek_platform_t platform; ideatek_sign_status_t status; }",
-    "{ ideatek_entity_t user; }",
     "{ IDEATEK_SIGN_IN_FLAGS_SHOW_UI = 0x01 }",
     "{ ideatek_sign_in_flags_t flags; }",
     "{ IDEATEK_TICKET_PURPOSE_SERVER = 0, IDEATEK_TICKET_PURPOSE_WEB = 1 }",
@@ -457,6 +596,27 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t user; bridge_text_t id; bool subscribe; }",
     "{ ideatek_entity_t user; bridge_text_t id; bridge_text_t title; bridge_text_t folder; bridge_text_t note; }",
     "{ bridge_text_t id; ideatek_service_state_t state; }",
+    "{ bridge_text_t name; bridge_text_t map; bridge_text_t tags; bridge_text_t address; uint32_t players; uint32_t max_players; uint32_t bots; bool password; bool dedicated; }",
+    "{ IDEATEK_SERVER_LIST_INTERNET = 0, IDEATEK_SERVER_LIST_LAN = 1, IDEATEK_SERVER_LIST_FAVORITES = 2, IDEATEK_SERVER_LIST_HISTORY = 3, IDEATEK_SERVER_LIST_FRIENDS = 4 }",
+    "{ bridge_text_t filter; ideatek_server_list_t kind; }",
+    "{ ideatek_entity_t search; bridge_text_t name; bridge_text_t map; bridge_text_t tags; bridge_text_t address; uint32_t players; uint32_t max_players; uint32_t bots; uint32_t ping; bool password; }",
+    "{ IDEATEK_PARENTAL_CHAT = 0x01, IDEATEK_PARENTAL_UGC = 0x02, IDEATEK_PARENTAL_ONLINE = 0x04, IDEATEK_PARENTAL_STORE = 0x08, IDEATEK_PARENTAL_PROFILES = 0x10 }",
+    "{ ideatek_parental_t blocked; }",
+    "{ IDEATEK_TEXT_CONTEXT_CONTENT = 0, IDEATEK_TEXT_CONTEXT_CHAT = 1, IDEATEK_TEXT_CONTEXT_NAME = 2 }",
+    "{ ideatek_entity_t user; bridge_text_t text; ideatek_text_context_t context; }",
+    "{ bridge_text_t text; ideatek_service_state_t state; }",
+    "{ IDEATEK_OVERLAY_PAGE_FRIENDS = 0, IDEATEK_OVERLAY_PAGE_PROFILE = 1, IDEATEK_OVERLAY_PAGE_INVITE = 2, IDEATEK_OVERLAY_PAGE_ACHIEVEMENTS = 3, IDEATEK_OVERLAY_PAGE_SETTINGS = 4 }",
+    "{ uint64_t account; ideatek_entity_t lobby; ideatek_overlay_page_t page; }",
+    "{ bridge_text_t language; bridge_text_t branch; bool steam_deck; bool big_picture; }",
+    "{ IDEATEK_TIMELINE_MODE_PLAYING = 0, IDEATEK_TIMELINE_MODE_STAGING = 1, IDEATEK_TIMELINE_MODE_MENUS = 2, IDEATEK_TIMELINE_MODE_LOADING = 3 }",
+    "{ ideatek_timeline_mode_t mode; }",
+    "{ IDEATEK_TIMELINE_CLIP_NONE = 0, IDEATEK_TIMELINE_CLIP_STANDARD = 1, IDEATEK_TIMELINE_CLIP_FEATURED = 2 }",
+    "{ bridge_text_t title; bridge_text_t description; bridge_text_t icon; float start_offset; float duration; uint32_t priority; ideatek_timeline_clip_t clip; }",
+    "{ bridge_text_t location; }",
+    "{ uint32_t order; }",
+    "{ IDEATEK_AVATAR_SIZE_SMALL = 0, IDEATEK_AVATAR_SIZE_MEDIUM = 1, IDEATEK_AVATAR_SIZE_LARGE = 2 }",
+    "{ uint64_t account; ideatek_avatar_size_t size; }",
+    "{ bridge_text_t pixels; uint32_t width; uint32_t height; ideatek_service_state_t state; }",
 ] }
 false = { run = ["{out}/services_layout{exe}", "descriptors"] }
 
@@ -467,7 +627,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/services_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 57 types, each type after the types of its fields"
+name = "a module declares the 77 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/services_probe{library}"] }
 
@@ -491,20 +651,29 @@ read = [
     "ideatek:ideatek_joinable_t", "ideatek:ideatek_lobby_kind_t",
     "ideatek:ideatek_lobby_state_t", "ideatek:ideatek_compare_t",
     "ideatek:ideatek_voice_channel_flags_t", "ideatek:ideatek_store_flags_t",
-    "ideatek:ideatek_ugc_state_t", "ideatek:PlatformUser", "ideatek:DeviceUser",
-    "ideatek:SignInRequest", "ideatek:TicketRequest", "ideatek:Ticket",
-    "ideatek:TicketCheck", "ideatek:TicketResult", "ideatek:AchievementState",
-    "ideatek:AchievementProgress", "ideatek:StatState", "ideatek:StatUpdate",
-    "ideatek:ScoreUpload", "ideatek:ScoreResult", "ideatek:ScoreQuery",
-    "ideatek:ScoreEntry", "ideatek:CloudState", "ideatek:Friend",
-    "ideatek:Presence", "ideatek:InviteRequest", "ideatek:JoinRequested",
-    "ideatek:Lobby", "ideatek:LobbyJoin", "ideatek:LobbyState",
-    "ideatek:LobbyMember", "ideatek:LobbyValue", "ideatek:LobbySet",
-    "ideatek:LobbySearch", "ideatek:LobbyFilter", "ideatek:LobbyFound",
-    "ideatek:VoiceChannel", "ideatek:VoiceMember", "ideatek:VoiceSettings",
-    "ideatek:Entitlement", "ideatek:InstallRequest", "ideatek:StoreRequest",
-    "ideatek:PlatformOverlay", "ideatek:UgcItem", "ideatek:UgcSubscribe",
-    "ideatek:UgcPublish", "ideatek:UgcResult",
+    "ideatek:ideatek_ugc_state_t", "ideatek:ideatek_server_list_t",
+    "ideatek:ideatek_parental_t", "ideatek:ideatek_text_context_t",
+    "ideatek:ideatek_overlay_page_t", "ideatek:ideatek_timeline_mode_t",
+    "ideatek:ideatek_timeline_clip_t", "ideatek:ideatek_avatar_size_t",
+    "ideatek:PlatformUser", "ideatek:SignInRequest", "ideatek:TicketRequest",
+    "ideatek:Ticket", "ideatek:TicketCheck", "ideatek:TicketResult",
+    "ideatek:AchievementState", "ideatek:AchievementProgress",
+    "ideatek:StatState", "ideatek:StatUpdate", "ideatek:ScoreUpload",
+    "ideatek:ScoreResult", "ideatek:ScoreQuery", "ideatek:ScoreEntry",
+    "ideatek:CloudState", "ideatek:Friend", "ideatek:Presence",
+    "ideatek:InviteRequest", "ideatek:JoinRequested", "ideatek:Lobby",
+    "ideatek:LobbyJoin", "ideatek:LobbyState", "ideatek:LobbyMember",
+    "ideatek:LobbyValue", "ideatek:LobbySet", "ideatek:LobbySearch",
+    "ideatek:LobbyFilter", "ideatek:LobbyFound", "ideatek:VoiceChannel",
+    "ideatek:VoiceMember", "ideatek:VoiceSettings", "ideatek:Entitlement",
+    "ideatek:InstallRequest", "ideatek:StoreRequest", "ideatek:PlatformOverlay",
+    "ideatek:UgcItem", "ideatek:UgcSubscribe", "ideatek:UgcPublish",
+    "ideatek:UgcResult", "ideatek:GameServer", "ideatek:ServerSearch",
+    "ideatek:ServerFound", "ideatek:ParentalLimits", "ideatek:TextFilter",
+    "ideatek:TextFiltered", "ideatek:OverlayRequest", "ideatek:PlatformInfo",
+    "ideatek:TimelineMode", "ideatek:TimelineEvent",
+    "ideatek:ScreenshotRequest", "ideatek:ScreenshotTaken",
+    "ideatek:AvatarRequest", "ideatek:Avatar",
 ]
 '''
 
@@ -534,7 +703,10 @@ write = [
     "ideatek:Lobby", "ideatek:LobbyJoin", "ideatek:LobbySet",
     "ideatek:LobbySearch", "ideatek:LobbyFilter", "ideatek:VoiceChannel",
     "ideatek:VoiceSettings", "ideatek:InstallRequest", "ideatek:StoreRequest",
-    "ideatek:UgcSubscribe", "ideatek:UgcPublish",
+    "ideatek:UgcSubscribe", "ideatek:UgcPublish", "ideatek:GameServer",
+    "ideatek:ServerSearch", "ideatek:TextFilter", "ideatek:OverlayRequest",
+    "ideatek:TimelineMode", "ideatek:TimelineEvent",
+    "ideatek:ScreenshotRequest", "ideatek:AvatarRequest",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_sign_in_flags_t",
@@ -542,7 +714,10 @@ read = [
     "ideatek:ideatek_score_method_t", "ideatek:ideatek_score_range_t",
     "ideatek:ideatek_joinable_t", "ideatek:ideatek_lobby_kind_t",
     "ideatek:ideatek_compare_t", "ideatek:ideatek_voice_channel_flags_t",
-    "ideatek:ideatek_store_flags_t",
+    "ideatek:ideatek_store_flags_t", "ideatek:ideatek_server_list_t",
+    "ideatek:ideatek_text_context_t", "ideatek:ideatek_overlay_page_t",
+    "ideatek:ideatek_timeline_mode_t", "ideatek:ideatek_timeline_clip_t",
+    "ideatek:ideatek_avatar_size_t",
 ]
 '''
 
@@ -561,7 +736,9 @@ write = [
     "ideatek:Lobby", "ideatek:LobbyJoin", "ideatek:LobbySet",
     "ideatek:LobbySearch", "ideatek:LobbyFilter", "ideatek:VoiceChannel",
     "ideatek:VoiceSettings", "ideatek:InstallRequest", "ideatek:StoreRequest",
-    "ideatek:UgcSubscribe",
+    "ideatek:UgcSubscribe", "ideatek:UgcPublish", "ideatek:GameServer",
+    "ideatek:ServerSearch", "ideatek:TextFilter", "ideatek:OverlayRequest",
+    "ideatek:TimelineMode", "ideatek:TimelineEvent", "ideatek:ScreenshotRequest",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_sign_in_flags_t",
@@ -569,7 +746,10 @@ read = [
     "ideatek:ideatek_score_method_t", "ideatek:ideatek_score_range_t",
     "ideatek:ideatek_joinable_t", "ideatek:ideatek_lobby_kind_t",
     "ideatek:ideatek_compare_t", "ideatek:ideatek_voice_channel_flags_t",
-    "ideatek:ideatek_store_flags_t", "ideatek:UgcPublish",
+    "ideatek:ideatek_store_flags_t", "ideatek:ideatek_server_list_t",
+    "ideatek:ideatek_text_context_t", "ideatek:ideatek_overlay_page_t",
+    "ideatek:ideatek_timeline_mode_t", "ideatek:ideatek_timeline_clip_t",
+    "ideatek:ideatek_avatar_size_t", "ideatek:AvatarRequest",
 ]
 '''
 
@@ -590,13 +770,15 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:module@1.0.0"]
 write = [
-    "ideatek:PlatformUser", "ideatek:DeviceUser", "ideatek:Ticket",
-    "ideatek:TicketResult", "ideatek:AchievementState", "ideatek:StatState",
-    "ideatek:ScoreResult", "ideatek:ScoreEntry", "ideatek:CloudState",
-    "ideatek:Friend", "ideatek:JoinRequested", "ideatek:LobbyState",
-    "ideatek:LobbyMember", "ideatek:LobbyValue", "ideatek:LobbyFound",
-    "ideatek:VoiceMember", "ideatek:Entitlement", "ideatek:PlatformOverlay",
-    "ideatek:UgcItem", "ideatek:UgcResult",
+    "ideatek:PlatformUser", "ideatek:Ticket", "ideatek:TicketResult",
+    "ideatek:AchievementState", "ideatek:StatState", "ideatek:ScoreResult",
+    "ideatek:ScoreEntry", "ideatek:CloudState", "ideatek:Friend",
+    "ideatek:JoinRequested", "ideatek:LobbyState", "ideatek:LobbyMember",
+    "ideatek:LobbyValue", "ideatek:LobbyFound", "ideatek:VoiceMember",
+    "ideatek:Entitlement", "ideatek:PlatformOverlay", "ideatek:UgcItem",
+    "ideatek:UgcResult", "ideatek:ServerFound", "ideatek:ParentalLimits",
+    "ideatek:TextFiltered", "ideatek:PlatformInfo", "ideatek:ScreenshotTaken",
+    "ideatek:Avatar",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_service_state_t",
@@ -607,14 +789,20 @@ read = [
     "ideatek:ideatek_joinable_t", "ideatek:ideatek_lobby_kind_t",
     "ideatek:ideatek_lobby_state_t", "ideatek:ideatek_compare_t",
     "ideatek:ideatek_voice_channel_flags_t", "ideatek:ideatek_store_flags_t",
-    "ideatek:ideatek_ugc_state_t", "ideatek:SignInRequest",
-    "ideatek:TicketRequest", "ideatek:TicketCheck",
+    "ideatek:ideatek_ugc_state_t", "ideatek:ideatek_server_list_t",
+    "ideatek:ideatek_parental_t", "ideatek:ideatek_text_context_t",
+    "ideatek:ideatek_overlay_page_t", "ideatek:ideatek_timeline_mode_t",
+    "ideatek:ideatek_timeline_clip_t", "ideatek:ideatek_avatar_size_t",
+    "ideatek:SignInRequest", "ideatek:TicketRequest", "ideatek:TicketCheck",
     "ideatek:AchievementProgress", "ideatek:StatUpdate", "ideatek:ScoreUpload",
     "ideatek:ScoreQuery", "ideatek:Presence", "ideatek:InviteRequest",
     "ideatek:Lobby", "ideatek:LobbyJoin", "ideatek:LobbySet",
     "ideatek:LobbySearch", "ideatek:LobbyFilter", "ideatek:VoiceChannel",
     "ideatek:VoiceSettings", "ideatek:InstallRequest", "ideatek:StoreRequest",
-    "ideatek:UgcSubscribe", "ideatek:UgcPublish",
+    "ideatek:UgcSubscribe", "ideatek:UgcPublish", "ideatek:GameServer",
+    "ideatek:ServerSearch", "ideatek:TextFilter", "ideatek:OverlayRequest",
+    "ideatek:TimelineMode", "ideatek:TimelineEvent",
+    "ideatek:ScreenshotRequest", "ideatek:AvatarRequest",
 ]
 '''
 
@@ -627,13 +815,14 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:module@1.0.0"]
 write = [
-    "ideatek:PlatformUser", "ideatek:DeviceUser", "ideatek:Ticket",
-    "ideatek:TicketResult", "ideatek:AchievementState", "ideatek:StatState",
-    "ideatek:ScoreResult", "ideatek:ScoreEntry", "ideatek:CloudState",
-    "ideatek:Friend", "ideatek:JoinRequested", "ideatek:LobbyState",
-    "ideatek:LobbyMember", "ideatek:LobbyValue", "ideatek:LobbyFound",
-    "ideatek:VoiceMember", "ideatek:Entitlement", "ideatek:PlatformOverlay",
-    "ideatek:UgcItem",
+    "ideatek:PlatformUser", "ideatek:Ticket", "ideatek:TicketResult",
+    "ideatek:AchievementState", "ideatek:StatState", "ideatek:ScoreResult",
+    "ideatek:ScoreEntry", "ideatek:CloudState", "ideatek:Friend",
+    "ideatek:JoinRequested", "ideatek:LobbyState", "ideatek:LobbyMember",
+    "ideatek:LobbyValue", "ideatek:LobbyFound", "ideatek:VoiceMember",
+    "ideatek:Entitlement", "ideatek:PlatformOverlay", "ideatek:UgcItem",
+    "ideatek:UgcResult", "ideatek:ServerFound", "ideatek:ParentalLimits",
+    "ideatek:TextFiltered", "ideatek:PlatformInfo", "ideatek:ScreenshotTaken",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_service_state_t",
@@ -644,14 +833,20 @@ read = [
     "ideatek:ideatek_joinable_t", "ideatek:ideatek_lobby_kind_t",
     "ideatek:ideatek_lobby_state_t", "ideatek:ideatek_compare_t",
     "ideatek:ideatek_voice_channel_flags_t", "ideatek:ideatek_store_flags_t",
-    "ideatek:ideatek_ugc_state_t", "ideatek:SignInRequest",
-    "ideatek:TicketRequest", "ideatek:TicketCheck",
+    "ideatek:ideatek_ugc_state_t", "ideatek:ideatek_server_list_t",
+    "ideatek:ideatek_parental_t", "ideatek:ideatek_text_context_t",
+    "ideatek:ideatek_overlay_page_t", "ideatek:ideatek_timeline_mode_t",
+    "ideatek:ideatek_timeline_clip_t", "ideatek:ideatek_avatar_size_t",
+    "ideatek:SignInRequest", "ideatek:TicketRequest", "ideatek:TicketCheck",
     "ideatek:AchievementProgress", "ideatek:StatUpdate", "ideatek:ScoreUpload",
     "ideatek:ScoreQuery", "ideatek:Presence", "ideatek:InviteRequest",
     "ideatek:Lobby", "ideatek:LobbyJoin", "ideatek:LobbySet",
     "ideatek:LobbySearch", "ideatek:LobbyFilter", "ideatek:VoiceChannel",
     "ideatek:VoiceSettings", "ideatek:InstallRequest", "ideatek:StoreRequest",
-    "ideatek:UgcSubscribe", "ideatek:UgcPublish", "ideatek:UgcResult",
+    "ideatek:UgcSubscribe", "ideatek:UgcPublish", "ideatek:GameServer",
+    "ideatek:ServerSearch", "ideatek:TextFilter", "ideatek:OverlayRequest",
+    "ideatek:TimelineMode", "ideatek:TimelineEvent",
+    "ideatek:ScreenshotRequest", "ideatek:AvatarRequest", "ideatek:Avatar",
 ]
 '''
 
