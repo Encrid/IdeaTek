@@ -43,6 +43,7 @@ platform_abstraction/
     ideatek_window_clipboard.h
     ideatek_world.h
 kernel/
+    ideatek_changes.h
     ideatek_frame.h
     ideatek_resources.h
     ideatek_states.h
