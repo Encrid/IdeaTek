@@ -1,0 +1,318 @@
+[[case]]
+name = "ideatek_entity_id_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/changes_layout{exe}", "entity_id"]
+claims = { status = 0, order = ["size 8", "alignment 8", "id 0"] }
+false = { run = ["{out}/changes_layout{exe}", "change_kind"] }
+
+[[case]]
+name = "ideatek_change_kind_t is 1 byte"
+run = ["{out}/changes_layout{exe}", "change_kind"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/changes_layout{exe}", "change_tag"] }
+
+[[case]]
+name = "ideatek_durability_t is 1 byte"
+run = ["{out}/changes_layout{exe}", "durability"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/changes_layout{exe}", "change_tag"] }
+
+[[case]]
+name = "ideatek_change_condition_t is 1 byte"
+run = ["{out}/changes_layout{exe}", "change_condition"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/changes_layout{exe}", "change_tag"] }
+
+[[case]]
+name = "ideatek_change_tag_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/changes_layout{exe}", "change_tag"]
+claims = { status = 0, order = ["size 24", "alignment 8", "tag 0", "period 8", "version 12", "durability 16", "condition 17"] }
+false = { run = ["{out}/changes_layout{exe}", "row_changes"] }
+
+[[case]]
+name = "ideatek_row_changes_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/changes_layout{exe}", "row_changes"]
+claims = { status = 0, order = ["size 32", "alignment 8", "tag 0", "data 8", "request 16", "peer 24", "kind 28"] }
+false = { run = ["{out}/changes_layout{exe}", "rows_in"] }
+
+[[case]]
+name = "ideatek_rows_in_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/changes_layout{exe}", "rows_in"]
+claims = { status = 0, order = ["size 40", "alignment 8", "tag 0", "data 8", "source 16", "peer 24", "version 28", "kind 32"] }
+false = { run = ["{out}/changes_layout{exe}", "store_state"] }
+
+[[case]]
+name = "ideatek_store_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/changes_layout{exe}", "store_state"]
+claims = { status = 0, order = ["size 16", "alignment 8", "round 0", "durable 8"] }
+false = { run = ["{out}/changes_layout{exe}", "recording_action"] }
+
+[[case]]
+name = "ideatek_recording_action_t is 1 byte"
+run = ["{out}/changes_layout{exe}", "recording_action"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/changes_layout{exe}", "recording"] }
+
+[[case]]
+name = "ideatek_recording_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/changes_layout{exe}", "recording"]
+claims = { status = 0, order = ["size 12", "alignment 4", "file 0", "action 8"] }
+false = { run = ["{out}/changes_layout{exe}", "recording_status"] }
+
+[[case]]
+name = "ideatek_recording_status_t is 1 byte"
+run = ["{out}/changes_layout{exe}", "recording_status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/changes_layout{exe}", "recording_state"] }
+
+[[case]]
+name = "ideatek_recording_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/changes_layout{exe}", "recording_state"]
+claims = { status = 0, order = ["size 16", "alignment 8", "round 0", "status 8"] }
+false = { run = ["{out}/changes_layout{exe}", "entity_id"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/changes_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "{ uint64_t id; }",
+    "uint8_t { IDEATEK_CHANGE_KIND_STATE = 0, IDEATEK_CHANGE_KIND_EVENT = 1, IDEATEK_CHANGE_KIND_REMOVE = 2, IDEATEK_CHANGE_KIND_FULL = 3, IDEATEK_CHANGE_KIND_PREDICTED = 4 }",
+    "uint8_t { IDEATEK_DURABILITY_IMMEDIATE = 0, IDEATEK_DURABILITY_PERIODIC = 1, IDEATEK_DURABILITY_NONE = 2 }",
+    "uint8_t { IDEATEK_CHANGE_CONDITION_ALL = 0, IDEATEK_CHANGE_CONDITION_OWNER_ONLY = 1, IDEATEK_CHANGE_CONDITION_SKIP_OWNER = 2, IDEATEK_CHANGE_CONDITION_INITIAL_ONLY = 3 }",
+    "{ uint64_t tag; float period; uint32_t version; ideatek_durability_t durability; ideatek_change_condition_t condition; }",
+    "{ uint64_t tag; bridge_text_t data; ideatek_entity_t request; uint32_t peer; ideatek_change_kind_t kind; }",
+    "{ uint64_t tag; bridge_text_t data; ideatek_entity_t source; uint32_t peer; uint32_t version; ideatek_change_kind_t kind; }",
+    "{ uint64_t round; uint64_t durable; }",
+    "uint8_t { IDEATEK_RECORDING_ACTION_RECORD = 0, IDEATEK_RECORDING_ACTION_PLAY = 1, IDEATEK_RECORDING_ACTION_STOP = 2 }",
+    "{ bridge_text_t file; ideatek_recording_action_t action; }",
+    "uint8_t { IDEATEK_RECORDING_STATUS_IDLE = 0, IDEATEK_RECORDING_STATUS_RECORDING = 1, IDEATEK_RECORDING_STATUS_PLAYING = 2, IDEATEK_RECORDING_STATUS_FAILED = 3 }",
+    "{ uint64_t round; ideatek_recording_status_t status; }",
+] }
+false = { run = ["{out}/changes_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/changes_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ uint64_t id; }",
+    "{ IDEATEK_CHANGE_KIND_STATE = 0, IDEATEK_CHANGE_KIND_EVENT = 1, IDEATEK_CHANGE_KIND_REMOVE = 2, IDEATEK_CHANGE_KIND_FULL = 3, IDEATEK_CHANGE_KIND_PREDICTED = 4 }",
+    "{ IDEATEK_DURABILITY_IMMEDIATE = 0, IDEATEK_DURABILITY_PERIODIC = 1, IDEATEK_DURABILITY_NONE = 2 }",
+    "{ IDEATEK_CHANGE_CONDITION_ALL = 0, IDEATEK_CHANGE_CONDITION_OWNER_ONLY = 1, IDEATEK_CHANGE_CONDITION_SKIP_OWNER = 2, IDEATEK_CHANGE_CONDITION_INITIAL_ONLY = 3 }",
+    "{ uint64_t tag; float period; uint32_t version; ideatek_durability_t durability; ideatek_change_condition_t condition; }",
+    "{ uint64_t tag; bridge_text_t data; ideatek_entity_t request; uint32_t peer; ideatek_change_kind_t kind; }",
+    "{ uint64_t tag; bridge_text_t data; ideatek_entity_t source; uint32_t peer; uint32_t version; ideatek_change_kind_t kind; }",
+    "{ uint64_t round; uint64_t durable; }",
+    "{ IDEATEK_RECORDING_ACTION_RECORD = 0, IDEATEK_RECORDING_ACTION_PLAY = 1, IDEATEK_RECORDING_ACTION_STOP = 2 }",
+    "{ bridge_text_t file; ideatek_recording_action_t action; }",
+    "{ IDEATEK_RECORDING_STATUS_IDLE = 0, IDEATEK_RECORDING_STATUS_RECORDING = 1, IDEATEK_RECORDING_STATUS_PLAYING = 2, IDEATEK_RECORDING_STATUS_FAILED = 3 }",
+    "{ uint64_t round; ideatek_recording_status_t status; }",
+] }
+false = { run = ["{out}/changes_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the header of the world part and the headers of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/kernel/changes_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/kernel", "-I", "include/platform_abstraction", "-c", "tests/kernel/changes_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the 13 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/changes_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["changes_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_change_kind_t",
+    "ideatek:ideatek_durability_t", "ideatek:ideatek_change_condition_t",
+    "ideatek:ideatek_recording_action_t", "ideatek:ideatek_recording_status_t",
+    "ideatek:EntityId", "ideatek:ChangeTag", "ideatek:RowChanges",
+    "ideatek:RowsIn", "ideatek:StoreState", "ideatek:Recording",
+    "ideatek:RecordingState",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["changes_late"]
+
+[[case]]
+name = "a module of rows loads with write on its tag and its changes"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:module@1.0.0, native, m/changes_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["changes_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:ChangeTag", "ideatek:RowChanges",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_change_kind_t",
+    "ideatek:ideatek_durability_t", "ideatek:ideatek_change_condition_t",
+    "ideatek:RowsIn", "ideatek:EntityId",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:module@1.0.0"]
+write = [
+    "ideatek:ChangeTag",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_change_kind_t",
+    "ideatek:ideatek_durability_t", "ideatek:ideatek_change_condition_t",
+    "ideatek:RowsIn", "ideatek:EntityId", "ideatek:RowChanges",
+]
+'''
+
+[[case]]
+name = "the id module loads with write on the ids"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:ids@1.0.0, native, m/changes_ids{library}"] }
+
+[case.folders]
+"{case}/m" = ["changes_ids"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:ids@1.0.0"]
+write = [
+    "ideatek:EntityId",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:ids@1.0.0"]
+read = [
+    "ideatek:EntityId",
+]
+'''
+
+[[case]]
+name = "a consumer loads with write on the rows in, the store state and the recording state"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:consumer@1.0.0, native, m/changes_consumer{library}"] }
+
+[case.folders]
+"{case}/m" = ["changes_consumer"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:consumer@1.0.0"]
+write = [
+    "ideatek:RowsIn", "ideatek:StoreState", "ideatek:RecordingState",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_change_kind_t",
+    "ideatek:ideatek_durability_t", "ideatek:ideatek_change_condition_t",
+    "ideatek:ideatek_recording_action_t", "ideatek:ideatek_recording_status_t",
+    "ideatek:ChangeTag", "ideatek:RowChanges", "ideatek:EntityId",
+    "ideatek:Recording",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:consumer@1.0.0"]
+write = [
+    "ideatek:RowsIn", "ideatek:StoreState",
+]
+read = [
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_change_kind_t",
+    "ideatek:ideatek_durability_t", "ideatek:ideatek_change_condition_t",
+    "ideatek:ideatek_recording_action_t", "ideatek:ideatek_recording_status_t",
+    "ideatek:ChangeTag", "ideatek:RowChanges", "ideatek:EntityId",
+    "ideatek:Recording", "ideatek:RecordingState",
+]
+'''
+
+[[case]]
+name = "the game loads with write on the recordings"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/changes_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["changes_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = [
+    "ideatek:Recording",
+]
+read = [
+    "ideatek:ideatek_recording_action_t", "ideatek:ideatek_recording_status_t",
+    "ideatek:RecordingState", "ideatek:StoreState",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+read = [
+    "ideatek:ideatek_recording_action_t", "ideatek:ideatek_recording_status_t",
+    "ideatek:RecordingState", "ideatek:StoreState", "ideatek:Recording",
+]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "changes", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Changes-{target}.zip", "include/ideatek_changes.h", "license",
+    "package proof: BC-IdeaTek-Changes ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "changes"] }
