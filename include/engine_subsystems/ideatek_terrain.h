@@ -205,6 +205,17 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_terrain_split_t,
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_terrain_split_t,
     IDEATEK_TERRAIN_SPLIT_FIELDS);
 
+    #define IDEATEK_TERRAIN_NEED_FIELDS { \
+        ideatek_entity_t terrain; \
+        int32_t x; \
+        int32_t y; \
+        int32_t z; \
+        uint32_t order; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_terrain_need_t, IDEATEK_TERRAIN_NEED_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_terrain_need_t, IDEATEK_TERRAIN_NEED_FIELDS);
+
     #define IDEATEK_TERRAIN_SCATTER_FIELDS { \
         ideatek_entity_t terrain; \
         ideatek_entity_t mesh; \
