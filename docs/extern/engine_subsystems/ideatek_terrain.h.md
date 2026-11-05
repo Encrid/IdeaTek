@@ -63,6 +63,19 @@ An entity with `ideatek:TerrainViewer` keeps the chunks within `radius` of its p
 With VISUALS, the module also makes the meshes of those chunks, and with COLLISIONS, their shapes.
 `peer` names the peer of the networking part whose viewer it is, or 0 for the local viewer.
 
+## The mixed terrains
+
+A HEIGHTMAP terrain can carry VOXEL terrains on top of it. `holes` cuts the heightmap where a voxel terrain opens a cave or an overhang. This fits authored ground where only some places need volume.
+A VOXEL terrain that names `heights` takes the cells of a chunk that was never edited from the heightmap. Below the height times `height_scale` is solid, and the layer `n` of `weights` gives the material of index `n`.
+
+Only the edited chunks are stored, as rows of the changes part. This fits ground that can be dug or destroyed everywhere.
+The terrain module writes each hole as the value 65535 in the heights that it gives to the physics.
+
+## The generators
+
+When a viewer needs a chunk that has no stored data, the terrain module applies `heights`, then spawns `ideatek:TerrainNeed`.
+A generator module answers with `ideatek:TerrainFill`. Its cells take the place of those of the chunk, for example the caves under a heightmap.
+
 ## The network and the saves
 
 A chunk is rows of the changes part: a STATE when it changes, and a FULL at a join and in a save. It is relevant to the peers whose viewer is near.
@@ -298,6 +311,19 @@ Bytes 13 to 15 hold no field.
 
 Bytes 20 to 23 hold no field.
 
+## ideatek:TerrainNeed
+
+`ideatek:TerrainNeed` asks a generator for a chunk: *The generators*. It is an event of 1 round.
+`ideatek_terrain_need_t` takes 24 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `terrain` | `ideatek_entity_t` | 0 | The terrain. |
+| `x` | `int32_t` | 8 | The place of the chunk on X, in chunks. |
+| `y` | `int32_t` | 12 | The place on Y. |
+| `z` | `int32_t` | 16 | The place on Z. |
+| `order` | `uint32_t` | 20 | The rank in the round. |
+
 ## ideatek:TerrainScatter
 
 `ideatek:TerrainScatter` scatters copies of a mesh on a terrain: *The scatter*.
@@ -335,6 +361,7 @@ Bytes 35 to 39 hold no field.
 | `ideatek:ideatek_viewer_flags_t` | `ideatek_viewer_flags_t` | `ideatek_viewer_flags_t_desc` | `IDEATEK_VIEWER_FLAGS_VALUES` |
 | `ideatek:TerrainViewer` | `ideatek_terrain_viewer_t` | `ideatek_terrain_viewer_t_desc` | `IDEATEK_TERRAIN_VIEWER_FIELDS` |
 | `ideatek:TerrainSplit` | `ideatek_terrain_split_t` | `ideatek_terrain_split_t_desc` | `IDEATEK_TERRAIN_SPLIT_FIELDS` |
+| `ideatek:TerrainNeed` | `ideatek_terrain_need_t` | `ideatek_terrain_need_t_desc` | `IDEATEK_TERRAIN_NEED_FIELDS` |
 | `ideatek:TerrainScatter` | `ideatek_terrain_scatter_t` | `ideatek_terrain_scatter_t_desc` | `IDEATEK_TERRAIN_SCATTER_FIELDS` |
 
 ```text
@@ -353,6 +380,7 @@ Bytes 35 to 39 hold no field.
 { IDEATEK_VIEWER_FLAGS_VISUALS = 0x01, IDEATEK_VIEWER_FLAGS_COLLISIONS = 0x02 }
 { float radius; float vertical_ratio; uint32_t peer; ideatek_viewer_flags_t flags; }
 { ideatek_entity_t source; ideatek_entity_t piece; uint32_t order; }
+{ ideatek_entity_t terrain; int32_t x; int32_t y; int32_t z; uint32_t order; }
 { ideatek_entity_t terrain; ideatek_entity_t mesh; float density; float min_scale; float max_scale; uint32_t seed; uint16_t material; bool align; }
 ```
 
@@ -378,6 +406,7 @@ Bytes 35 to 39 hold no field.
 | `ideatek:TerrainFill` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TerrainViewer` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TerrainSplit` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:TerrainNeed` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TerrainScatter` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
@@ -385,4 +414,5 @@ Bytes 35 to 39 hold no field.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | The game | `ideatek:Terrain`, `ideatek:TerrainMaterial`, `ideatek:TerrainEdit`, `ideatek:TerrainFill`, `ideatek:TerrainViewer`, `ideatek:TerrainScatter` | The types of the fields |
-| The terrain module | `ideatek:TerrainChunk`, `ideatek:TerrainSplit`, `ideatek:Mesh`, `ideatek:MeshInstance`, `ideatek:MeshInstances`, `ideatek:Body`, `ideatek:Shape` | `ideatek:Terrain`, `ideatek:TerrainMaterial`, `ideatek:TerrainEdit`, `ideatek:TerrainFill`, `ideatek:TerrainViewer`, `ideatek:TerrainScatter`, and the types of the fields |
+| The terrain module | `ideatek:TerrainChunk`, `ideatek:TerrainSplit`, `ideatek:TerrainNeed`, `ideatek:Mesh`, `ideatek:MeshInstance`, `ideatek:MeshInstances`, `ideatek:Body`, `ideatek:Shape` | `ideatek:Terrain`, `ideatek:TerrainMaterial`, `ideatek:TerrainEdit`, `ideatek:TerrainFill`, `ideatek:TerrainViewer`, `ideatek:TerrainScatter`, and the types of the fields |
+| A generator | `ideatek:TerrainFill` | `ideatek:Terrain`, `ideatek:TerrainNeed`, and the types of the fields |

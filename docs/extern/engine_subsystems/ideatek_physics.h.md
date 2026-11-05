@@ -100,6 +100,8 @@ With `deterministic`, the same inputs give the same steps on each machine of a t
 A height field reads its heights from a 2D texture, the `source` of its shape, in `R16_UNORM` or `R32_SFLOAT`.
 `size.x` and `size.z` are the distances between 2 samples, and `size.y` is the factor of a height. The origin is the corner of the first sample.
 To edit the terrain, the game writes new texels and raises `revision` of the texture. The module builds the changed part again.
+A sample of 65535 in a height field of `R16_UNORM` is a hole, with no collision, as `cNoCollisionValue16` of Jolt.
+
 With `ideatek:ShapeMaterials`, each cell has its own material.
 
 ## The joint drives
