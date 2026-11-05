@@ -23,9 +23,10 @@ Each module of rows writes 1 `ideatek:RowChanges` FULL with `request` at the req
 ## The load
 
 The game clears the old world first. The save module reads the file and spawns each prefab with its `ideatek:EntityId`.
-It writes 1 `ideatek:RowsIn` FULL for each tag, with `source` at the request and the version of the chunk. Each module checks its rows, and answers `ideatek:SaveReady` or `ideatek:SaveRefuse`.
-Only when each module is ready does each module apply its rows. So a refused load leaves the world as it was.
+It checks each checksum first. A checksum that does not match fails the load with CORRUPT, and no row is written.
+Then it writes 1 `ideatek:RowsIn` FULL for each tag, with `source` at the request and the version of the chunk. Each module checks its rows, and answers `ideatek:SaveReady` or `ideatek:SaveRefuse`.
 
+Only when each module is ready does each module apply its rows. So a refused load leaves the world as it was.
 A tag with no chunk in the file gets a `ideatek:RowsIn` of version 0 with no data, and its module starts from its defaults. A chunk with no tag is skipped, and the save module logs it once.
 
 ## The versions
@@ -38,11 +39,15 @@ The save module reads each older version of the format of the file, and refuses 
 A save is a file in the folder `saves/` of `IDEATEK_STORAGE_USER`. A name of a slot follows the rule of the paths of the files part. All numbers are little-endian.
 
 1. The magic `IDTS`, then the version of the format, a `uint32_t` of 1.
-2. The head: the time as an `int64_t` of Unix seconds, and the groups as a `uint64_t`. Then the length of the info as a `uint32_t`, and the info.
+2. The head: the time as an `int64_t` of Unix seconds, and the groups as a `uint64_t`.
+   Then the compression as a `uint32_t`: 0 none, 1 LZ4, 2 zstd.
+   Then the length of the info as a `uint32_t`, and the info.
+   Last, the CRC-32C of the head as a `uint32_t`.
 3. The prefabs: a `uint32_t` count, then records of `{uint64_t id, uint64_t prefab}`. `id` is the `ideatek:EntityId`.
-4. The chunks: a `uint32_t` count, then records of `{uint64_t tag, uint32_t version, uint32_t length, bytes}`. The bytes are the records of the FULL of the tag.
+4. The chunks: a `uint32_t` count, then records of `{uint64_t tag, uint32_t version, uint32_t length, uint32_t crc, bytes}`.
+   The bytes are the records of the FULL of the tag, compressed apart for each chunk. `length` is the length as stored, and `crc` is their CRC-32C.
 
-INFO and LIST read only the head.
+INFO and LIST read only the head. The CRC-32C is the checksum of Castagnoli, as the commit log of SpacetimeDB uses.
 
 ## The live store
 
@@ -54,6 +59,12 @@ A save file stays a snapshot that a player names, for example a slot of a solo g
 The settings of a player are rows of the game. Examples are the bindings, the volumes of the buses, the scale of the UI and the options of the graphics.
 The game marks them with a bit of the groups of its own, and saves them in their own slot.
 A load of a game uses another bit, so it never touches the settings. A menu of the saves hides a slot by its groups.
+
+## The settings
+
+| Setting | Default | Range | Value |
+| --- | --- | --- | --- |
+| `compression` | `none` | `none`, `lz4` or `zstd` | The compression of the files that the save module writes. It reads each of the 3. |
 
 ## ideatek:ideatek_save_action_t
 
@@ -139,7 +150,8 @@ Bytes 20 to 23 hold no field.
 | 3 | `IDEATEK_SAVE_ERROR_WRITE` | The write failed. |
 | 4 | `IDEATEK_SAVE_ERROR_NO_SPACE` | The storage is full. |
 | 5 | `IDEATEK_SAVE_ERROR_FORMAT` | The file is not a save, or its format is newer. |
-| 6 | `IDEATEK_SAVE_ERROR_VERSION` | A participant refused its chunk. |
+| 6 | `IDEATEK_SAVE_ERROR_VERSION` | A module refused its rows. |
+| 7 | `IDEATEK_SAVE_ERROR_CORRUPT` | A checksum of the file does not match. |
 
 ## ideatek:SaveResult
 
@@ -191,7 +203,7 @@ The save module destroys these entities 1 round after `ideatek:SaveResult`.
 { ideatek_entity_t request; uint64_t tag; }
 { ideatek_entity_t request; uint64_t tag; int32_t reason; }
 { IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }
-{ IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6 }
+{ IDEATEK_SAVE_ERROR_NONE = 0, IDEATEK_SAVE_ERROR_NOT_FOUND = 1, IDEATEK_SAVE_ERROR_READ = 2, IDEATEK_SAVE_ERROR_WRITE = 3, IDEATEK_SAVE_ERROR_NO_SPACE = 4, IDEATEK_SAVE_ERROR_FORMAT = 5, IDEATEK_SAVE_ERROR_VERSION = 6, IDEATEK_SAVE_ERROR_CORRUPT = 7 }
 { ideatek_save_state_t state; ideatek_save_error_t error; }
 { ideatek_entity_t request; int64_t time; uint64_t bytes; uint64_t groups; bridge_text_t slot; bridge_text_t info; uint32_t version; }
 ```
