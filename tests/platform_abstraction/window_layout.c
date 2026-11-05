@@ -115,6 +115,12 @@ static void show_drop(void)
     AT(ideatek_drop_t, kind);
 }
 
+static void show_event_wait(void)
+{
+    SIZE(ideatek_event_wait_t);
+    AT(ideatek_event_wait_t, wait);
+}
+
 static void show_clipboard_request(void)
 {
     SIZE(ideatek_clipboard_request_t);
@@ -134,7 +140,8 @@ static void show_descriptors(void)
         ideatek_surface_t_desc, ideatek_drop_kind_t_desc,
         ideatek_window_request_t_desc, ideatek_window_state_t_desc,
         ideatek_display_t_desc, ideatek_video_mode_t_desc,
-        ideatek_drop_t_desc, ideatek_clipboard_request_t_desc,
+        ideatek_drop_t_desc, ideatek_event_wait_t_desc,
+        ideatek_clipboard_request_t_desc,
         ideatek_paste_t_desc
     };
 
@@ -151,6 +158,7 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_WINDOW_REQUEST_FIELDS),
         TEXT_OF(IDEATEK_WINDOW_STATE_FIELDS), TEXT_OF(IDEATEK_DISPLAY_FIELDS),
         TEXT_OF(IDEATEK_VIDEO_MODE_FIELDS), TEXT_OF(IDEATEK_DROP_FIELDS),
+        TEXT_OF(IDEATEK_EVENT_WAIT_FIELDS),
         TEXT_OF(IDEATEK_CLIPBOARD_REQUEST_FIELDS),
         TEXT_OF(IDEATEK_PASTE_FIELDS)
     };
@@ -167,7 +175,8 @@ int main(int argc, char **argv)
         { "surface", show_surface }, { "drop_kind", show_drop_kind },
         { "request", show_request }, { "state", show_state },
         { "display", show_display }, { "video_mode", show_video_mode },
-        { "drop", show_drop }, { "clipboard_request", show_clipboard_request },
+        { "drop", show_drop }, { "event_wait", show_event_wait },
+        { "clipboard_request", show_clipboard_request },
         { "paste", show_paste }, { "descriptors", show_descriptors },
         { "texts", show_texts }
     };

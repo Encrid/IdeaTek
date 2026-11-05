@@ -27,7 +27,6 @@ static void show_frame(void)
     AT(ideatek_frame_t, real_delta);
     AT(ideatek_frame_t, real_elapsed);
     AT(ideatek_frame_t, scale);
-    AT(ideatek_frame_t, wait);
     AT(ideatek_frame_t, index);
     AT(ideatek_frame_t, paused);
 }

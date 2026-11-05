@@ -65,6 +65,11 @@ defines = ["ROLE_WINDOW"]
 manifest = ["test:window@1.0.0", "{window_drop_words}"]
 
 [[artifact.variants]]
+name = "window_clock"
+defines = ["ROLE_CLOCK"]
+manifest = ["test:clock@1.0.0", "{window_spawn_words}"]
+
+[[artifact.variants]]
 name = "window_reader"
 defines = ["ROLE_READER"]
 manifest = ["test:reader@1.0.0", "{window_probe_words}"]
