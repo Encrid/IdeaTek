@@ -875,16 +875,23 @@ Bytes 42 to 43 hold no field.
 ## ideatek:MotorJoint
 
 `ideatek:MotorJoint` drives a body toward the frame of the other, as the motor joint of Box3D.
-`ideatek_motor_joint_t` takes 40 bytes. Its alignment is 4.
+`ideatek_motor_joint_t` takes 56 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `linear_velocity` | `ideatek_vec3_t` | 0 | The speed of the second body relative to the first. |
 | `angular_velocity` | `ideatek_vec3_t` | 12 | The turn speed of the second body relative to the first. |
-| `max_force` | `float` | 24 | The largest force. |
-| `max_torque` | `float` | 28 | The largest torque. |
-| `hertz` | `float` | 32 | The frequency of the spring to the frame. |
-| `damping` | `float` | 36 | The damping ratio of that spring. |
+| `max_force` | `float` | 24 | The largest force toward `linear_velocity`, in N. |
+| `max_torque` | `float` | 28 | The largest torque toward `angular_velocity`, in N m. |
+| `linear_hertz` | `float` | 32 | The frequency of the spring to the point of the frame. |
+| `linear_damping` | `float` | 36 | The damping ratio of that spring. |
+| `max_spring_force` | `float` | 40 | The largest force of that spring, in N. |
+| `angular_hertz` | `float` | 44 | The frequency of the spring to the rotation of the frame. |
+| `angular_damping` | `float` | 48 | The damping ratio of that spring. |
+| `max_spring_torque` | `float` | 52 | The largest torque of that spring, in N m. |
+
+The move and the turn have each a spring, so a held body can follow a point closely and turn slowly.
+A spring with a frequency of 0 does not act.
 
 ## ideatek:WheelJoint
 
@@ -2050,7 +2057,7 @@ Byte 31 holds no field.
 { IDEATEK_PATH_ROTATION_FREE = 0, IDEATEK_PATH_ROTATION_TANGENT = 1, IDEATEK_PATH_ROTATION_NORMAL = 2, IDEATEK_PATH_ROTATION_BINORMAL = 3, IDEATEK_PATH_ROTATION_PATH = 4, IDEATEK_PATH_ROTATION_FIXED = 5 }
 { bridge_text_t path; float fraction; float max_friction; ideatek_joint_drive_t drive; ideatek_path_rotation_t rotation; bool looping; }
 { float half_angle; }
-{ ideatek_vec3_t linear_velocity; ideatek_vec3_t angular_velocity; float max_force; float max_torque; float hertz; float damping; }
+{ ideatek_vec3_t linear_velocity; ideatek_vec3_t angular_velocity; float max_force; float max_torque; float linear_hertz; float linear_damping; float max_spring_force; float angular_hertz; float angular_damping; float max_spring_torque; }
 { float lower; float upper; float suspension_hertz; float suspension_damping; float max_steer; float steer_target; ideatek_joint_drive_t spin; }
 { ideatek_entity_t joint; float force; float torque; uint32_t order; }
 { ideatek_vec3_t force; ideatek_vec3_t torque; }
