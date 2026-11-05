@@ -24,7 +24,8 @@ The project holds the contracts of layers 2, 3 and 4. It also holds their implem
 ## The parts
 
 The folder of each layer has the name of the layer in snake_case, and holds the headers of
-its parts. A part has no folder of its own:
+its contract parts. A contract part has no folder of its own. The sources of an implementation
+part are in `src/<layer>/<part>/`:
 
 ```text
 platform_abstraction/
