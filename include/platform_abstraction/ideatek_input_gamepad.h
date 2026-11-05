@@ -35,19 +35,8 @@ BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_gamepad_button_t, uint32_t,
 BRIDGE_SCHEMA_BITMASK_DESC(ideatek_gamepad_button_t, uint32_t,
     IDEATEK_GAMEPAD_BUTTON_VALUES);
 
-    #define IDEATEK_GAMEPAD_FEATURES_VALUES { \
-        IDEATEK_GAMEPAD_FEATURES_GYRO = 0x01, \
-        IDEATEK_GAMEPAD_FEATURES_ACCEL = 0x02 \
-    }
-
-BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_gamepad_features_t, uint8_t,
-    IDEATEK_GAMEPAD_FEATURES_VALUES);
-BRIDGE_SCHEMA_BITMASK_DESC(ideatek_gamepad_features_t, uint8_t,
-    IDEATEK_GAMEPAD_FEATURES_VALUES);
-
     #define IDEATEK_GAMEPAD_FIELDS { \
         char name[379]; \
-        ideatek_gamepad_features_t features; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_t, IDEATEK_GAMEPAD_FIELDS);
@@ -90,25 +79,5 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_request_t,
     IDEATEK_GAMEPAD_REQUEST_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gamepad_request_t,
     IDEATEK_GAMEPAD_REQUEST_FIELDS);
-
-    #define IDEATEK_GAMEPAD_SENSOR_REQUEST_FIELDS { \
-        bool enabled; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_sensor_request_t,
-    IDEATEK_GAMEPAD_SENSOR_REQUEST_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gamepad_sensor_request_t,
-    IDEATEK_GAMEPAD_SENSOR_REQUEST_FIELDS);
-
-    #define IDEATEK_GAMEPAD_MOTION_FIELDS { \
-        float gyro[3]; \
-        float accel[3]; \
-        float turn[3]; \
-    }
-
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gamepad_motion_t,
-    IDEATEK_GAMEPAD_MOTION_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gamepad_motion_t,
-    IDEATEK_GAMEPAD_MOTION_FIELDS);
 
 #endif
