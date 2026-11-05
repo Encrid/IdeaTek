@@ -131,7 +131,7 @@ A play with `real_time` runs in a pause, so a menu of the pause can move. A load
 ## The markers
 
 A node with `ideatek:UiAnchor` follows an entity of the world through a camera. The layout puts the pivot of the node at the point, and does not read the left and top of the node.
-With HIDE_BEHIND, a point behind the camera hides the node, and it takes no hits. With CLAMP, the node stays inside the view, less `margin`.
+With HIDE_BEHIND, a point behind the camera hides the node, and it takes no hits.
 
 ## The styles
 
@@ -1024,13 +1024,12 @@ Byte 55 holds no field.
 
 | Bit | Name | Meaning |
 | --- | --- | --- |
-| 0x01 | `IDEATEK_ANCHOR_FLAGS_CLAMP` | The node stays inside the view. |
-| 0x02 | `IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND` | A point behind the camera hides the node. |
+| 0x01 | `IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND` | A point behind the camera hides the node. |
 
 ## ideatek:UiAnchor
 
 `ideatek:UiAnchor` makes a node a marker of an entity of the world: *The markers*.
-`ideatek_ui_anchor_t` takes 48 bytes. Its alignment is 8.
+`ideatek_ui_anchor_t` takes 40 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -1039,26 +1038,23 @@ Byte 55 holds no field.
 | `offset` | `ideatek_vec3_t` | 16 | No default | The offset of the point, in the world. |
 | `pivot_x` | `float` | 28 | 0.5 | The point of the node on X, from 0 to 1. |
 | `pivot_y` | `float` | 32 | 0.5 | The point of the node on Y, from 0 to 1. |
-| `margin` | `float` | 36 | 0 | The space at the edge of the view with CLAMP. |
-| `flags` | `ideatek_anchor_flags_t` | 40 | HIDE_BEHIND | The options. |
+| `flags` | `ideatek_anchor_flags_t` | 36 | HIDE_BEHIND | The options. |
 
-Bytes 41 to 47 hold no field.
+Bytes 37 to 39 hold no field.
 
 A pivot of 0.5 is the default of the widget component of Unreal and of `transform-origin` of CSS.
 
 ## ideatek:UiAnchorState
 
 `ideatek:UiAnchorState` is the state of a marker. The layout module writes it.
-`ideatek_ui_anchor_state_t` takes 12 bytes. Its alignment is 4.
+`ideatek_ui_anchor_state_t` takes 8 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `distance` | `float` | 0 | The distance from the camera. |
-| `angle` | `float` | 4 | The direction from the center of the view to the point. |
-| `visible` | `bool` | 8 | `true` if the node shows. |
-| `clamped` | `bool` | 9 | `true` if the node is at the edge. |
+| `visible` | `bool` | 4 | `true` if the node shows. |
 
-Bytes 10 to 11 hold no field.
+Bytes 5 to 7 hold no field.
 
 ## ideatek:UiGrid
 
@@ -1381,9 +1377,9 @@ Bytes 46 to 47 hold no field.
 { IDEATEK_GESTURE_KIND_TAP = 0, IDEATEK_GESTURE_KIND_LONG_PRESS = 1, IDEATEK_GESTURE_KIND_PAN = 2, IDEATEK_GESTURE_KIND_PINCH = 3 }
 { IDEATEK_GESTURE_PHASE_BEGIN = 0, IDEATEK_GESTURE_PHASE_CHANGE = 1, IDEATEK_GESTURE_PHASE_END = 2 }
 { ideatek_entity_t node; ideatek_entity_t target; float x; float y; float dx; float dy; float scale; float angle; float vx; float vy; uint32_t order; ideatek_gesture_kind_t kind; ideatek_gesture_phase_t phase; uint8_t fingers; }
-{ IDEATEK_ANCHOR_FLAGS_CLAMP = 0x01, IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND = 0x02 }
-{ ideatek_entity_t entity; ideatek_entity_t camera; ideatek_vec3_t offset; float pivot_x; float pivot_y; float margin; ideatek_anchor_flags_t flags; }
-{ float distance; float angle; bool visible; bool clamped; }
+{ IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND = 0x01 }
+{ ideatek_entity_t entity; ideatek_entity_t camera; ideatek_vec3_t offset; float pivot_x; float pivot_y; ideatek_anchor_flags_t flags; }
+{ float distance; bool visible; }
 { uint32_t columns; uint32_t rows; }
 { uint32_t column; uint32_t row; uint32_t column_span; uint32_t row_span; }
 { float x; float y; float scale_x; float scale_y; float rotation; float rotation_x; float rotation_y; float perspective; float pivot_x; float pivot_y; }
