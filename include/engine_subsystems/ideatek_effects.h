@@ -14,7 +14,8 @@
 
     #define IDEATEK_CURVE_KIND_VALUES { \
         IDEATEK_CURVE_KIND_FLOAT = 0, \
-        IDEATEK_CURVE_KIND_COLOR = 1 \
+        IDEATEK_CURVE_KIND_COLOR = 1, \
+        IDEATEK_CURVE_KIND_VEC3 = 2 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_curve_kind_t,
@@ -46,7 +47,9 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_emitter_state_t,
     #define IDEATEK_EMITTER_FLAGS_VALUES { \
         IDEATEK_EMITTER_FLAGS_ONE_SHOT = 0x01, \
         IDEATEK_EMITTER_FLAGS_LOCAL = 0x02, \
-        IDEATEK_EMITTER_FLAGS_DESTROY_AT_END = 0x04 \
+        IDEATEK_EMITTER_FLAGS_DESTROY_AT_END = 0x04, \
+        IDEATEK_EMITTER_FLAGS_ALWAYS_SIMULATE = 0x08, \
+        IDEATEK_EMITTER_FLAGS_REPORT_HITS = 0x10 \
     }
 
 BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_emitter_flags_t,
@@ -64,6 +67,8 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_emitter_flags_t,
         float lifetime_max; \
         float speed_scale; \
         float prewarm; \
+        float lod_distance; \
+        float cull_distance; \
         uint32_t burst; \
         uint32_t max; \
         uint32_t seed; \
@@ -154,7 +159,8 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_particle_ended_t,
         IDEATEK_PARTICLE_KIND_SPRITE = 0, \
         IDEATEK_PARTICLE_KIND_MESH = 1, \
         IDEATEK_PARTICLE_KIND_RIBBON = 2, \
-        IDEATEK_PARTICLE_KIND_TRAIL = 3 \
+        IDEATEK_PARTICLE_KIND_TRAIL = 3, \
+        IDEATEK_PARTICLE_KIND_DECAL = 4 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_particle_kind_t,
@@ -191,13 +197,15 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_particle_sort_t,
         ideatek_entity_t size_curve; \
         ideatek_entity_t color_curve; \
         ideatek_entity_t start_color_curve; \
+        ideatek_entity_t speed_curve; \
+        ideatek_entity_t spin_curve; \
         ideatek_color_t color; \
+        ideatek_vec3_t rotation_min; \
+        ideatek_vec3_t rotation_max; \
+        ideatek_vec3_t spin_min; \
+        ideatek_vec3_t spin_max; \
         float size_min; \
         float size_max; \
-        float rotation_min; \
-        float rotation_max; \
-        float spin_min; \
-        float spin_max; \
         float frame_rate; \
         float trail_lifetime; \
         uint32_t frames_x; \
@@ -215,7 +223,9 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_particle_look_t,
 
     #define IDEATEK_COLLISION_SOURCE_VALUES { \
         IDEATEK_COLLISION_SOURCE_DEPTH = 0, \
-        IDEATEK_COLLISION_SOURCE_SHAPES = 1 \
+        IDEATEK_COLLISION_SOURCE_SHAPES = 1, \
+        IDEATEK_COLLISION_SOURCE_DISTANCE_FIELD = 2, \
+        IDEATEK_COLLISION_SOURCE_RAY_TRACING = 3 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_collision_source_t,
@@ -260,6 +270,7 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_spawn_on_t, uint8_t, IDEATEK_SPAWN_ON_VALUES);
 
     #define IDEATEK_PARTICLE_SPAWN_FIELDS { \
         ideatek_entity_t parent; \
+        ideatek_entity_t hit_material; \
         float rate; \
         float inherit_velocity; \
         uint32_t count; \
@@ -282,5 +293,30 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_particle_light_t,
     IDEATEK_PARTICLE_LIGHT_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_particle_light_t,
     IDEATEK_PARTICLE_LIGHT_FIELDS);
+
+    #define IDEATEK_PARTICLE_SOUND_FIELDS { \
+        ideatek_entity_t sound; \
+        ideatek_entity_t bus; \
+        float volume; \
+        uint32_t max; \
+        ideatek_spawn_on_t on; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_particle_sound_t,
+    IDEATEK_PARTICLE_SOUND_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_particle_sound_t,
+    IDEATEK_PARTICLE_SOUND_FIELDS);
+
+    #define IDEATEK_PARTICLE_HITS_FIELDS { \
+        ideatek_entity_t emitter; \
+        bridge_text_t hits; \
+        uint32_t count; \
+        uint32_t order; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_particle_hits_t,
+    IDEATEK_PARTICLE_HITS_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_particle_hits_t,
+    IDEATEK_PARTICLE_HITS_FIELDS);
 
 #endif
