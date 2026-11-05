@@ -32,6 +32,7 @@ static void show_accumulate(void)
 static void show_input_action(void)
 {
     SIZE(ideatek_input_action_t);
+    AT(ideatek_input_action_t, name);
     AT(ideatek_input_action_t, type);
     AT(ideatek_input_action_t, accumulate);
 }
@@ -122,6 +123,34 @@ static void show_input_swizzle(void)
     AT(ideatek_input_swizzle_t, order);
 }
 
+static void show_input_response_curve(void)
+{
+    SIZE(ideatek_input_response_curve_t);
+    AT(ideatek_input_response_curve_t, x_points);
+    AT(ideatek_input_response_curve_t, y_points);
+    AT(ideatek_input_response_curve_t, z_points);
+}
+
+static void show_input_clamp(void)
+{
+    SIZE(ideatek_input_clamp_t);
+    AT(ideatek_input_clamp_t, min);
+    AT(ideatek_input_clamp_t, max);
+}
+
+static void show_input_smooth(void)
+{
+    SIZE(ideatek_input_smooth_t);
+    AT(ideatek_input_smooth_t, decay_rate);
+}
+
+static void show_input_linear_step(void)
+{
+    SIZE(ideatek_input_linear_step_t);
+    AT(ideatek_input_linear_step_t, accel_rate);
+    AT(ideatek_input_linear_step_t, decel_rate);
+}
+
 static void show_input_pressed(void)
 {
     SIZE(ideatek_input_pressed_t);
@@ -168,6 +197,43 @@ static void show_input_pulse(void)
     AT(ideatek_input_pulse_t, flags);
 }
 
+static void show_input_hold_release(void)
+{
+    SIZE(ideatek_input_hold_release_t);
+    AT(ideatek_input_hold_release_t, threshold);
+    AT(ideatek_input_hold_release_t, time);
+}
+
+static void show_input_multi_tap(void)
+{
+    SIZE(ideatek_input_multi_tap_t);
+    AT(ideatek_input_multi_tap_t, threshold);
+    AT(ideatek_input_multi_tap_t, time);
+    AT(ideatek_input_multi_tap_t, gap);
+    AT(ideatek_input_multi_tap_t, count);
+}
+
+static void show_input_toggle(void)
+{
+    SIZE(ideatek_input_toggle_t);
+    AT(ideatek_input_toggle_t, threshold);
+}
+
+static void show_input_flick(void)
+{
+    SIZE(ideatek_input_flick_t);
+    AT(ideatek_input_flick_t, threshold);
+    AT(ideatek_input_flick_t, rest);
+    AT(ideatek_input_flick_t, time);
+}
+
+static void show_input_cooldown(void)
+{
+    SIZE(ideatek_input_cooldown_t);
+    AT(ideatek_input_cooldown_t, threshold);
+    AT(ideatek_input_cooldown_t, time);
+}
+
 static void show_chord_flags(void)
 {
     SIZE(ideatek_chord_flags_t);
@@ -180,6 +246,40 @@ static void show_input_chord(void)
     AT(ideatek_input_chord_t, flags);
 }
 
+static void show_input_combo(void)
+{
+    SIZE(ideatek_input_combo_t);
+    AT(ideatek_input_combo_t, steps);
+    AT(ideatek_input_combo_t, cancels);
+    AT(ideatek_input_combo_t, steps_count);
+    AT(ideatek_input_combo_t, cancels_count);
+}
+
+static void show_input_cardinal(void)
+{
+    SIZE(ideatek_input_cardinal_t);
+    AT(ideatek_input_cardinal_t, up);
+    AT(ideatek_input_cardinal_t, down);
+    AT(ideatek_input_cardinal_t, left);
+    AT(ideatek_input_cardinal_t, right);
+}
+
+static void show_input_external(void)
+{
+    SIZE(ideatek_input_external_t);
+    AT(ideatek_input_external_t, x);
+    AT(ideatek_input_external_t, y);
+    AT(ideatek_input_external_t, z);
+    AT(ideatek_input_external_t, origin);
+}
+
+static void show_input_action_origins(void)
+{
+    SIZE(ideatek_input_action_origins_t);
+    AT(ideatek_input_action_origins_t, origins);
+    AT(ideatek_input_action_origins_t, count);
+}
+
 static void show_context_flags(void)
 {
     SIZE(ideatek_context_flags_t);
@@ -188,6 +288,7 @@ static void show_context_flags(void)
 static void show_input_context(void)
 {
     SIZE(ideatek_input_context_t);
+    AT(ideatek_input_context_t, name);
     AT(ideatek_input_context_t, player);
     AT(ideatek_input_context_t, priority);
     AT(ideatek_input_context_t, flags);
@@ -250,15 +351,22 @@ static void show_descriptors(void)
         ideatek_input_curve_t_desc, ideatek_input_scale_t_desc,
         ideatek_axes_t_desc, ideatek_input_negate_t_desc,
         ideatek_swizzle_t_desc, ideatek_input_swizzle_t_desc,
+        ideatek_input_response_curve_t_desc, ideatek_input_clamp_t_desc,
+        ideatek_input_smooth_t_desc, ideatek_input_linear_step_t_desc,
         ideatek_input_pressed_t_desc, ideatek_input_released_t_desc,
         ideatek_hold_flags_t_desc, ideatek_input_hold_t_desc,
         ideatek_input_tap_t_desc, ideatek_pulse_flags_t_desc,
-        ideatek_input_pulse_t_desc, ideatek_chord_flags_t_desc,
-        ideatek_input_chord_t_desc, ideatek_context_flags_t_desc,
-        ideatek_input_context_t_desc, ideatek_input_player_t_desc,
-        ideatek_input_device_t_desc, ideatek_capture_sources_t_desc,
-        ideatek_input_capture_t_desc, ideatek_input_captured_t_desc,
-        ideatek_device_kind_t_desc, ideatek_input_last_device_t_desc };
+        ideatek_input_pulse_t_desc, ideatek_input_hold_release_t_desc,
+        ideatek_input_multi_tap_t_desc, ideatek_input_toggle_t_desc,
+        ideatek_input_flick_t_desc, ideatek_input_cooldown_t_desc,
+        ideatek_chord_flags_t_desc, ideatek_input_chord_t_desc,
+        ideatek_input_combo_t_desc, ideatek_input_cardinal_t_desc,
+        ideatek_input_external_t_desc, ideatek_input_action_origins_t_desc,
+        ideatek_context_flags_t_desc, ideatek_input_context_t_desc,
+        ideatek_input_player_t_desc, ideatek_input_device_t_desc,
+        ideatek_capture_sources_t_desc, ideatek_input_capture_t_desc,
+        ideatek_input_captured_t_desc, ideatek_device_kind_t_desc,
+        ideatek_input_last_device_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -280,13 +388,26 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_INPUT_SCALE_FIELDS), TEXT_OF(IDEATEK_AXES_VALUES),
         TEXT_OF(IDEATEK_INPUT_NEGATE_FIELDS), TEXT_OF(IDEATEK_SWIZZLE_VALUES),
         TEXT_OF(IDEATEK_INPUT_SWIZZLE_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_RESPONSE_CURVE_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_CLAMP_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_SMOOTH_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_LINEAR_STEP_FIELDS),
         TEXT_OF(IDEATEK_INPUT_PRESSED_FIELDS),
         TEXT_OF(IDEATEK_INPUT_RELEASED_FIELDS),
         TEXT_OF(IDEATEK_HOLD_FLAGS_VALUES), TEXT_OF(IDEATEK_INPUT_HOLD_FIELDS),
         TEXT_OF(IDEATEK_INPUT_TAP_FIELDS), TEXT_OF(IDEATEK_PULSE_FLAGS_VALUES),
         TEXT_OF(IDEATEK_INPUT_PULSE_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_HOLD_RELEASE_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_MULTI_TAP_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_TOGGLE_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_FLICK_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_COOLDOWN_FIELDS),
         TEXT_OF(IDEATEK_CHORD_FLAGS_VALUES),
         TEXT_OF(IDEATEK_INPUT_CHORD_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_COMBO_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_CARDINAL_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_EXTERNAL_FIELDS),
+        TEXT_OF(IDEATEK_INPUT_ACTION_ORIGINS_FIELDS),
         TEXT_OF(IDEATEK_CONTEXT_FLAGS_VALUES),
         TEXT_OF(IDEATEK_INPUT_CONTEXT_FIELDS),
         TEXT_OF(IDEATEK_INPUT_PLAYER_FIELDS),
@@ -317,13 +438,26 @@ int main(int argc, char **argv)
         { "input_scale", show_input_scale }, { "axes", show_axes },
         { "input_negate", show_input_negate }, { "swizzle", show_swizzle },
         { "input_swizzle", show_input_swizzle },
+        { "input_response_curve", show_input_response_curve },
+        { "input_clamp", show_input_clamp },
+        { "input_smooth", show_input_smooth },
+        { "input_linear_step", show_input_linear_step },
         { "input_pressed", show_input_pressed },
         { "input_released", show_input_released },
         { "hold_flags", show_hold_flags }, { "input_hold", show_input_hold },
         { "input_tap", show_input_tap }, { "pulse_flags", show_pulse_flags },
         { "input_pulse", show_input_pulse },
+        { "input_hold_release", show_input_hold_release },
+        { "input_multi_tap", show_input_multi_tap },
+        { "input_toggle", show_input_toggle },
+        { "input_flick", show_input_flick },
+        { "input_cooldown", show_input_cooldown },
         { "chord_flags", show_chord_flags },
         { "input_chord", show_input_chord },
+        { "input_combo", show_input_combo },
+        { "input_cardinal", show_input_cardinal },
+        { "input_external", show_input_external },
+        { "input_action_origins", show_input_action_origins },
         { "context_flags", show_context_flags },
         { "input_context", show_input_context },
         { "input_player", show_input_player },

@@ -56,3 +56,8 @@ manifest = ["test:game@1.0.0", "{input_mapping_spawn_words}"]
 name = "input_mapping_mapper"
 defines = ["ROLE_MAPPER"]
 manifest = ["test:mapper@1.0.0", "{input_mapping_spawn_words}"]
+
+[[artifact.variants]]
+name = "input_mapping_external"
+defines = ["ROLE_EXTERNAL"]
+manifest = ["test:external@1.0.0", "{input_mapping_spawn_words}"]

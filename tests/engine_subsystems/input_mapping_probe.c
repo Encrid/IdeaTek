@@ -55,12 +55,25 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:InputScale", ideatek_input_scale_t);
     STRUCT(api, "ideatek:InputNegate", ideatek_input_negate_t);
     STRUCT(api, "ideatek:InputSwizzle", ideatek_input_swizzle_t);
+    STRUCT(api, "ideatek:InputResponseCurve", ideatek_input_response_curve_t);
+    STRUCT(api, "ideatek:InputClamp", ideatek_input_clamp_t);
+    STRUCT(api, "ideatek:InputSmooth", ideatek_input_smooth_t);
+    STRUCT(api, "ideatek:InputLinearStep", ideatek_input_linear_step_t);
     STRUCT(api, "ideatek:InputPressed", ideatek_input_pressed_t);
     STRUCT(api, "ideatek:InputReleased", ideatek_input_released_t);
     STRUCT(api, "ideatek:InputHold", ideatek_input_hold_t);
     STRUCT(api, "ideatek:InputTap", ideatek_input_tap_t);
     STRUCT(api, "ideatek:InputPulse", ideatek_input_pulse_t);
+    STRUCT(api, "ideatek:InputHoldRelease", ideatek_input_hold_release_t);
+    STRUCT(api, "ideatek:InputMultiTap", ideatek_input_multi_tap_t);
+    STRUCT(api, "ideatek:InputToggle", ideatek_input_toggle_t);
+    STRUCT(api, "ideatek:InputFlick", ideatek_input_flick_t);
+    STRUCT(api, "ideatek:InputCooldown", ideatek_input_cooldown_t);
     STRUCT(api, "ideatek:InputChord", ideatek_input_chord_t);
+    STRUCT(api, "ideatek:InputCombo", ideatek_input_combo_t);
+    STRUCT(api, "ideatek:InputCardinal", ideatek_input_cardinal_t);
+    STRUCT(api, "ideatek:InputExternal", ideatek_input_external_t);
+    STRUCT(api, "ideatek:InputActionOrigins", ideatek_input_action_origins_t);
     STRUCT(api, "ideatek:InputContext", ideatek_input_context_t);
     STRUCT(api, "ideatek:InputPlayer", ideatek_input_player_t);
     STRUCT(api, "ideatek:InputDevice", ideatek_input_device_t);
@@ -119,6 +132,28 @@ static const char WHO[] = MANIFEST;
         ideatek_input_device_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:InputCapture",
         ideatek_input_capture_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputResponseCurve",
+        ideatek_input_response_curve_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputClamp",
+        ideatek_input_clamp_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputSmooth",
+        ideatek_input_smooth_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputLinearStep",
+        ideatek_input_linear_step_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputHoldRelease",
+        ideatek_input_hold_release_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputMultiTap",
+        ideatek_input_multi_tap_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputToggle",
+        ideatek_input_toggle_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputFlick",
+        ideatek_input_flick_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputCooldown",
+        ideatek_input_cooldown_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputCombo",
+        ideatek_input_combo_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputCardinal",
+        ideatek_input_cardinal_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_mapper(const bridge_api_t *api)
@@ -157,14 +192,78 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:InputPlayer", ideatek_input_player_t);
     STRUCT(api, "ideatek:InputDevice", ideatek_input_device_t);
     STRUCT(api, "ideatek:InputCapture", ideatek_input_capture_t);
+    STRUCT(api, "ideatek:InputResponseCurve", ideatek_input_response_curve_t);
+    STRUCT(api, "ideatek:InputClamp", ideatek_input_clamp_t);
+    STRUCT(api, "ideatek:InputSmooth", ideatek_input_smooth_t);
+    STRUCT(api, "ideatek:InputLinearStep", ideatek_input_linear_step_t);
+    STRUCT(api, "ideatek:InputHoldRelease", ideatek_input_hold_release_t);
+    STRUCT(api, "ideatek:InputMultiTap", ideatek_input_multi_tap_t);
+    STRUCT(api, "ideatek:InputToggle", ideatek_input_toggle_t);
+    STRUCT(api, "ideatek:InputFlick", ideatek_input_flick_t);
+    STRUCT(api, "ideatek:InputCooldown", ideatek_input_cooldown_t);
+    STRUCT(api, "ideatek:InputCombo", ideatek_input_combo_t);
+    STRUCT(api, "ideatek:InputCardinal", ideatek_input_cardinal_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Tick", ideatek_tick_t, BRIDGE_STRIP,
         BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:Frame", ideatek_frame_t, BRIDGE_STRIP,
+        BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
+    STRUCT(api, "ideatek:InputExternal", ideatek_input_external_t);
     api->attach(api, id, STRUCT(api, "ideatek:InputActionState",
         ideatek_input_action_state_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:InputCaptured",
         ideatek_input_captured_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:InputLastDevice",
         ideatek_input_last_device_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:InputActionOrigins",
+        ideatek_input_action_origins_t), BRIDGE_ZEROED);
+}
+
+[[maybe_unused]] static void role_external(const bridge_api_t *api)
+{
+    uint64_t id = api->spawn(api);
+
+    STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
+    ENUM(api, "ideatek:ideatek_action_type_t", ideatek_action_type_t);
+    ENUM(api, "ideatek:ideatek_accumulate_t", ideatek_accumulate_t);
+    ENUM(api, "ideatek:ideatek_input_source_t", ideatek_input_source_t);
+    ENUM(api, "ideatek:ideatek_dead_zone_kind_t", ideatek_dead_zone_kind_t);
+    MASK(api, "ideatek:ideatek_axes_t", ideatek_axes_t);
+    ENUM(api, "ideatek:ideatek_swizzle_t", ideatek_swizzle_t);
+    MASK(api, "ideatek:ideatek_hold_flags_t", ideatek_hold_flags_t);
+    MASK(api, "ideatek:ideatek_pulse_flags_t", ideatek_pulse_flags_t);
+    MASK(api, "ideatek:ideatek_chord_flags_t", ideatek_chord_flags_t);
+    MASK(api, "ideatek:ideatek_context_flags_t", ideatek_context_flags_t);
+    MASK(api, "ideatek:ideatek_capture_sources_t", ideatek_capture_sources_t);
+    STRUCT(api, "ideatek:InputAction", ideatek_input_action_t);
+    STRUCT(api, "ideatek:InputBinding", ideatek_input_binding_t);
+    STRUCT(api, "ideatek:InputDeadZone", ideatek_input_dead_zone_t);
+    STRUCT(api, "ideatek:InputCurve", ideatek_input_curve_t);
+    STRUCT(api, "ideatek:InputScale", ideatek_input_scale_t);
+    STRUCT(api, "ideatek:InputNegate", ideatek_input_negate_t);
+    STRUCT(api, "ideatek:InputSwizzle", ideatek_input_swizzle_t);
+    STRUCT(api, "ideatek:InputPressed", ideatek_input_pressed_t);
+    STRUCT(api, "ideatek:InputReleased", ideatek_input_released_t);
+    STRUCT(api, "ideatek:InputHold", ideatek_input_hold_t);
+    STRUCT(api, "ideatek:InputTap", ideatek_input_tap_t);
+    STRUCT(api, "ideatek:InputPulse", ideatek_input_pulse_t);
+    STRUCT(api, "ideatek:InputChord", ideatek_input_chord_t);
+    STRUCT(api, "ideatek:InputContext", ideatek_input_context_t);
+    STRUCT(api, "ideatek:InputPlayer", ideatek_input_player_t);
+    STRUCT(api, "ideatek:InputDevice", ideatek_input_device_t);
+    STRUCT(api, "ideatek:InputCapture", ideatek_input_capture_t);
+    STRUCT(api, "ideatek:InputResponseCurve", ideatek_input_response_curve_t);
+    STRUCT(api, "ideatek:InputClamp", ideatek_input_clamp_t);
+    STRUCT(api, "ideatek:InputSmooth", ideatek_input_smooth_t);
+    STRUCT(api, "ideatek:InputLinearStep", ideatek_input_linear_step_t);
+    STRUCT(api, "ideatek:InputHoldRelease", ideatek_input_hold_release_t);
+    STRUCT(api, "ideatek:InputMultiTap", ideatek_input_multi_tap_t);
+    STRUCT(api, "ideatek:InputToggle", ideatek_input_toggle_t);
+    STRUCT(api, "ideatek:InputFlick", ideatek_input_flick_t);
+    STRUCT(api, "ideatek:InputCooldown", ideatek_input_cooldown_t);
+    STRUCT(api, "ideatek:InputCombo", ideatek_input_combo_t);
+    STRUCT(api, "ideatek:InputCardinal", ideatek_input_cardinal_t);
+    api->attach(api, id, STRUCT(api, "ideatek:InputExternal",
+        ideatek_input_external_t), BRIDGE_ZEROED);
 }
 
 BRIDGE_NATIVE(init)
@@ -175,6 +274,8 @@ BRIDGE_NATIVE(init)
     role_game(api);
 #elif defined(ROLE_MAPPER)
     role_mapper(api);
+#elif defined(ROLE_EXTERNAL)
+    role_external(api);
 #else
     declare_all(api);
 #endif
