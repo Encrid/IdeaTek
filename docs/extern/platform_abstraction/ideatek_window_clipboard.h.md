@@ -16,7 +16,7 @@ The window module destroys the entity in the next round. A reader that keeps the
 
 ## The bytes of the pastes
 
-At `init`, the window module takes `clipboard_bytes` bytes from its share of the persistent arena.
+In its first round, the window module takes `clipboard_bytes` bytes from its share of the persistent arena.
 Each round writes the pastes in one half of the bytes, and the next round writes in the other half.
 A paste that is too large for the free bytes of its half gets no entity. The log of the window module gets 1 line.
 The window module never cuts a paste.

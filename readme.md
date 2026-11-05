@@ -36,6 +36,9 @@ Each part has a header in `include` and a document in `docs/extern`, which gives
 - Bridge does not compare `on_unload`, so each module states its own.
 - No module has the namespace `ideatek`. Thus each module needs a grant for each type that it declares, in `read` or `write` of the deployment.
 - Two modules that conflict in one phase need a pair of the deployment.
+- The document of a contract gives the range of each setting of a role. A setting outside its range is a fault of the deployment.
+- Then the module writes `<setting>: <value> is outside <range>`, and its system fails in each round.
+- Bridge then stops the module or the world, as `on_error` and `max_system_failures` of the deployment tell.
 
 The documents of `bridge.h` and `bridge_abi.h` of Bridge tell the pairs and what each grant allows.
 

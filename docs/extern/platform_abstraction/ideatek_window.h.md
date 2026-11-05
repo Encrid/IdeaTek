@@ -16,6 +16,7 @@ The header includes `include/platform_abstraction/ideatek_world.h` for `ideatek_
 
 - The game writes `ideatek:WindowRequest`.
 - The window module reads `ideatek:WindowRequest`. It writes `ideatek:WindowState`, `ideatek:Display`, `ideatek:VideoMode` and `ideatek:Drop`. A deployment has one window module.
+- The clock module writes `ideatek:EventWait` when its `sleeper` is `"events"`: `docs/extern/kernel/ideatek_frame.h.md`, *The limit of the rate*.
 - A reader reads the types of this header. Render, input and the UI are readers.
 
 The game spawns an entity, and attaches `ideatek:WindowRequest` to it.
@@ -27,7 +28,7 @@ The window module attaches `ideatek:WindowState` again only when a byte of it ch
 
 ## The displays
 
-The window module spawns an entity for each display when it starts, and when the system adds a display.
+The window module spawns an entity for each display in its first round, and when the system adds a display.
 It attaches `ideatek:Display` to the entity, and spawns an entity with `ideatek:VideoMode` for each video mode of the display.
 When the system removes a display, the window module destroys the entity of the display and the entities of its video modes.
 Exactly 1 display entity has `is_primary` set to `true`.
@@ -49,7 +50,7 @@ The game closes the window when it destroys its entity. The window module then r
 
 The window module takes the events of the system in the first phase of each round.
 It runs after the clock module, and before each other reader of the events.
-When the `wait` of `ideatek:Frame` is more than 0, it waits for an event of the system, for at most `wait`.
+When the `wait` of the `ideatek:EventWait` of the window is more than 0, it waits for an event of the system, for at most `wait`.
 It waits until `wait` passed since it took the events of the last round, or until an event comes.
 `docs/extern/kernel/ideatek_frame.h.md`, *The limit of the rate*, tells when `wait` is more than 0.
 
@@ -61,7 +62,7 @@ The user can drag files or a text from another program, and drop them on the win
 - For each dropped item, the window module spawns an entity with `ideatek:Drop`. A reader hears it with an observer of `BRIDGE_ON_ENTER`.
 - The window module destroys each entity of `ideatek:Drop` in the next round. A reader that keeps the item copies its bytes.
 
-At `init`, the window module allocates `drop_bytes` bytes in its share of the persistent arena.
+In its first round, the window module allocates `drop_bytes` bytes in its share of the persistent arena.
 It uses one half of these bytes in a round, and the other half in the next round.
 Thus, the bytes of a drop stay good while its entity lives.
 If an item does not fit in the free part of the half, the window module does not spawn its entity.
@@ -238,6 +239,20 @@ The bytes 41 to 47 hold no field, because the size of the type is a multiple of 
 | `IDEATEK_DROP_FILE` | 0 | A file. |
 | `IDEATEK_DROP_TEXT` | 1 | A text. |
 
+## ideatek:EventWait
+
+`ideatek:EventWait` is the longest time that the window module waits for an event: *The events of the system*.
+Its C type `ideatek_event_wait_t` takes 8 bytes, with an alignment of 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `wait` | `double` | 0 | The longest wait, in seconds. 0 sets no limit on the rounds, and the window module does not wait. |
+
+The clock module attaches `ideatek:EventWait` to the entity of the window when the entity has `ideatek:WindowState`.
+Then it writes `wait` where it is, in the first phase of each round, before the window module.
+The deployment orders the 2 modules with a pair.
+Until the barrier applies the attach, the entity has no `ideatek:EventWait`, and the window module does not wait.
+
 ## The C types
 
 | Type of Bridge | C type | Descriptor | Macro of the text |
@@ -251,6 +266,7 @@ The bytes 41 to 47 hold no field, because the size of the type is a multiple of 
 | `ideatek:Display` | `ideatek_display_t` | `ideatek_display_t_desc` | `IDEATEK_DISPLAY_FIELDS` |
 | `ideatek:VideoMode` | `ideatek_video_mode_t` | `ideatek_video_mode_t_desc` | `IDEATEK_VIDEO_MODE_FIELDS` |
 | `ideatek:Drop` | `ideatek_drop_t` | `ideatek_drop_t_desc` | `IDEATEK_DROP_FIELDS` |
+| `ideatek:EventWait` | `ideatek_event_wait_t` | `ideatek_event_wait_t_desc` | `IDEATEK_EVENT_WAIT_FIELDS` |
 
 ```text
 { IDEATEK_WINDOW_MODE_WINDOWED = 0, IDEATEK_WINDOW_MODE_FULLSCREEN = 1, IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN = 2 }
@@ -262,6 +278,7 @@ The bytes 41 to 47 hold no field, because the size of the type is a multiple of 
 { char name[128]; ideatek_entity_t desktop_mode; ideatek_entity_t current_mode; uint32_t width; uint32_t height; float content_scale; bool hdr; bool is_primary; }
 { ideatek_entity_t display; uint32_t width; uint32_t height; float pixel_density; int32_t refresh_numerator; int32_t refresh_denominator; uint32_t order; }
 { ideatek_entity_t window; bridge_text_t data; bridge_text_t source; uint32_t set; uint32_t index; float x; float y; ideatek_drop_kind_t kind; }
+{ double wait; }
 ```
 
 ## The declarations
@@ -278,6 +295,7 @@ The bytes 41 to 47 hold no field, because the size of the type is a multiple of 
 | `ideatek:Display` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:VideoMode` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Drop` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:EventWait` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 A module declares each field type before the struct that has a field of the type.
 `bridge_text_t` is a type of Bridge, and no module declares it.
@@ -289,5 +307,6 @@ The field types are `ideatek:ideatek_entity_t` and the four enums.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | The game | `ideatek:WindowRequest` | The field types |
-| The window module | `ideatek:WindowState`, `ideatek:Display`, `ideatek:VideoMode` and `ideatek:Drop` | `ideatek:WindowRequest` and the field types |
+| The window module | `ideatek:WindowState`, `ideatek:Display`, `ideatek:VideoMode` and `ideatek:Drop` | `ideatek:WindowRequest`, `ideatek:EventWait` and the field types |
+| The clock module, with `sleeper` at `"events"` | `ideatek:EventWait` | `ideatek:WindowState` and the field types |
 | A reader | No type. | The types that it reads, and the field types |
