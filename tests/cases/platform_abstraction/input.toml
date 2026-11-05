@@ -120,19 +120,13 @@ false = { run = ["{out}/input_layout{exe}", "gamepad_button"] }
 name = "ideatek_gamepad_button_t has the size and the alignment of its Usage"
 run = ["{out}/input_layout{exe}", "gamepad_button"]
 claims = { status = 0, order = ["size 4", "alignment 4"] }
-false = { run = ["{out}/input_layout{exe}", "gamepad_features"] }
-
-[[case]]
-name = "ideatek_gamepad_features_t has the size and the alignment of its Usage"
-run = ["{out}/input_layout{exe}", "gamepad_features"]
-claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/input_layout{exe}", "gamepad"] }
 
 [[case]]
 name = "ideatek_gamepad_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/input_layout{exe}", "gamepad"]
 claims = { status = 0, order = [
-    "size 380", "alignment 1", "name 0", "features 379",
+    "size 379", "alignment 1", "name 0",
 ] }
 false = { run = ["{out}/input_layout{exe}", "gamepad_state"] }
 
@@ -159,20 +153,6 @@ run = ["{out}/input_layout{exe}", "gamepad_request"]
 claims = { status = 0, order = [
     "size 12", "alignment 4", "weak 0", "strong 4", "duration_ms 8",
 ] }
-false = { run = ["{out}/input_layout{exe}", "gamepad_sensor_request"] }
-
-[[case]]
-name = "ideatek_gamepad_sensor_request_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/input_layout{exe}", "gamepad_sensor_request"]
-claims = { status = 0, order = ["size 1", "alignment 1", "enabled 0"] }
-false = { run = ["{out}/input_layout{exe}", "gamepad_motion"] }
-
-[[case]]
-name = "ideatek_gamepad_motion_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/input_layout{exe}", "gamepad_motion"]
-claims = { status = 0, order = [
-    "size 36", "alignment 4", "gyro 0", "accel 12", "turn 24",
-] }
 false = { run = ["{out}/input_layout{exe}", "input_event_kind"] }
 
 [[case]]
@@ -196,13 +176,10 @@ claims = { status = 0, line = [
     "uint8_t { IDEATEK_FINGER_EVENT_KIND_BEGAN = 0, IDEATEK_FINGER_EVENT_KIND_MOVED = 1, IDEATEK_FINGER_EVENT_KIND_ENDED = 2, IDEATEK_FINGER_EVENT_KIND_CANCELED = 3 }",
     "{ uint64_t id; float x; float y; uint32_t order; ideatek_finger_event_kind_t kind; }",
     "uint32_t { IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x00001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x00002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x00004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x00008, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x00010, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x00020, IDEATEK_GAMEPAD_BUTTON_BACK = 0x00100, IDEATEK_GAMEPAD_BUTTON_START = 0x00200, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x00400, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x00800, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x01000, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x02000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x04000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x08000, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x10000 }",
-    "uint8_t { IDEATEK_GAMEPAD_FEATURES_GYRO = 0x01, IDEATEK_GAMEPAD_FEATURES_ACCEL = 0x02 }",
-    "{ char name[379]; ideatek_gamepad_features_t features; }",
+    "{ char name[379]; }",
     "{ float left_x; float left_y; float right_x; float right_y; float left_trigger; float right_trigger; ideatek_gamepad_button_t buttons; }",
     "{ ideatek_entity_t gamepad; uint32_t order; ideatek_gamepad_button_t button; bool down; }",
     "{ float weak; float strong; uint32_t duration_ms; }",
-    "{ bool enabled; }",
-    "{ float gyro[3]; float accel[3]; float turn[3]; }",
 ] }
 false = { run = ["{out}/input_layout{exe}", "texts"] }
 
@@ -227,13 +204,10 @@ claims = { status = 0, line = [
     "{ IDEATEK_FINGER_EVENT_KIND_BEGAN = 0, IDEATEK_FINGER_EVENT_KIND_MOVED = 1, IDEATEK_FINGER_EVENT_KIND_ENDED = 2, IDEATEK_FINGER_EVENT_KIND_CANCELED = 3 }",
     "{ uint64_t id; float x; float y; uint32_t order; ideatek_finger_event_kind_t kind; }",
     "{ IDEATEK_GAMEPAD_BUTTON_SOUTH = 0x00001, IDEATEK_GAMEPAD_BUTTON_EAST = 0x00002, IDEATEK_GAMEPAD_BUTTON_WEST = 0x00004, IDEATEK_GAMEPAD_BUTTON_NORTH = 0x00008, IDEATEK_GAMEPAD_BUTTON_LEFT_SHOULDER = 0x00010, IDEATEK_GAMEPAD_BUTTON_RIGHT_SHOULDER = 0x00020, IDEATEK_GAMEPAD_BUTTON_BACK = 0x00100, IDEATEK_GAMEPAD_BUTTON_START = 0x00200, IDEATEK_GAMEPAD_BUTTON_LEFT_STICK = 0x00400, IDEATEK_GAMEPAD_BUTTON_RIGHT_STICK = 0x00800, IDEATEK_GAMEPAD_BUTTON_DPAD_UP = 0x01000, IDEATEK_GAMEPAD_BUTTON_DPAD_DOWN = 0x02000, IDEATEK_GAMEPAD_BUTTON_DPAD_LEFT = 0x04000, IDEATEK_GAMEPAD_BUTTON_DPAD_RIGHT = 0x08000, IDEATEK_GAMEPAD_BUTTON_GUIDE = 0x10000 }",
-    "{ IDEATEK_GAMEPAD_FEATURES_GYRO = 0x01, IDEATEK_GAMEPAD_FEATURES_ACCEL = 0x02 }",
-    "{ char name[379]; ideatek_gamepad_features_t features; }",
+    "{ char name[379]; }",
     "{ float left_x; float left_y; float right_x; float right_y; float left_trigger; float right_trigger; ideatek_gamepad_button_t buttons; }",
     "{ ideatek_entity_t gamepad; uint32_t order; ideatek_gamepad_button_t button; bool down; }",
     "{ float weak; float strong; uint32_t duration_ms; }",
-    "{ bool enabled; }",
-    "{ float gyro[3]; float accel[3]; float turn[3]; }",
 ] }
 false = { run = ["{out}/input_layout{exe}", "descriptors"] }
 
@@ -326,14 +300,14 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:probe@1.0.0"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_features_t", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextRequest", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:MouseRequest", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:GamepadRequest", "ideatek:GamepadSensorRequest", "ideatek:GamepadMotion"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextRequest", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:MouseRequest", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:GamepadRequest"]
 '''
 
 [case.false.folders]
 "{case}/m" = ["input_late"]
 
 [[case]]
-name = "the game loads with write on the four requests, and attaches them"
+name = "the game loads with write on the three requests, and attaches them"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/input_game{library}"] }
 
@@ -348,8 +322,8 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
-write = ["ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:GamepadSensorRequest"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_features_t"]
+write = ["ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t"]
 '''
 
 [case.false.files]
@@ -361,11 +335,11 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0"]
 write = ["ideatek:TextRequest", "ideatek:MouseRequest"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_features_t", "ideatek:GamepadRequest"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:GamepadRequest"]
 '''
 
 [[case]]
-name = "the input module loads with write on its 13 types and read on the four requests, and attaches its 13 types"
+name = "the input module loads with write on its 12 types and read on the three requests, and attaches its 12 types"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:input@1.0.0, native, m/input_module{library}"] }
 
@@ -380,8 +354,8 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:input@1.0.0"]
-write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:GamepadMotion"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_features_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:GamepadSensorRequest"]
+write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest"]
 '''
 
 [case.false.files]
@@ -393,11 +367,11 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:input@1.0.0"]
 write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_features_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:GamepadSensorRequest", "ideatek:GamepadEvent"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:GamepadEvent"]
 '''
 
 [[case]]
-name = "a reader loads with read on the 25 types"
+name = "a reader loads with read on the 22 types"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/input_reader{library}"] }
 
@@ -412,7 +386,7 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:reader@1.0.0"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_gamepad_features_t", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextRequest", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:MouseRequest", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:GamepadRequest", "ideatek:GamepadSensorRequest", "ideatek:GamepadMotion"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextRequest", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:MouseRequest", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:GamepadRequest"]
 '''
 
 [case.false.files]
@@ -423,7 +397,7 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:reader@1.0.0"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextRequest", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:MouseRequest", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:GamepadRequest", "ideatek:GamepadSensorRequest", "ideatek:GamepadMotion"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextRequest", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:MouseRequest", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:GamepadRequest"]
 '''
 
 [[case]]

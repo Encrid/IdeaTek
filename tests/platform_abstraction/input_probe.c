@@ -32,8 +32,6 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_finger_event_kind_t",
         ideatek_finger_event_kind_t);
     MASK(api, "ideatek:ideatek_gamepad_button_t", ideatek_gamepad_button_t);
-    MASK(api, "ideatek:ideatek_gamepad_features_t",
-        ideatek_gamepad_features_t);
 }
 
 [[maybe_unused]] static uint32_t declare_text_request(const bridge_api_t *api)
@@ -53,19 +51,11 @@ static const char WHO[] = MANIFEST;
     return (STRUCT(api, "ideatek:GamepadRequest", ideatek_gamepad_request_t));
 }
 
-[[maybe_unused]] static uint32_t declare_gamepad_sensor_request(
-    const bridge_api_t *api)
-{
-    return (STRUCT(api, "ideatek:GamepadSensorRequest",
-        ideatek_gamepad_sensor_request_t));
-}
-
 [[maybe_unused]] static void declare_requests(const bridge_api_t *api)
 {
     declare_text_request(api);
     declare_mouse_request(api);
     declare_gamepad_request(api);
-    declare_gamepad_sensor_request(api);
 }
 
 [[maybe_unused]] static void declare_module(const bridge_api_t *api)
@@ -85,8 +75,6 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:GamepadState", ideatek_gamepad_state_t);
     STRUCT(api, "ideatek:GamepadEvent", ideatek_gamepad_event_t);
     declare_gamepad_request(api);
-    declare_gamepad_sensor_request(api);
-    STRUCT(api, "ideatek:GamepadMotion", ideatek_gamepad_motion_t);
 }
 
 [[maybe_unused]] static void ask(const bridge_api_t *api)
@@ -98,15 +86,12 @@ static const char WHO[] = MANIFEST;
         .cursor = IDEATEK_CURSOR_ARROW };
     ideatek_gamepad_request_t rumble = { .weak = 0.5F, .strong = 0.5F,
         .duration_ms = 100 };
-    ideatek_gamepad_sensor_request_t sensors = { .enabled = true };
-    uint64_t pad = api->spawn(api);
 
     declare_fields(api);
     BRIDGE_NATIVE_ATTACH(api, input, declare_text_request(api), text);
     BRIDGE_NATIVE_ATTACH(api, input, declare_mouse_request(api), mouse);
-    BRIDGE_NATIVE_ATTACH(api, pad, declare_gamepad_request(api), rumble);
-    BRIDGE_NATIVE_ATTACH(api, pad, declare_gamepad_sensor_request(api),
-        sensors);
+    BRIDGE_NATIVE_ATTACH(api, api->spawn(api), declare_gamepad_request(api),
+        rumble);
 }
 
 [[maybe_unused]] static void report(const bridge_api_t *api)
@@ -127,14 +112,11 @@ static const char WHO[] = MANIFEST;
     ideatek_mouse_wheel_t wheel = { .ticks_y = 1.0F, .order = 5 };
     ideatek_finger_event_t finger = { .id = 1, .x = 1.0F, .y = 2.0F,
         .order = 6, .kind = IDEATEK_FINGER_EVENT_KIND_BEGAN };
-    ideatek_gamepad_t pad = { .name = "probe",
-        .features = IDEATEK_GAMEPAD_FEATURES_GYRO };
+    ideatek_gamepad_t pad = { .name = "probe" };
     ideatek_gamepad_state_t state = { .left_trigger = 1.0F,
         .buttons = IDEATEK_GAMEPAD_BUTTON_SOUTH };
     ideatek_gamepad_event_t press = { .gamepad = { gamepad }, .order = 7,
         .button = IDEATEK_GAMEPAD_BUTTON_SOUTH, .down = true };
-    ideatek_gamepad_motion_t sample = { .gyro = { 1.0F, 0.0F, 0.0F },
-        .turn = { 0.01F, 0.0F, 0.0F } };
 
     declare_fields(api);
     declare_requests(api);
@@ -162,8 +144,6 @@ static const char WHO[] = MANIFEST;
         ideatek_gamepad_state_t), state);
     BRIDGE_NATIVE_ATTACH(api, gamepad, STRUCT(api, "ideatek:GamepadEvent",
         ideatek_gamepad_event_t), press);
-    BRIDGE_NATIVE_ATTACH(api, gamepad, STRUCT(api, "ideatek:GamepadMotion",
-        ideatek_gamepad_motion_t), sample);
 }
 
 BRIDGE_NATIVE(init)
