@@ -19,7 +19,7 @@ that place a type on a layer. Each part of the project is on 1 layer.
 
 ## The layers of the project
 
-The project holds the contracts of layers 2, 3 and 4.
+The project holds the contracts of layers 2, 3 and 4. It also holds their implementations, as module parts and library parts.
 
 ## The parts
 

@@ -1,10 +1,12 @@
 # IdeaTek
 
-IdeaTek is a set of contracts for game engines on Bridge. Each concern is a part with its own contract.
+IdeaTek holds contracts for game engines on Bridge, and the parts that implement them. Each concern has a contract.
 
 ## Install
 
 Python 3.11 or a later version.
+
+The release of a part is a zip with a folder for each target. A deployment puts the files of a module and the shared library of `BL-IdeaTek-SDL3` in the same folder.
 
 ## Usage
 
@@ -36,6 +38,26 @@ Each part has a header in `include` and a document in `docs/extern`, which gives
 - Two modules that conflict in one phase need a pair of the deployment.
 
 The documents of `bridge.h` and `bridge_abi.h` of Bridge tell the pairs and what each grant allows.
+
+### The implementations
+
+Each implementation is a part with its own release. A module part fills the role of a module that a contract document names.
+
+| Part | Package | Identity | Fills the role of | Beside it |
+| --- | --- | --- | --- | --- |
+| `sdl3` | `BL-IdeaTek-SDL3` | A library: no identity | | |
+| `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `ideatek_window_sdl3:window@0.1.0` | The window module, with the clipboard | The SDL3 library |
+| `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `ideatek_input_sdl3:input@0.1.0` | The input module | The SDL3 library |
+| `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `ideatek_gpu_vulkan:gpu@0.1.0` | The GPU module | The Vulkan loader. On macOS, the bundled loader with KosmicKrisp and MoltenVK |
+
+- The behavior and the settings of each role are in the document of its contract, under the name of the role.
+- The namespace of each identity is the key of its part, so no module has the namespace `ideatek`.
+- `sdl3` holds the shared library of SDL3 3.4.20. A deployment puts 1 copy of it beside its modules, so each module in the process uses the same SDL3.
+- The GPU module needs the base of `docs/extern/platform_abstraction/ideatek_gpu_vulkan.h.md`, *The features*.
+- On macOS, KosmicKrisp needs Apple silicon and macOS 26. MoltenVK serves an Intel Mac and an older macOS.
+- A GPU that lacks a part of that base gets `IDEATEK_GPU_STATUS_NONE`, and the log gets 1 line for each missing part.
+- A deployment grants each module the `write` and the `read` of the types of its role.
+- The pairs that a role needs are in the document of its contract.
 
 ## Contributing
 
