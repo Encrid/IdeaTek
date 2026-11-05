@@ -40,27 +40,6 @@ static void show_saved(void)
     AT(ideatek_saved_t, groups);
 }
 
-static void show_save_id(void)
-{
-    SIZE(ideatek_save_id_t);
-    AT(ideatek_save_id_t, id);
-}
-
-static void show_save_participant(void)
-{
-    SIZE(ideatek_save_participant_t);
-    AT(ideatek_save_participant_t, tag);
-}
-
-static void show_save_chunk(void)
-{
-    SIZE(ideatek_save_chunk_t);
-    AT(ideatek_save_chunk_t, request);
-    AT(ideatek_save_chunk_t, tag);
-    AT(ideatek_save_chunk_t, data);
-    AT(ideatek_save_chunk_t, version);
-}
-
 static void show_save_ready(void)
 {
     SIZE(ideatek_save_ready_t);
@@ -109,11 +88,10 @@ static void show_descriptors(void)
 {
     const char *descriptors[] = {
         ideatek_save_action_t_desc, ideatek_save_request_t_desc,
-        ideatek_saved_t_desc, ideatek_save_id_t_desc,
-        ideatek_save_participant_t_desc, ideatek_save_chunk_t_desc,
-        ideatek_save_ready_t_desc, ideatek_save_refuse_t_desc,
-        ideatek_save_state_t_desc, ideatek_save_error_t_desc,
-        ideatek_save_result_t_desc, ideatek_save_info_t_desc };
+        ideatek_saved_t_desc, ideatek_save_ready_t_desc,
+        ideatek_save_refuse_t_desc, ideatek_save_state_t_desc,
+        ideatek_save_error_t_desc, ideatek_save_result_t_desc,
+        ideatek_save_info_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -124,12 +102,9 @@ static void show_texts(void)
     const char *texts[] = {
         TEXT_OF(IDEATEK_SAVE_ACTION_VALUES),
         TEXT_OF(IDEATEK_SAVE_REQUEST_FIELDS), TEXT_OF(IDEATEK_SAVED_FIELDS),
-        TEXT_OF(IDEATEK_SAVE_ID_FIELDS),
-        TEXT_OF(IDEATEK_SAVE_PARTICIPANT_FIELDS),
-        TEXT_OF(IDEATEK_SAVE_CHUNK_FIELDS), TEXT_OF(IDEATEK_SAVE_READY_FIELDS),
-        TEXT_OF(IDEATEK_SAVE_REFUSE_FIELDS), TEXT_OF(IDEATEK_SAVE_STATE_VALUES),
-        TEXT_OF(IDEATEK_SAVE_ERROR_VALUES), TEXT_OF(IDEATEK_SAVE_RESULT_FIELDS),
-        TEXT_OF(IDEATEK_SAVE_INFO_FIELDS) };
+        TEXT_OF(IDEATEK_SAVE_READY_FIELDS), TEXT_OF(IDEATEK_SAVE_REFUSE_FIELDS),
+        TEXT_OF(IDEATEK_SAVE_STATE_VALUES), TEXT_OF(IDEATEK_SAVE_ERROR_VALUES),
+        TEXT_OF(IDEATEK_SAVE_RESULT_FIELDS), TEXT_OF(IDEATEK_SAVE_INFO_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -140,13 +115,10 @@ int main(int argc, char **argv)
     static const show_mode_t MODES[] = {
         { "save_action", show_save_action },
         { "save_request", show_save_request }, { "saved", show_saved },
-        { "save_id", show_save_id },
-        { "save_participant", show_save_participant },
-        { "save_chunk", show_save_chunk }, { "save_ready", show_save_ready },
-        { "save_refuse", show_save_refuse }, { "save_state", show_save_state },
-        { "save_error", show_save_error }, { "save_result", show_save_result },
-        { "save_info", show_save_info }, { "descriptors", show_descriptors },
-        { "texts", show_texts }
+        { "save_ready", show_save_ready }, { "save_refuse", show_save_refuse },
+        { "save_state", show_save_state }, { "save_error", show_save_error },
+        { "save_result", show_save_result }, { "save_info", show_save_info },
+        { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 
     for (size_t i = 0; argc > 1 && i < sizeof(MODES) / sizeof(MODES[0]); i++)

@@ -4,6 +4,7 @@
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
 #include "bridge_native.h"
+#include "ideatek_changes.h"
 #include "ideatek_persistence.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -37,9 +38,6 @@ static const char WHO[] = MANIFEST;
     declare_fields(api);
     STRUCT(api, "ideatek:SaveRequest", ideatek_save_request_t);
     STRUCT(api, "ideatek:Saved", ideatek_saved_t);
-    STRUCT(api, "ideatek:SaveId", ideatek_save_id_t);
-    STRUCT(api, "ideatek:SaveParticipant", ideatek_save_participant_t);
-    STRUCT(api, "ideatek:SaveChunk", ideatek_save_chunk_t);
     STRUCT(api, "ideatek:SaveReady", ideatek_save_ready_t);
     STRUCT(api, "ideatek:SaveRefuse", ideatek_save_refuse_t);
     STRUCT(api, "ideatek:SaveResult", ideatek_save_result_t);
@@ -62,13 +60,13 @@ static const char WHO[] = MANIFEST;
     uint64_t id = api->spawn(api);
 
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
+    ENUM(api, "ideatek:ideatek_change_kind_t", ideatek_change_kind_t);
     ENUM(api, "ideatek:ideatek_save_action_t", ideatek_save_action_t);
     STRUCT(api, "ideatek:SaveRequest", ideatek_save_request_t);
-    STRUCT(api, "ideatek:SaveId", ideatek_save_id_t);
-    api->attach(api, id, STRUCT(api, "ideatek:SaveParticipant",
-        ideatek_save_participant_t), BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:SaveChunk", ideatek_save_chunk_t),
-        BRIDGE_ZEROED);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:RowsIn", ideatek_rows_in_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:EntityId", ideatek_entity_id_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
     api->attach(api, id, STRUCT(api, "ideatek:SaveReady", ideatek_save_ready_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:SaveRefuse",
@@ -80,18 +78,25 @@ static const char WHO[] = MANIFEST;
     uint64_t id = api->spawn(api);
 
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
+    ENUM(api, "ideatek:ideatek_change_kind_t", ideatek_change_kind_t);
+    ENUM(api, "ideatek:ideatek_durability_t", ideatek_durability_t);
+    ENUM(api, "ideatek:ideatek_change_condition_t", ideatek_change_condition_t);
     ENUM(api, "ideatek:ideatek_save_action_t", ideatek_save_action_t);
     ENUM(api, "ideatek:ideatek_save_state_t", ideatek_save_state_t);
     ENUM(api, "ideatek:ideatek_save_error_t", ideatek_save_error_t);
     STRUCT(api, "ideatek:SaveRequest", ideatek_save_request_t);
     STRUCT(api, "ideatek:Saved", ideatek_saved_t);
-    STRUCT(api, "ideatek:SaveParticipant", ideatek_save_participant_t);
     STRUCT(api, "ideatek:SaveReady", ideatek_save_ready_t);
     STRUCT(api, "ideatek:SaveRefuse", ideatek_save_refuse_t);
-    api->attach(api, id, STRUCT(api, "ideatek:SaveId", ideatek_save_id_t),
-        BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:SaveChunk", ideatek_save_chunk_t),
-        BRIDGE_ZEROED);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:ChangeTag", ideatek_change_tag_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:RowChanges", ideatek_row_changes_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:EntityId", ideatek_entity_id_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:RowsIn",
+        ideatek_rows_in_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:SaveResult",
         ideatek_save_result_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:SaveInfo", ideatek_save_info_t),

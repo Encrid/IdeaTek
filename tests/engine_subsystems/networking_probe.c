@@ -5,6 +5,7 @@
 */
 #include "bridge_native.h"
 #include "ideatek_frame.h"
+#include "ideatek_changes.h"
 #include "ideatek_networking.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -26,8 +27,6 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_peer_state_t", ideatek_peer_state_t);
     ENUM(api, "ideatek:ideatek_admit_t", ideatek_admit_t);
     ENUM(api, "ideatek:ideatek_net_authority_t", ideatek_net_authority_t);
-    ENUM(api, "ideatek:ideatek_net_kind_t", ideatek_net_kind_t);
-    ENUM(api, "ideatek:ideatek_net_condition_t", ideatek_net_condition_t);
     ENUM(api, "ideatek:ideatek_relevance_mode_t", ideatek_relevance_mode_t);
 }
 
@@ -46,9 +45,6 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:NetJoinEvent", ideatek_net_join_event_t);
     STRUCT(api, "ideatek:NetAdmit", ideatek_net_admit_t);
     STRUCT(api, "ideatek:Replicated", ideatek_replicated_t);
-    STRUCT(api, "ideatek:NetEntity", ideatek_net_entity_t);
-    STRUCT(api, "ideatek:NetOut", ideatek_net_out_t);
-    STRUCT(api, "ideatek:NetIn", ideatek_net_in_t);
     STRUCT(api, "ideatek:NetViewer", ideatek_net_viewer_t);
     STRUCT(api, "ideatek:NetRelevance", ideatek_net_relevance_t);
     STRUCT(api, "ideatek:NetCommand", ideatek_net_command_t);
@@ -69,8 +65,6 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_net_role_t", ideatek_net_role_t);
     ENUM(api, "ideatek:ideatek_admit_t", ideatek_admit_t);
     ENUM(api, "ideatek:ideatek_net_authority_t", ideatek_net_authority_t);
-    ENUM(api, "ideatek:ideatek_net_kind_t", ideatek_net_kind_t);
-    ENUM(api, "ideatek:ideatek_net_condition_t", ideatek_net_condition_t);
     ENUM(api, "ideatek:ideatek_relevance_mode_t", ideatek_relevance_mode_t);
     api->attach(api, id, STRUCT(api, "ideatek:NetSession",
         ideatek_net_session_t), BRIDGE_ZEROED);
@@ -80,8 +74,6 @@ static const char WHO[] = MANIFEST;
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:Replicated",
         ideatek_replicated_t), BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:NetOut", ideatek_net_out_t),
-        BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:NetViewer", ideatek_net_viewer_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:NetRelevance",
@@ -99,18 +91,18 @@ static const char WHO[] = MANIFEST;
     uint64_t id = api->spawn(api);
 
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
+    ENUM(api, "ideatek:ideatek_change_kind_t", ideatek_change_kind_t);
+    ENUM(api, "ideatek:ideatek_durability_t", ideatek_durability_t);
+    ENUM(api, "ideatek:ideatek_change_condition_t", ideatek_change_condition_t);
     ENUM(api, "ideatek:ideatek_net_role_t", ideatek_net_role_t);
     ENUM(api, "ideatek:ideatek_peer_state_t", ideatek_peer_state_t);
     ENUM(api, "ideatek:ideatek_admit_t", ideatek_admit_t);
     ENUM(api, "ideatek:ideatek_net_authority_t", ideatek_net_authority_t);
-    ENUM(api, "ideatek:ideatek_net_kind_t", ideatek_net_kind_t);
-    ENUM(api, "ideatek:ideatek_net_condition_t", ideatek_net_condition_t);
     ENUM(api, "ideatek:ideatek_relevance_mode_t", ideatek_relevance_mode_t);
     STRUCT(api, "ideatek:NetSession", ideatek_net_session_t);
     STRUCT(api, "ideatek:NetJoin", ideatek_net_join_t);
     STRUCT(api, "ideatek:NetAdmit", ideatek_net_admit_t);
     STRUCT(api, "ideatek:Replicated", ideatek_replicated_t);
-    STRUCT(api, "ideatek:NetOut", ideatek_net_out_t);
     STRUCT(api, "ideatek:NetViewer", ideatek_net_viewer_t);
     STRUCT(api, "ideatek:NetRelevance", ideatek_net_relevance_t);
     STRUCT(api, "ideatek:NetCommand", ideatek_net_command_t);
@@ -118,14 +110,16 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:NetPredictedSpawn", ideatek_net_predicted_spawn_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Tick", ideatek_tick_t, BRIDGE_STRIP,
         BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:RowChanges", ideatek_row_changes_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:ChangeTag", ideatek_change_tag_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:EntityId", ideatek_entity_id_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
     api->attach(api, id, STRUCT(api, "ideatek:NetPeer", ideatek_net_peer_t),
         BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:NetJoinEvent",
         ideatek_net_join_event_t), BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:NetEntity", ideatek_net_entity_t),
-        BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:NetIn", ideatek_net_in_t),
-        BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:NetCommandIn",
         ideatek_net_command_in_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:NetSessionState",
@@ -136,6 +130,9 @@ static const char WHO[] = MANIFEST;
         ideatek_net_authority_changed_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:NetHostChanged",
         ideatek_net_host_changed_t), BRIDGE_ZEROED);
+    api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:RowsIn",
+        ideatek_rows_in_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
 }
 
 BRIDGE_NATIVE(init)

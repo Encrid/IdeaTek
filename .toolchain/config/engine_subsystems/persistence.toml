@@ -1,7 +1,7 @@
 [parts.persistence]
 name = "BC-IdeaTek-Persistence"
 folder = "engine_subsystems/persistence"
-uses = ["world", "files"]
+uses = ["world", "files", "changes"]
 third_party = []
 
 [parts.persistence.package]
@@ -39,7 +39,7 @@ kind = "native_module"
 part = "persistence"
 test = true
 sources = ["tests/engine_subsystems/persistence_probe.c"]
-include = ["include/engine_subsystems", "include/platform_abstraction"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel"]
 defines = ["ROLE_ALL"]
 manifest = ["test:probe@1.0.0", "{persistence_probe_words}"]
 

@@ -14,24 +14,6 @@ false = { run = ["{out}/persistence_layout{exe}", "saved"] }
 name = "ideatek_saved_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/persistence_layout{exe}", "saved"]
 claims = { status = 0, order = ["size 16", "alignment 8", "prefab 0", "groups 8"] }
-false = { run = ["{out}/persistence_layout{exe}", "save_id"] }
-
-[[case]]
-name = "ideatek_save_id_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/persistence_layout{exe}", "save_id"]
-claims = { status = 0, order = ["size 8", "alignment 8", "id 0"] }
-false = { run = ["{out}/persistence_layout{exe}", "save_participant"] }
-
-[[case]]
-name = "ideatek_save_participant_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/persistence_layout{exe}", "save_participant"]
-claims = { status = 0, order = ["size 8", "alignment 8", "tag 0"] }
-false = { run = ["{out}/persistence_layout{exe}", "save_chunk"] }
-
-[[case]]
-name = "ideatek_save_chunk_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/persistence_layout{exe}", "save_chunk"]
-claims = { status = 0, order = ["size 32", "alignment 8", "request 0", "tag 8", "data 16", "version 24"] }
 false = { run = ["{out}/persistence_layout{exe}", "save_ready"] }
 
 [[case]]
@@ -77,9 +59,6 @@ claims = { status = 0, line = [
     "uint8_t { IDEATEK_SAVE_ACTION_SAVE = 0, IDEATEK_SAVE_ACTION_LOAD = 1, IDEATEK_SAVE_ACTION_INFO = 2, IDEATEK_SAVE_ACTION_LIST = 3, IDEATEK_SAVE_ACTION_REMOVE = 4 }",
     "{ uint64_t groups; bridge_text_t slot; bridge_text_t info; ideatek_save_action_t action; }",
     "{ uint64_t prefab; uint64_t groups; }",
-    "{ uint64_t id; }",
-    "{ uint64_t tag; }",
-    "{ ideatek_entity_t request; uint64_t tag; bridge_text_t data; uint32_t version; }",
     "{ ideatek_entity_t request; uint64_t tag; }",
     "{ ideatek_entity_t request; uint64_t tag; int32_t reason; }",
     "uint8_t { IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }",
@@ -96,9 +75,6 @@ claims = { status = 0, line = [
     "{ IDEATEK_SAVE_ACTION_SAVE = 0, IDEATEK_SAVE_ACTION_LOAD = 1, IDEATEK_SAVE_ACTION_INFO = 2, IDEATEK_SAVE_ACTION_LIST = 3, IDEATEK_SAVE_ACTION_REMOVE = 4 }",
     "{ uint64_t groups; bridge_text_t slot; bridge_text_t info; ideatek_save_action_t action; }",
     "{ uint64_t prefab; uint64_t groups; }",
-    "{ uint64_t id; }",
-    "{ uint64_t tag; }",
-    "{ ideatek_entity_t request; uint64_t tag; bridge_text_t data; uint32_t version; }",
     "{ ideatek_entity_t request; uint64_t tag; }",
     "{ ideatek_entity_t request; uint64_t tag; int32_t reason; }",
     "{ IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }",
@@ -115,7 +91,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/persistence_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 13 types, each type after the types of its fields"
+name = "a module declares the 10 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/persistence_probe{library}"] }
 
@@ -133,8 +109,7 @@ library = "{bb_native}/bridge_native"
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
     "ideatek:ideatek_save_state_t", "ideatek:ideatek_save_error_t",
-    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveId",
-    "ideatek:SaveParticipant", "ideatek:SaveChunk", "ideatek:SaveReady",
+    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveReady",
     "ideatek:SaveRefuse", "ideatek:SaveResult", "ideatek:SaveInfo",
 ]
 '''
@@ -183,7 +158,7 @@ read = [
 '''
 
 [[case]]
-name = "a participant loads with write on its chunks and its answers"
+name = "a module of rows loads with write on its answers"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:participant@1.0.0, native, m/persistence_participant{library}"] }
 
@@ -199,12 +174,12 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:participant@1.0.0"]
 write = [
-    "ideatek:SaveParticipant", "ideatek:SaveChunk", "ideatek:SaveReady",
-    "ideatek:SaveRefuse",
+    "ideatek:SaveReady", "ideatek:SaveRefuse",
 ]
 read = [
-    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
-    "ideatek:SaveRequest", "ideatek:SaveId",
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_change_kind_t",
+    "ideatek:ideatek_save_action_t", "ideatek:SaveRequest", "ideatek:RowsIn",
+    "ideatek:EntityId",
 ]
 '''
 
@@ -217,16 +192,17 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:participant@1.0.0"]
 write = [
-    "ideatek:SaveParticipant", "ideatek:SaveChunk", "ideatek:SaveReady",
+    "ideatek:SaveReady",
 ]
 read = [
-    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
-    "ideatek:SaveRequest", "ideatek:SaveId", "ideatek:SaveRefuse",
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_change_kind_t",
+    "ideatek:ideatek_save_action_t", "ideatek:SaveRequest", "ideatek:RowsIn",
+    "ideatek:EntityId", "ideatek:SaveRefuse",
 ]
 '''
 
 [[case]]
-name = "the save module loads with write on the ids, the chunks of a load, the results and the heads"
+name = "the save module loads with write on the rows of a load, the results and the heads"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:saver@1.0.0, native, m/persistence_saver{library}"] }
 
@@ -242,14 +218,15 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:saver@1.0.0"]
 write = [
-    "ideatek:SaveId", "ideatek:SaveChunk", "ideatek:SaveResult",
-    "ideatek:SaveInfo",
+    "ideatek:RowsIn", "ideatek:SaveResult", "ideatek:SaveInfo",
 ]
 read = [
-    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
-    "ideatek:ideatek_save_state_t", "ideatek:ideatek_save_error_t",
-    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveParticipant",
-    "ideatek:SaveReady", "ideatek:SaveRefuse",
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_change_kind_t",
+    "ideatek:ideatek_durability_t", "ideatek:ideatek_change_condition_t",
+    "ideatek:ideatek_save_action_t", "ideatek:ideatek_save_state_t",
+    "ideatek:ideatek_save_error_t", "ideatek:SaveRequest", "ideatek:Saved",
+    "ideatek:SaveReady", "ideatek:SaveRefuse", "ideatek:ChangeTag",
+    "ideatek:RowChanges", "ideatek:EntityId",
 ]
 '''
 
@@ -262,13 +239,15 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:saver@1.0.0"]
 write = [
-    "ideatek:SaveId", "ideatek:SaveChunk", "ideatek:SaveResult",
+    "ideatek:RowsIn", "ideatek:SaveResult",
 ]
 read = [
-    "ideatek:ideatek_entity_t", "ideatek:ideatek_save_action_t",
-    "ideatek:ideatek_save_state_t", "ideatek:ideatek_save_error_t",
-    "ideatek:SaveRequest", "ideatek:Saved", "ideatek:SaveParticipant",
-    "ideatek:SaveReady", "ideatek:SaveRefuse", "ideatek:SaveInfo",
+    "ideatek:ideatek_entity_t", "ideatek:ideatek_change_kind_t",
+    "ideatek:ideatek_durability_t", "ideatek:ideatek_change_condition_t",
+    "ideatek:ideatek_save_action_t", "ideatek:ideatek_save_state_t",
+    "ideatek:ideatek_save_error_t", "ideatek:SaveRequest", "ideatek:Saved",
+    "ideatek:SaveReady", "ideatek:SaveRefuse", "ideatek:ChangeTag",
+    "ideatek:RowChanges", "ideatek:EntityId", "ideatek:SaveInfo",
 ]
 '''
 

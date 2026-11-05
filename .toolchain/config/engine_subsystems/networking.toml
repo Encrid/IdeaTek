@@ -1,7 +1,7 @@
 [parts.networking]
 name = "BC-IdeaTek-Networking"
 folder = "engine_subsystems/networking"
-uses = ["world", "sockets", "frame"]
+uses = ["world", "sockets", "frame", "changes"]
 third_party = []
 
 [parts.networking.package]

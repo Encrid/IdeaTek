@@ -88,41 +88,6 @@ static void show_replicated(void)
     AT(ideatek_replicated_t, authority);
 }
 
-static void show_net_entity(void)
-{
-    SIZE(ideatek_net_entity_t);
-    AT(ideatek_net_entity_t, net_id);
-}
-
-static void show_net_kind(void)
-{
-    SIZE(ideatek_net_kind_t);
-}
-
-static void show_net_condition(void)
-{
-    SIZE(ideatek_net_condition_t);
-}
-
-static void show_net_out(void)
-{
-    SIZE(ideatek_net_out_t);
-    AT(ideatek_net_out_t, tag);
-    AT(ideatek_net_out_t, data);
-    AT(ideatek_net_out_t, peer);
-    AT(ideatek_net_out_t, kind);
-    AT(ideatek_net_out_t, condition);
-}
-
-static void show_net_in(void)
-{
-    SIZE(ideatek_net_in_t);
-    AT(ideatek_net_in_t, tag);
-    AT(ideatek_net_in_t, data);
-    AT(ideatek_net_in_t, peer);
-    AT(ideatek_net_in_t, kind);
-}
-
 static void show_net_viewer(void)
 {
     SIZE(ideatek_net_viewer_t);
@@ -219,14 +184,12 @@ static void show_descriptors(void)
         ideatek_net_join_t_desc, ideatek_net_join_event_t_desc,
         ideatek_admit_t_desc, ideatek_net_admit_t_desc,
         ideatek_net_authority_t_desc, ideatek_replicated_t_desc,
-        ideatek_net_entity_t_desc, ideatek_net_kind_t_desc,
-        ideatek_net_condition_t_desc, ideatek_net_out_t_desc,
-        ideatek_net_in_t_desc, ideatek_net_viewer_t_desc,
-        ideatek_relevance_mode_t_desc, ideatek_net_relevance_t_desc,
-        ideatek_net_command_t_desc, ideatek_net_command_in_t_desc,
-        ideatek_net_session_state_t_desc, ideatek_net_peer_groups_t_desc,
-        ideatek_net_predicted_spawn_t_desc, ideatek_net_rollback_t_desc,
-        ideatek_net_authority_changed_t_desc, ideatek_net_host_changed_t_desc };
+        ideatek_net_viewer_t_desc, ideatek_relevance_mode_t_desc,
+        ideatek_net_relevance_t_desc, ideatek_net_command_t_desc,
+        ideatek_net_command_in_t_desc, ideatek_net_session_state_t_desc,
+        ideatek_net_peer_groups_t_desc, ideatek_net_predicted_spawn_t_desc,
+        ideatek_net_rollback_t_desc, ideatek_net_authority_changed_t_desc,
+        ideatek_net_host_changed_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -241,10 +204,7 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_NET_JOIN_EVENT_FIELDS), TEXT_OF(IDEATEK_ADMIT_VALUES),
         TEXT_OF(IDEATEK_NET_ADMIT_FIELDS),
         TEXT_OF(IDEATEK_NET_AUTHORITY_VALUES),
-        TEXT_OF(IDEATEK_REPLICATED_FIELDS), TEXT_OF(IDEATEK_NET_ENTITY_FIELDS),
-        TEXT_OF(IDEATEK_NET_KIND_VALUES), TEXT_OF(IDEATEK_NET_CONDITION_VALUES),
-        TEXT_OF(IDEATEK_NET_OUT_FIELDS), TEXT_OF(IDEATEK_NET_IN_FIELDS),
-        TEXT_OF(IDEATEK_NET_VIEWER_FIELDS),
+        TEXT_OF(IDEATEK_REPLICATED_FIELDS), TEXT_OF(IDEATEK_NET_VIEWER_FIELDS),
         TEXT_OF(IDEATEK_RELEVANCE_MODE_VALUES),
         TEXT_OF(IDEATEK_NET_RELEVANCE_FIELDS),
         TEXT_OF(IDEATEK_NET_COMMAND_FIELDS),
@@ -269,10 +229,7 @@ int main(int argc, char **argv)
         { "net_join_event", show_net_join_event }, { "admit", show_admit },
         { "net_admit", show_net_admit },
         { "net_authority", show_net_authority },
-        { "replicated", show_replicated }, { "net_entity", show_net_entity },
-        { "net_kind", show_net_kind }, { "net_condition", show_net_condition },
-        { "net_out", show_net_out }, { "net_in", show_net_in },
-        { "net_viewer", show_net_viewer },
+        { "replicated", show_replicated }, { "net_viewer", show_net_viewer },
         { "relevance_mode", show_relevance_mode },
         { "net_relevance", show_net_relevance },
         { "net_command", show_net_command },
