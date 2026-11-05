@@ -14,6 +14,7 @@ Its look uses `ideatek_color_t` of the rendering part, so the header includes it
 
 A curve gives a value for each time from 0 to 1. The effects module reads it over the life of each particle.
 `bytes` of `ideatek:Curve` holds `key_count` keys by rising time, with no bytes between them. A key of `IDEATEK_CURVE_KIND_FLOAT` is 2 floats: the time and the value. A key of `IDEATEK_CURVE_KIND_COLOR` is 5 floats: the time and a linear color with alpha.
+A key of `IDEATEK_CURVE_KIND_VEC3` is 4 floats: the time and the values on X, Y and Z.
 
 The value between 2 keys is a straight blend. Before the first key and after the last key, the value of that key stays.
 All numbers are little-endian. Many emitters can share 1 curve.
@@ -42,14 +43,23 @@ A trail belongs to 1 particle: a strip through the places of the particle over t
 
 The references do not agree on a `trail_lifetime`, so the game sets it.
 With `start_color_curve`, each particle starts with `color` times the value of the curve at a random time.
+A sprite turns only by `z` of its angle and of its spin. A mesh turns by all 3, about X, Y and Z.
+A `size_curve` of `IDEATEK_CURVE_KIND_FLOAT` scales all axes, and one of `IDEATEK_CURVE_KIND_VEC3` scales each axis.
+A decal particle projects its material on the surfaces in a box of its size, along its -Z, as `ideatek:Decal` of the rendering part.
+
 The glow comes from the emissive value of the material. Soft particles, the light and the blend are choices of the render module.
 
 ## The collision and the spawns
 
 With `IDEATEK_COLLISION_SOURCE_DEPTH`, the particles hit the depth of the view: it is cheap, and it sees only what the camera sees.
 With `IDEATEK_COLLISION_SOURCE_SHAPES`, they hit the `ideatek:Shape` of each static or kinematic body that the filter allows. The module logs each kind of shape that it cannot use once.
+`IDEATEK_COLLISION_SOURCE_DISTANCE_FIELD` uses a distance field of the world that the renderer has. `IDEATEK_COLLISION_SOURCE_RAY_TRACING` uses the ray tracing of the GPU.
+
+Without the source, the module uses `IDEATEK_COLLISION_SOURCE_DEPTH` and logs the emitter once. A decal particle that sticks at a hit turns its -Z into the surface.
 An emitter with `ideatek:ParticleSpawn` is a child: it spawns at the particles of its parent. A parent can have many children.
-No event goes to the game for each particle.
+With `IDEATEK_SPAWN_ON_COLLISION` and a `hit_material` above 0, only the hits on that physics material spawn. A hit of the depth has no material.
+
+No event goes to the game for each particle. The hits come in 1 event for each emitter: *The hits*.
 
 ## The emission from a mesh
 
@@ -64,6 +74,33 @@ The noise of `ideatek:ParticleForces` acts only on the particles of its emitter.
 `radial_acceleration` pushes out from the origin of the emitter, and a negative value pulls. `tangential_acceleration` turns about the Y axis of the emitter.
 
 `inherit_velocity` of `ideatek:ParticleVelocity` adds a part of the speed of the emitter. The module gets that speed from the move of its `ideatek:WorldTransform`.
+
+## The hits
+
+With `IDEATEK_EMITTER_FLAGS_REPORT_HITS`, the module spawns at most 1 `ideatek:ParticleHits` for the emitter in each round. A record of `hits`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `point` | `double[3]` | 0 | The point of the hit, in the world. |
+| `normal` | `float[3]` | 24 | The normal of the surface. |
+| `speed` | `float` | 36 | The speed of the particle at the hit, in m / s. |
+| `hit_material` | `uint64_t` | 40 | The physics material of the hit, or 0 if the source does not know it. |
+
+The records have no bytes between them. A module that simulates on the GPU can give the hits 1 round late.
+The game decides what a hit does, for example a burn or a wet ground.
+
+## The particle sounds
+
+With `ideatek:ParticleSound`, the effects module spawns a player at a particle for each event that `on` tells.
+The player is an entity with `ideatek:SoundPlayer`, `IDEATEK_SOUND_PLAYER_FLAGS_DESTROY_AT_END` and `ideatek:Transform`.
+With `IDEATEK_SPAWN_ON_CONSTANT`, the player loops and follows its particle until the particle dies.
+A player takes the `ideatek:SoundSpatial` of the emitter, or the defaults of the sound part if the emitter has none.
+
+## The level of detail
+
+The distance of an emitter is its distance to the nearest camera.
+Past `cull_distance`, the emitter does not simulate and does not draw. From `lod_distance` to `cull_distance`, its spawns fall in a straight line to 0.
+Without `IDEATEK_EMITTER_FLAGS_ALWAYS_SIMULATE`, the module can pause an emitter out of the view. With it, the emitter always simulates, for an effect that the game reads.
 
 ## The particle lights
 
@@ -80,6 +117,7 @@ The render module can drop the faintest lights.
 | --- | --- | --- |
 | 0 | `IDEATEK_CURVE_KIND_FLOAT` | Each key holds 1 float. |
 | 1 | `IDEATEK_CURVE_KIND_COLOR` | Each key holds a color with alpha. |
+| 2 | `IDEATEK_CURVE_KIND_VEC3` | Each key holds a value on X, Y and Z. |
 
 ## ideatek:Curve
 
@@ -116,11 +154,13 @@ Bytes 17 to 19 hold no field.
 | 0x01 | `IDEATEK_EMITTER_FLAGS_ONE_SHOT` | The emitter runs 1 cycle. |
 | 0x02 | `IDEATEK_EMITTER_FLAGS_LOCAL` | The particles move with the emitter. |
 | 0x04 | `IDEATEK_EMITTER_FLAGS_DESTROY_AT_END` | The module destroys the emitter at its end. |
+| 0x08 | `IDEATEK_EMITTER_FLAGS_ALWAYS_SIMULATE` | The emitter simulates out of the view too. |
+| 0x10 | `IDEATEK_EMITTER_FLAGS_REPORT_HITS` | The module gives the hits to the game: *The hits*. |
 
 ## ideatek:ParticleEmitter
 
 `ideatek:ParticleEmitter` makes particles at the place of its entity.
-`ideatek_particle_emitter_t` takes 52 bytes. Its alignment is 4.
+`ideatek_particle_emitter_t` takes 60 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -133,13 +173,15 @@ Bytes 17 to 19 hold no field.
 | `lifetime_max` | `float` | 24 | 1 | The longest life. |
 | `speed_scale` | `float` | 28 | 1 | The factor of the time of the emitter. |
 | `prewarm` | `float` | 32 | 0 | The seconds that the emitter runs before its first frame. |
-| `burst` | `uint32_t` | 36 | 0 | The particles of each burst. |
-| `max` | `uint32_t` | 40 | 0 | The most live particles. |
-| `seed` | `uint32_t` | 44 | 0 | The seed of the random values. 0 means random. |
-| `state` | `ideatek_emitter_state_t` | 48 | `IDEATEK_EMITTER_STATE_STOPPED` | The state. |
-| `flags` | `ideatek_emitter_flags_t` | 49 | 0 | The options. |
+| `lod_distance` | `float` | 36 | 0 | The distance where the spawns start to fall. 0 means no level of detail. |
+| `cull_distance` | `float` | 40 | 0 | The distance past which the emitter stops. 0 means no cull. |
+| `burst` | `uint32_t` | 44 | 0 | The particles of each burst. |
+| `max` | `uint32_t` | 48 | 0 | The most live particles. |
+| `seed` | `uint32_t` | 52 | 0 | The seed of the random values. 0 means random. |
+| `state` | `ideatek_emitter_state_t` | 56 | `IDEATEK_EMITTER_STATE_STOPPED` | The state. |
+| `flags` | `ideatek_emitter_flags_t` | 57 | 0 | The options. |
 
-Bytes 50 to 51 hold no field.
+Bytes 58 to 59 hold no field.
 
 ## ideatek:ideatek_emission_shape_t
 
@@ -236,6 +278,7 @@ Bytes 12 to 15 hold no field.
 | 1 | `IDEATEK_PARTICLE_KIND_MESH` | A mesh. |
 | 2 | `IDEATEK_PARTICLE_KIND_RIBBON` | A strip through the particles. |
 | 3 | `IDEATEK_PARTICLE_KIND_TRAIL` | A strip through the past places of each particle. |
+| 4 | `IDEATEK_PARTICLE_KIND_DECAL` | A decal on the surfaces. |
 
 ## ideatek:ideatek_particle_align_t
 
@@ -263,32 +306,34 @@ Bytes 12 to 15 hold no field.
 ## ideatek:ParticleLook
 
 `ideatek:ParticleLook` tells how the particles of an emitter draw.
-`ideatek_particle_look_t` takes 104 bytes. Its alignment is 8.
+`ideatek_particle_look_t` takes 152 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
 | `material` | `ideatek_entity_t` | 0 | No default | The material. |
 | `mesh` | `ideatek_entity_t` | 8 | No default | The mesh of `IDEATEK_PARTICLE_KIND_MESH`. |
-| `size_curve` | `ideatek_entity_t` | 16 | 0 | The curve of the size over the life. 0 means constant. |
+| `size_curve` | `ideatek_entity_t` | 16 | 0 | The curve of the size over the life, FLOAT or VEC3. 0 means constant. |
 | `color_curve` | `ideatek_entity_t` | 24 | 0 | The curve of the color over the life. 0 means constant. |
 | `start_color_curve` | `ideatek_entity_t` | 32 | 0 | A color curve for a random start color. 0 means none. |
-| `color` | `ideatek_color_t` | 40 | 1, 1, 1, 1 | The start color. |
-| `size_min` | `float` | 56 | 1 | The smallest start size, in m. |
-| `size_max` | `float` | 60 | 1 | The largest start size. |
-| `rotation_min` | `float` | 64 | 0 | The lowest start angle. |
-| `rotation_max` | `float` | 68 | 0 | The highest start angle. |
-| `spin_min` | `float` | 72 | 0 | The lowest turn speed, in rad / s. |
-| `spin_max` | `float` | 76 | 0 | The highest turn speed. |
-| `frame_rate` | `float` | 80 | 0 | The frames of the flipbook for each second. 0 plays them once over the life. |
-| `trail_lifetime` | `float` | 84 | 0 | The seconds of the past places of a trail. |
-| `frames_x` | `uint32_t` | 88 | 1 | The columns of the flipbook. |
-| `frames_y` | `uint32_t` | 92 | 1 | The rows of the flipbook. |
-| `kind` | `ideatek_particle_kind_t` | 96 | `IDEATEK_PARTICLE_KIND_SPRITE` | What each particle draws. |
-| `align` | `ideatek_particle_align_t` | 97 | `IDEATEK_PARTICLE_ALIGN_CAMERA` | The turn of a sprite. |
-| `sort` | `ideatek_particle_sort_t` | 98 | `IDEATEK_PARTICLE_SORT_NONE` | The draw order. |
-| `frame_random` | `bool` | 99 | `false` | `true` if each particle starts at a random frame of the flipbook. |
+| `speed_curve` | `ideatek_entity_t` | 40 | 0 | The curve of the factor of the speed over the life. 0 means constant. |
+| `spin_curve` | `ideatek_entity_t` | 48 | 0 | The curve of the factor of the spin over the life. 0 means constant. |
+| `color` | `ideatek_color_t` | 56 | 1, 1, 1, 1 | The start color. |
+| `rotation_min` | `ideatek_vec3_t` | 72 | 0, 0, 0 | The lowest start angles about X, Y and Z, in radians. |
+| `rotation_max` | `ideatek_vec3_t` | 84 | 0, 0, 0 | The highest start angles. |
+| `spin_min` | `ideatek_vec3_t` | 96 | 0, 0, 0 | The lowest turn speeds about X, Y and Z, in rad / s. |
+| `spin_max` | `ideatek_vec3_t` | 108 | 0, 0, 0 | The highest turn speeds. |
+| `size_min` | `float` | 120 | 1 | The smallest start size, in m. |
+| `size_max` | `float` | 124 | 1 | The largest start size. |
+| `frame_rate` | `float` | 128 | 0 | The frames of the flipbook for each second. 0 plays them once over the life. |
+| `trail_lifetime` | `float` | 132 | 0 | The seconds of the past places of a trail. |
+| `frames_x` | `uint32_t` | 136 | 1 | The columns of the flipbook. |
+| `frames_y` | `uint32_t` | 140 | 1 | The rows of the flipbook. |
+| `kind` | `ideatek_particle_kind_t` | 144 | `IDEATEK_PARTICLE_KIND_SPRITE` | What each particle draws. |
+| `align` | `ideatek_particle_align_t` | 145 | `IDEATEK_PARTICLE_ALIGN_CAMERA` | The turn of a sprite. |
+| `sort` | `ideatek_particle_sort_t` | 146 | `IDEATEK_PARTICLE_SORT_NONE` | The draw order. |
+| `frame_random` | `bool` | 147 | `false` | `true` if each particle starts at a random frame of the flipbook. |
 
-Bytes 100 to 103 hold no field.
+Bytes 148 to 151 hold no field.
 
 ## ideatek:ideatek_collision_source_t
 
@@ -299,6 +344,8 @@ Bytes 100 to 103 hold no field.
 | --- | --- | --- |
 | 0 | `IDEATEK_COLLISION_SOURCE_DEPTH` | The depth of the view. |
 | 1 | `IDEATEK_COLLISION_SOURCE_SHAPES` | The shapes of the physics. |
+| 2 | `IDEATEK_COLLISION_SOURCE_DISTANCE_FIELD` | A distance field of the world. |
+| 3 | `IDEATEK_COLLISION_SOURCE_RAY_TRACING` | The ray tracing of the GPU. |
 
 ## ideatek:ideatek_collision_mode_t
 
@@ -342,17 +389,18 @@ Bytes 22 to 23 hold no field.
 ## ideatek:ParticleSpawn
 
 `ideatek:ParticleSpawn` makes its emitter a child that spawns at the particles of its parent.
-`ideatek_particle_spawn_t` takes 24 bytes. Its alignment is 8.
+`ideatek_particle_spawn_t` takes 32 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
 | `parent` | `ideatek_entity_t` | 0 | No default | The parent emitter. |
-| `rate` | `float` | 8 | 0 | The spawns for each second with `IDEATEK_SPAWN_ON_CONSTANT`. |
-| `inherit_velocity` | `float` | 12 | 0 | The part of the speed of the parent particle that the child takes. |
-| `count` | `uint32_t` | 16 | 1 | The particles of each spawn. |
-| `on` | `ideatek_spawn_on_t` | 20 | No default | When the child spawns. |
+| `hit_material` | `ideatek_entity_t` | 8 | 0 | With `IDEATEK_SPAWN_ON_COLLISION`: the physics material of the hits. 0 means each hit. |
+| `rate` | `float` | 16 | 0 | The spawns for each second with `IDEATEK_SPAWN_ON_CONSTANT`. |
+| `inherit_velocity` | `float` | 20 | 0 | The part of the speed of the parent particle that the child takes. |
+| `count` | `uint32_t` | 24 | 1 | The particles of each spawn. |
+| `on` | `ideatek_spawn_on_t` | 28 | No default | When the child spawns. |
 
-Bytes 21 to 23 hold no field.
+Bytes 29 to 31 hold no field.
 
 Only 1 reference gives a rate, so its default is 0.
 
@@ -367,6 +415,33 @@ Only 1 reference gives a rate, so its default is 0.
 | `range_scale` | `float` | 4 | 1 | The distance where the light ends, as a factor of the size of the particle. |
 | `fraction` | `float` | 8 | 1 | The part of the particles with a light, from 0 to 1. |
 | `max` | `uint32_t` | 12 | 0 | The most lights. 0 means no limit. |
+
+## ideatek:ParticleSound
+
+`ideatek:ParticleSound` plays a sound at the particles of an emitter: *The particle sounds*.
+`ideatek_particle_sound_t` takes 32 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `sound` | `ideatek_entity_t` | 0 | No default | The sound. |
+| `bus` | `ideatek_entity_t` | 8 | 0 | The bus. 0 means the main bus. |
+| `volume` | `float` | 16 | 1 | The gain. |
+| `max` | `uint32_t` | 20 | 0 | The most sounds at a time. 0 means no limit. |
+| `on` | `ideatek_spawn_on_t` | 24 | No default | When a sound plays. |
+
+Bytes 25 to 31 hold no field.
+
+## ideatek:ParticleHits
+
+`ideatek:ParticleHits` gives the hits of an emitter in 1 round. It is an event of 1 round.
+`ideatek_particle_hits_t` takes 24 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `emitter` | `ideatek_entity_t` | 0 | The emitter. |
+| `hits` | `bridge_text_t` | 8 | The records of the hits: *The hits*. |
+| `count` | `uint32_t` | 16 | The records in `hits`. |
+| `order` | `uint32_t` | 20 | The rank in the round. |
 
 ## The C types
 
@@ -393,29 +468,33 @@ Only 1 reference gives a rate, so its default is 0.
 | `ideatek:ideatek_spawn_on_t` | `ideatek_spawn_on_t` | `ideatek_spawn_on_t_desc` | `IDEATEK_SPAWN_ON_VALUES` |
 | `ideatek:ParticleSpawn` | `ideatek_particle_spawn_t` | `ideatek_particle_spawn_t_desc` | `IDEATEK_PARTICLE_SPAWN_FIELDS` |
 | `ideatek:ParticleLight` | `ideatek_particle_light_t` | `ideatek_particle_light_t_desc` | `IDEATEK_PARTICLE_LIGHT_FIELDS` |
+| `ideatek:ParticleSound` | `ideatek_particle_sound_t` | `ideatek_particle_sound_t_desc` | `IDEATEK_PARTICLE_SOUND_FIELDS` |
+| `ideatek:ParticleHits` | `ideatek_particle_hits_t` | `ideatek_particle_hits_t_desc` | `IDEATEK_PARTICLE_HITS_FIELDS` |
 
 ```text
-{ IDEATEK_CURVE_KIND_FLOAT = 0, IDEATEK_CURVE_KIND_COLOR = 1 }
+{ IDEATEK_CURVE_KIND_FLOAT = 0, IDEATEK_CURVE_KIND_COLOR = 1, IDEATEK_CURVE_KIND_VEC3 = 2 }
 { bridge_text_t bytes; uint32_t key_count; uint32_t revision; ideatek_curve_kind_t kind; }
 { IDEATEK_EMITTER_STATE_STOPPED = 0, IDEATEK_EMITTER_STATE_PLAYING = 1, IDEATEK_EMITTER_STATE_PAUSED = 2 }
-{ IDEATEK_EMITTER_FLAGS_ONE_SHOT = 0x01, IDEATEK_EMITTER_FLAGS_LOCAL = 0x02, IDEATEK_EMITTER_FLAGS_DESTROY_AT_END = 0x04 }
-{ float rate; float rate_per_meter; float duration; float delay; float burst_interval; float lifetime_min; float lifetime_max; float speed_scale; float prewarm; uint32_t burst; uint32_t max; uint32_t seed; ideatek_emitter_state_t state; ideatek_emitter_flags_t flags; }
+{ IDEATEK_EMITTER_FLAGS_ONE_SHOT = 0x01, IDEATEK_EMITTER_FLAGS_LOCAL = 0x02, IDEATEK_EMITTER_FLAGS_DESTROY_AT_END = 0x04, IDEATEK_EMITTER_FLAGS_ALWAYS_SIMULATE = 0x08, IDEATEK_EMITTER_FLAGS_REPORT_HITS = 0x10 }
+{ float rate; float rate_per_meter; float duration; float delay; float burst_interval; float lifetime_min; float lifetime_max; float speed_scale; float prewarm; float lod_distance; float cull_distance; uint32_t burst; uint32_t max; uint32_t seed; ideatek_emitter_state_t state; ideatek_emitter_flags_t flags; }
 { IDEATEK_EMISSION_SHAPE_POINT = 0, IDEATEK_EMISSION_SHAPE_SPHERE = 1, IDEATEK_EMISSION_SHAPE_SPHERE_SURFACE = 2, IDEATEK_EMISSION_SHAPE_BOX = 3, IDEATEK_EMISSION_SHAPE_RING = 4, IDEATEK_EMISSION_SHAPE_MESH = 5, IDEATEK_EMISSION_SHAPE_MESH_SURFACE = 6 }
 { ideatek_entity_t mesh; ideatek_vec3_t size; ideatek_emission_shape_t kind; }
 { ideatek_vec3_t min; ideatek_vec3_t max; float radial_min; float radial_max; float inherit_velocity; }
 { ideatek_vec3_t gravity; float drag; float noise_strength; float noise_frequency; float radial_acceleration; float tangential_acceleration; float max_speed; }
 { uint32_t alive; bool done; }
 { ideatek_entity_t emitter; uint32_t order; }
-{ IDEATEK_PARTICLE_KIND_SPRITE = 0, IDEATEK_PARTICLE_KIND_MESH = 1, IDEATEK_PARTICLE_KIND_RIBBON = 2, IDEATEK_PARTICLE_KIND_TRAIL = 3 }
+{ IDEATEK_PARTICLE_KIND_SPRITE = 0, IDEATEK_PARTICLE_KIND_MESH = 1, IDEATEK_PARTICLE_KIND_RIBBON = 2, IDEATEK_PARTICLE_KIND_TRAIL = 3, IDEATEK_PARTICLE_KIND_DECAL = 4 }
 { IDEATEK_PARTICLE_ALIGN_CAMERA = 0, IDEATEK_PARTICLE_ALIGN_VELOCITY = 1, IDEATEK_PARTICLE_ALIGN_HORIZONTAL = 2, IDEATEK_PARTICLE_ALIGN_VERTICAL = 3 }
 { IDEATEK_PARTICLE_SORT_NONE = 0, IDEATEK_PARTICLE_SORT_DEPTH = 1, IDEATEK_PARTICLE_SORT_AGE = 2 }
-{ ideatek_entity_t material; ideatek_entity_t mesh; ideatek_entity_t size_curve; ideatek_entity_t color_curve; ideatek_entity_t start_color_curve; ideatek_color_t color; float size_min; float size_max; float rotation_min; float rotation_max; float spin_min; float spin_max; float frame_rate; float trail_lifetime; uint32_t frames_x; uint32_t frames_y; ideatek_particle_kind_t kind; ideatek_particle_align_t align; ideatek_particle_sort_t sort; bool frame_random; }
-{ IDEATEK_COLLISION_SOURCE_DEPTH = 0, IDEATEK_COLLISION_SOURCE_SHAPES = 1 }
+{ ideatek_entity_t material; ideatek_entity_t mesh; ideatek_entity_t size_curve; ideatek_entity_t color_curve; ideatek_entity_t start_color_curve; ideatek_entity_t speed_curve; ideatek_entity_t spin_curve; ideatek_color_t color; ideatek_vec3_t rotation_min; ideatek_vec3_t rotation_max; ideatek_vec3_t spin_min; ideatek_vec3_t spin_max; float size_min; float size_max; float frame_rate; float trail_lifetime; uint32_t frames_x; uint32_t frames_y; ideatek_particle_kind_t kind; ideatek_particle_align_t align; ideatek_particle_sort_t sort; bool frame_random; }
+{ IDEATEK_COLLISION_SOURCE_DEPTH = 0, IDEATEK_COLLISION_SOURCE_SHAPES = 1, IDEATEK_COLLISION_SOURCE_DISTANCE_FIELD = 2, IDEATEK_COLLISION_SOURCE_RAY_TRACING = 3 }
 { IDEATEK_COLLISION_MODE_BOUNCE = 0, IDEATEK_COLLISION_MODE_KILL = 1, IDEATEK_COLLISION_MODE_STICK = 2 }
 { uint64_t touches; float bounce; float friction; float radius; ideatek_collision_source_t source; ideatek_collision_mode_t mode; }
 { IDEATEK_SPAWN_ON_START = 0, IDEATEK_SPAWN_ON_END = 1, IDEATEK_SPAWN_ON_COLLISION = 2, IDEATEK_SPAWN_ON_CONSTANT = 3 }
-{ ideatek_entity_t parent; float rate; float inherit_velocity; uint32_t count; ideatek_spawn_on_t on; }
+{ ideatek_entity_t parent; ideatek_entity_t hit_material; float rate; float inherit_velocity; uint32_t count; ideatek_spawn_on_t on; }
 { float intensity; float range_scale; float fraction; uint32_t max; }
+{ ideatek_entity_t sound; ideatek_entity_t bus; float volume; uint32_t max; ideatek_spawn_on_t on; }
+{ ideatek_entity_t emitter; bridge_text_t hits; uint32_t count; uint32_t order; }
 ```
 
 ## The declarations
@@ -446,10 +525,12 @@ Only 1 reference gives a rate, so its default is 0.
 | `ideatek:ParticleCollision` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ParticleSpawn` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ParticleLight` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ParticleSound` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ParticleHits` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
 
 | Role | `write` | `read` |
 | --- | --- | --- |
 | An author | The curves and the emitters with their types | The types of the fields |
-| The effects module | `ideatek:ParticleEmitterState`, `ideatek:ParticleEnded` | The curves, the emitters, `ideatek:WorldTransform`, `ideatek:MeshInstance`, `ideatek:Shape`, `ideatek:Wind`, `ideatek:ForceField`, and the types of the fields |
+| The effects module | `ideatek:ParticleEmitterState`, `ideatek:ParticleEnded`, `ideatek:ParticleHits`, `ideatek:SoundPlayer`, `ideatek:SoundSpatial`, `ideatek:Transform` | The curves, the emitters, `ideatek:WorldTransform`, `ideatek:MeshInstance`, `ideatek:Shape`, `ideatek:Wind`, `ideatek:ForceField`, and the types of the fields |
