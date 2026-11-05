@@ -247,7 +247,7 @@ false = { run = ["{out}/physics_layout{exe}", "motor_joint"] }
 [[case]]
 name = "ideatek_motor_joint_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "motor_joint"]
-claims = { status = 0, order = ["size 40", "alignment 4", "linear_velocity 0", "angular_velocity 12", "max_force 24", "max_torque 28", "hertz 32", "damping 36"] }
+claims = { status = 0, order = ["size 56", "alignment 4", "linear_velocity 0", "angular_velocity 12", "max_force 24", "max_torque 28", "linear_hertz 32", "linear_damping 36", "max_spring_force 40", "angular_hertz 44", "angular_damping 48", "max_spring_torque 52"] }
 false = { run = ["{out}/physics_layout{exe}", "wheel_joint"] }
 
 [[case]]
@@ -727,7 +727,7 @@ claims = { status = 0, line = [
     "uint8_t { IDEATEK_PATH_ROTATION_FREE = 0, IDEATEK_PATH_ROTATION_TANGENT = 1, IDEATEK_PATH_ROTATION_NORMAL = 2, IDEATEK_PATH_ROTATION_BINORMAL = 3, IDEATEK_PATH_ROTATION_PATH = 4, IDEATEK_PATH_ROTATION_FIXED = 5 }",
     "{ bridge_text_t path; float fraction; float max_friction; ideatek_joint_drive_t drive; ideatek_path_rotation_t rotation; bool looping; }",
     "{ float half_angle; }",
-    "{ ideatek_vec3_t linear_velocity; ideatek_vec3_t angular_velocity; float max_force; float max_torque; float hertz; float damping; }",
+    "{ ideatek_vec3_t linear_velocity; ideatek_vec3_t angular_velocity; float max_force; float max_torque; float linear_hertz; float linear_damping; float max_spring_force; float angular_hertz; float angular_damping; float max_spring_torque; }",
     "{ float lower; float upper; float suspension_hertz; float suspension_damping; float max_steer; float steer_target; ideatek_joint_drive_t spin; }",
     "{ ideatek_entity_t joint; float force; float torque; uint32_t order; }",
     "{ ideatek_vec3_t force; ideatek_vec3_t torque; }",
@@ -848,7 +848,7 @@ claims = { status = 0, line = [
     "{ IDEATEK_PATH_ROTATION_FREE = 0, IDEATEK_PATH_ROTATION_TANGENT = 1, IDEATEK_PATH_ROTATION_NORMAL = 2, IDEATEK_PATH_ROTATION_BINORMAL = 3, IDEATEK_PATH_ROTATION_PATH = 4, IDEATEK_PATH_ROTATION_FIXED = 5 }",
     "{ bridge_text_t path; float fraction; float max_friction; ideatek_joint_drive_t drive; ideatek_path_rotation_t rotation; bool looping; }",
     "{ float half_angle; }",
-    "{ ideatek_vec3_t linear_velocity; ideatek_vec3_t angular_velocity; float max_force; float max_torque; float hertz; float damping; }",
+    "{ ideatek_vec3_t linear_velocity; ideatek_vec3_t angular_velocity; float max_force; float max_torque; float linear_hertz; float linear_damping; float max_spring_force; float angular_hertz; float angular_damping; float max_spring_torque; }",
     "{ float lower; float upper; float suspension_hertz; float suspension_damping; float max_steer; float steer_target; ideatek_joint_drive_t spin; }",
     "{ ideatek_entity_t joint; float force; float torque; uint32_t order; }",
     "{ ideatek_vec3_t force; ideatek_vec3_t torque; }",

@@ -383,8 +383,12 @@ static void show_motor_joint(void)
     AT(ideatek_motor_joint_t, angular_velocity);
     AT(ideatek_motor_joint_t, max_force);
     AT(ideatek_motor_joint_t, max_torque);
-    AT(ideatek_motor_joint_t, hertz);
-    AT(ideatek_motor_joint_t, damping);
+    AT(ideatek_motor_joint_t, linear_hertz);
+    AT(ideatek_motor_joint_t, linear_damping);
+    AT(ideatek_motor_joint_t, max_spring_force);
+    AT(ideatek_motor_joint_t, angular_hertz);
+    AT(ideatek_motor_joint_t, angular_damping);
+    AT(ideatek_motor_joint_t, max_spring_torque);
 }
 
 static void show_wheel_joint(void)
