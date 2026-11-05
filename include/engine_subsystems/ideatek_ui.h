@@ -823,6 +823,9 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_grid_item_t, IDEATEK_UI_GRID_ITEM_FIELDS);
         float scale_x; \
         float scale_y; \
         float rotation; \
+        float rotation_x; \
+        float rotation_y; \
+        float perspective; \
         float pivot_x; \
         float pivot_y; \
     }
@@ -883,6 +886,13 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_shader_t, IDEATEK_UI_SHADER_FIELDS);
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_blur_t, IDEATEK_UI_BLUR_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_blur_t, IDEATEK_UI_BLUR_FIELDS);
+
+    #define IDEATEK_UI_MASK_FIELDS { \
+        ideatek_entity_t texture; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_ui_mask_t, IDEATEK_UI_MASK_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_ui_mask_t, IDEATEK_UI_MASK_FIELDS);
 
     #define IDEATEK_EASE_VALUES { \
         IDEATEK_EASE_LINEAR = 0, \
