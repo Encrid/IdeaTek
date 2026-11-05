@@ -153,10 +153,16 @@ static void show_gamepad_button(void)
     SIZE(ideatek_gamepad_button_t);
 }
 
+static void show_gamepad_features(void)
+{
+    SIZE(ideatek_gamepad_features_t);
+}
+
 static void show_gamepad(void)
 {
     SIZE(ideatek_gamepad_t);
     AT(ideatek_gamepad_t, name);
+    AT(ideatek_gamepad_t, features);
 }
 
 static void show_gamepad_state(void)
@@ -188,6 +194,20 @@ static void show_gamepad_request(void)
     AT(ideatek_gamepad_request_t, duration_ms);
 }
 
+static void show_gamepad_sensor_request(void)
+{
+    SIZE(ideatek_gamepad_sensor_request_t);
+    AT(ideatek_gamepad_sensor_request_t, enabled);
+}
+
+static void show_gamepad_motion(void)
+{
+    SIZE(ideatek_gamepad_motion_t);
+    AT(ideatek_gamepad_motion_t, gyro);
+    AT(ideatek_gamepad_motion_t, accel);
+    AT(ideatek_gamepad_motion_t, turn);
+}
+
 static void show_descriptors(void)
 {
     static const char *const DESCRIPTORS[] = {
@@ -199,9 +219,10 @@ static void show_descriptors(void)
         ideatek_mouse_motion_t_desc, ideatek_mouse_button_t_desc,
         ideatek_mouse_wheel_t_desc, ideatek_mouse_request_t_desc,
         ideatek_finger_event_kind_t_desc, ideatek_finger_event_t_desc,
-        ideatek_gamepad_button_t_desc, ideatek_gamepad_t_desc,
-        ideatek_gamepad_state_t_desc, ideatek_gamepad_event_t_desc,
-        ideatek_gamepad_request_t_desc
+        ideatek_gamepad_button_t_desc, ideatek_gamepad_features_t_desc,
+        ideatek_gamepad_t_desc, ideatek_gamepad_state_t_desc,
+        ideatek_gamepad_event_t_desc, ideatek_gamepad_request_t_desc,
+        ideatek_gamepad_sensor_request_t_desc, ideatek_gamepad_motion_t_desc
     };
 
     for (size_t i = 0; i < sizeof(DESCRIPTORS) / sizeof(DESCRIPTORS[0]); i++)
@@ -225,9 +246,12 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_FINGER_EVENT_KIND_VALUES),
         TEXT_OF(IDEATEK_FINGER_EVENT_FIELDS),
         TEXT_OF(IDEATEK_GAMEPAD_BUTTON_VALUES),
+        TEXT_OF(IDEATEK_GAMEPAD_FEATURES_VALUES),
         TEXT_OF(IDEATEK_GAMEPAD_FIELDS), TEXT_OF(IDEATEK_GAMEPAD_STATE_FIELDS),
         TEXT_OF(IDEATEK_GAMEPAD_EVENT_FIELDS),
-        TEXT_OF(IDEATEK_GAMEPAD_REQUEST_FIELDS)
+        TEXT_OF(IDEATEK_GAMEPAD_REQUEST_FIELDS),
+        TEXT_OF(IDEATEK_GAMEPAD_SENSOR_REQUEST_FIELDS),
+        TEXT_OF(IDEATEK_GAMEPAD_MOTION_FIELDS)
     };
 
     for (size_t i = 0; i < sizeof(TEXTS) / sizeof(TEXTS[0]); i++)
@@ -249,10 +273,14 @@ int main(int argc, char **argv)
         { "mouse_request", show_mouse_request },
         { "finger_event_kind", show_finger_event_kind },
         { "finger_event", show_finger_event },
-        { "gamepad_button", show_gamepad_button }, { "gamepad", show_gamepad },
+        { "gamepad_button", show_gamepad_button },
+        { "gamepad_features", show_gamepad_features },
+        { "gamepad", show_gamepad },
         { "gamepad_state", show_gamepad_state },
         { "gamepad_event", show_gamepad_event },
         { "gamepad_request", show_gamepad_request },
+        { "gamepad_sensor_request", show_gamepad_sensor_request },
+        { "gamepad_motion", show_gamepad_motion },
         { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 
