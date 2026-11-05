@@ -44,12 +44,18 @@ false = { run = ["{out}/networking_layout{exe}", "net_admit"] }
 name = "ideatek_net_admit_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/networking_layout{exe}", "net_admit"]
 claims = { status = 0, order = ["size 8", "alignment 4", "reason 0", "action 4"] }
+false = { run = ["{out}/networking_layout{exe}", "net_authority"] }
+
+[[case]]
+name = "ideatek_net_authority_t is 1 byte"
+run = ["{out}/networking_layout{exe}", "net_authority"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/networking_layout{exe}", "replicated"] }
 
 [[case]]
 name = "ideatek_replicated_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/networking_layout{exe}", "replicated"]
-claims = { status = 0, order = ["size 16", "alignment 8", "prefab 0", "owner 8"] }
+claims = { status = 0, order = ["size 32", "alignment 8", "prefab 0", "group 8", "owner 16", "host 20", "authority 24"] }
 false = { run = ["{out}/networking_layout{exe}", "net_entity"] }
 
 [[case]]
@@ -65,10 +71,16 @@ claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/networking_layout{exe}", "net_out"] }
 
 [[case]]
+name = "ideatek_net_condition_t is 1 byte"
+run = ["{out}/networking_layout{exe}", "net_condition"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/networking_layout{exe}", "net_out"] }
+
+[[case]]
 name = "ideatek_net_out_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/networking_layout{exe}", "net_out"]
-claims = { status = 0, order = ["size 24", "alignment 8", "tag 0", "data 8", "peer 16", "kind 20"] }
-false = { run = ["{out}/networking_layout{exe}", "net_viewer"] }
+claims = { status = 0, order = ["size 24", "alignment 8", "tag 0", "data 8", "peer 16", "kind 20", "condition 21"] }
+false = { run = ["{out}/networking_layout{exe}", "net_in"] }
 
 [[case]]
 name = "ideatek_net_in_t has the size, the alignment and the offsets of its Usage"
@@ -91,7 +103,7 @@ false = { run = ["{out}/networking_layout{exe}", "net_relevance"] }
 [[case]]
 name = "ideatek_net_relevance_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/networking_layout{exe}", "net_relevance"]
-claims = { status = 0, order = ["size 12", "alignment 4", "distance 0", "priority 4", "mode 8"] }
+claims = { status = 0, order = ["size 24", "alignment 8", "groups 0", "distance 8", "priority 12", "steps 16", "mode 20"] }
 false = { run = ["{out}/networking_layout{exe}", "net_command"] }
 
 [[case]]
@@ -109,7 +121,37 @@ false = { run = ["{out}/networking_layout{exe}", "net_session_state"] }
 [[case]]
 name = "ideatek_net_session_state_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/networking_layout{exe}", "net_session_state"]
-claims = { status = 0, order = ["size 16", "alignment 4", "tick 0", "command_tick 4", "playback 8", "ack 12"] }
+claims = { status = 0, order = ["size 24", "alignment 4", "tick 0", "command_tick 4", "playback 8", "ack 12", "confirmed 16", "host 20"] }
+false = { run = ["{out}/networking_layout{exe}", "net_peer_groups"] }
+
+[[case]]
+name = "ideatek_net_peer_groups_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/networking_layout{exe}", "net_peer_groups"]
+claims = { status = 0, order = ["size 8", "alignment 8", "groups 0"] }
+false = { run = ["{out}/networking_layout{exe}", "net_predicted_spawn"] }
+
+[[case]]
+name = "ideatek_net_predicted_spawn_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/networking_layout{exe}", "net_predicted_spawn"]
+claims = { status = 0, order = ["size 8", "alignment 8", "key 0"] }
+false = { run = ["{out}/networking_layout{exe}", "net_rollback"] }
+
+[[case]]
+name = "ideatek_net_rollback_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/networking_layout{exe}", "net_rollback"]
+claims = { status = 0, order = ["size 16", "alignment 8", "group 0", "tick 8", "order 12"] }
+false = { run = ["{out}/networking_layout{exe}", "net_authority_changed"] }
+
+[[case]]
+name = "ideatek_net_authority_changed_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/networking_layout{exe}", "net_authority_changed"]
+claims = { status = 0, order = ["size 24", "alignment 8", "entity 0", "old_host 8", "new_host 12", "order 16", "old_authority 20", "new_authority 21"] }
+false = { run = ["{out}/networking_layout{exe}", "net_host_changed"] }
+
+[[case]]
+name = "ideatek_net_host_changed_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/networking_layout{exe}", "net_host_changed"]
+claims = { status = 0, order = ["size 12", "alignment 4", "old_host 0", "new_host 4", "order 8"] }
 false = { run = ["{out}/networking_layout{exe}", "net_role"] }
 
 [[case]]
@@ -124,17 +166,24 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t peer; bridge_text_t data; uint32_t order; }",
     "uint8_t { IDEATEK_ADMIT_ACCEPT = 0, IDEATEK_ADMIT_REFUSE = 1 }",
     "{ int32_t reason; ideatek_admit_t action; }",
-    "{ uint64_t prefab; uint32_t owner; }",
+    "uint8_t { IDEATEK_NET_AUTHORITY_SERVER = 0, IDEATEK_NET_AUTHORITY_OWNER = 1, IDEATEK_NET_AUTHORITY_HOST = 2, IDEATEK_NET_AUTHORITY_DETERMINISTIC = 3 }",
+    "{ uint64_t prefab; uint64_t group; uint32_t owner; uint32_t host; ideatek_net_authority_t authority; }",
     "{ uint64_t net_id; }",
     "uint8_t { IDEATEK_NET_KIND_STATE = 0, IDEATEK_NET_KIND_EVENT = 1, IDEATEK_NET_KIND_PREDICTED = 2 }",
-    "{ uint64_t tag; bridge_text_t data; uint32_t peer; ideatek_net_kind_t kind; }",
+    "uint8_t { IDEATEK_NET_CONDITION_ALL = 0, IDEATEK_NET_CONDITION_OWNER_ONLY = 1, IDEATEK_NET_CONDITION_SKIP_OWNER = 2, IDEATEK_NET_CONDITION_INITIAL_ONLY = 3 }",
+    "{ uint64_t tag; bridge_text_t data; uint32_t peer; ideatek_net_kind_t kind; ideatek_net_condition_t condition; }",
     "{ uint64_t tag; bridge_text_t data; uint32_t peer; ideatek_net_kind_t kind; }",
     "{ uint32_t peer; }",
-    "uint8_t { IDEATEK_RELEVANCE_MODE_DISTANCE = 0, IDEATEK_RELEVANCE_MODE_ALWAYS = 1, IDEATEK_RELEVANCE_MODE_OWNER = 2, IDEATEK_RELEVANCE_MODE_NONE = 3 }",
-    "{ float distance; float priority; ideatek_relevance_mode_t mode; }",
+    "uint8_t { IDEATEK_RELEVANCE_MODE_DISTANCE = 0, IDEATEK_RELEVANCE_MODE_ALWAYS = 1, IDEATEK_RELEVANCE_MODE_OWNER = 2, IDEATEK_RELEVANCE_MODE_NONE = 3, IDEATEK_RELEVANCE_MODE_GROUP = 4, IDEATEK_RELEVANCE_MODE_VISIBLE = 5 }",
+    "{ uint64_t groups; float distance; float priority; uint32_t steps; ideatek_relevance_mode_t mode; }",
     "{ bridge_text_t data; uint32_t tick; uint32_t view_tick; }",
     "{ bridge_text_t data; uint32_t peer; uint32_t tick; uint32_t view_tick; }",
-    "{ uint32_t tick; uint32_t command_tick; uint32_t playback; uint32_t ack; }",
+    "{ uint32_t tick; uint32_t command_tick; uint32_t playback; uint32_t ack; uint32_t confirmed; uint32_t host; }",
+    "{ uint64_t groups; }",
+    "{ uint64_t key; }",
+    "{ uint64_t group; uint32_t tick; uint32_t order; }",
+    "{ ideatek_entity_t entity; uint32_t old_host; uint32_t new_host; uint32_t order; ideatek_net_authority_t old_authority; ideatek_net_authority_t new_authority; }",
+    "{ uint32_t old_host; uint32_t new_host; uint32_t order; }",
 ] }
 false = { run = ["{out}/networking_layout{exe}", "texts"] }
 
@@ -150,17 +199,24 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t peer; bridge_text_t data; uint32_t order; }",
     "{ IDEATEK_ADMIT_ACCEPT = 0, IDEATEK_ADMIT_REFUSE = 1 }",
     "{ int32_t reason; ideatek_admit_t action; }",
-    "{ uint64_t prefab; uint32_t owner; }",
+    "{ IDEATEK_NET_AUTHORITY_SERVER = 0, IDEATEK_NET_AUTHORITY_OWNER = 1, IDEATEK_NET_AUTHORITY_HOST = 2, IDEATEK_NET_AUTHORITY_DETERMINISTIC = 3 }",
+    "{ uint64_t prefab; uint64_t group; uint32_t owner; uint32_t host; ideatek_net_authority_t authority; }",
     "{ uint64_t net_id; }",
     "{ IDEATEK_NET_KIND_STATE = 0, IDEATEK_NET_KIND_EVENT = 1, IDEATEK_NET_KIND_PREDICTED = 2 }",
-    "{ uint64_t tag; bridge_text_t data; uint32_t peer; ideatek_net_kind_t kind; }",
+    "{ IDEATEK_NET_CONDITION_ALL = 0, IDEATEK_NET_CONDITION_OWNER_ONLY = 1, IDEATEK_NET_CONDITION_SKIP_OWNER = 2, IDEATEK_NET_CONDITION_INITIAL_ONLY = 3 }",
+    "{ uint64_t tag; bridge_text_t data; uint32_t peer; ideatek_net_kind_t kind; ideatek_net_condition_t condition; }",
     "{ uint64_t tag; bridge_text_t data; uint32_t peer; ideatek_net_kind_t kind; }",
     "{ uint32_t peer; }",
-    "{ IDEATEK_RELEVANCE_MODE_DISTANCE = 0, IDEATEK_RELEVANCE_MODE_ALWAYS = 1, IDEATEK_RELEVANCE_MODE_OWNER = 2, IDEATEK_RELEVANCE_MODE_NONE = 3 }",
-    "{ float distance; float priority; ideatek_relevance_mode_t mode; }",
+    "{ IDEATEK_RELEVANCE_MODE_DISTANCE = 0, IDEATEK_RELEVANCE_MODE_ALWAYS = 1, IDEATEK_RELEVANCE_MODE_OWNER = 2, IDEATEK_RELEVANCE_MODE_NONE = 3, IDEATEK_RELEVANCE_MODE_GROUP = 4, IDEATEK_RELEVANCE_MODE_VISIBLE = 5 }",
+    "{ uint64_t groups; float distance; float priority; uint32_t steps; ideatek_relevance_mode_t mode; }",
     "{ bridge_text_t data; uint32_t tick; uint32_t view_tick; }",
     "{ bridge_text_t data; uint32_t peer; uint32_t tick; uint32_t view_tick; }",
-    "{ uint32_t tick; uint32_t command_tick; uint32_t playback; uint32_t ack; }",
+    "{ uint32_t tick; uint32_t command_tick; uint32_t playback; uint32_t ack; uint32_t confirmed; uint32_t host; }",
+    "{ uint64_t groups; }",
+    "{ uint64_t key; }",
+    "{ uint64_t group; uint32_t tick; uint32_t order; }",
+    "{ ideatek_entity_t entity; uint32_t old_host; uint32_t new_host; uint32_t order; ideatek_net_authority_t old_authority; ideatek_net_authority_t new_authority; }",
+    "{ uint32_t old_host; uint32_t new_host; uint32_t order; }",
 ] }
 false = { run = ["{out}/networking_layout{exe}", "descriptors"] }
 
@@ -171,7 +227,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/networking_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 20 types, each type after the types of its fields"
+name = "a module declares the 27 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/networking_probe{library}"] }
 
@@ -189,12 +245,15 @@ library = "{bb_native}/bridge_native"
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
     "ideatek:ideatek_peer_state_t", "ideatek:ideatek_admit_t",
-    "ideatek:ideatek_net_kind_t", "ideatek:ideatek_relevance_mode_t",
+    "ideatek:ideatek_net_authority_t", "ideatek:ideatek_net_kind_t",
+    "ideatek:ideatek_net_condition_t", "ideatek:ideatek_relevance_mode_t",
     "ideatek:NetSession", "ideatek:NetPeer", "ideatek:NetJoin",
     "ideatek:NetJoinEvent", "ideatek:NetAdmit", "ideatek:Replicated",
     "ideatek:NetEntity", "ideatek:NetOut", "ideatek:NetIn", "ideatek:NetViewer",
     "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:NetCommandIn",
-    "ideatek:NetSessionState",
+    "ideatek:NetSessionState", "ideatek:NetPeerGroups",
+    "ideatek:NetPredictedSpawn", "ideatek:NetRollback",
+    "ideatek:NetAuthorityChanged", "ideatek:NetHostChanged",
 ]
 '''
 
@@ -220,11 +279,13 @@ library = "{bb_native}/bridge_native"
 write = [
     "ideatek:NetSession", "ideatek:NetJoin", "ideatek:NetAdmit",
     "ideatek:Replicated", "ideatek:NetOut", "ideatek:NetViewer",
-    "ideatek:NetRelevance", "ideatek:NetCommand",
+    "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:NetPeerGroups",
+    "ideatek:NetPredictedSpawn",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
-    "ideatek:ideatek_admit_t", "ideatek:ideatek_net_kind_t",
+    "ideatek:ideatek_admit_t", "ideatek:ideatek_net_authority_t",
+    "ideatek:ideatek_net_kind_t", "ideatek:ideatek_net_condition_t",
     "ideatek:ideatek_relevance_mode_t",
 ]
 '''
@@ -240,12 +301,13 @@ library = "{bb_native}/bridge_native"
 write = [
     "ideatek:NetSession", "ideatek:NetJoin", "ideatek:NetAdmit",
     "ideatek:Replicated", "ideatek:NetOut", "ideatek:NetViewer",
-    "ideatek:NetRelevance",
+    "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:NetPeerGroups",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
-    "ideatek:ideatek_admit_t", "ideatek:ideatek_net_kind_t",
-    "ideatek:ideatek_relevance_mode_t", "ideatek:NetCommand",
+    "ideatek:ideatek_admit_t", "ideatek:ideatek_net_authority_t",
+    "ideatek:ideatek_net_kind_t", "ideatek:ideatek_net_condition_t",
+    "ideatek:ideatek_relevance_mode_t", "ideatek:NetPredictedSpawn",
 ]
 '''
 
@@ -268,14 +330,18 @@ library = "{bb_native}/bridge_native"
 write = [
     "ideatek:NetPeer", "ideatek:NetJoinEvent", "ideatek:NetEntity",
     "ideatek:NetIn", "ideatek:NetCommandIn", "ideatek:NetSessionState",
+    "ideatek:NetRollback", "ideatek:NetAuthorityChanged",
+    "ideatek:NetHostChanged",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
     "ideatek:ideatek_peer_state_t", "ideatek:ideatek_admit_t",
-    "ideatek:ideatek_net_kind_t", "ideatek:ideatek_relevance_mode_t",
+    "ideatek:ideatek_net_authority_t", "ideatek:ideatek_net_kind_t",
+    "ideatek:ideatek_net_condition_t", "ideatek:ideatek_relevance_mode_t",
     "ideatek:NetSession", "ideatek:NetJoin", "ideatek:NetAdmit",
     "ideatek:Replicated", "ideatek:NetOut", "ideatek:NetViewer",
-    "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:Tick",
+    "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:NetPeerGroups",
+    "ideatek:NetPredictedSpawn", "ideatek:Tick",
 ]
 '''
 
@@ -289,16 +355,18 @@ library = "{bb_native}/bridge_native"
 [module."test:module@1.0.0"]
 write = [
     "ideatek:NetPeer", "ideatek:NetJoinEvent", "ideatek:NetEntity",
-    "ideatek:NetIn", "ideatek:NetCommandIn",
+    "ideatek:NetIn", "ideatek:NetCommandIn", "ideatek:NetSessionState",
+    "ideatek:NetRollback", "ideatek:NetAuthorityChanged",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_net_role_t",
     "ideatek:ideatek_peer_state_t", "ideatek:ideatek_admit_t",
-    "ideatek:ideatek_net_kind_t", "ideatek:ideatek_relevance_mode_t",
+    "ideatek:ideatek_net_authority_t", "ideatek:ideatek_net_kind_t",
+    "ideatek:ideatek_net_condition_t", "ideatek:ideatek_relevance_mode_t",
     "ideatek:NetSession", "ideatek:NetJoin", "ideatek:NetAdmit",
     "ideatek:Replicated", "ideatek:NetOut", "ideatek:NetViewer",
-    "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:Tick",
-    "ideatek:NetSessionState",
+    "ideatek:NetRelevance", "ideatek:NetCommand", "ideatek:NetPeerGroups",
+    "ideatek:NetPredictedSpawn", "ideatek:Tick", "ideatek:NetHostChanged",
 ]
 '''
 
