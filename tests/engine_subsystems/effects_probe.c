@@ -56,6 +56,7 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ParticleLook", ideatek_particle_look_t);
     STRUCT(api, "ideatek:ParticleCollision", ideatek_particle_collision_t);
     STRUCT(api, "ideatek:ParticleSpawn", ideatek_particle_spawn_t);
+    STRUCT(api, "ideatek:ParticleLight", ideatek_particle_light_t);
 }
 
 [[maybe_unused]] static void role_author(const bridge_api_t *api)
@@ -91,6 +92,8 @@ static const char WHO[] = MANIFEST;
         ideatek_particle_collision_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:ParticleSpawn",
         ideatek_particle_spawn_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ParticleLight",
+        ideatek_particle_light_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_effects(const bridge_api_t *api)
@@ -124,8 +127,12 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ParticleLook", ideatek_particle_look_t);
     STRUCT(api, "ideatek:ParticleCollision", ideatek_particle_collision_t);
     STRUCT(api, "ideatek:ParticleSpawn", ideatek_particle_spawn_t);
+    STRUCT(api, "ideatek:ParticleLight", ideatek_particle_light_t);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:WorldTransform",
         ideatek_world_transform_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:MeshInstance",
+        ideatek_mesh_instance_t, BRIDGE_STRIP, BRIDGE_TABLE,
         BRIDGE_ON_DESTROY_REMOVE);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Shape", ideatek_shape_t, BRIDGE_STRIP,
         BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);

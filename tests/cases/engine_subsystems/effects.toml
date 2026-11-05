@@ -25,7 +25,7 @@ false = { run = ["{out}/effects_layout{exe}", "particle_emitter"] }
 [[case]]
 name = "ideatek_particle_emitter_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/effects_layout{exe}", "particle_emitter"]
-claims = { status = 0, order = ["size 40", "alignment 4", "rate 0", "burst_interval 4", "lifetime_min 8", "lifetime_max 12", "speed_scale 16", "prewarm 20", "burst 24", "max 28", "seed 32", "state 36", "flags 37"] }
+claims = { status = 0, order = ["size 52", "alignment 4", "rate 0", "rate_per_meter 4", "duration 8", "delay 12", "burst_interval 16", "lifetime_min 20", "lifetime_max 24", "speed_scale 28", "prewarm 32", "burst 36", "max 40", "seed 44", "state 48", "flags 49"] }
 false = { run = ["{out}/effects_layout{exe}", "emission_shape"] }
 
 [[case]]
@@ -43,13 +43,13 @@ false = { run = ["{out}/effects_layout{exe}", "particle_velocity"] }
 [[case]]
 name = "ideatek_particle_velocity_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/effects_layout{exe}", "particle_velocity"]
-claims = { status = 0, order = ["size 32", "alignment 4", "min 0", "max 12", "radial_min 24", "radial_max 28"] }
+claims = { status = 0, order = ["size 36", "alignment 4", "min 0", "max 12", "radial_min 24", "radial_max 28", "inherit_velocity 32"] }
 false = { run = ["{out}/effects_layout{exe}", "particle_forces"] }
 
 [[case]]
 name = "ideatek_particle_forces_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/effects_layout{exe}", "particle_forces"]
-claims = { status = 0, order = ["size 16", "alignment 4", "gravity 0", "drag 12"] }
+claims = { status = 0, order = ["size 36", "alignment 4", "gravity 0", "drag 12", "noise_strength 16", "noise_frequency 20", "radial_acceleration 24", "tangential_acceleration 28", "max_speed 32"] }
 false = { run = ["{out}/effects_layout{exe}", "particle_emitter_state"] }
 
 [[case]]
@@ -85,7 +85,7 @@ false = { run = ["{out}/effects_layout{exe}", "particle_look"] }
 [[case]]
 name = "ideatek_particle_look_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/effects_layout{exe}", "particle_look"]
-claims = { status = 0, order = ["size 88", "alignment 8", "material 0", "mesh 8", "size_curve 16", "color_curve 24", "color 32", "size_min 48", "size_max 52", "rotation_min 56", "rotation_max 60", "spin_min 64", "spin_max 68", "frame_rate 72", "frames_x 76", "frames_y 80", "kind 84", "align 85", "sort 86"] }
+claims = { status = 0, order = ["size 104", "alignment 8", "material 0", "mesh 8", "size_curve 16", "color_curve 24", "start_color_curve 32", "color 40", "size_min 56", "size_max 60", "rotation_min 64", "rotation_max 68", "spin_min 72", "spin_max 76", "frame_rate 80", "trail_lifetime 84", "frames_x 88", "frames_y 92", "kind 96", "align 97", "sort 98", "frame_random 99"] }
 false = { run = ["{out}/effects_layout{exe}", "collision_source"] }
 
 [[case]]
@@ -116,6 +116,12 @@ false = { run = ["{out}/effects_layout{exe}", "particle_spawn"] }
 name = "ideatek_particle_spawn_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/effects_layout{exe}", "particle_spawn"]
 claims = { status = 0, order = ["size 24", "alignment 8", "parent 0", "rate 8", "inherit_velocity 12", "count 16", "on 20"] }
+false = { run = ["{out}/effects_layout{exe}", "particle_light"] }
+
+[[case]]
+name = "ideatek_particle_light_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/effects_layout{exe}", "particle_light"]
+claims = { status = 0, order = ["size 16", "alignment 4", "intensity 0", "range_scale 4", "fraction 8", "max 12"] }
 false = { run = ["{out}/effects_layout{exe}", "curve_kind"] }
 
 [[case]]
@@ -126,22 +132,23 @@ claims = { status = 0, line = [
     "{ bridge_text_t bytes; uint32_t key_count; uint32_t revision; ideatek_curve_kind_t kind; }",
     "uint8_t { IDEATEK_EMITTER_STATE_STOPPED = 0, IDEATEK_EMITTER_STATE_PLAYING = 1, IDEATEK_EMITTER_STATE_PAUSED = 2 }",
     "uint8_t { IDEATEK_EMITTER_FLAGS_ONE_SHOT = 0x01, IDEATEK_EMITTER_FLAGS_LOCAL = 0x02, IDEATEK_EMITTER_FLAGS_DESTROY_AT_END = 0x04 }",
-    "{ float rate; float burst_interval; float lifetime_min; float lifetime_max; float speed_scale; float prewarm; uint32_t burst; uint32_t max; uint32_t seed; ideatek_emitter_state_t state; ideatek_emitter_flags_t flags; }",
-    "uint8_t { IDEATEK_EMISSION_SHAPE_POINT = 0, IDEATEK_EMISSION_SHAPE_SPHERE = 1, IDEATEK_EMISSION_SHAPE_SPHERE_SURFACE = 2, IDEATEK_EMISSION_SHAPE_BOX = 3, IDEATEK_EMISSION_SHAPE_RING = 4, IDEATEK_EMISSION_SHAPE_MESH = 5 }",
+    "{ float rate; float rate_per_meter; float duration; float delay; float burst_interval; float lifetime_min; float lifetime_max; float speed_scale; float prewarm; uint32_t burst; uint32_t max; uint32_t seed; ideatek_emitter_state_t state; ideatek_emitter_flags_t flags; }",
+    "uint8_t { IDEATEK_EMISSION_SHAPE_POINT = 0, IDEATEK_EMISSION_SHAPE_SPHERE = 1, IDEATEK_EMISSION_SHAPE_SPHERE_SURFACE = 2, IDEATEK_EMISSION_SHAPE_BOX = 3, IDEATEK_EMISSION_SHAPE_RING = 4, IDEATEK_EMISSION_SHAPE_MESH = 5, IDEATEK_EMISSION_SHAPE_MESH_SURFACE = 6 }",
     "{ ideatek_entity_t mesh; ideatek_vec3_t size; ideatek_emission_shape_t kind; }",
-    "{ ideatek_vec3_t min; ideatek_vec3_t max; float radial_min; float radial_max; }",
-    "{ ideatek_vec3_t gravity; float drag; }",
+    "{ ideatek_vec3_t min; ideatek_vec3_t max; float radial_min; float radial_max; float inherit_velocity; }",
+    "{ ideatek_vec3_t gravity; float drag; float noise_strength; float noise_frequency; float radial_acceleration; float tangential_acceleration; float max_speed; }",
     "{ uint32_t alive; bool done; }",
     "{ ideatek_entity_t emitter; uint32_t order; }",
-    "uint8_t { IDEATEK_PARTICLE_KIND_SPRITE = 0, IDEATEK_PARTICLE_KIND_MESH = 1, IDEATEK_PARTICLE_KIND_RIBBON = 2 }",
-    "uint8_t { IDEATEK_PARTICLE_ALIGN_CAMERA = 0, IDEATEK_PARTICLE_ALIGN_VELOCITY = 1 }",
+    "uint8_t { IDEATEK_PARTICLE_KIND_SPRITE = 0, IDEATEK_PARTICLE_KIND_MESH = 1, IDEATEK_PARTICLE_KIND_RIBBON = 2, IDEATEK_PARTICLE_KIND_TRAIL = 3 }",
+    "uint8_t { IDEATEK_PARTICLE_ALIGN_CAMERA = 0, IDEATEK_PARTICLE_ALIGN_VELOCITY = 1, IDEATEK_PARTICLE_ALIGN_HORIZONTAL = 2, IDEATEK_PARTICLE_ALIGN_VERTICAL = 3 }",
     "uint8_t { IDEATEK_PARTICLE_SORT_NONE = 0, IDEATEK_PARTICLE_SORT_DEPTH = 1, IDEATEK_PARTICLE_SORT_AGE = 2 }",
-    "{ ideatek_entity_t material; ideatek_entity_t mesh; ideatek_entity_t size_curve; ideatek_entity_t color_curve; ideatek_color_t color; float size_min; float size_max; float rotation_min; float rotation_max; float spin_min; float spin_max; float frame_rate; uint32_t frames_x; uint32_t frames_y; ideatek_particle_kind_t kind; ideatek_particle_align_t align; ideatek_particle_sort_t sort; }",
+    "{ ideatek_entity_t material; ideatek_entity_t mesh; ideatek_entity_t size_curve; ideatek_entity_t color_curve; ideatek_entity_t start_color_curve; ideatek_color_t color; float size_min; float size_max; float rotation_min; float rotation_max; float spin_min; float spin_max; float frame_rate; float trail_lifetime; uint32_t frames_x; uint32_t frames_y; ideatek_particle_kind_t kind; ideatek_particle_align_t align; ideatek_particle_sort_t sort; bool frame_random; }",
     "uint8_t { IDEATEK_COLLISION_SOURCE_DEPTH = 0, IDEATEK_COLLISION_SOURCE_SHAPES = 1 }",
     "uint8_t { IDEATEK_COLLISION_MODE_BOUNCE = 0, IDEATEK_COLLISION_MODE_KILL = 1, IDEATEK_COLLISION_MODE_STICK = 2 }",
     "{ uint64_t touches; float bounce; float friction; float radius; ideatek_collision_source_t source; ideatek_collision_mode_t mode; }",
     "uint8_t { IDEATEK_SPAWN_ON_START = 0, IDEATEK_SPAWN_ON_END = 1, IDEATEK_SPAWN_ON_COLLISION = 2, IDEATEK_SPAWN_ON_CONSTANT = 3 }",
     "{ ideatek_entity_t parent; float rate; float inherit_velocity; uint32_t count; ideatek_spawn_on_t on; }",
+    "{ float intensity; float range_scale; float fraction; uint32_t max; }",
 ] }
 false = { run = ["{out}/effects_layout{exe}", "texts"] }
 
@@ -153,22 +160,23 @@ claims = { status = 0, line = [
     "{ bridge_text_t bytes; uint32_t key_count; uint32_t revision; ideatek_curve_kind_t kind; }",
     "{ IDEATEK_EMITTER_STATE_STOPPED = 0, IDEATEK_EMITTER_STATE_PLAYING = 1, IDEATEK_EMITTER_STATE_PAUSED = 2 }",
     "{ IDEATEK_EMITTER_FLAGS_ONE_SHOT = 0x01, IDEATEK_EMITTER_FLAGS_LOCAL = 0x02, IDEATEK_EMITTER_FLAGS_DESTROY_AT_END = 0x04 }",
-    "{ float rate; float burst_interval; float lifetime_min; float lifetime_max; float speed_scale; float prewarm; uint32_t burst; uint32_t max; uint32_t seed; ideatek_emitter_state_t state; ideatek_emitter_flags_t flags; }",
-    "{ IDEATEK_EMISSION_SHAPE_POINT = 0, IDEATEK_EMISSION_SHAPE_SPHERE = 1, IDEATEK_EMISSION_SHAPE_SPHERE_SURFACE = 2, IDEATEK_EMISSION_SHAPE_BOX = 3, IDEATEK_EMISSION_SHAPE_RING = 4, IDEATEK_EMISSION_SHAPE_MESH = 5 }",
+    "{ float rate; float rate_per_meter; float duration; float delay; float burst_interval; float lifetime_min; float lifetime_max; float speed_scale; float prewarm; uint32_t burst; uint32_t max; uint32_t seed; ideatek_emitter_state_t state; ideatek_emitter_flags_t flags; }",
+    "{ IDEATEK_EMISSION_SHAPE_POINT = 0, IDEATEK_EMISSION_SHAPE_SPHERE = 1, IDEATEK_EMISSION_SHAPE_SPHERE_SURFACE = 2, IDEATEK_EMISSION_SHAPE_BOX = 3, IDEATEK_EMISSION_SHAPE_RING = 4, IDEATEK_EMISSION_SHAPE_MESH = 5, IDEATEK_EMISSION_SHAPE_MESH_SURFACE = 6 }",
     "{ ideatek_entity_t mesh; ideatek_vec3_t size; ideatek_emission_shape_t kind; }",
-    "{ ideatek_vec3_t min; ideatek_vec3_t max; float radial_min; float radial_max; }",
-    "{ ideatek_vec3_t gravity; float drag; }",
+    "{ ideatek_vec3_t min; ideatek_vec3_t max; float radial_min; float radial_max; float inherit_velocity; }",
+    "{ ideatek_vec3_t gravity; float drag; float noise_strength; float noise_frequency; float radial_acceleration; float tangential_acceleration; float max_speed; }",
     "{ uint32_t alive; bool done; }",
     "{ ideatek_entity_t emitter; uint32_t order; }",
-    "{ IDEATEK_PARTICLE_KIND_SPRITE = 0, IDEATEK_PARTICLE_KIND_MESH = 1, IDEATEK_PARTICLE_KIND_RIBBON = 2 }",
-    "{ IDEATEK_PARTICLE_ALIGN_CAMERA = 0, IDEATEK_PARTICLE_ALIGN_VELOCITY = 1 }",
+    "{ IDEATEK_PARTICLE_KIND_SPRITE = 0, IDEATEK_PARTICLE_KIND_MESH = 1, IDEATEK_PARTICLE_KIND_RIBBON = 2, IDEATEK_PARTICLE_KIND_TRAIL = 3 }",
+    "{ IDEATEK_PARTICLE_ALIGN_CAMERA = 0, IDEATEK_PARTICLE_ALIGN_VELOCITY = 1, IDEATEK_PARTICLE_ALIGN_HORIZONTAL = 2, IDEATEK_PARTICLE_ALIGN_VERTICAL = 3 }",
     "{ IDEATEK_PARTICLE_SORT_NONE = 0, IDEATEK_PARTICLE_SORT_DEPTH = 1, IDEATEK_PARTICLE_SORT_AGE = 2 }",
-    "{ ideatek_entity_t material; ideatek_entity_t mesh; ideatek_entity_t size_curve; ideatek_entity_t color_curve; ideatek_color_t color; float size_min; float size_max; float rotation_min; float rotation_max; float spin_min; float spin_max; float frame_rate; uint32_t frames_x; uint32_t frames_y; ideatek_particle_kind_t kind; ideatek_particle_align_t align; ideatek_particle_sort_t sort; }",
+    "{ ideatek_entity_t material; ideatek_entity_t mesh; ideatek_entity_t size_curve; ideatek_entity_t color_curve; ideatek_entity_t start_color_curve; ideatek_color_t color; float size_min; float size_max; float rotation_min; float rotation_max; float spin_min; float spin_max; float frame_rate; float trail_lifetime; uint32_t frames_x; uint32_t frames_y; ideatek_particle_kind_t kind; ideatek_particle_align_t align; ideatek_particle_sort_t sort; bool frame_random; }",
     "{ IDEATEK_COLLISION_SOURCE_DEPTH = 0, IDEATEK_COLLISION_SOURCE_SHAPES = 1 }",
     "{ IDEATEK_COLLISION_MODE_BOUNCE = 0, IDEATEK_COLLISION_MODE_KILL = 1, IDEATEK_COLLISION_MODE_STICK = 2 }",
     "{ uint64_t touches; float bounce; float friction; float radius; ideatek_collision_source_t source; ideatek_collision_mode_t mode; }",
     "{ IDEATEK_SPAWN_ON_START = 0, IDEATEK_SPAWN_ON_END = 1, IDEATEK_SPAWN_ON_COLLISION = 2, IDEATEK_SPAWN_ON_CONSTANT = 3 }",
     "{ ideatek_entity_t parent; float rate; float inherit_velocity; uint32_t count; ideatek_spawn_on_t on; }",
+    "{ float intensity; float range_scale; float fraction; uint32_t max; }",
 ] }
 false = { run = ["{out}/effects_layout{exe}", "descriptors"] }
 
@@ -179,7 +187,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/effects_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 23 types, each type after the types of its fields"
+name = "a module declares the 24 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/effects_probe{library}"] }
 
@@ -206,6 +214,7 @@ read = [
     "ideatek:ParticleForces", "ideatek:ParticleEmitterState",
     "ideatek:ParticleEnded", "ideatek:ParticleLook",
     "ideatek:ParticleCollision", "ideatek:ParticleSpawn",
+    "ideatek:ParticleLight",
 ]
 '''
 
@@ -231,7 +240,8 @@ library = "{bb_native}/bridge_native"
 write = [
     "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
     "ideatek:ParticleVelocity", "ideatek:ParticleForces",
-    "ideatek:ParticleLook", "ideatek:ParticleCollision", "ideatek:ParticleSpawn",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision",
+    "ideatek:ParticleSpawn", "ideatek:ParticleLight",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -255,7 +265,7 @@ library = "{bb_native}/bridge_native"
 write = [
     "ideatek:Curve", "ideatek:ParticleEmitter", "ideatek:ParticleShape",
     "ideatek:ParticleVelocity", "ideatek:ParticleForces",
-    "ideatek:ParticleLook", "ideatek:ParticleCollision",
+    "ideatek:ParticleLook", "ideatek:ParticleCollision", "ideatek:ParticleSpawn",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -264,7 +274,7 @@ read = [
     "ideatek:ideatek_emission_shape_t", "ideatek:ideatek_particle_kind_t",
     "ideatek:ideatek_particle_align_t", "ideatek:ideatek_particle_sort_t",
     "ideatek:ideatek_collision_source_t", "ideatek:ideatek_collision_mode_t",
-    "ideatek:ideatek_spawn_on_t", "ideatek:ParticleSpawn",
+    "ideatek:ideatek_spawn_on_t", "ideatek:ParticleLight",
 ]
 '''
 
@@ -301,8 +311,8 @@ read = [
     "ideatek:ParticleShape", "ideatek:ParticleVelocity",
     "ideatek:ParticleForces", "ideatek:ParticleLook",
     "ideatek:ParticleCollision", "ideatek:ParticleSpawn",
-    "ideatek:WorldTransform", "ideatek:Shape", "ideatek:Wind",
-    "ideatek:ForceField",
+    "ideatek:ParticleLight", "ideatek:WorldTransform", "ideatek:MeshInstance",
+    "ideatek:Shape", "ideatek:Wind", "ideatek:ForceField",
 ]
 '''
 
@@ -331,8 +341,9 @@ read = [
     "ideatek:ParticleShape", "ideatek:ParticleVelocity",
     "ideatek:ParticleForces", "ideatek:ParticleLook",
     "ideatek:ParticleCollision", "ideatek:ParticleSpawn",
-    "ideatek:WorldTransform", "ideatek:Shape", "ideatek:Wind",
-    "ideatek:ForceField", "ideatek:ParticleEnded",
+    "ideatek:ParticleLight", "ideatek:WorldTransform", "ideatek:MeshInstance",
+    "ideatek:Shape", "ideatek:Wind", "ideatek:ForceField",
+    "ideatek:ParticleEnded",
 ]
 '''
 
