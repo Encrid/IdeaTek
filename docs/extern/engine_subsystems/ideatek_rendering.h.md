@@ -48,6 +48,18 @@ The render module chooses for each sub-mesh the coarsest level whose screen erro
 The threshold is a setting of the render module. `lod_bias` of `ideatek:MeshInstance` multiplies the error.
 `ideatek:VisibilityRange` fades an entity in and out by distance, for a far proxy of a group of meshes.
 
+## The copies of a mesh
+
+`ideatek:MeshInstances` draws 1 mesh at many transforms, for grass, rocks or a crowd. A record of `transforms`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `position` | `double[3]` | 0 | The place, in the space of the entity. |
+| `rotation` | `float[4]` | 24 | A quaternion: x, y, z and w. |
+| `scale` | `float[3]` | 40 | The scale on each axis. |
+
+The records have no bytes between them. `ideatek:MeshMaterials` and `ideatek:Visibility` of the entity apply to each copy.
+
 ## The texture slots
 
 A material names each texture with `ideatek_texture_slot_t`: the texture, the set of texture coordinates and a transform.
@@ -428,6 +440,18 @@ A renderer that cannot read a stream, a format or the number of joint sets logs 
 | `lod_bias` | `float` | 8 | 1 | The factor of the error of each level. |
 
 Bytes 12 to 15 hold no field.
+
+## ideatek:MeshInstances
+
+`ideatek:MeshInstances` draws many copies of a mesh in the space of its entity.
+`ideatek_mesh_instances_t` takes 24 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `mesh` | `ideatek_entity_t` | 0 | The resource entity of the mesh. |
+| `transforms` | `bridge_text_t` | 8 | The records of the copies: *The copies of a mesh*. |
+| `count` | `uint32_t` | 16 | The records in `transforms`. |
+| `revision` | `uint32_t` | 20 | Raised at each change. |
 
 ## ideatek:MeshMaterials
 
@@ -925,6 +949,7 @@ Bytes 25 to 31 hold no field.
 | `ideatek:ProjectionAngles` | `ideatek_projection_angles_t` | `ideatek_projection_angles_t_desc` | `IDEATEK_PROJECTION_ANGLES_FIELDS` |
 | `ideatek:Mesh` | `ideatek_mesh_t` | `ideatek_mesh_t_desc` | `IDEATEK_MESH_FIELDS` |
 | `ideatek:MeshInstance` | `ideatek_mesh_instance_t` | `ideatek_mesh_instance_t_desc` | `IDEATEK_MESH_INSTANCE_FIELDS` |
+| `ideatek:MeshInstances` | `ideatek_mesh_instances_t` | `ideatek_mesh_instances_t_desc` | `IDEATEK_MESH_INSTANCES_FIELDS` |
 | `ideatek:MeshMaterials` | `ideatek_mesh_materials_t` | `ideatek_mesh_materials_t_desc` | `IDEATEK_MESH_MATERIALS_FIELDS` |
 | `ideatek:Visibility` | `ideatek_visibility_t` | `ideatek_visibility_t_desc` | `IDEATEK_VISIBILITY_FIELDS` |
 | `ideatek:Affects` | `ideatek_affects_t` | `ideatek_affects_t_desc` | `IDEATEK_AFFECTS_FIELDS` |
@@ -985,6 +1010,7 @@ Bytes 25 to 31 hold no field.
 { float left; float right; float up; float down; }
 { bridge_text_t bytes; uint32_t vertex_count; uint32_t index_count; uint32_t index_offset; uint32_t stream_count; uint32_t submesh_count; uint32_t lod_count; uint32_t target_count; uint32_t revision; ideatek_topology_t topology; ideatek_index_format_t index_format; }
 { ideatek_entity_t mesh; float lod_bias; }
+{ ideatek_entity_t mesh; bridge_text_t transforms; uint32_t count; uint32_t revision; }
 { bridge_text_t materials; }
 { uint64_t groups; ideatek_cast_shadow_t cast_shadow; ideatek_gi_mode_t gi_mode; bool visible; }
 { uint64_t groups; }
@@ -1051,6 +1077,7 @@ Bytes 25 to 31 hold no field.
 | `ideatek:ProjectionAngles` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Mesh` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:MeshInstance` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:MeshInstances` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:MeshMaterials` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Visibility` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Affects` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
