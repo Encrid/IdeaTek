@@ -1,37 +1,36 @@
 # include/engine_subsystems/ideatek_persistence.h
 
-`include/engine_subsystems/ideatek_persistence.h` gives the types of the saves: the requests, the chunks of each module, the slots, the versions and the settings of the user.
+`include/engine_subsystems/ideatek_persistence.h` gives the types of the saves: the requests, the answers of each module, the slots, the versions and the settings of the user.
 `readme.md`, *The contracts*, tells the rules of each contract.
 The header includes the world part, for the entities of its fields.
 
 ## The roles
 
 - The game spawns a request and marks the entities that the save holds.
-- Each module that saves rows is a participant. It writes its own chunk and reads it back.
+- Each module with an `ideatek:ChangeTag` of the changes part saves its rows. It writes a FULL for a save, and reads `ideatek:RowsIn` at a load.
 - The save module writes the file through the files part of layer 2, and reads it back. When a write fails, the files part keeps the old file.
 
-## The participants
+## The rows of a save
 
-At `init`, each module that saves spawns 1 `ideatek:SaveParticipant` with its tag. The tag is the hash of the name of its component.
-A participant serializes its rows field by field, keyed by `ideatek:SaveId`. It writes each reference to an entity as a save id.
-A module can use the same serialization for its replication.
+A module saves its rows with the stream of the changes part, keyed by `ideatek:EntityId`. A field that names an entity holds the `ideatek:EntityId` of that entity.
+So a save, the network and a store read the same bytes of a module.
 
 ## The save
 
-The save module gives each `ideatek:Saved` entity of the groups of the request an `ideatek:SaveId`.
-Each participant writes 1 `ideatek:SaveChunk` for the request. When each participant has written its chunk, the save module writes the file.
+The id module gives each `ideatek:Saved` entity of the groups of the request an `ideatek:EntityId`, if it has none.
+Each module of rows writes 1 `ideatek:RowChanges` FULL with `request` at the request. When each tag has written, the save module writes the file.
 
 ## The load
 
-The game clears the old world first. The save module reads the file and spawns each prefab with its `ideatek:SaveId`.
-It writes 1 `ideatek:SaveChunk` for each tag, and each participant checks its chunk. It answers `ideatek:SaveReady` or `ideatek:SaveRefuse`.
-Only when each participant is ready does each participant write its rows. So a refused load leaves the world as it was.
+The game clears the old world first. The save module reads the file and spawns each prefab with its `ideatek:EntityId`.
+It writes 1 `ideatek:RowsIn` FULL for each tag, with `source` at the request and the version of the chunk. Each module checks its rows, and answers `ideatek:SaveReady` or `ideatek:SaveRefuse`.
+Only when each module is ready does each module apply its rows. So a refused load leaves the world as it was.
 
-A participant with no chunk in the file gets a chunk of version 0 with no data, and starts from its defaults. A chunk with no participant is skipped, and the save module logs it once.
+A tag with no chunk in the file gets a `ideatek:RowsIn` of version 0 with no data, and its module starts from its defaults. A chunk with no tag is skipped, and the save module logs it once.
 
 ## The versions
 
-Each chunk has the version of its participant. The participant reads an older version and upgrades it in its own code. A newer version gets `ideatek:SaveRefuse`.
+Each chunk has the `version` of the `ideatek:ChangeTag` of its module. Its module upgrades an older version, as the changes part tells, and answers a newer version with `ideatek:SaveRefuse`.
 The save module reads each older version of the format of the file, and refuses a newer one.
 
 ## The file
@@ -40,10 +39,15 @@ A save is a file in the folder `saves/` of `IDEATEK_STORAGE_USER`. A name of a s
 
 1. The magic `IDTS`, then the version of the format, a `uint32_t` of 1.
 2. The head: the time as an `int64_t` of Unix seconds, and the groups as a `uint64_t`. Then the length of the info as a `uint32_t`, and the info.
-3. The prefabs: a `uint32_t` count, then records of `{uint64_t id, uint64_t prefab}`.
-4. The chunks: a `uint32_t` count, then records of `{uint64_t tag, uint32_t version, uint32_t length, bytes}`.
+3. The prefabs: a `uint32_t` count, then records of `{uint64_t id, uint64_t prefab}`. `id` is the `ideatek:EntityId`.
+4. The chunks: a `uint32_t` count, then records of `{uint64_t tag, uint32_t version, uint32_t length, bytes}`. The bytes are the records of the FULL of the tag.
 
 INFO and LIST read only the head.
+
+## The live store
+
+A store module of the changes part keeps the world durable between the rounds, as the changes part tells. A world of a server then needs no save to survive a crash.
+A save file stays a snapshot that a player names, for example a slot of a solo game. Both hold the same rows, so a world can move from a save to a store and back.
 
 ## The settings of the user
 
@@ -87,38 +91,6 @@ Bytes 25 to 31 hold no field.
 | --- | --- | --- | --- | --- |
 | `prefab` | `uint64_t` | 0 | No default | The prefab, by the hash of its name. |
 | `groups` | `uint64_t` | 8 | 1 | The groups of the entity. |
-
-## ideatek:SaveId
-
-`ideatek:SaveId` gives an entity its id in a save. The save module writes it.
-`ideatek_save_id_t` takes 8 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `id` | `uint64_t` | 0 | The id of the entity in the save. |
-
-## ideatek:SaveParticipant
-
-`ideatek:SaveParticipant` makes a module save its rows: *The participants*.
-`ideatek_save_participant_t` takes 8 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `tag` | `uint64_t` | 0 | The tag of the module: the hash of its component name. |
-
-## ideatek:SaveChunk
-
-`ideatek:SaveChunk` holds the rows of 1 participant for a request.
-`ideatek_save_chunk_t` takes 32 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `request` | `ideatek_entity_t` | 0 | The request. |
-| `tag` | `uint64_t` | 8 | The tag of the participant. |
-| `data` | `bridge_text_t` | 16 | The rows, serialized by the participant. |
-| `version` | `uint32_t` | 24 | The version of the chunk. |
-
-Bytes 28 to 31 hold no field.
 
 ## ideatek:SaveReady
 
@@ -205,9 +177,6 @@ The save module destroys these entities 1 round after `ideatek:SaveResult`.
 | `ideatek:ideatek_save_action_t` | `ideatek_save_action_t` | `ideatek_save_action_t_desc` | `IDEATEK_SAVE_ACTION_VALUES` |
 | `ideatek:SaveRequest` | `ideatek_save_request_t` | `ideatek_save_request_t_desc` | `IDEATEK_SAVE_REQUEST_FIELDS` |
 | `ideatek:Saved` | `ideatek_saved_t` | `ideatek_saved_t_desc` | `IDEATEK_SAVED_FIELDS` |
-| `ideatek:SaveId` | `ideatek_save_id_t` | `ideatek_save_id_t_desc` | `IDEATEK_SAVE_ID_FIELDS` |
-| `ideatek:SaveParticipant` | `ideatek_save_participant_t` | `ideatek_save_participant_t_desc` | `IDEATEK_SAVE_PARTICIPANT_FIELDS` |
-| `ideatek:SaveChunk` | `ideatek_save_chunk_t` | `ideatek_save_chunk_t_desc` | `IDEATEK_SAVE_CHUNK_FIELDS` |
 | `ideatek:SaveReady` | `ideatek_save_ready_t` | `ideatek_save_ready_t_desc` | `IDEATEK_SAVE_READY_FIELDS` |
 | `ideatek:SaveRefuse` | `ideatek_save_refuse_t` | `ideatek_save_refuse_t_desc` | `IDEATEK_SAVE_REFUSE_FIELDS` |
 | `ideatek:ideatek_save_state_t` | `ideatek_save_state_t` | `ideatek_save_state_t_desc` | `IDEATEK_SAVE_STATE_VALUES` |
@@ -219,9 +188,6 @@ The save module destroys these entities 1 round after `ideatek:SaveResult`.
 { IDEATEK_SAVE_ACTION_SAVE = 0, IDEATEK_SAVE_ACTION_LOAD = 1, IDEATEK_SAVE_ACTION_INFO = 2, IDEATEK_SAVE_ACTION_LIST = 3, IDEATEK_SAVE_ACTION_REMOVE = 4 }
 { uint64_t groups; bridge_text_t slot; bridge_text_t info; ideatek_save_action_t action; }
 { uint64_t prefab; uint64_t groups; }
-{ uint64_t id; }
-{ uint64_t tag; }
-{ ideatek_entity_t request; uint64_t tag; bridge_text_t data; uint32_t version; }
 { ideatek_entity_t request; uint64_t tag; }
 { ideatek_entity_t request; uint64_t tag; int32_t reason; }
 { IDEATEK_SAVE_STATE_PENDING = 0, IDEATEK_SAVE_STATE_DONE = 1, IDEATEK_SAVE_STATE_FAILED = 2 }
@@ -240,9 +206,6 @@ The save module destroys these entities 1 round after `ideatek:SaveResult`.
 | `ideatek:ideatek_save_error_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SaveRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Saved` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:SaveId` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:SaveParticipant` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:SaveChunk` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SaveReady` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SaveRefuse` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:SaveResult` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -253,5 +216,5 @@ The save module destroys these entities 1 round after `ideatek:SaveResult`.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | The game | `ideatek:SaveRequest`, `ideatek:Saved` | The types of the fields |
-| A participant | `ideatek:SaveParticipant`, `ideatek:SaveChunk`, `ideatek:SaveReady`, `ideatek:SaveRefuse` | `ideatek:SaveRequest`, `ideatek:SaveId`, and the types of the fields |
-| The save module | `ideatek:SaveId`, `ideatek:SaveChunk`, `ideatek:SaveResult`, `ideatek:SaveInfo` | `ideatek:SaveRequest`, `ideatek:Saved`, `ideatek:SaveParticipant`, `ideatek:SaveReady`, `ideatek:SaveRefuse`, and the types of the fields |
+| A module of rows | `ideatek:SaveReady`, `ideatek:SaveRefuse` | The requests, the rows of a load, the ids, and the field types |
+| The save module | `ideatek:RowsIn`, `ideatek:SaveResult`, `ideatek:SaveInfo` | `ideatek:SaveRequest`, `ideatek:Saved`, `ideatek:SaveReady`, `ideatek:SaveRefuse`, `ideatek:ChangeTag`, `ideatek:RowChanges`, `ideatek:EntityId`, and the types of the fields |

@@ -24,11 +24,12 @@ So the same code runs in solo and with other players.
 
 ## The replication
 
-The game of the server writes `ideatek:Replicated` on each entity that the clients see. The module gives it `ideatek:NetEntity`, and spawns the same prefab on each client.
-Each module serializes its own rows, field by field, into `ideatek:NetOut`. The bytes are records of `{net_id uint64_t, length uint32_t, bytes}`, little-endian.
+The game of the server writes `ideatek:Replicated` on each entity that the clients see. The net module spawns the same prefab on each client, with the same `ideatek:EntityId`.
+The net module reads the `ideatek:RowChanges` of each module, as the changes part tells. It sends each STATE as a delta from the last state that the peer acked.
 
-A STATE goes as a delta from the last state that the peer acked. It is unreliable, and the latest wins. An EVENT goes reliable and in order, once.
-On a client, the module writes 1 `ideatek:NetIn` for each tag in a round. The module that owns the tag reads it and writes its rows.
+A STATE is unreliable, and the latest wins. An EVENT goes reliable and in order, once. A FULL goes at a join, and when an entity comes back into the relevance of a peer.
+On a client, the net module writes 1 `ideatek:RowsIn` for each tag in a round, with `source` at the net session. The module of the tag applies it.
+The net module of the server can be the id module of the changes part.
 
 An EVENT from a client to the server is a request. The server does not trust it.
 
@@ -39,7 +40,7 @@ GROUP means the peers whose groups share a bit with `groups`. A peer with no `id
 
 VISIBLE means the peers with a viewer that sees the entity. The module tests the line of sight with the physics, or with its own sets of visibility.
 An entity sends in 1 step of each `steps`. A `steps` of 0 takes the setting `snapshot_steps`.
-`condition` of `ideatek:NetOut` limits the peers of a tag: only the owner, each peer but the owner, or only the first send.
+`condition` of `ideatek:ChangeTag` limits the peers of a tag: only the owner, each peer but the owner, or only the first send.
 
 When the bytes of a peer pass its budget, the module sends by `priority` times the time since the last send. The rest waits.
 When an entity leaves the relevance of a peer, the module despawns it on that peer. When it comes back, the module spawns it with its full state.
@@ -80,7 +81,7 @@ Each STATE tells `ack`: the last command that the server applied. The prediction
 
 The tick of the server is the number of its fixed steps since the start of the net session. Each STATE carries it.
 On a client, the module plays the states at `playback`: the newest tick minus `interp_ratio` intervals of the snapshots. So each module applies the same tick.
-The records of the entities that the client owns come at once, with the kind PREDICTED. A module that writes a place from the network attaches `ideatek:Interpolated` of the space part.
+The rows of the entities that the client owns come at once, as `ideatek:RowsIn` of the kind PREDICTED. A module that writes a place from the network attaches `ideatek:Interpolated` of the space part.
 
 `command_tick` is the estimate plus half the round trip plus 1 step. The filter of the estimate is a choice of the module.
 
@@ -213,67 +214,6 @@ Bytes 5 to 7 hold no field.
 | `authority` | `ideatek_net_authority_t` | 24 | `IDEATEK_NET_AUTHORITY_SERVER` | Who computes the state. |
 
 Bytes 25 to 31 hold no field.
-
-## ideatek:NetEntity
-
-`ideatek:NetEntity` gives an entity its id in the net session. The net module writes it.
-`ideatek_net_entity_t` takes 8 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `net_id` | `uint64_t` | 0 | The id of the entity in the net session. |
-
-## ideatek:ideatek_net_kind_t
-
-`ideatek_net_kind_t` tells the kind of the bytes of a module.
-`ideatek_net_kind_t` is an enum of 1 byte.
-
-| Value | Name | Meaning |
-| --- | --- | --- |
-| 0 | `IDEATEK_NET_KIND_STATE` | A state, as a delta. The latest wins. |
-| 1 | `IDEATEK_NET_KIND_EVENT` | An event, reliable and in order. |
-| 2 | `IDEATEK_NET_KIND_PREDICTED` | The newest state of the entities that the client owns. |
-
-## ideatek:ideatek_net_condition_t
-
-`ideatek_net_condition_t` limits the peers of the bytes of a tag, as the conditions of Unreal.
-`ideatek_net_condition_t` is an enum of 1 byte.
-
-| Value | Name | Meaning |
-| --- | --- | --- |
-| 0 | `IDEATEK_NET_CONDITION_ALL` | Each peer of the relevance. |
-| 1 | `IDEATEK_NET_CONDITION_OWNER_ONLY` | Only the owner. |
-| 2 | `IDEATEK_NET_CONDITION_SKIP_OWNER` | Each peer but the owner. |
-| 3 | `IDEATEK_NET_CONDITION_INITIAL_ONLY` | Only in the first send to a peer. |
-
-## ideatek:NetOut
-
-`ideatek:NetOut` holds the bytes that a module sends in a step.
-`ideatek_net_out_t` takes 24 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Default | Value |
-| --- | --- | --- | --- | --- |
-| `tag` | `uint64_t` | 0 | No default | The hash of the name of the component. |
-| `data` | `bridge_text_t` | 8 | No default | The records: *The replication*. |
-| `peer` | `uint32_t` | 16 | 0 | The peer. 0 means each peer. |
-| `kind` | `ideatek_net_kind_t` | 20 | No default | The kind. |
-| `condition` | `ideatek_net_condition_t` | 21 | `IDEATEK_NET_CONDITION_ALL` | The peers that get it. |
-
-Bytes 22 to 23 hold no field.
-
-## ideatek:NetIn
-
-`ideatek:NetIn` holds the bytes that came for a tag. The net module writes it.
-`ideatek_net_in_t` takes 24 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `tag` | `uint64_t` | 0 | The hash of the name of the component. |
-| `data` | `bridge_text_t` | 8 | The records. |
-| `peer` | `uint32_t` | 16 | The peer that sent them. |
-| `kind` | `ideatek_net_kind_t` | 20 | The kind. |
-
-Bytes 21 to 23 hold no field.
 
 ## ideatek:NetViewer
 
@@ -422,11 +362,6 @@ Bytes 22 to 23 hold no field.
 | `ideatek:NetAdmit` | `ideatek_net_admit_t` | `ideatek_net_admit_t_desc` | `IDEATEK_NET_ADMIT_FIELDS` |
 | `ideatek:ideatek_net_authority_t` | `ideatek_net_authority_t` | `ideatek_net_authority_t_desc` | `IDEATEK_NET_AUTHORITY_VALUES` |
 | `ideatek:Replicated` | `ideatek_replicated_t` | `ideatek_replicated_t_desc` | `IDEATEK_REPLICATED_FIELDS` |
-| `ideatek:NetEntity` | `ideatek_net_entity_t` | `ideatek_net_entity_t_desc` | `IDEATEK_NET_ENTITY_FIELDS` |
-| `ideatek:ideatek_net_kind_t` | `ideatek_net_kind_t` | `ideatek_net_kind_t_desc` | `IDEATEK_NET_KIND_VALUES` |
-| `ideatek:ideatek_net_condition_t` | `ideatek_net_condition_t` | `ideatek_net_condition_t_desc` | `IDEATEK_NET_CONDITION_VALUES` |
-| `ideatek:NetOut` | `ideatek_net_out_t` | `ideatek_net_out_t_desc` | `IDEATEK_NET_OUT_FIELDS` |
-| `ideatek:NetIn` | `ideatek_net_in_t` | `ideatek_net_in_t_desc` | `IDEATEK_NET_IN_FIELDS` |
 | `ideatek:NetViewer` | `ideatek_net_viewer_t` | `ideatek_net_viewer_t_desc` | `IDEATEK_NET_VIEWER_FIELDS` |
 | `ideatek:ideatek_relevance_mode_t` | `ideatek_relevance_mode_t` | `ideatek_relevance_mode_t_desc` | `IDEATEK_RELEVANCE_MODE_VALUES` |
 | `ideatek:NetRelevance` | `ideatek_net_relevance_t` | `ideatek_net_relevance_t_desc` | `IDEATEK_NET_RELEVANCE_FIELDS` |
@@ -450,11 +385,6 @@ Bytes 22 to 23 hold no field.
 { int32_t reason; ideatek_admit_t action; }
 { IDEATEK_NET_AUTHORITY_SERVER = 0, IDEATEK_NET_AUTHORITY_OWNER = 1, IDEATEK_NET_AUTHORITY_HOST = 2, IDEATEK_NET_AUTHORITY_DETERMINISTIC = 3 }
 { uint64_t prefab; uint64_t group; uint32_t owner; uint32_t host; ideatek_net_authority_t authority; }
-{ uint64_t net_id; }
-{ IDEATEK_NET_KIND_STATE = 0, IDEATEK_NET_KIND_EVENT = 1, IDEATEK_NET_KIND_PREDICTED = 2 }
-{ IDEATEK_NET_CONDITION_ALL = 0, IDEATEK_NET_CONDITION_OWNER_ONLY = 1, IDEATEK_NET_CONDITION_SKIP_OWNER = 2, IDEATEK_NET_CONDITION_INITIAL_ONLY = 3 }
-{ uint64_t tag; bridge_text_t data; uint32_t peer; ideatek_net_kind_t kind; ideatek_net_condition_t condition; }
-{ uint64_t tag; bridge_text_t data; uint32_t peer; ideatek_net_kind_t kind; }
 { uint32_t peer; }
 { IDEATEK_RELEVANCE_MODE_DISTANCE = 0, IDEATEK_RELEVANCE_MODE_ALWAYS = 1, IDEATEK_RELEVANCE_MODE_OWNER = 2, IDEATEK_RELEVANCE_MODE_NONE = 3, IDEATEK_RELEVANCE_MODE_GROUP = 4, IDEATEK_RELEVANCE_MODE_VISIBLE = 5 }
 { uint64_t groups; float distance; float priority; uint32_t steps; ideatek_relevance_mode_t mode; }
@@ -477,8 +407,6 @@ Bytes 22 to 23 hold no field.
 | `ideatek:ideatek_peer_state_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_admit_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_net_authority_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:ideatek_net_kind_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:ideatek_net_condition_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_relevance_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:NetSession` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:NetPeer` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -486,9 +414,6 @@ Bytes 22 to 23 hold no field.
 | `ideatek:NetJoinEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:NetAdmit` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Replicated` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:NetEntity` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:NetOut` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:NetIn` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:NetViewer` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:NetRelevance` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:NetCommand` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -504,5 +429,5 @@ Bytes 22 to 23 hold no field.
 
 | Role | `write` | `read` |
 | --- | --- | --- |
-| The game | The net session, the join, the answers, the replicated entities, the bytes out, the viewers, the relevance and the commands | The types of the fields |
-| The net module | `ideatek:NetPeer`, `ideatek:NetJoinEvent`, `ideatek:NetEntity`, `ideatek:NetIn`, `ideatek:NetCommandIn`, `ideatek:NetSessionState`, `ideatek:NetRollback`, `ideatek:NetAuthorityChanged`, `ideatek:NetHostChanged` | `ideatek:Tick`, what the game writes, and the field types |
+| The game | The net session, the join, the answers, the replicated entities, the viewers, the relevance, the groups and the commands | The types of the fields |
+| The net module | `ideatek:NetPeer`, `ideatek:NetJoinEvent`, `ideatek:NetCommandIn`, `ideatek:NetSessionState`, `ideatek:NetRollback`, `ideatek:NetAuthorityChanged`, `ideatek:NetHostChanged`, `ideatek:RowsIn` | `ideatek:Tick`, what the game writes, the changes of the rows, and the field types |
