@@ -17,6 +17,7 @@ The scale of a root is `display_scale` of the window times `scale`. A texture us
 
 A UI unit is a pixel of the target divided by the scale. The size of a root in UI units is the size of its target divided by its scale.
 A root of a higher `order` draws on top and gets the pointer first.
+With `right_to_left`, a row runs from the right, START is on the right, and the text runs from right to left.
 
 ## The layout
 
@@ -29,13 +30,15 @@ The module keeps `ideatek:UiScroll` inside the size of the content. It measures 
 ## The looks
 
 `ideatek:UiBox` draws a background, a border and a shadow. The border takes the widths of `ideatek:UiLayout`. A color with an alpha of 0 does not draw.
-`ideatek:UiImage` draws over the background and inside the border. A second shadow needs a child node.
+`ideatek:UiImage` draws over the background and inside the border. A second shadow needs a child node. `ideatek:UiGradient` draws over the background and under the image.
 
 ## The text
 
 `ideatek:UiText` holds the string, and `ideatek:UiTextLook` holds its look. A span on a child entity changes a part of the string. The spans follow `order`.
 A font is a resource entity with `ideatek:Font`. 1 file is 1 face. When a font lacks a glyph, the module takes it from the fallback, and then from the fallback of the fallback.
 
+A span with an `image` draws the texture at the height of the line, in place of its text. The text stays, for a screen reader.
+`letter_spacing` adds space between the glyphs. With ELLIPSIS, a line that is too long ends with an ellipsis.
 The module that writes `ideatek:UiRect` shapes and measures the text. Its glyphs, its atlas and the method of the draw are its own.
 
 ## The pointers
@@ -78,6 +81,30 @@ The UI module finds the gestures in the finger pointers. A tap ends before `long
 A pan moves more than `drag_threshold`. A pinch has 2 fingers and gives the scale and the angle since its start.
 A swipe is the end of a pan with its velocity, and the game chooses its own speed limit.
 
+## The grid
+
+A node with `IDEATEK_UI_DISPLAY_GRID` places its children in the equal cells of `ideatek:UiGrid`, with `gap_x` and `gap_y` between them. A `rows` of 0 adds rows as needed.
+A cell starts at 1, as a line of CSS grid. A child with `ideatek:UiGridItem` takes its cell and its spans. A column or a row of 0, or no `ideatek:UiGridItem`, takes the next free cell.
+
+## The transforms and the opacity
+
+`ideatek:UiTransform` moves, scales and turns the draw and the hits of a node and its children, about its pivot. It does not change the layout.
+The pivot is a part of the size of the node, from 0 to 1. A pivot of 0.5 is the default of `transform-origin` of CSS and of RmlUi, as for a marker.
+`ideatek:UiOpacity` multiplies the alpha of a node and of its children.
+
+## The accessibility
+
+`ideatek:UiAccessible` gives a node a label and a description for a screen reader. The UI module gives the tree to the screen reader of the OS, for example through AccessKit.
+The role of a node comes from its widget: a button, a toggle, a slider, a scroll area or a text field. A toggle in a group is a radio button, and a toggle with no group is a check box.
+A text node is a label. Each other node is a group.
+
+## The shaders and the blur
+
+With `ideatek:UiShader`, the render module draws the box of the node with its own shader of the name `name`. `params` holds the bytes that the shader reads.
+A render module that does not know the name draws the box without the shader, and logs it once.
+`ideatek:UiBlur` with `backdrop` at `true` blurs what is behind the box, as frosted glass. With `false`, it blurs the node and its children.
+The references do not agree on a radius of the blur, so the game sets it.
+
 ## The markers
 
 A node with `ideatek:UiAnchor` follows an entity of the world through a camera. The layout puts the pivot of the node at the point, and does not read the left and top of the node.
@@ -85,10 +112,12 @@ With HIDE_BEHIND, a point behind the camera hides the node, and it takes no hits
 
 ## The styles
 
-A node with `ideatek:UiStyle` takes its looks from a style entity for each state. A style entity holds `ideatek:UiBox`, `ideatek:UiImage` and `ideatek:UiTextLook`.
+A node with `ideatek:UiStyle` takes its looks from a style entity for each state. A style entity holds `ideatek:UiBox`, `ideatek:UiImage`, `ideatek:UiTextLook`, `ideatek:UiGradient`, `ideatek:UiOpacity` and `ideatek:UiBlur`.
 The state is disabled, then pressed, then hovered, then normal. A toggle with a value of 1 is pressed.
 While the node has the focus and the focus is visible, the looks of `focus` draw over the look of the state.
 The modules read the looks at the time of the draw, and copy nothing, so each look keeps 1 writer.
+
+At a change of state, the colors and the numbers of the looks blend over `transition`, along the curve of `ease` and `ease_direction`.
 
 ## The settings
 
@@ -100,13 +129,16 @@ The modules read the looks at the time of the draw, and copy nothing, so each lo
 ## ideatek:UiRoot
 
 `ideatek:UiRoot` starts a tree of nodes on a target.
-`ideatek_ui_root_t` takes 16 bytes. Its alignment is 8.
+`ideatek_ui_root_t` takes 24 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
 | `target` | `ideatek_entity_t` | 0 | No default | A window, or a texture. |
 | `order` | `int32_t` | 8 | 0 | The rank of the root on its target. |
 | `scale` | `float` | 12 | 1 | The factor of the size of the UI. |
+| `right_to_left` | `bool` | 16 | `false` | `true` if rows and text run from the right. |
+
+Bytes 17 to 23 hold no field.
 
 The UI size of the settings of a game is `scale`. A curve of the DPI is a system of the game that writes `scale`.
 
@@ -151,6 +183,7 @@ Bytes 5 to 7 hold no field.
 | --- | --- | --- |
 | 0 | `IDEATEK_UI_DISPLAY_NONE` | The node and its children are not there. |
 | 1 | `IDEATEK_UI_DISPLAY_FLEX` | The flex layout of CSS. |
+| 2 | `IDEATEK_UI_DISPLAY_GRID` | A grid of equal cells: *The grid*. |
 
 ## ideatek:ideatek_ui_position_t
 
@@ -171,6 +204,8 @@ Bytes 5 to 7 hold no field.
 | --- | --- | --- |
 | 0 | `IDEATEK_UI_DIRECTION_ROW` | The children go to the right. |
 | 1 | `IDEATEK_UI_DIRECTION_COLUMN` | The children go down. |
+| 2 | `IDEATEK_UI_DIRECTION_ROW_REVERSE` | The children go to the left. |
+| 3 | `IDEATEK_UI_DIRECTION_COLUMN_REVERSE` | The children go up. |
 
 ## ideatek:ideatek_ui_align_t
 
@@ -390,10 +425,20 @@ Bytes 21 to 23 hold no field.
 | 1 | `IDEATEK_TEXT_WRAP_ANY` | A new line between any characters. |
 | 2 | `IDEATEK_TEXT_WRAP_NONE` | No new line. |
 
+## ideatek:ideatek_text_overflow_t
+
+`ideatek_text_overflow_t` tells the end of a line that is too long, as `text-overflow` of CSS.
+`ideatek_text_overflow_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_TEXT_OVERFLOW_CLIP` | The line is cut at the edge. |
+| 1 | `IDEATEK_TEXT_OVERFLOW_ELLIPSIS` | The line ends with an ellipsis. |
+
 ## ideatek:UiTextLook
 
 `ideatek:UiTextLook` is the look of a text, on the node or on a style entity.
-`ideatek_ui_text_look_t` takes 80 bytes. Its alignment is 8.
+`ideatek_ui_text_look_t` takes 88 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -406,26 +451,29 @@ Bytes 21 to 23 hold no field.
 | `outline` | `float` | 64 | 0 | The width of the outline. |
 | `shadow_x` | `float` | 68 | 1 | The offset of the shadow on X. |
 | `shadow_y` | `float` | 72 | 1 | The offset of the shadow on Y. |
-| `align` | `ideatek_text_align_t` | 76 | `IDEATEK_TEXT_ALIGN_START` | The place of the lines. |
-| `wrap` | `ideatek_text_wrap_t` | 77 | `IDEATEK_TEXT_WRAP_WORD` | The breaks. |
+| `letter_spacing` | `float` | 76 | 0 | The space between glyphs, in UI units. |
+| `align` | `ideatek_text_align_t` | 80 | `IDEATEK_TEXT_ALIGN_START` | The place of the lines. |
+| `wrap` | `ideatek_text_wrap_t` | 81 | `IDEATEK_TEXT_WRAP_WORD` | The breaks. |
+| `overflow` | `ideatek_text_overflow_t` | 82 | `IDEATEK_TEXT_OVERFLOW_CLIP` | The end of a line that is too long. |
 
-Bytes 78 to 79 hold no field.
+Bytes 83 to 87 hold no field.
 
 A size of 16 is the default of Godot and of CSS. A line height of 1.2 is the default of Bevy and of CSS.
 
 ## ideatek:UiTextSpan
 
 `ideatek:UiTextSpan` is a part of a text with its own look, on a child entity of a text node.
-`ideatek_ui_text_span_t` takes 40 bytes. Its alignment is 8.
+`ideatek_ui_text_span_t` takes 48 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `text` | `bridge_text_t` | 0 | The string of the span. |
 | `font` | `ideatek_entity_t` | 8 | The font. 0 means the font of the parent. |
-| `color` | `ideatek_color_t` | 16 | The color. An alpha of 0 means the color of the parent. |
-| `size` | `float` | 32 | The size. 0 means the size of the parent. |
+| `image` | `ideatek_entity_t` | 16 | A texture in place of the text. 0 means none. |
+| `color` | `ideatek_color_t` | 24 | The color. An alpha of 0 means the color of the parent. |
+| `size` | `float` | 40 | The size. 0 means the size of the parent. |
 
-Bytes 36 to 39 hold no field.
+Bytes 44 to 47 hold no field.
 
 ## ideatek:ideatek_pointer_buttons_t
 
@@ -989,18 +1037,160 @@ A pivot of 0.5 is the default of the widget component of Unreal and of `transfor
 
 Bytes 10 to 11 hold no field.
 
-## ideatek:UiStyle
+## ideatek:UiGrid
 
-`ideatek:UiStyle` gives a node its looks for each state: *The styles*.
-`ideatek_ui_style_t` takes 40 bytes. Its alignment is 8.
+`ideatek:UiGrid` gives the cells of a grid node: *The grid*.
+`ideatek_ui_grid_t` takes 8 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `columns` | `uint32_t` | 0 | 1 | The columns. |
+| `rows` | `uint32_t` | 4 | 0 | The rows. 0 adds rows as needed. |
+
+## ideatek:UiGridItem
+
+`ideatek:UiGridItem` places a child in a grid: *The grid*.
+`ideatek_ui_grid_item_t` takes 16 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `column` | `uint32_t` | 0 | 0 | The first column, from 1. 0 means the next free cell. |
+| `row` | `uint32_t` | 4 | 0 | The first row, from 1. 0 means the next free cell. |
+| `column_span` | `uint32_t` | 8 | 1 | The columns that it takes. |
+| `row_span` | `uint32_t` | 12 | 1 | The rows that it takes. |
+
+## ideatek:UiTransform
+
+`ideatek:UiTransform` moves the draw of a node without the layout: *The transforms and the opacity*.
+`ideatek_ui_transform_t` takes 28 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `x` | `float` | 0 | 0 | The move on X, in UI units. |
+| `y` | `float` | 4 | 0 | The move on Y. |
+| `scale_x` | `float` | 8 | 1 | The scale on X. |
+| `scale_y` | `float` | 12 | 1 | The scale on Y. |
+| `rotation` | `float` | 16 | 0 | The turn, in radians, clockwise. |
+| `pivot_x` | `float` | 20 | 0.5 | The center of the scale and the turn on X, from 0 to 1. |
+| `pivot_y` | `float` | 24 | 0.5 | The center on Y, from 0 to 1. |
+
+## ideatek:UiOpacity
+
+`ideatek:UiOpacity` fades a node and its children: *The transforms and the opacity*.
+`ideatek_ui_opacity_t` takes 4 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `value` | `float` | 0 | 1 | The factor of the alpha, from 0 to 1. |
+
+## ideatek:ideatek_gradient_kind_t
+
+`ideatek_gradient_kind_t` tells the shape of a gradient.
+`ideatek_gradient_kind_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_GRADIENT_KIND_LINEAR` | Along a line at `angle`. |
+| 1 | `IDEATEK_GRADIENT_KIND_RADIAL` | Out from the center. |
+| 2 | `IDEATEK_GRADIENT_KIND_CONIC` | About the center, from `angle`. |
+
+## ideatek:UiGradient
+
+`ideatek:UiGradient` draws a gradient over the background and under the image of a node.
+`ideatek_ui_gradient_t` takes 20 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `stops` | `bridge_text_t` | 0 | No default | The records of the stops. |
+| `count` | `uint32_t` | 8 | No default | The records in `stops`. |
+| `angle` | `float` | 12 | pi | The direction, in radians. 0 points up, and the angle turns clockwise. |
+| `kind` | `ideatek_gradient_kind_t` | 16 | `IDEATEK_GRADIENT_KIND_LINEAR` | The shape. |
+
+Bytes 17 to 19 hold no field.
+
+A record of `stops` takes 20 bytes: `offset` (`float`, from 0 to 1) at 0, and `color` (`float[4]`, linear with alpha) at 4.
+The records have no bytes between them.
+The angle of pi points down, the default of `linear-gradient` of CSS.
+
+## ideatek:UiAccessible
+
+`ideatek:UiAccessible` names a node for a screen reader: *The accessibility*.
+`ideatek_ui_accessible_t` takes 16 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `normal` | `ideatek_entity_t` | 0 | The style of the normal state. 0 means the node itself. |
-| `hovered` | `ideatek_entity_t` | 8 | The style of a hover. 0 means `normal`. |
-| `pressed` | `ideatek_entity_t` | 16 | The style of a press. 0 means `normal`. |
-| `disabled` | `ideatek_entity_t` | 24 | The style of a disabled widget. 0 means `normal`. |
-| `focus` | `ideatek_entity_t` | 32 | The looks over the state, with a visible focus. 0 means none. |
+| `label` | `bridge_text_t` | 0 | The name that a screen reader says. |
+| `description` | `bridge_text_t` | 8 | More words about the node. |
+
+## ideatek:UiShader
+
+`ideatek:UiShader` draws the box of a node with a shader: *The shaders and the blur*.
+`ideatek_ui_shader_t` takes 16 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `name` | `bridge_text_t` | 0 | The name of a shader of the render module. |
+| `params` | `bridge_text_t` | 8 | The bytes that the shader reads. |
+
+## ideatek:UiBlur
+
+`ideatek:UiBlur` blurs a node, or what is behind it: *The shaders and the blur*.
+`ideatek_ui_blur_t` takes 8 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `radius` | `float` | 0 | No default | The radius of the blur, in UI units. |
+| `backdrop` | `bool` | 4 | `false` | `true` if it blurs what is behind the box. |
+
+Bytes 5 to 7 hold no field.
+
+## ideatek:ideatek_ease_t
+
+`ideatek_ease_t` tells the curve of a transition, as the tweens of RmlUi.
+`ideatek_ease_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_EASE_LINEAR` | A straight blend. |
+| 1 | `IDEATEK_EASE_QUADRATIC` | A curve of power 2. |
+| 2 | `IDEATEK_EASE_CUBIC` | A curve of power 3. |
+| 3 | `IDEATEK_EASE_QUARTIC` | A curve of power 4. |
+| 4 | `IDEATEK_EASE_QUINTIC` | A curve of power 5. |
+| 5 | `IDEATEK_EASE_SINE` | A sine curve. |
+| 6 | `IDEATEK_EASE_EXPONENTIAL` | An exponential curve. |
+| 7 | `IDEATEK_EASE_CIRCULAR` | A quarter of a circle. |
+| 8 | `IDEATEK_EASE_BACK` | A curve that goes past the end and comes back. |
+| 9 | `IDEATEK_EASE_ELASTIC` | A curve that springs. |
+| 10 | `IDEATEK_EASE_BOUNCE` | A curve that bounces. |
+
+## ideatek:ideatek_ease_direction_t
+
+`ideatek_ease_direction_t` tells where the curve of a transition acts.
+`ideatek_ease_direction_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_EASE_DIRECTION_IN` | The curve at the start. |
+| 1 | `IDEATEK_EASE_DIRECTION_OUT` | The curve at the end. |
+| 2 | `IDEATEK_EASE_DIRECTION_IN_OUT` | The curve at both ends. |
+
+## ideatek:UiStyle
+
+`ideatek:UiStyle` gives a node its looks for each state: *The styles*.
+`ideatek_ui_style_t` takes 48 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `normal` | `ideatek_entity_t` | 0 | No default | The style of the normal state. 0 means the node itself. |
+| `hovered` | `ideatek_entity_t` | 8 | No default | The style of a hover. 0 means `normal`. |
+| `pressed` | `ideatek_entity_t` | 16 | No default | The style of a press. 0 means `normal`. |
+| `disabled` | `ideatek_entity_t` | 24 | No default | The style of a disabled widget. 0 means `normal`. |
+| `focus` | `ideatek_entity_t` | 32 | No default | The looks over the state, with a visible focus. 0 means none. |
+| `transition` | `float` | 40 | 0 | The seconds of the blend at a change of state. 0 means at once. |
+| `ease` | `ideatek_ease_t` | 44 | `IDEATEK_EASE_LINEAR` | The curve of the blend. |
+| `ease_direction` | `ideatek_ease_direction_t` | 45 | `IDEATEK_EASE_DIRECTION_OUT` | Where the curve acts. |
+
+Bytes 46 to 47 hold no field.
 
 ## The C types
 
@@ -1027,6 +1217,7 @@ Bytes 10 to 11 hold no field.
 | `ideatek:UiText` | `ideatek_ui_text_t` | `ideatek_ui_text_t_desc` | `IDEATEK_UI_TEXT_FIELDS` |
 | `ideatek:ideatek_text_align_t` | `ideatek_text_align_t` | `ideatek_text_align_t_desc` | `IDEATEK_TEXT_ALIGN_VALUES` |
 | `ideatek:ideatek_text_wrap_t` | `ideatek_text_wrap_t` | `ideatek_text_wrap_t_desc` | `IDEATEK_TEXT_WRAP_VALUES` |
+| `ideatek:ideatek_text_overflow_t` | `ideatek_text_overflow_t` | `ideatek_text_overflow_t_desc` | `IDEATEK_TEXT_OVERFLOW_VALUES` |
 | `ideatek:UiTextLook` | `ideatek_ui_text_look_t` | `ideatek_ui_text_look_t_desc` | `IDEATEK_UI_TEXT_LOOK_FIELDS` |
 | `ideatek:UiTextSpan` | `ideatek_ui_text_span_t` | `ideatek_ui_text_span_t_desc` | `IDEATEK_UI_TEXT_SPAN_FIELDS` |
 | `ideatek:ideatek_pointer_buttons_t` | `ideatek_pointer_buttons_t` | `ideatek_pointer_buttons_t_desc` | `IDEATEK_POINTER_BUTTONS_VALUES` |
@@ -1074,16 +1265,27 @@ Bytes 10 to 11 hold no field.
 | `ideatek:ideatek_anchor_flags_t` | `ideatek_anchor_flags_t` | `ideatek_anchor_flags_t_desc` | `IDEATEK_ANCHOR_FLAGS_VALUES` |
 | `ideatek:UiAnchor` | `ideatek_ui_anchor_t` | `ideatek_ui_anchor_t_desc` | `IDEATEK_UI_ANCHOR_FIELDS` |
 | `ideatek:UiAnchorState` | `ideatek_ui_anchor_state_t` | `ideatek_ui_anchor_state_t_desc` | `IDEATEK_UI_ANCHOR_STATE_FIELDS` |
+| `ideatek:UiGrid` | `ideatek_ui_grid_t` | `ideatek_ui_grid_t_desc` | `IDEATEK_UI_GRID_FIELDS` |
+| `ideatek:UiGridItem` | `ideatek_ui_grid_item_t` | `ideatek_ui_grid_item_t_desc` | `IDEATEK_UI_GRID_ITEM_FIELDS` |
+| `ideatek:UiTransform` | `ideatek_ui_transform_t` | `ideatek_ui_transform_t_desc` | `IDEATEK_UI_TRANSFORM_FIELDS` |
+| `ideatek:UiOpacity` | `ideatek_ui_opacity_t` | `ideatek_ui_opacity_t_desc` | `IDEATEK_UI_OPACITY_FIELDS` |
+| `ideatek:ideatek_gradient_kind_t` | `ideatek_gradient_kind_t` | `ideatek_gradient_kind_t_desc` | `IDEATEK_GRADIENT_KIND_VALUES` |
+| `ideatek:UiGradient` | `ideatek_ui_gradient_t` | `ideatek_ui_gradient_t_desc` | `IDEATEK_UI_GRADIENT_FIELDS` |
+| `ideatek:UiAccessible` | `ideatek_ui_accessible_t` | `ideatek_ui_accessible_t_desc` | `IDEATEK_UI_ACCESSIBLE_FIELDS` |
+| `ideatek:UiShader` | `ideatek_ui_shader_t` | `ideatek_ui_shader_t_desc` | `IDEATEK_UI_SHADER_FIELDS` |
+| `ideatek:UiBlur` | `ideatek_ui_blur_t` | `ideatek_ui_blur_t_desc` | `IDEATEK_UI_BLUR_FIELDS` |
+| `ideatek:ideatek_ease_t` | `ideatek_ease_t` | `ideatek_ease_t_desc` | `IDEATEK_EASE_VALUES` |
+| `ideatek:ideatek_ease_direction_t` | `ideatek_ease_direction_t` | `ideatek_ease_direction_t_desc` | `IDEATEK_EASE_DIRECTION_VALUES` |
 | `ideatek:UiStyle` | `ideatek_ui_style_t` | `ideatek_ui_style_t_desc` | `IDEATEK_UI_STYLE_FIELDS` |
 
 ```text
-{ ideatek_entity_t target; int32_t order; float scale; }
+{ ideatek_entity_t target; int32_t order; float scale; bool right_to_left; }
 { int32_t order; }
 { IDEATEK_UI_UNIT_AUTO = 0, IDEATEK_UI_UNIT_PX = 1, IDEATEK_UI_UNIT_PERCENT = 2 }
 { float value; ideatek_ui_unit_t unit; }
-{ IDEATEK_UI_DISPLAY_NONE = 0, IDEATEK_UI_DISPLAY_FLEX = 1 }
+{ IDEATEK_UI_DISPLAY_NONE = 0, IDEATEK_UI_DISPLAY_FLEX = 1, IDEATEK_UI_DISPLAY_GRID = 2 }
 { IDEATEK_UI_POSITION_RELATIVE = 0, IDEATEK_UI_POSITION_ABSOLUTE = 1 }
-{ IDEATEK_UI_DIRECTION_ROW = 0, IDEATEK_UI_DIRECTION_COLUMN = 1 }
+{ IDEATEK_UI_DIRECTION_ROW = 0, IDEATEK_UI_DIRECTION_COLUMN = 1, IDEATEK_UI_DIRECTION_ROW_REVERSE = 2, IDEATEK_UI_DIRECTION_COLUMN_REVERSE = 3 }
 { IDEATEK_UI_ALIGN_START = 0, IDEATEK_UI_ALIGN_CENTER = 1, IDEATEK_UI_ALIGN_END = 2, IDEATEK_UI_ALIGN_STRETCH = 3, IDEATEK_UI_ALIGN_SPACE_BETWEEN = 4, IDEATEK_UI_ALIGN_SPACE_AROUND = 5, IDEATEK_UI_ALIGN_SPACE_EVENLY = 6 }
 { IDEATEK_UI_OVERFLOW_VISIBLE = 0, IDEATEK_UI_OVERFLOW_CLIP = 1, IDEATEK_UI_OVERFLOW_SCROLL = 2 }
 { ideatek_ui_length_t left; ideatek_ui_length_t right; ideatek_ui_length_t top; ideatek_ui_length_t bottom; ideatek_ui_length_t width; ideatek_ui_length_t height; ideatek_ui_length_t min_width; ideatek_ui_length_t min_height; ideatek_ui_length_t max_width; ideatek_ui_length_t max_height; ideatek_ui_length_t basis; float aspect; float margin_left; float margin_right; float margin_top; float margin_bottom; float padding_left; float padding_right; float padding_top; float padding_bottom; float border_left; float border_right; float border_top; float border_bottom; float grow; float shrink; float gap_x; float gap_y; ideatek_ui_display_t display; ideatek_ui_position_t position; ideatek_ui_direction_t direction; bool wrap; ideatek_ui_align_t align_items; ideatek_ui_align_t align_self; ideatek_ui_align_t justify_content; ideatek_ui_align_t align_content; ideatek_ui_overflow_t overflow_x; ideatek_ui_overflow_t overflow_y; }
@@ -1098,8 +1300,9 @@ Bytes 10 to 11 hold no field.
 { bridge_text_t text; }
 { IDEATEK_TEXT_ALIGN_START = 0, IDEATEK_TEXT_ALIGN_CENTER = 1, IDEATEK_TEXT_ALIGN_END = 2, IDEATEK_TEXT_ALIGN_JUSTIFY = 3 }
 { IDEATEK_TEXT_WRAP_WORD = 0, IDEATEK_TEXT_WRAP_ANY = 1, IDEATEK_TEXT_WRAP_NONE = 2 }
-{ ideatek_entity_t font; ideatek_color_t color; ideatek_color_t outline_color; ideatek_color_t shadow; float size; float line_height; float outline; float shadow_x; float shadow_y; ideatek_text_align_t align; ideatek_text_wrap_t wrap; }
-{ bridge_text_t text; ideatek_entity_t font; ideatek_color_t color; float size; }
+{ IDEATEK_TEXT_OVERFLOW_CLIP = 0, IDEATEK_TEXT_OVERFLOW_ELLIPSIS = 1 }
+{ ideatek_entity_t font; ideatek_color_t color; ideatek_color_t outline_color; ideatek_color_t shadow; float size; float line_height; float outline; float shadow_x; float shadow_y; float letter_spacing; ideatek_text_align_t align; ideatek_text_wrap_t wrap; ideatek_text_overflow_t overflow; }
+{ bridge_text_t text; ideatek_entity_t font; ideatek_entity_t image; ideatek_color_t color; float size; }
 { IDEATEK_POINTER_BUTTONS_PRIMARY = 0x01, IDEATEK_POINTER_BUTTONS_SECONDARY = 0x02, IDEATEK_POINTER_BUTTONS_MIDDLE = 0x04 }
 { ideatek_entity_t target; float x; float y; float wheel_x; float wheel_y; ideatek_pointer_buttons_t buttons; }
 { ideatek_entity_t node; }
@@ -1145,7 +1348,18 @@ Bytes 10 to 11 hold no field.
 { IDEATEK_ANCHOR_FLAGS_CLAMP = 0x01, IDEATEK_ANCHOR_FLAGS_HIDE_BEHIND = 0x02 }
 { ideatek_entity_t entity; ideatek_entity_t camera; ideatek_vec3_t offset; float pivot_x; float pivot_y; float margin; ideatek_anchor_flags_t flags; }
 { float distance; float angle; bool visible; bool clamped; }
-{ ideatek_entity_t normal; ideatek_entity_t hovered; ideatek_entity_t pressed; ideatek_entity_t disabled; ideatek_entity_t focus; }
+{ uint32_t columns; uint32_t rows; }
+{ uint32_t column; uint32_t row; uint32_t column_span; uint32_t row_span; }
+{ float x; float y; float scale_x; float scale_y; float rotation; float pivot_x; float pivot_y; }
+{ float value; }
+{ IDEATEK_GRADIENT_KIND_LINEAR = 0, IDEATEK_GRADIENT_KIND_RADIAL = 1, IDEATEK_GRADIENT_KIND_CONIC = 2 }
+{ bridge_text_t stops; uint32_t count; float angle; ideatek_gradient_kind_t kind; }
+{ bridge_text_t label; bridge_text_t description; }
+{ bridge_text_t name; bridge_text_t params; }
+{ float radius; bool backdrop; }
+{ IDEATEK_EASE_LINEAR = 0, IDEATEK_EASE_QUADRATIC = 1, IDEATEK_EASE_CUBIC = 2, IDEATEK_EASE_QUARTIC = 3, IDEATEK_EASE_QUINTIC = 4, IDEATEK_EASE_SINE = 5, IDEATEK_EASE_EXPONENTIAL = 6, IDEATEK_EASE_CIRCULAR = 7, IDEATEK_EASE_BACK = 8, IDEATEK_EASE_ELASTIC = 9, IDEATEK_EASE_BOUNCE = 10 }
+{ IDEATEK_EASE_DIRECTION_IN = 0, IDEATEK_EASE_DIRECTION_OUT = 1, IDEATEK_EASE_DIRECTION_IN_OUT = 2 }
+{ ideatek_entity_t normal; ideatek_entity_t hovered; ideatek_entity_t pressed; ideatek_entity_t disabled; ideatek_entity_t focus; float transition; ideatek_ease_t ease; ideatek_ease_direction_t ease_direction; }
 ```
 
 ## The declarations
@@ -1167,6 +1381,7 @@ Bytes 10 to 11 hold no field.
 | `ideatek:ideatek_font_format_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_text_align_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_text_wrap_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_text_overflow_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_pointer_buttons_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_pickable_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_interaction_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -1183,6 +1398,9 @@ Bytes 10 to 11 hold no field.
 | `ideatek:ideatek_gesture_kind_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_gesture_phase_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_anchor_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_gradient_kind_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_ease_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_ease_direction_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UiRoot` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UiNode` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UiLayout` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -1223,11 +1441,19 @@ Bytes 10 to 11 hold no field.
 | `ideatek:UiGesture` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UiAnchor` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UiAnchorState` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:UiGrid` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:UiGridItem` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:UiTransform` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:UiOpacity` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:UiGradient` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:UiAccessible` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:UiShader` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:UiBlur` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:UiStyle` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
 
 | Role | `write` | `read` |
 | --- | --- | --- |
-| The game | The roots, the nodes, the looks, the texts, the fonts, the focus, the widgets, the screens, the markers and the styles | The types of the fields |
+| The game | The roots, the nodes, the looks, the texts, the fonts, the focus, the widgets, the screens, the markers, the styles and the labels | The types of the fields |
 | The UI module | The rectangles, the scrolls, the pointers, the hits, the states, the events and the carets | The types of the game, `ideatek:WorldTransform`, and the types of the fields |
