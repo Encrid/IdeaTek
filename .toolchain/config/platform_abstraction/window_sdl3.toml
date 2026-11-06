@@ -1,0 +1,24 @@
+[parts.window_sdl3]
+name = "BM-IdeaTek-Window-SDL3"
+folder = "platform_abstraction/window_sdl3"
+uses = ["world", "window", "sdl3", "sdl3_start"]
+third_party = []
+
+[variables]
+window_sdl3_words = [
+    "abi=1", "config=ideatek_window_sdl3:Settings", "pinned=true", "reloadable=false",
+    "settings=close_on_request icon drop_bytes clipboard_bytes", "config.close_on_request=true",
+    "config.icon=none", "config.drop_bytes=65536", "config.clipboard_bytes=16384", "scratch=16384",
+    "log_ring=1024", "spans=65536", "spawns=256", "changes=65536", "persistent=86016",
+    "hot_reload=false",
+]
+
+[[artifact]]
+name = "window_sdl3"
+kind = "native_module"
+part = "window_sdl3"
+sources = ["src/platform_abstraction/window_sdl3/*.c"]
+include = ["include/platform_abstraction", "src/platform_abstraction/sdl3_start"]
+link = ["{out}/sdl3_start.a", "{out}/SDL3{library}"]
+flags = ["-isystem", "{sdl_root}/include", "{rpath}"]
+manifest = ["ideatek_window_sdl3:window@0.1.0", "{window_sdl3_words}"]
