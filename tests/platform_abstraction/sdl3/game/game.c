@@ -250,6 +250,7 @@ static void declare_types(const bridge_api_t *api)
         ideatek_clipboard_request_t);
     s->paste = SWEPT(api, "ideatek:Paste", ideatek_paste_t);
     s->event_wait = STRUCT(api, "ideatek:EventWait", ideatek_event_wait_t);
+    game_declare_input(api);
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -260,13 +261,16 @@ static void declare_types(const bridge_api_t *api)
 
 BRIDGE_NATIVE(init)
 {
-    uint32_t changes[3];
+    uint32_t changes[6];
 
     declare_types(api);
     changes[0] = game.slots.request;
     changes[1] = game.slots.clipboard;
     changes[2] = game.slots.event_wait;
-    BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, 3,
+    changes[3] = game.input.text_request;
+    changes[4] = game.input.mouse_request;
+    changes[5] = game.input.gamepad_request;
+    BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, 6,
         nullptr, 0);
     queries[0] = ADD_SHOW(api, "show_state", game.slots.state);
     queries[1] = ADD_SHOW(api, "show_displays", game.slots.display);
@@ -275,6 +279,7 @@ BRIDGE_NATIVE(init)
     queries[4] = ADD_SHOW(api, "show_pastes", game.slots.paste);
     lists[0] = ADD_SEEN(api, "seen_state", game.slots.state);
     lists[1] = ADD_SEEN(api, "seen_display", game.slots.display);
+    game_watch_input(api);
 #if defined(GAME_EARLY)
     game_start(api);
 #endif

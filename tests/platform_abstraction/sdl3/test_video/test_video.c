@@ -7,6 +7,8 @@
 #include "video/SDL_sysvideo.h"
 #include "events/SDL_displayevents_c.h"
 #include "events/SDL_windowevents_c.h"
+#include "events/SDL_mouse_c.h"
+#include "events/SDL_keyboard_c.h"
 
 struct SDL_DisplayData {
     char key[16];
@@ -23,6 +25,7 @@ typedef struct {
 } test_display_t;
 
 static const char HINT[] = "IDEATEK_TEST_DISPLAYS";
+static const char FOCUS[] = "IDEATEK_TEST_FOCUS";
 static const char FALLBACK[] = "a,Test,1920x1080@60,1920x1080@60,desktop,1,1";
 
 static bool read_mode(const char *text, SDL_DisplayMode *mode)
@@ -209,15 +212,60 @@ static void SDLCALL apply_displays(void *unused, const char *name,
     SDL_free(copy);
 }
 
+static void SDLCALL apply_focus(void *unused, const char *name,
+    const char *old, const char *value)
+{
+    SDL_VideoDevice *device = SDL_GetVideoDevice();
+
+    if (device && device->windows) {
+        SDL_SetKeyboardFocus(value && SDL_strcmp(value, "1") == 0
+            ? device->windows : NULL);
+    }
+}
+
+static SDL_Cursor *TEST_CreateSystemCursor(SDL_SystemCursor id)
+{
+    return SDL_calloc(1, sizeof(SDL_Cursor));
+}
+
+static bool TEST_ShowCursor(SDL_Cursor *cursor)
+{
+    return true;
+}
+
+static void TEST_FreeCursor(SDL_Cursor *cursor)
+{
+    SDL_free(cursor);
+}
+
+static bool TEST_SetRelativeMouseMode(bool enabled)
+{
+    return true;
+}
+
+static bool TEST_SetWindowMouseGrab(SDL_VideoDevice *_this,
+    SDL_Window *window, bool grabbed)
+{
+    return true;
+}
+
 static bool TEST_VideoInit(SDL_VideoDevice *_this)
 {
+    SDL_Mouse *mouse = SDL_GetMouse();
+
+    mouse->CreateSystemCursor = TEST_CreateSystemCursor;
+    mouse->ShowCursor = TEST_ShowCursor;
+    mouse->FreeCursor = TEST_FreeCursor;
+    mouse->SetRelativeMouseMode = TEST_SetRelativeMouseMode;
     SDL_AddHintCallback(HINT, apply_displays, NULL);
+    SDL_AddHintCallback(FOCUS, apply_focus, NULL);
     return _this->num_displays > 0;
 }
 
 static void TEST_VideoQuit(SDL_VideoDevice *_this)
 {
     SDL_RemoveHintCallback(HINT, apply_displays, NULL);
+    SDL_RemoveHintCallback(FOCUS, apply_focus, NULL);
 }
 
 static void TEST_PumpEvents(SDL_VideoDevice *_this)
@@ -273,6 +321,7 @@ static SDL_VideoDevice *TEST_CreateDevice(void)
     device->SetWindowSize = TEST_SetWindowSize;
     device->SetWindowPosition = TEST_SetWindowPosition;
     device->SetWindowIcon = TEST_SetWindowIcon;
+    device->SetWindowMouseGrab = TEST_SetWindowMouseGrab;
     device->free = TEST_DeleteDevice;
     return device;
 }

@@ -280,6 +280,8 @@ static void second(const bridge_api_t *api)
 
 static void run_step(const bridge_api_t *api, const char *verb, char *args)
 {
+    if (game_input_step(api, verb, args))
+        return;
     if (!strcmp(verb, "request"))
         ask_window(api, args);
     if (!strcmp(verb, "second"))

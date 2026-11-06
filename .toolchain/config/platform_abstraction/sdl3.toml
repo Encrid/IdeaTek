@@ -73,7 +73,7 @@ test = true
 [variables]
 sdl3_game_words = [
     "abi=1", "config=test:Settings", "pinned=true", "reloadable=false", "settings=script",
-    "config.script=none", "scratch=1048576", "log_ring=65536", "spans=4096", "spawns=1024",
+    "config.script=none", "scratch=1048576", "log_ring=65536", "spans=262144", "spawns=1024",
     "changes=262144", "persistent=65536", "hot_reload=false",
 ]
 sdl_build = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "-shared", "{pic}", "{soname}", "{optimize}", "{float}", "{errno}", "{define}", "{defines}", "{include}", "{sources}", "{link}", "{flags}", "-o", "{output}"]
