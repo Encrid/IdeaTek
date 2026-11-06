@@ -1,30 +1,6 @@
 # src/platform_abstraction/window_sdl3/window_text.c
 
-This file copies the texts that the module gets.
-
-## The cut
-
-`cut_text` copies `len` bytes of a text of UTF-8 into an array of 128 bytes, and ends the copy with a zero:
-
-```pseudo
-FUNCTION cut_text(BYREF to : ARRAY[0:127] OF U8, from : STRING, len : U32) RETURNS BOOLEAN
-   DECLARE keep : U32
-   keep <- len
-   IF len > 127 THEN
-      keep <- 127
-      WHILE keep > 0 AND from[keep] >= 128 AND from[keep] < 192
-         keep <- keep - 1
-      ENDWHILE
-   ENDIF
-   CALL memcpy(to, from, keep)
-   to[keep] <- 0
-   RETURN keep < len
-ENDFUNCTION
-```
-
-A byte from 128 to 191 continues a code point. Thus the loop goes back to the first byte of the code point that does not fit, and keeps the bytes before it.
-The result is `true` when the copy lost bytes. The caller then writes its line: a title or the name of a display.
-The title of a request is `len` bytes long up to its first zero, or 128 bytes with no zero.
+This file copies the texts of the persistent arena.
 
 ## The copy of the arena
 
@@ -56,17 +32,12 @@ SDL3 needs a zero at the end of a path and of a text, and a `bridge_text_t` has 
 
 | Case | Result |
 | --- | --- |
-| A text of 127 bytes or less. | The whole text, and `false`. |
-| A text of 128 bytes or more that ends a code point at byte 127. | 127 bytes, and `true`. |
-| A text with a code point of 2, 3 or 4 bytes across byte 127. | The bytes before that code point, and `true`. |
 | A text of the arena. | A C string with its bytes and a zero. |
 | A text with an `at` or a `len` outside of the arena. | The line of the arena, and null. |
 | No memory. | The line of the memory, and null. |
-| A text of 128 bytes or more with no first byte of a code point in its first 128 bytes. | A text of length 0, and `true`. |
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `cut_text` | Copies a text of UTF-8 into an array of 128 bytes, cut at a whole code point. Gives `true` if it cut. |
 | `copy_arena_text` | Copies a text of the persistent arena into a C string. Gives null after a line. |

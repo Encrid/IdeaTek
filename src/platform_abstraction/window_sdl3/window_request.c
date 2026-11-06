@@ -30,8 +30,11 @@ static bool is_new_mode(const ideatek_window_request_t *a,
 static void read_request(const bridge_api_t *api, uint32_t at,
     ideatek_window_request_t *r)
 {
+    char title[sizeof(r->title) + 1] = {};
+
     memcpy(r, api->shared_base + at, sizeof(*r));
-    if (cut_text(r->title, r->title, strnlen(r->title, sizeof(r->title))))
+    memcpy(title, r->title, sizeof(r->title));
+    if (SDL_utf8strlcpy(r->title, title, sizeof(r->title)) < strlen(title))
         bridge_native_say(api, BRIDGE_LOG_WARN, "the title is longer than "
             "127 bytes, and the window shows its first %zu bytes",
             strlen(r->title));

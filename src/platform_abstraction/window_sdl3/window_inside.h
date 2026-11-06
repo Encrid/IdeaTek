@@ -164,7 +164,6 @@ bridge_text_t put_bytes(const bridge_api_t *api, window_half_t *half,
 void spawn_item(const bridge_api_t *api, uint32_t slot, const void *value,
     uint32_t size);
 
-bool cut_text(char to[128], const char *from, size_t len);
 char *copy_arena_text(const bridge_api_t *api, bridge_text_t text);
 
 uint64_t spawn_entity(const bridge_api_t *api);
