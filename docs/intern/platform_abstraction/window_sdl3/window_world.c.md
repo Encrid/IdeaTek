@@ -11,9 +11,6 @@ FUNCTION get_cell(id : U64, slot : U32) RETURNS U32
    DECLARE record : bridge_entity_t
    DECLARE base : U32
    record <- entity_index[id MOD 4294967296]
-   IF record.generation <> id DIV 4294967296 THEN
-      RETURN 0
-   ENDIF
    base <- column_base[record.table * types + slot]
    IF base = 0 THEN
       RETURN 0
@@ -23,8 +20,11 @@ ENDFUNCTION
 ```
 
 It follows the steps of https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge_abi.h.md#bridge_entity_t.
-It gives 0 for a dead entity, and for an entity that does not carry the component.
-The module calls it only with an id that Bridge gave in a trigger, so the index of the id is in the entity index.
+It gives 0 for an entity that does not carry the component.
+The module calls it only with a live entity, so it does not check the generation:
+
+- The entity of the window lives until the end of the run. Its destroy is a leave of the observer `request`, which ends the run: `docs/intern/platform_abstraction/window_sdl3/window_observe.c.md`.
+- An entity of a trigger of `ideatek:ClipboardRequest` carries the request in the barrier of the trigger.
 
 ## The room of a round
 
@@ -60,7 +60,6 @@ A display with 255 modes takes 14464 bytes. Thus each display fits in 1 round of
 | --- | --- |
 | A live entity with the component. | Where the value is. |
 | A live entity without the component. | 0. |
-| A dead entity. | 0. |
 | 256 spawns in a round. | No room for 1 more spawn in the round. |
 | Less room in `changes` than the change needs. | No room. |
 

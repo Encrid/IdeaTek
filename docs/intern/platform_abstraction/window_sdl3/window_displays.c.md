@@ -47,6 +47,7 @@ A display that comes back gets a new entity. Thus the window stays on the primar
 | A 17th display. | The line of the 17th display, and no entity. |
 | SDL3 gives no list of the displays. | The line of the list. The entities stay. |
 | No room in the round. | The next round does the rest. |
+| The system removes a display that the window does not use. | The window stays. |
 
 ## Functions
 

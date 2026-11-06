@@ -10,13 +10,10 @@
 static void set_clipboard(const bridge_api_t *api, uint64_t id)
 {
     uint32_t at = get_cell(api, id, CLIPBOARD);
-    const ideatek_clipboard_request_t *request;
-    char *text;
+    const ideatek_clipboard_request_t *request = (const void *)(api->shared_base
+        + at);
+    char *text = copy_arena_text(api, request->text);
 
-    if (!at)
-        return;
-    request = (const ideatek_clipboard_request_t *)(api->shared_base + at);
-    text = copy_arena_text(api, request->text);
     if (!text)
         return;
     if (!SDL_SetClipboardText(text))

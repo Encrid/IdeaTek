@@ -57,10 +57,10 @@ static bool match_list(const bridge_api_t *api, const SDL_DisplayID *ids,
 
     for (uint32_t i = window_module.display_count; i > 0; i--)
         if (!is_listed(window_module.displays[i - 1].id, ids, count))
-            done = remove_display(api, i - 1) && done;
+            done &= remove_display(api, i - 1);
     for (int i = 0; i < count; i++)
         if (!find_display(ids[i], 0))
-            done = add_display(api, ids[i]) && done;
+            done &= add_display(api, ids[i]);
     return (done);
 }
 
@@ -77,8 +77,7 @@ void sync_displays(const bridge_api_t *api)
     }
     done = match_list(api, ids, count);
     for (uint32_t i = 0; i < window_module.display_count; i++)
-        done = update_display(api, &window_module.displays[i], ids[0])
-            && done;
+        done &= update_display(api, &window_module.displays[i], ids[0]);
     window_module.displays_dirty = !done;
     SDL_free(ids);
 }

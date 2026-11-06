@@ -62,6 +62,7 @@ SDL3 needs a zero at the end of a path and of a text, and a `bridge_text_t` has 
 | A text of the arena. | A C string with its bytes and a zero. |
 | A text with an `at` or a `len` outside of the arena. | The line of the arena, and null. |
 | No memory. | The line of the memory, and null. |
+| A text of 128 bytes or more with no first byte of a code point in its first 128 bytes. | A text of length 0, and `true`. |
 
 ## Functions
 

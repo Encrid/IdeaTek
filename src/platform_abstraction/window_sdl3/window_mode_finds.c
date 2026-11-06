@@ -17,7 +17,7 @@ uint64_t find_mode_entity(const window_display_t *display,
 const SDL_DisplayMode *find_mode(const window_display_t *display,
     uint64_t entity)
 {
-    for (uint32_t i = 0; entity && i < display->listed; i++)
+    for (uint32_t i = 0; i < display->listed; i++)
         if (display->modes[i].entity == entity)
             return (&display->modes[i].mode);
     return (nullptr);

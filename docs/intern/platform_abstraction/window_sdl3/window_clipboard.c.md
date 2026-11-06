@@ -10,7 +10,7 @@ Thus the last request of a barrier is the text that stays on the clipboard. The 
 
 `set_clipboard` does these steps:
 
-1. `get_cell` gives where the request of the entity is. With no request, it stops.
+1. `get_cell` gives where the request of the entity is. The entity of a trigger of `BRIDGE_ON_ENTER` or `BRIDGE_ON_ATTACH` carries the request.
 2. `copy_arena_text` copies the text into a C string: `docs/intern/platform_abstraction/window_sdl3/window_text.c.md`.
 3. If the copy fails, it stops. `copy_arena_text` wrote the line.
 4. If SDL3 refuses `SDL_SetClipboardText`, it writes the line of no clipboard.
@@ -84,6 +84,9 @@ A paste takes 1 spawn and 32 bytes of `changes`. Without the room, the next roun
 | A text that does not fit in the free bytes of the half. | The line of the paste, and no entity. |
 | A clipboard with no text. | 1 entity with a `text` of length 0. |
 | More than 64 key presses in 1 round. | A paste after the 64th press gets no entity. |
+| SDL3 gives no text of the clipboard. | 1 entity with a `text` of length 0. |
+| A paste in a round with no room for a spawn. | The next round spawns it. |
+| More pastes than the room of the round. | The next round spawns the rest. |
 
 ## Functions
 

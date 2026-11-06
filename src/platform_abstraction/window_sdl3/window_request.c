@@ -43,8 +43,7 @@ void apply_request(const bridge_api_t *api)
     ideatek_window_request_t r;
     bool was_open = window_module.window;
 
-    if (!at)
-        return;
+    window_module.pending = false;
     read_request(api, at, &r);
     if (!was_open && !open_window(api, &r))
         return;
@@ -54,7 +53,6 @@ void apply_request(const bridge_api_t *api)
         || window_module.moved))
         set_mode(api, &r, get_target(&r));
     window_module.applied = r;
-    window_module.pending = false;
     window_module.moved = false;
     window_module.dirty = true;
 }

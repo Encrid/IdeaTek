@@ -56,7 +56,7 @@ The module writes these lines in its log:
 | `more than 16 displays: the display <id> gets no entity` | The system has a 17th display. |
 | `the name of the display <id> is longer than 127 bytes` | The name of a display does not fit in `name`. |
 | `no video modes of the display <id>: <reason>` | SDL3 gives no list of the modes of a display. |
-| `the display <id> has <count> video modes, and the module keeps the first 255` | A display has more than 255 modes. |
+| `the display <id> has <count> video modes, and the module keeps the first 253` | A display has more than 253 modes. |
 | `the drop <set>.<index> needs <count> bytes, and the half has <count> free bytes` | A dropped item does not fit in the half of the round. |
 | `the paste needs <count> bytes, and the half has <count> free bytes` | A pasted text does not fit in the half of the round. |
 | `the text at <at> with <len> bytes is not in the persistent arena` | A text of a request or of `icon` is outside the arena. |

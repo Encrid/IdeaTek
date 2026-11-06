@@ -15,12 +15,8 @@ uint32_t get_cell(const bridge_api_t *api, uint64_t id, uint32_t slot)
     const uint32_t *strides = (const uint32_t *)(api->private_base
         + h->stride);
     const bridge_entity_t *record = index + (uint32_t)id;
-    uint32_t base;
+    uint32_t base = bases[record->table * h->types + slot];
 
-    if ((uint32_t)id >= h->entities
-        || record->generation != (uint32_t)(id >> 32))
-        return (0);
-    base = bases[record->table * h->types + slot];
     if (!base)
         return (0);
     return (base + record->row * strides[slot]);

@@ -44,8 +44,10 @@ BRIDGE_NATIVE(init)
 
 void close_window(void)
 {
+#if defined(__APPLE__)
     if (window_module.view)
         SDL_Metal_DestroyView(window_module.view);
+#endif
     if (window_module.window)
         SDL_DestroyWindow(window_module.window);
     window_module.view = nullptr;

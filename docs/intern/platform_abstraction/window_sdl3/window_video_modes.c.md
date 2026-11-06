@@ -9,13 +9,13 @@ The modes of a display are `modes` of its `window_display_t`, `mode_count` of th
 
 1. `SDL_GetFullscreenDisplayModes` gives the exclusive modes of the display, the largest first.
 2. If SDL3 gives no list, the module writes the line of no video modes. The list then has no exclusive mode.
-3. It copies at most 255 modes, and `listed` is their count.
+3. It copies at most 253 modes, and `listed` is their count.
 4. With more modes, it writes the line of the modes.
-5. It adds the desktop mode and the current mode at the end, if the list lacks them and has room.
+5. It adds the desktop mode and the current mode at the end, if the list lacks them.
 6. It frees the list of SDL3 with `SDL_free`.
 
 Step 5 gives an entity to the desktop mode and to the current mode of the display, also when SDL3 does not list them.
-Thus `desktop_mode` and `current_mode` of `ideatek:Display` name an entity. A display with a full list of 255 modes can have 0 there.
+Thus `desktop_mode` and `current_mode` of `ideatek:Display` name an entity.
 
 ## The entities
 
@@ -39,8 +39,8 @@ The denominator of 1 keeps a refresh rate of 0 Hz with no division by 0.
 | Case | Result |
 | --- | --- |
 | A display with a list of modes. | An entity for each mode, with `order` from 0. |
-| A display with more than 255 modes. | The line of the modes, and 255 entities for the list. |
-| SDL3 gives no list of the modes. | The line of the modes, and no exclusive mode. |
+| A display with more than 253 modes. | The line of the modes, and 253 entities for the list. |
+| SDL3 gives no list of the modes. | The line of the modes. Until the next read of its modes, the display has only its desktop mode and its current mode. |
 | A desktop mode that the list does not hold. | An entity for the desktop mode, after the list. |
 | A mode with no refresh rate. | `refresh_numerator` of 0 and `refresh_denominator` of 1. |
 
