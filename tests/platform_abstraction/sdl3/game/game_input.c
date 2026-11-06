@@ -200,6 +200,20 @@ BRIDGE_NATIVE(seen_pad_left)
     return (0);
 }
 
+static void found_input(const bridge_api_t *api, uint64_t id, const void *v)
+{
+    (void)v;
+    if (game.input_entity != id)
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u input found", game.round);
+    game.input_entity = id;
+}
+
+BRIDGE_NATIVE(find_input)
+{
+    game_rows(api, game.input.query, game.input.keyboard, found_input);
+    return (0);
+}
+
 #define WATCH(api, name, index, field, events) \
     game.input.lists[index] = BRIDGE_NATIVE_OBSERVER(api, name, events, \
         (&(bridge_term_t){ game.input.field, BRIDGE_READ, BRIDGE_AND, 0 }), \
@@ -208,6 +222,11 @@ BRIDGE_NATIVE(seen_pad_left)
 void game_watch_input(const bridge_api_t *api)
 {
     uint32_t both = BRIDGE_ON_ENTER | BRIDGE_ON_ATTACH;
+    bridge_term_t term[1] = {{ game.input.keyboard, BRIDGE_READ, BRIDGE_AND,
+        0 }};
+
+    game.input.query = BRIDGE_NATIVE_ADD_SYSTEM(api, "find_input", "check",
+        term, 1, nullptr, 0, nullptr, 0);
 
     WATCH(api, "seen_focus", 0, input_event, BRIDGE_ON_ENTER);
     WATCH(api, "seen_key", 1, key_event, BRIDGE_ON_ENTER);

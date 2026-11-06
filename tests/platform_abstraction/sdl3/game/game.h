@@ -53,6 +53,7 @@ typedef struct {
     uint32_t gamepad_request;
     uint32_t finger_event;
     uint32_t lists[13];
+    uint32_t query;
 } game_input_t;
 
 typedef struct {
@@ -93,7 +94,11 @@ typedef struct {
 
 extern game_t game;
 
+typedef void (*game_show_t)(const bridge_api_t *, uint64_t, const void *);
+
 const void *game_cell(const bridge_api_t *api, uint64_t id, uint32_t slot);
+uint32_t game_rows(const bridge_api_t *api, uint32_t query, uint32_t slot,
+    game_show_t show);
 uint64_t game_find_display(const char *name);
 void game_start(const bridge_api_t *api);
 void game_play(const bridge_api_t *api);

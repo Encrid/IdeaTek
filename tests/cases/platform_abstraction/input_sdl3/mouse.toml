@@ -218,7 +218,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:density 1|4:motion 10 20
 name = "a button that goes down then up sets then clears its bit"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
-claims = { status = 0, matches = ["mouse at 5.0 5.0 buttons 4(.*\\n)*.*mouse at 5.0 5.0 buttons 0"] }
+claims = { status = 0, matches = ["mouse at 5.0 5.0 buttons 4.*mouse at 5.0 5.0 buttons 0"] }
 
 [case.folders]
 "{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]

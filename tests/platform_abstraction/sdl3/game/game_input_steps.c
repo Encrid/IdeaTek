@@ -107,6 +107,19 @@ static void add_pad(char *args)
     game.pads[game.pad_count++] = SDL_OpenJoystick(id);
 }
 
+static void star_pad(void)
+{
+    char guid[33];
+    char mapping[96];
+
+    if (!game.pad_count)
+        return;
+    SDL_GUIDToString(SDL_GetJoystickGUIDForID(game.pad_ids[game.pad_count
+        - 1]), guid, sizeof(guid));
+    SDL_snprintf(mapping, sizeof(mapping), "%s,*,a:b0,b:b1,x:b2,y:b3,", guid);
+    SDL_AddGamepadMapping(mapping);
+}
+
 static void remove_pad(void)
 {
     if (!game.pad_count)
@@ -120,14 +133,15 @@ static void set_pad(const char *verb, const char *args)
 {
     int n = 0;
     int v = 0;
+    unsigned pad = 0;
 
-    sscanf(args, "%d %d", &n, &v);
-    if (!game.pad_count)
+    sscanf(args, "%d %d %u", &n, &v, &pad);
+    if (pad >= game.pad_count)
         return;
     if (!strcmp(verb, "padbutton"))
-        SDL_SetJoystickVirtualButton(game.pads[0], n, v != 0);
+        SDL_SetJoystickVirtualButton(game.pads[pad], n, v != 0);
     else
-        SDL_SetJoystickVirtualAxis(game.pads[0], n, (Sint16)v);
+        SDL_SetJoystickVirtualAxis(game.pads[pad], n, (Sint16)v);
 }
 
 static void ask_text(const bridge_api_t *api, const char *args)
@@ -141,7 +155,7 @@ static void ask_text(const bridge_api_t *api, const char *args)
     BRIDGE_NATIVE_ATTACH(api, game.input_entity, game.input.text_request, r);
 }
 
-static void ask_mouse(const bridge_api_t *api, const char *args)
+static void ask_mouse(const bridge_api_t *api, const char *args, bool other)
 {
     unsigned mode = 0;
     unsigned cursor = 0;
@@ -150,7 +164,8 @@ static void ask_mouse(const bridge_api_t *api, const char *args)
     sscanf(args, "%u %u", &mode, &cursor);
     r.mode = (ideatek_mouse_mode_t)mode;
     r.cursor = (ideatek_cursor_t)cursor;
-    BRIDGE_NATIVE_ATTACH(api, game.input_entity, game.input.mouse_request, r);
+    BRIDGE_NATIVE_ATTACH(api, other ? api->spawn(api) : game.input_entity,
+        game.input.mouse_request, r);
 }
 
 static void ask_rumble(const bridge_api_t *api, const char *args, bool pad)
@@ -217,6 +232,8 @@ bool game_input_step(const bridge_api_t *api, const char *verb, char *args)
         push_mouse(verb, args);
     else if (!strcmp(verb, "addpad"))
         add_pad(args);
+    else if (!strcmp(verb, "starpad"))
+        star_pad();
     else if (!strcmp(verb, "removepad"))
         remove_pad();
     else if (!strcmp(verb, "padbutton") || !strcmp(verb, "padaxis"))
@@ -225,8 +242,8 @@ bool game_input_step(const bridge_api_t *api, const char *verb, char *args)
         ask_text(api, args);
     else if (!strcmp(verb, "textoff"))
         api->detach(api, game.input_entity, game.input.text_request);
-    else if (!strcmp(verb, "mousereq"))
-        ask_mouse(api, args);
+    else if (!strcmp(verb, "mousereq") || !strcmp(verb, "mouseother"))
+        ask_mouse(api, args, !strcmp(verb, "mouseother"));
     else if (!strcmp(verb, "rumble") || !strcmp(verb, "rumbleoff"))
         ask_rumble(api, args, !strcmp(verb, "rumble"));
     else if (!strcmp(verb, "rumbled"))
