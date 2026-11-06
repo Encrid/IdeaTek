@@ -9,7 +9,7 @@ claims = { status = 0, has = ["r2 state windowed none", "video -1 "] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -22,7 +22,7 @@ script = "1:request Game,640,480,windowed,default,-,-"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -44,7 +44,7 @@ claims = { status = 0, has = ["r3 state windowed none 640x480", "hdr 1 2.00 4.00
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -57,7 +57,7 @@ script = "2:request Game,640,480,windowed,chosen,Side,-"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -79,7 +79,7 @@ claims = { status = 0, has = ["r3 state windowed none 640x480", "hdr 0 1.00 1.00
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -92,7 +92,7 @@ script = "2:request Game,640,480,windowed,chosen,Main,-"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -114,7 +114,7 @@ claims = { status = 0, has = ["r2 attached state"], lacks = ["r4 attached state"
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -127,7 +127,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:push exposed"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -149,7 +149,7 @@ claims = { status = 0, has = ["r4 attached state"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -162,7 +162,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:resize 800 600"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -184,7 +184,7 @@ claims = { status = 0, lacks = ["attached state"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -199,7 +199,7 @@ script = "1:request Game,640,480,windowed,default,-,-"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]

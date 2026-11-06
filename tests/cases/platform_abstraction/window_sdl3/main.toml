@@ -10,7 +10,7 @@ false = { env = { SDL_VIDEO_DRIVER = "ideatek_test" } }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -33,7 +33,7 @@ false = { env = { SDL_VIDEO_DRIVER = "nothing", IDEATEK_TEST_DISPLAYS = "a,Main,
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -56,7 +56,7 @@ false = { env = { SDL_VIDEO_DRIVER = "nothing", IDEATEK_TEST_DISPLAYS = "a,Main,
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -78,7 +78,7 @@ claims = { status = 0, line = ["ended after 3 rounds, as many as it was given"],
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -91,7 +91,7 @@ script = ""
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]

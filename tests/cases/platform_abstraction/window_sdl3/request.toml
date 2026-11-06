@@ -9,7 +9,7 @@ claims = { status = 0, has = ["show_state: r4 state windowed none 800x600"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -22,7 +22,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:request Other,800,600,wi
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -44,7 +44,7 @@ claims = { status = 0, has = ["the title is longer than 127 bytes, and the windo
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -57,7 +57,7 @@ script = "1:request xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -79,7 +79,7 @@ claims = { status = 0, has = ["r3 state windowed none 640x480", "display Main vi
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -92,7 +92,7 @@ script = "2:request Game,640,480,windowed,chosen,dead,-"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -114,7 +114,7 @@ claims = { status = 0, has = ["r3 state exclusive none 1280x720", "display Side 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -127,7 +127,7 @@ script = "2:request Game,640,480,exclusive,chosen,Side,-"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -149,7 +149,7 @@ claims = { status = 0, has = ["is not an exclusive mode of the display, so the w
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -162,7 +162,7 @@ script = "2:request Game,640,480,exclusive,chosen,Side,dead"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -184,7 +184,7 @@ claims = { status = 0, has = ["is not an exclusive mode of the display, so the w
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -197,7 +197,7 @@ script = "2:request Game,640,480,exclusive,chosen,Side,Main/0"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -219,7 +219,7 @@ claims = { status = 0, has = ["the video mode 0 is not an exclusive mode of the 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -232,7 +232,7 @@ script = "2:request Game,640,480,exclusive,chosen,Empty,-"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -254,7 +254,7 @@ claims = { status = 0, matches = ["r4 state [^\\n]* display Side ", "r5 state [^
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -267,7 +267,7 @@ script = "2:request Game,640,480,windowed,chosen,Side,-|4:displays a,Main,1920x1
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]

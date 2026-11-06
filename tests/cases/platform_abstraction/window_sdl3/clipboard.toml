@@ -9,7 +9,7 @@ claims = { status = 0, has = ["r4 clipboard [hello]"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -22,7 +22,7 @@ script = "2:clip hello|4:readclip"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -44,7 +44,7 @@ claims = { status = 0, has = ["the text at 0 with 4 bytes is not in the persiste
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -57,7 +57,7 @@ script = "2:setclip before|3:clipout|5:readclip"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -79,7 +79,7 @@ claims = { status = 0, has = ["with 1073741824 bytes is not in the persistent ar
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -92,7 +92,7 @@ script = "2:setclip before|3:cliplong after|5:readclip"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -116,7 +116,7 @@ false = { fail = {  } }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -140,7 +140,7 @@ false = { fail = {  } }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -162,7 +162,7 @@ claims = { status = 0, has = ["r5 clipboard [before]"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -175,7 +175,7 @@ script = "2:setclip before|3:clipgone after|5:readclip"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -197,7 +197,7 @@ claims = { status = 0, has = ["r4 paste [hi]", "r4 pastes 1"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -210,7 +210,7 @@ script = "2:setclip hi|3:key v ctrl"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -232,7 +232,7 @@ claims = { status = 0, has = ["r4 pastes 0", "r4 has keydown 1"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -245,7 +245,7 @@ script = "2:setclip hi|3:key v none|4:has keydown"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -267,7 +267,7 @@ claims = { status = 0, has = ["r4 pastes 0"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -280,7 +280,7 @@ script = "2:setclip hi|3:key v ctrl+alt"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -302,7 +302,7 @@ claims = { status = 0, has = ["r4 pastes 0"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -315,7 +315,7 @@ script = "2:setclip hi|3:key x ctrl"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -337,7 +337,7 @@ claims = { status = 0, has = ["r4 pastes 2"], matches = ["r4 paste \\[hi\\] at (
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -350,7 +350,7 @@ script = "2:setclip hi|3:keys 2 v ctrl"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -372,7 +372,7 @@ claims = { status = 0, has = ["the paste needs 5 bytes, and the half has 2 free 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -387,7 +387,7 @@ script = "2:setclip hello|3:key v ctrl"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -411,7 +411,7 @@ claims = { status = 0, has = ["r4 paste []", "r4 pastes 1"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -424,7 +424,7 @@ script = "2:noclip|3:key v ctrl"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -446,7 +446,7 @@ claims = { status = 0, has = ["r4 pastes 64"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -459,7 +459,7 @@ script = "2:setclip hi|3:keys 70 v ctrl"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]

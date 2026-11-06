@@ -9,7 +9,7 @@ claims = { status = 0, has = ["show_state: r2 state windowed none 640x480"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -22,7 +22,7 @@ script = "1:request Game,640,480,windowed,default,-,-"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -44,7 +44,7 @@ claims = { status = 0, has = ["asks for a second window, and gets none"], lacks 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -57,7 +57,7 @@ script = "1:request Game,640,480,windowed,default,-,-|2:second"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -79,7 +79,7 @@ claims = { status = 0, has = ["a module asked for the end", "ended at round 3"] 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -92,7 +92,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:destroy"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -114,7 +114,7 @@ claims = { status = 0, has = ["a module asked for the end", "ended at round 3"] 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -127,7 +127,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:detach"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -149,7 +149,7 @@ claims = { status = 0, has = ["ended after 5 rounds"], lacks = ["a module asked 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -162,7 +162,7 @@ script = "1:request Game,640,480,windowed,default,-,-|2:second|3:unsecond"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]

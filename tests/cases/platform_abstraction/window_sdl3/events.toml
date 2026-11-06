@@ -9,7 +9,7 @@ claims = { status = 1, has = ["drop_bytes: 0 is outside 2 to 1073741824, an even
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -24,7 +24,7 @@ script = ""
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -48,7 +48,7 @@ claims = { status = 1, has = ["clipboard_bytes: 1073741826 is outside 2 to 10737
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -63,7 +63,7 @@ script = ""
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -87,7 +87,7 @@ claims = { status = 1, has = ["drop_bytes: 3 is outside 2 to 1073741824, an even
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -102,7 +102,7 @@ script = ""
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -126,7 +126,7 @@ claims = { status = 0, matches = ["r4 gap [0-9]?[0-9] "] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -139,7 +139,7 @@ script = "1:request Game,640,480,windowed,default,-,-|1:wait 0|4:gap"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -161,7 +161,7 @@ claims = { status = 0, matches = ["r4 gap [0-9]?[0-9] "] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -174,7 +174,7 @@ script = "1:request Game,640,480,windowed,default,-,-|4:gap"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -196,7 +196,7 @@ claims = { status = 0, matches = ["r4 gap [0-9]?[0-9]?[0-9] "] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -209,7 +209,7 @@ script = "1:request Game,640,480,windowed,default,-,-|1:wait 1|3:ping 50|4:gap"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -231,7 +231,7 @@ claims = { status = 0, matches = ["r4 gap (2[5-9][0-9]|[3-9][0-9][0-9]) "] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -244,7 +244,7 @@ script = "1:request Game,640,480,windowed,default,-,-|1:wait 0.3|4:gap"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -266,7 +266,7 @@ claims = { status = 0, matches = ["r4 gap [0-4]?[0-9] "] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -279,7 +279,7 @@ script = "1:request Game,640,480,windowed,default,-,-|1:wait 0.1|3:stall 300|4:g
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -301,7 +301,7 @@ claims = { status = 0, has = ["show_state: r4 state windowed none 800x600"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -314,7 +314,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:resize 800 600"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -336,7 +336,7 @@ claims = { status = 0, has = ["show_displays: r3 display [Main] 1920x1080 scale 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -349,7 +349,7 @@ script = "2:displays a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,2,1;b,
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -371,7 +371,7 @@ claims = { status = 0, has = ["a module asked for the end", "ended at round 4"] 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -384,7 +384,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:push close"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -406,7 +406,7 @@ claims = { status = 0, has = ["a module asked for the end", "ended at round 4"] 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -419,7 +419,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:push quit"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -441,7 +441,7 @@ claims = { status = 0, has = ["a module asked for the end", "ended at round 3"] 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -454,7 +454,7 @@ script = "2:push close"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 6
 [content]
 paths = ["m"]
@@ -476,7 +476,7 @@ claims = { status = 0, matches = ["r4 state [^\\n]* close 1 ", "r5 state [^\\n]*
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -491,7 +491,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:push close"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -515,7 +515,7 @@ claims = { status = 0, has = ["r3 has keydown 1"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -528,7 +528,7 @@ script = "2:key x none|3:has keydown"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -550,7 +550,7 @@ claims = { status = 0, matches = ["r2 enabled \\w+ 0 "] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -563,7 +563,7 @@ script = "2:enabled sensor"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -585,7 +585,7 @@ claims = { status = 0, has = ["r3 pushed display 1", "r3 pushed exposed 1", "r3 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -598,7 +598,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:push display|3:push expo
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
