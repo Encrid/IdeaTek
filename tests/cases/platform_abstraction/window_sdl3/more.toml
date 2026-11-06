@@ -1,0 +1,687 @@
+[[case]]
+name = "no text of the clipboard from SDL3 spawns 1 entity with a text of length 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+fail = { SDL_GetClipboardText = 1 }
+claims = { status = 0, has = ["r4 paste []", "r4 pastes 1"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:setclip hi|3:key v {paste_mods}"
+'''
+
+[[case]]
+name = "a paste in a round with no room for a spawn waits for the next round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r4 drops 256", "r4 pastes 0", "r5 pastes 1"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|2:setclip hi|3:drop file - f0 f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23 f24 f25 f26 f27 f28 f29 f30 f31 f32 f33 f34 f35 f36 f37 f38 f39 f40 f41 f42 f43 f44 f45 f46 f47 f48 f49 f50 f51 f52 f53 f54 f55 f56 f57 f58 f59 f60 f61 f62 f63 f64 f65 f66 f67 f68 f69 f70 f71 f72 f73 f74 f75 f76 f77 f78 f79 f80 f81 f82 f83 f84 f85 f86 f87 f88 f89 f90 f91 f92 f93 f94 f95 f96 f97 f98 f99 f100 f101 f102 f103 f104 f105 f106 f107 f108 f109 f110 f111 f112 f113 f114 f115 f116 f117 f118 f119 f120 f121 f122 f123 f124 f125 f126 f127 f128 f129 f130 f131 f132 f133 f134 f135 f136 f137 f138 f139 f140 f141 f142 f143 f144 f145 f146 f147 f148 f149 f150 f151 f152 f153 f154 f155 f156 f157 f158 f159 f160 f161 f162 f163 f164 f165 f166 f167 f168 f169 f170 f171 f172 f173 f174 f175 f176 f177 f178 f179 f180 f181 f182 f183 f184 f185 f186 f187 f188 f189 f190 f191 f192 f193 f194 f195 f196 f197 f198 f199 f200 f201 f202 f203 f204 f205 f206 f207 f208 f209 f210 f211 f212 f213 f214 f215 f216 f217 f218 f219 f220 f221 f222 f223 f224 f225 f226 f227 f228 f229 f230 f231 f232 f233 f234 f235 f236 f237 f238 f239 f240 f241 f242 f243 f244 f245 f246 f247 f248 f249 f250 f251 f252 f253 f254 f255|3:key v {paste_mods}|4:takekeys"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|2:setclip hi|3:drop file - f0 f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23 f24 f25 f26 f27 f28 f29 f30 f31 f32 f33 f34 f35 f36 f37 f38 f39 f40 f41 f42 f43 f44 f45 f46 f47 f48 f49 f50 f51 f52 f53 f54 f55 f56 f57 f58 f59 f60 f61 f62 f63 f64 f65 f66 f67 f68 f69 f70 f71 f72 f73 f74 f75 f76 f77 f78 f79 f80 f81 f82 f83 f84 f85 f86 f87 f88 f89 f90 f91 f92 f93 f94 f95 f96 f97 f98 f99 f100 f101 f102 f103 f104 f105 f106 f107 f108 f109 f110 f111 f112 f113 f114 f115 f116 f117 f118 f119 f120 f121 f122 f123 f124 f125 f126 f127 f128 f129 f130 f131 f132 f133 f134 f135 f136 f137 f138 f139 f140 f141 f142 f143 f144 f145 f146 f147 f148 f149 f150 f151 f152 f153 f154 f155 f156 f157 f158 f159 f160 f161 f162 f163 f164 f165 f166 f167 f168 f169 f170 f171 f172 f173 f174 f175 f176 f177 f178 f179 f180 f181 f182 f183 f184 f185 f186 f187 f188 f189 f190 f191 f192 f193 f194 f195 f196 f197 f198 f199|3:key v {paste_mods}|4:takekeys"
+'''
+
+[[case]]
+name = "more pastes than the room of the round spawn the rest in the next round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r4 pastes 6", "r5 pastes 4"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|2:setclip hi|3:drop file - f0 f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23 f24 f25 f26 f27 f28 f29 f30 f31 f32 f33 f34 f35 f36 f37 f38 f39 f40 f41 f42 f43 f44 f45 f46 f47 f48 f49 f50 f51 f52 f53 f54 f55 f56 f57 f58 f59 f60 f61 f62 f63 f64 f65 f66 f67 f68 f69 f70 f71 f72 f73 f74 f75 f76 f77 f78 f79 f80 f81 f82 f83 f84 f85 f86 f87 f88 f89 f90 f91 f92 f93 f94 f95 f96 f97 f98 f99 f100 f101 f102 f103 f104 f105 f106 f107 f108 f109 f110 f111 f112 f113 f114 f115 f116 f117 f118 f119 f120 f121 f122 f123 f124 f125 f126 f127 f128 f129 f130 f131 f132 f133 f134 f135 f136 f137 f138 f139 f140 f141 f142 f143 f144 f145 f146 f147 f148 f149 f150 f151 f152 f153 f154 f155 f156 f157 f158 f159 f160 f161 f162 f163 f164 f165 f166 f167 f168 f169 f170 f171 f172 f173 f174 f175 f176 f177 f178 f179 f180 f181 f182 f183 f184 f185 f186 f187 f188 f189 f190 f191 f192 f193 f194 f195 f196 f197 f198 f199 f200 f201 f202 f203 f204 f205 f206 f207 f208 f209 f210 f211 f212 f213 f214 f215 f216 f217 f218 f219 f220 f221 f222 f223 f224 f225 f226 f227 f228 f229 f230 f231 f232 f233 f234 f235 f236 f237 f238 f239 f240 f241 f242 f243 f244 f245 f246 f247 f248 f249|3:keys 10 v {paste_mods}|4:takekeys"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|2:setclip hi|3:drop file - f0 f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12 f13 f14 f15 f16 f17 f18 f19 f20 f21 f22 f23 f24 f25 f26 f27 f28 f29 f30 f31 f32 f33 f34 f35 f36 f37 f38 f39 f40 f41 f42 f43 f44 f45 f46 f47 f48 f49 f50 f51 f52 f53 f54 f55 f56 f57 f58 f59 f60 f61 f62 f63 f64 f65 f66 f67 f68 f69 f70 f71 f72 f73 f74 f75 f76 f77 f78 f79 f80 f81 f82 f83 f84 f85 f86 f87 f88 f89 f90 f91 f92 f93 f94 f95 f96 f97 f98 f99 f100 f101 f102 f103 f104 f105 f106 f107 f108 f109 f110 f111 f112 f113 f114 f115 f116 f117 f118 f119 f120 f121 f122 f123 f124 f125 f126 f127 f128 f129 f130 f131 f132 f133 f134 f135 f136 f137 f138 f139 f140 f141 f142 f143 f144 f145 f146 f147 f148 f149 f150 f151 f152 f153 f154 f155 f156 f157 f158 f159 f160 f161 f162 f163 f164 f165 f166 f167 f168 f169 f170 f171 f172 f173 f174 f175 f176 f177 f178 f179 f180 f181 f182 f183 f184 f185 f186 f187 f188 f189 f190 f191 f192 f193 f194 f195 f196 f197 f198 f199 f200 f201 f202 f203 f204 f205 f206 f207 f208 f209 f210 f211 f212 f213 f214 f215 f216 f217 f218 f219 f220 f221 f222 f223 f224 f225 f226 f227 f228 f229 f230 f231 f232 f233 f234 f235 f236 f237 f238 f239|3:keys 10 v {paste_mods}|4:takekeys"
+'''
+
+[[case]]
+name = "no name of a display from SDL3 gives a name of length 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1" }
+fail = { SDL_GetDisplayName = 1 }
+claims = { status = 0, has = ["r1 display [] 1920x1080"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 1
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "a round with no room for the new modes or for the display does it in a next round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r5 mode [Main] 2 1280x720", "r6 attached display Main"], lacks = ["r4 mode [Main] 2 ", "r5 attached display"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0"]
+changes = 300
+[module."test:game@1.0.0".config]
+script = "3:drop file - a b|3:displays a,Main,1920x1080@60 1600x900@60 1280x720@60,1920x1080@60,desktop,1,1"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "3:drop file - a b|3:displays a,Main,1920x1080@60 1600x900@60 1280x720@60,1920x1080@60,desktop,1,1"
+'''
+
+[[case]]
+name = "no desktop mode from SDL3 gives a desktop_mode of 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1" }
+fail = { SDL_GetDesktopDisplayMode = 3 }
+claims = { status = 0, has = ["r1 display [Main] 1920x1080 scale 1.00 hdr 0 primary 1 desktop -1 current 0"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 1
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "2 modes that differ only in pixel_density or in refresh_rate_denominator are 2 entities"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1920x1080@60*2 1920x1080@60/2,1920x1080@60/2,desktop,1,1" }
+claims = { status = 0, has = ["r1 mode [Main] 0 1920x1080 60/1 1.00", "r1 mode [Main] 1 1920x1080 60/1 2.00", "r1 mode [Main] 2 1920x1080 60/2 1.00", "r1 display [Main] 1920x1080 scale 1.00 hdr 0 primary 1 desktop 2 current 2"] }
+false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1920x1080@60*2 1920x1080@60/2,1920x1080@60,desktop,1,1" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 1
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "a name with no first byte of a code point in its first 128 bytes keeps no byte"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["is longer than 127 bytes", "r3 display [] 1920x1080"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:displays z,@cont,1920x1080@60,1920x1080@60,desktop,1,1"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:displays z,nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn,1920x1080@60,1920x1080@60,desktop,1,1"
+'''
+
+[[case]]
+name = "a text with an at after the end of the persistent arena writes the line of the text"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["is not in the persistent arena", "r5 clipboard [before]"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:setclip before|3:clipfar x|5:readclip"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:setclip before|3:clip after|5:readclip"
+'''
+
+[[case]]
+name = "an ideatek:EventWait in the first round makes no wait"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r1 gap [0-9]?[0-9]?[0-9] "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game_early", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:gap"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:gap"
+'''
+
+[[case]]
+name = "a destroy of the entity of the window before the window opens ends the run"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+fail = { SDL_CreateWindow = 1 }
+claims = { status = 1, has = ["a module asked for the end", "ended at round 3"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:destroy"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''
+
+[[case]]
+name = "no memory for the path of the icon writes the line of the memory, and keeps the icon of the system"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+fail = { malloc = 1 }
+claims = { status = 1, has = ["no memory for a text of 5 bytes", "r2 state windowed"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''
+
+[[case]]
+name = "IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN with no display entity writes the line of the video mode, and fills the display"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,gen100,4000x2000@60,desktop,1,1" }
+claims = { status = 0, has = ["the video mode 0 is not an exclusive mode of the display", "r2 state fullscreen none"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0"]
+changes = 2000
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,exclusive,default,-,-"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,exclusive,default,-,-"
+'''
+
+[[case]]
+name = "a request again with a new display moves the window to the display"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r5 state [^\\n]* display Side "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:request Game,640,480,windowed,chosen,Side,-"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:request Game,640,480,windowed,chosen,Main,-"
+'''
+
+[[case]]
+name = "a request again with a new video_mode changes the exclusive mode"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r5 state exclusive none 1280x720"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,exclusive,chosen,Main,Main/0|4:request Game,640,480,exclusive,chosen,Main,Main/1"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,exclusive,chosen,Main,Main/0|4:request Game,640,480,exclusive,chosen,Main,Main/0"
+'''
+
+[[case]]
+name = "a request again with a new height changes the size of the window"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r5 state windowed none 640x400"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:request Game,640,400,windowed,chosen,Main,-"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:request Game,640,480,windowed,chosen,Main,-"
+'''
+
+[[case]]
+name = "a request again with a new mode changes the mode of the window"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r5 state fullscreen none"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:request Game,640,480,fullscreen,chosen,Main,-"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:request Game,640,480,windowed,chosen,Main,-"
+'''
+
+[[case]]
+name = "a request again with a new target moves the window to the primary display"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r5 state [^\\n]* display Main "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Side,-|4:request Game,640,480,windowed,default,Side,-"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Side,-|4:request Game,640,480,windowed,chosen,Side,-"
+'''
+
+[[case]]
+name = "a request again with only a new title keeps the mode of the window"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r5 state windowed none 640x480"], lacks = ["r5 attached state"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:request Other,640,480,windowed,chosen,Main,-"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:request Other,640,400,windowed,chosen,Main,-"
+'''
+
+[[case]]
+name = "a display that the system removes and that the window does not use keeps the window on its display"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r5 state [^\\n]* display Main "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:displays a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,windowed,chosen,Main,-|4:displays b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4"
+'''
+
+[[case]]
+name = "a round with no room for a removed display removes it in the next round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r4 display [Side]"], lacks = ["r5 display [Side]"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0"]
+changes = 600
+[module."test:game@1.0.0".config]
+script = "3:drop file - a b c d e f g h|3:displays a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0"]
+changes = 600
+[module."test:game@1.0.0".config]
+script = "3:drop file - a b|3:displays a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1"
+'''

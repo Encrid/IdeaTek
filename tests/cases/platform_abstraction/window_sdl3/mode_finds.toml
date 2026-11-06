@@ -1,0 +1,34 @@
+[[case]]
+name = "the desktop mode outside the list is not an exclusive mode"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1280x720@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["is not an exclusive mode of the display, so the window fills the display", "r3 state fullscreen none"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,exclusive,chosen,Main,Main/1"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,exclusive,chosen,Main,Main/0"
+'''

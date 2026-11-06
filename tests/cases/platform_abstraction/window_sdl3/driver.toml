@@ -1,0 +1,116 @@
+[[case]]
+name = "the first row of the drivers of the system gives its surface and its 2 handles"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, has = ["r2 state windowed {window_surface1} ", "handles 11"] }
+false = { env = { SDL_VIDEO_DRIVER = "offscreen" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''
+
+[[case]]
+name = "the second row of the drivers of the system gives its surface and its 2 handles"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row2}" }
+claims = { status = 0, has = ["r2 state windowed {window_surface2} ", "handles 11"] }
+false = { env = { SDL_VIDEO_DRIVER = "offscreen" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''
+
+[[case]]
+name = "a driver that the table does not name gives IDEATEK_SURFACE_NONE and 2 handles of 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r2 state windowed none ", "handles 00"] }
+false = { env = { SDL_VIDEO_DRIVER = "{window_row1}" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''
+
+[[case]]
+name = "a driver of the first row with no handle of the window writes the line of the handle, and gives IDEATEK_SURFACE_NONE"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { SDL_GetPointerProperty = 2, SDL_GetNumberProperty = 1, SDL_Metal_CreateView = 1 }
+claims = { status = 1, has = ["the window has no handle of its surface: ", "r2 state windowed none "] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''
+
+[[case]]
+name = "a driver of the second row with no handle of the window writes the line of the handle, and gives IDEATEK_SURFACE_NONE"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row2}" }
+fail = { SDL_GetPointerProperty = 2, SDL_GetNumberProperty = 1, SDL_Metal_CreateView = 1 }
+claims = { status = 1, has = ["the window has no handle of its surface: ", "r2 state windowed none "] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''

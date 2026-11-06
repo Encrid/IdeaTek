@@ -1,0 +1,610 @@
+[[case]]
+name = "a drop_bytes of 0 writes the line of the setting, and the system fails"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 1, has = ["drop_bytes: 0 is outside 2 to 1073741824, an even number"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0".config]
+drop_bytes = 0
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0".config]
+drop_bytes = 2
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "a clipboard_bytes of 1073741826 writes the line of the setting, and the system fails"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 1, has = ["clipboard_bytes: 1073741826 is outside 2 to 1073741824, an even number"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0".config]
+clipboard_bytes = 1073741826
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0".config]
+clipboard_bytes = 1073741824
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "an odd drop_bytes writes the line of the setting, and the system fails"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 1, has = ["drop_bytes: 3 is outside 2 to 1073741824, an even number"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0".config]
+drop_bytes = 3
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0".config]
+drop_bytes = 4
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "a wait of 0 starts the next round with no wait"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r4 gap [0-9]?[0-9] "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:wait 0|4:gap"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:wait 0.3|4:gap"
+'''
+
+[[case]]
+name = "a window with no ideatek:EventWait starts the next round with no wait"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r4 gap [0-9]?[0-9] "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:gap"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:wait 0.3|4:gap"
+'''
+
+[[case]]
+name = "a wait that an event ends starts the next round at the event"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r4 gap [0-9]?[0-9]?[0-9] "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:wait 1|3:ping 50|4:gap"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:wait 1|4:gap"
+'''
+
+[[case]]
+name = "a wait with no event starts the round the wait after the take of the last round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r4 gap (2[5-9][0-9]|[3-9][0-9][0-9]) "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:wait 0.3|4:gap"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:wait 0|4:gap"
+'''
+
+[[case]]
+name = "a round that takes more time than the wait starts the next round with no wait"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r4 gap [0-4]?[0-9] "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:wait 0.1|3:stall 300|4:gap"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:wait 0.1|4:gap"
+'''
+
+[[case]]
+name = "an event of the window reads ideatek:WindowState again"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["show_state: r4 state windowed none 800x600"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:resize 800 600"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''
+
+[[case]]
+name = "an event of a display reads the displays again"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["show_displays: r3 display [Main] 1920x1080 scale 2.00"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:displays a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,2,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:displays a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4"
+'''
+
+[[case]]
+name = "a close request with close_on_request at true hides the window, and ends the run"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["a module asked for the end", "ended at round 4"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:push close"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:push exposed"
+'''
+
+[[case]]
+name = "a quit with close_on_request at true hides the window, and ends the run"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["a module asked for the end", "ended at round 4"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:push quit"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:push exposed"
+'''
+
+[[case]]
+name = "a close request with no window and close_on_request at true ends the run"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["a module asked for the end", "ended at round 3"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:push close"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:push exposed"
+'''
+
+[[case]]
+name = "a close request with close_on_request at false sets close_asked for 1 round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r4 state [^\\n]* close 1 ", "r5 state [^\\n]* close 0 "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0".config]
+close_on_request = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:push close"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_window_sdl3:window@0.1.0".config]
+close_on_request = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:push exposed"
+'''
+
+[[case]]
+name = "a key press of the keyboard stays in the queue"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r3 has keydown 1"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:key x none|3:has keydown"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "3:has keydown"
+'''
+
+[[case]]
+name = "a type of event that no part takes is off, so SDL3 never puts it into the queue"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, matches = ["r2 enabled \\w+ 0 "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:enabled sensor"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:enabled exposed"
+'''
+
+[[case]]
+name = "an event of each range of the module comes into the queue, and the round takes it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r3 pushed display 1", "r3 pushed exposed 1", "r3 pushed clipboard 1", "r4 has display 0", "r4 has exposed 0", "r4 has clipboard 0", "r4 has drop 0"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:push display|3:push exposed|3:push clipboard|3:drop file - a.txt|4:has display|4:has exposed|4:has clipboard|4:has drop"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:push display|3:push exposed|3:push clipboard|3:drop file - a.txt|3:has display|3:has exposed|3:has clipboard|3:has drop"
+'''

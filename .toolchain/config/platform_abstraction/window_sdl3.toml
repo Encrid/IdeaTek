@@ -13,6 +13,12 @@ window_sdl3_words = [
     "hot_reload=false",
 ]
 
+window_game_words = [
+    "abi=1", "config=test:Settings", "pinned=true", "reloadable=false", "settings=script",
+    "config.script=none", "scratch=1048576", "log_ring=65536", "spans=4096", "spawns=1024",
+    "changes=262144", "persistent=65536", "hot_reload=false",
+]
+
 [[artifact]]
 name = "window_sdl3"
 kind = "native_module"
@@ -22,3 +28,81 @@ include = ["include/platform_abstraction", "src/platform_abstraction/sdl3_start"
 link = ["{out}/sdl3_start.a", "{out}/SDL3{library}"]
 flags = ["-isystem", "{sdl_root}/include", "{rpath}"]
 manifest = ["ideatek_window_sdl3:window@0.1.0", "{window_sdl3_words}"]
+
+[targets.x86_64-windows-gnu]
+window_row1 = "windows"
+window_row2 = "windows"
+window_surface1 = "windows"
+window_surface2 = "windows"
+paste_mods = "ctrl"
+
+[targets.aarch64-windows-gnu]
+window_row1 = "windows"
+window_row2 = "windows"
+window_surface1 = "windows"
+window_surface2 = "windows"
+paste_mods = "ctrl"
+
+[targets.x86_64-linux-gnu]
+window_row1 = "x11"
+window_row2 = "wayland"
+window_surface1 = "xlib"
+window_surface2 = "wayland"
+paste_mods = "ctrl"
+
+[targets.aarch64-linux-gnu]
+window_row1 = "x11"
+window_row2 = "wayland"
+window_surface1 = "xlib"
+window_surface2 = "wayland"
+paste_mods = "ctrl"
+
+[targets.x86_64-macos]
+window_row1 = "cocoa"
+window_row2 = "cocoa"
+window_surface1 = "metal"
+window_surface2 = "metal"
+paste_mods = "gui"
+
+[targets.aarch64-macos]
+window_row1 = "cocoa"
+window_row2 = "cocoa"
+window_surface1 = "metal"
+window_surface2 = "metal"
+paste_mods = "gui"
+
+[[artifact]]
+name = "SDL3_test"
+kind = "sdl_test"
+part = "window_sdl3"
+test = true
+folder = "sdl3_test"
+sources = ["{sdl_common}", "{sdl_libm}", "{sdl_sources}", "tests/platform_abstraction/window_sdl3/window_test_video.c"]
+include = ["{sdl_root}/include/build_config", "{sdl_root}/include", "{sdl_root}/src"]
+defines = ["{sdl_defines}", "SDL_VIDEO_DRIVER_IDEATEK_TEST=1"]
+flags = ["{sdl_flags}", "{sdl_system}"]
+
+[[artifact]]
+name = "window_sdl3_game"
+kind = "native_module"
+part = "window_sdl3"
+test = true
+sources = ["tests/platform_abstraction/window_sdl3/window_game.c", "tests/platform_abstraction/window_sdl3/window_game_steps.c"]
+include = ["include/platform_abstraction"]
+link = ["{out}/SDL3{library}"]
+flags = ["-isystem", "{sdl_root}/include", "{rpath}"]
+manifest = ["test:game@1.0.0", "{window_game_words}"]
+
+[[artifact.variants]]
+name = "window_sdl3_game_early"
+defines = ["GAME_EARLY"]
+manifest = ["test:game@1.0.0", "{window_game_words}"]
+
+[[artifact]]
+name = "window_sdl3_reload"
+kind = "program"
+part = "window_sdl3"
+test = true
+sources = ["tests/platform_abstraction/window_sdl3/window_reload.c"]
+link = ["{out}/window_sdl3{library}"]
+flags = ["{rpath}"]

@@ -1,0 +1,115 @@
+[[case]]
+name = "a display with more than 253 modes writes the line of the modes, and keeps 253 entities for the list"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Big,gen300,4000x2000@60,desktop,1,1" }
+claims = { status = 0, has = ["has 300 video modes, and the module keeps the first 253", "r1 mode [Big] 252 3748x2000"], lacks = ["r1 mode [Big] 253 "] }
+false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Big,gen200,4000x2000@60,desktop,1,1" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 1
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "a display with more than 253 modes and a desktop mode and a current mode outside the list gets 255 entities"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Big,gen300,800x600@60,3720x2000@60,1,1" }
+claims = { status = 0, has = ["r1 mode [Big] 253 800x600", "r1 mode [Big] 254 3720x2000", "r1 display [Big] 3720x2000 scale 1.00 hdr 0 primary 1 desktop 253 current 254"] }
+false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Big,gen300,800x600@60,3900x2000@60,1,1" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 1
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "no list of the modes from SDL3 writes the line of the modes"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+fail = { SDL_GetFullscreenDisplayModes = 1 }
+claims = { status = 0, has = ["no video modes of the display "] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:request Game,640,480,exclusive,chosen,Main,-"
+'''
+
+[[case]]
+name = "a desktop mode that the list does not hold gets an entity after the list"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1280x720@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r1 mode [Main] 1 1920x1080 60/1", "r1 display [Main] 1920x1080 scale 1.00 hdr 0 primary 1 desktop 1 current 1"] }
+false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1280x720@60 1920x1080@60,1920x1080@60,desktop,1,1" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 1
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "a mode with no refresh rate gives a refresh_numerator of 0 and a refresh_denominator of 1"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["r1 mode [Side] 1 1280x720 0/1"] }
+false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@30,1280x720@30,desktop,1.5,4" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 1
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
