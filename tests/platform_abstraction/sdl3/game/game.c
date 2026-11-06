@@ -21,23 +21,9 @@ static const char *const SURFACES[] = { "none", "windows", "metal", "xlib",
 
 const void *game_cell(const bridge_api_t *api, uint64_t id, uint32_t slot)
 {
-    const bridge_header_t *h = bridge_native_get_header(api);
-    const bridge_entity_t *index = (const bridge_entity_t *)(api->shared_base
-        + h->entity_index);
-    const uint32_t *bases = (const uint32_t *)(api->private_base
-        + h->column_base);
-    const uint32_t *strides = (const uint32_t *)(api->private_base
-        + h->stride);
-    const bridge_entity_t *record = index + (uint32_t)id;
-    uint32_t base;
+    uint32_t at = bridge_native_find_value(api, id, slot);
 
-    if (!id || (uint32_t)id >= h->entities
-        || record->generation != (uint32_t)(id >> 32))
-        return (nullptr);
-    base = bases[record->table * h->types + slot];
-    if (!base)
-        return (nullptr);
-    return (api->shared_base + base + record->row * strides[slot]);
+    return (at ? api->shared_base + at : nullptr);
 }
 
 uint64_t game_find_display(const char *name)
@@ -137,9 +123,8 @@ static void show_paste(const bridge_api_t *api, uint64_t id, const void *cell)
         &game.first_paste);
 }
 
-typedef void (*game_show_t)(const bridge_api_t *, uint64_t, const void *);
 
-static uint32_t show_rows(const bridge_api_t *api, uint32_t query,
+uint32_t game_rows(const bridge_api_t *api, uint32_t query,
     uint32_t slot, game_show_t show)
 {
     const bridge_query_t *q = bridge_native_get_query(api, query);
@@ -169,35 +154,35 @@ BRIDGE_NATIVE(play)
 
 BRIDGE_NATIVE(show_state)
 {
-    show_rows(api, queries[0], game.slots.state, show_state);
+    game_rows(api, queries[0], game.slots.state, show_state);
     return (0);
 }
 
 BRIDGE_NATIVE(show_displays)
 {
     game.display_count = 0;
-    show_rows(api, queries[1], game.slots.display, show_display);
+    game_rows(api, queries[1], game.slots.display, show_display);
     return (0);
 }
 
 BRIDGE_NATIVE(show_modes)
 {
     game.mode_count = 0;
-    show_rows(api, queries[2], game.slots.video_mode, show_mode);
+    game_rows(api, queries[2], game.slots.video_mode, show_mode);
     return (0);
 }
 
 BRIDGE_NATIVE(show_drops)
 {
     bridge_native_say(api, BRIDGE_LOG_INFO, "r%u drops %u", game.round,
-        show_rows(api, queries[3], game.slots.drop, show_drop));
+        game_rows(api, queries[3], game.slots.drop, show_drop));
     return (0);
 }
 
 BRIDGE_NATIVE(show_pastes)
 {
     bridge_native_say(api, BRIDGE_LOG_INFO, "r%u pastes %u", game.round,
-        show_rows(api, queries[4], game.slots.paste, show_paste));
+        game_rows(api, queries[4], game.slots.paste, show_paste));
     return (0);
 }
 

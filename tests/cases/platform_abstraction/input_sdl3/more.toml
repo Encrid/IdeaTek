@@ -1,0 +1,629 @@
+[[case]]
+name = "a scancode below 4 has no event"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, lacks = ["key code"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 0 61 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0"
+'''
+
+[[case]]
+name = "a scancode between the page 0x07 and the other pages has no event"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, lacks = ["key code"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 101 40000101 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 102 40000102 0 1 0"
+'''
+
+[[case]]
+name = "a digit gives the usage of its key"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["key code 0x0007001f key 0x0007001f"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 1f 32 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 1f 33 0 1 0"
+'''
+
+[[case]]
+name = "the character 0 gives the usage of the key 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["key code 0x00070027 key 0x00070027"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 27 30 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 27 31 0 1 0"
+'''
+
+[[case]]
+name = "Delete gives the usage of Delete and a character of 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["key code 0x0007004c key 0x0007004c char 0 "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4c 7f 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4c 7e 0 1 0"
+'''
+
+[[case]]
+name = "a character of the second table gives its usage"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["key code 0x00070033 key 0x00070033"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 33 3b 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 33 3a 0 1 0"
+'''
+
+[[case]]
+name = "a character of 0x80 or more, or of no table, gives a key of 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["key code 0x00070020 key 0x00000000"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 20 23 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 20 33 0 1 0"
+'''
+
+[[case]]
+name = "a keycode of 0 gives a key of 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["key code 0x00070004 key 0x00000000"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 0 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0"
+'''
+
+[[case]]
+name = "a grab that SDL3 refuses writes the line of the mode"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+fail = { SDL_SetWindowMouseGrab = 1 }
+claims = { status = 0, has = ["no mouse mode 3: "] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:mousereq 3 0"
+'''
+
+[[case]]
+name = "a hide of the cursor that SDL3 refuses writes the line of the mode"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+fail = { SDL_HideCursor = 1 }
+claims = { status = 0, has = ["no mouse mode 1: "] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:mousereq 1 0"
+'''
+
+[[case]]
+name = "a cursor that SDL3 does not set writes the line of the cursor"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+fail = { SDL_SetCursor = 1 }
+claims = { status = 0, has = ["no cursor 2: "] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:mousereq 0 2"
+'''
+
+[[case]]
+name = "a mouse request on another entity changes nothing"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["mouse relative 0"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:mouseother 2 0|5:mousestate"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:mousereq 2 0|5:mousestate"
+'''
+
+[[case]]
+name = "a finger that ends and is not in the list gives its event"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["finger 17 kind 2"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:touch 0 1 0.1 0.1|4:touch 0 2 0.1 0.1|4:touch 0 3 0.1 0.1|4:touch 0 4 0.1 0.1|4:touch 0 5 0.1 0.1|4:touch 0 6 0.1 0.1|4:touch 0 7 0.1 0.1|4:touch 0 8 0.1 0.1|4:touch 0 9 0.1 0.1|4:touch 0 10 0.1 0.1|4:touch 0 11 0.1 0.1|4:touch 0 12 0.1 0.1|4:touch 0 13 0.1 0.1|4:touch 0 14 0.1 0.1|4:touch 0 15 0.1 0.1|4:touch 0 16 0.1 0.1|4:touch 0 17 0.1 0.1|5:touch 2 17 0.1 0.1"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:touch 0 1 0.1 0.1|4:touch 0 2 0.1 0.1|4:touch 0 3 0.1 0.1|4:touch 0 4 0.1 0.1|4:touch 0 5 0.1 0.1|4:touch 0 6 0.1 0.1|4:touch 0 7 0.1 0.1|4:touch 0 8 0.1 0.1|4:touch 0 9 0.1 0.1|4:touch 0 10 0.1 0.1|4:touch 0 11 0.1 0.1|4:touch 0 12 0.1 0.1|4:touch 0 13 0.1 0.1|4:touch 0 14 0.1 0.1|4:touch 0 15 0.1 0.1|4:touch 0 16 0.1 0.1|4:touch 0 17 0.1 0.1|5:touch 3 17 0.1 0.1"
+'''
+
+[[case]]
+name = "a finger with no window keeps the places of SDL3"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["finger 7 kind 0 at 0.5 0.2"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "4:touch 0 7 0.5 0.25"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:touch 0 7 0.5 0.25"
+'''
+
+[[case]]
+name = "a gamepad with no name from SDL3 has a name of length 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+fail = { SDL_GetGamepadName = 1 }
+claims = { status = 0, has = ["pad []"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:addpad Pad"
+'''
+
+[[case]]
+name = "a motion of the mouse after a motion of a finger starts a new run"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["finger 7 kind 1 at 128.0 96.0 order 1", "motion at 5.0 5.0 rel 1.0 1.0 buttons 0 order 2"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:touch 0 7 0.1 0.1|4:touch 1 7 0.2 0.2|4:motion 5 5 1 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:touch 0 7 0.1 0.1|4:motion 5 5 1 1 0"
+'''
+
+[[case]]
+name = "a path of mappings of 4096 bytes or more writes the line of the mappings"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["no mappings "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0"]
+persistent = 8192
+[module."ideatek_input_sdl3:input@0.1.0".config]
+mappings = "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0"]
+persistent = 8192
+[module."ideatek_input_sdl3:input@0.1.0".config]
+mappings = "none"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "a text request with no window writes the line of no text input"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["no text input: "] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "3:textreq 10 10 100 20 5 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:textreq 10 10 100 20 5 0"
+'''
+
+[[case]]
+name = "a detach of a request whose text input never started changes nothing"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+fail = { SDL_StartTextInput = 1 }
+claims = { status = 0, line = ["ended after 7 rounds, as many as it was given"] }
+false = { env = { SDL_VIDEO_DRIVER = "nothing", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:textreq 10 10 100 20 5 0|5:textoff"
+'''
