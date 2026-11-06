@@ -9,7 +9,7 @@ claims = { status = 0, has = ["r4 state windowed", "over 1 at 50 60 "] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -22,7 +22,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:drag 50 60"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -44,7 +44,7 @@ claims = { status = 0, matches = ["r5 state [^\\n]* over 0 "] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -57,7 +57,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:drag 50 60|4:dragend"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -79,7 +79,7 @@ claims = { status = 0, has = ["r4 drop 1.0 file window 1", "r4 drop 1.1 file win
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -92,7 +92,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:drop file - a.txt b.txt 
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -114,7 +114,7 @@ claims = { status = 0, has = ["r4 drop 1.0 text", "r4 drop data [hello]"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -127,7 +127,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:drop text - hello"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -149,7 +149,7 @@ claims = { status = 0, has = ["r4 drop source [app]", "r5 drop source []"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -162,7 +162,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:drop file app a.txt|4:dr
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -184,7 +184,7 @@ claims = { status = 0, has = ["the drop 1.0 needs 10 bytes, and the half has 8 f
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -199,7 +199,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:drop file - abcdefghij"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -223,7 +223,7 @@ claims = { status = 0, has = ["r4 drop 1.255 file", "r4 drops 256", "r5 drop 1.2
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -236,7 +236,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:drop file - f0 f1 f2 f3 
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 5
 [content]
 paths = ["m"]
@@ -258,7 +258,7 @@ claims = { status = 0, has = ["r4 drop 1.0 file window 0"] }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -271,7 +271,7 @@ script = "1:request Game,640,480,windowed,default,-,-|3:drop0 file - a.txt"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]

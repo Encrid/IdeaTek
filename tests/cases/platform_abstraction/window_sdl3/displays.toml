@@ -10,7 +10,7 @@ false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 1
 [content]
 paths = ["m"]
@@ -32,7 +32,7 @@ claims = { status = 0, has = ["r3 display [Third] 800x600", "r3 mode [Third] 0 8
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -45,7 +45,7 @@ script = "2:displays a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -67,7 +67,7 @@ claims = { status = 0, has = ["r2 display [Side]"], matches_not = ["r3 (display|
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -80,7 +80,7 @@ script = "2:displays a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1"
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 3
 [content]
 paths = ["m"]
@@ -102,7 +102,7 @@ claims = { status = 0, has = ["r7 display [Side]", "r7 attached display Side"], 
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 7
 [content]
 paths = ["m"]
@@ -115,7 +115,7 @@ script = "2:request Game,640,480,windowed,chosen,Side,-|4:displays a,Main,1920x1
 
 [case.false.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 7
 [content]
 paths = ["m"]
@@ -138,7 +138,7 @@ false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "d0
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 1
 [content]
 paths = ["m"]
@@ -162,7 +162,7 @@ false = { fail = {  } }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 4
 [content]
 paths = ["m"]
@@ -185,7 +185,7 @@ false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "d0
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]

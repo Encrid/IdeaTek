@@ -10,7 +10,7 @@ false = { env = { SDL_VIDEO_DRIVER = "offscreen" } }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -33,7 +33,7 @@ false = { env = { SDL_VIDEO_DRIVER = "offscreen" } }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -56,7 +56,7 @@ false = { env = { SDL_VIDEO_DRIVER = "{window_row1}" } }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -80,7 +80,7 @@ false = { fail = {  } }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
@@ -104,7 +104,7 @@ false = { fail = {  } }
 
 [case.files]
 "{case}/d.toml" = '''
-presets = ["{root}/tests/presets/window_sdl3.toml"]
+presets = ["{root}/tests/presets/sdl3.toml"]
 rounds = 2
 [content]
 paths = ["m"]
