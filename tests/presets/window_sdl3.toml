@@ -1,0 +1,11 @@
+presets = ["test.toml"]
+phases = ["first", "check"]
+again = {}
+
+[module."ideatek_window_sdl3:window@0.1.0"]
+write = ["ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:Paste"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:EventWait", "ideatek:ClipboardRequest"]
+
+[module."test:game@1.0.0"]
+write = ["ideatek:WindowRequest", "ideatek:EventWait", "ideatek:ClipboardRequest"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:Paste"]

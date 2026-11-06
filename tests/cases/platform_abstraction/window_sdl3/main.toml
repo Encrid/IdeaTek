@@ -1,0 +1,103 @@
+[[case]]
+name = "a start of the video that SDL3 refuses writes the line of no video, and the load fails"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "nothing" }
+claims = { status = 1, has = ["no video: "], lacks = ["loaded: ideatek_window_sdl3:window@0.1.0"] }
+false = { env = { SDL_VIDEO_DRIVER = "ideatek_test" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "a start of the video loads the module"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, line = ["loaded: ideatek_window_sdl3:window@0.1.0, native, m/window_sdl3{library}"] }
+false = { env = { SDL_VIDEO_DRIVER = "nothing", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[[case]]
+name = "the end of a run with a window closes the window, then the video of SDL3"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, has = ["show_state: r3 state windowed"], line = ["ended after 3 rounds, as many as it was given"] }
+false = { env = { SDL_VIDEO_DRIVER = "nothing", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''
+
+[[case]]
+name = "the end of a run with no window closes nothing, then the video of SDL3"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1;b,Side,2560x1440@144*2 1280x720@0,1280x720@0,desktop,1.5,4" }
+claims = { status = 0, line = ["ended after 3 rounds, as many as it was given"], lacks = ["state windowed"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/window_sdl3.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-"
+'''
