@@ -167,6 +167,7 @@ The build makes each artifact in the scratch folder `out`. A built binary is not
 
 It also copies `license`, and `license` of each folder of `third_party`, at their paths from the root.
 The deliverable of a part holds only the licences of the folders of its `third_party`.
+The deliverable of a part also holds its readme, `docs/extern/<folder>/readme.md`, as `readme.md` at its top.
 `composed` stops if such a folder has no licence: `third_party/<folder>/license is not there, and the deliverable needs it`.
 `composed` writes the path of each file of the deliverable.
 `.toolchain/docs/project.toml.md`, *[compose]*, tells the keys `from`, `headers`, `into` and `assets`.
@@ -243,7 +244,8 @@ Thus a part can link a library of a part that it uses, also when the file of the
 - the artifacts and the tables of `[compose]` of the part, with `kept`,
 - the name of the part as `[project] name`,
 - `[parts.<part>.package]` as `[package]`,
-- the `third_party` of the part.
+- the `third_party` of the part,
+- the path of the readme of the part.
 
 `views` gives the configuration of each part of `--part`. With no `--part`, it gives the configuration of each part of `[parts]`.
 `composed`, `packed` and `prove` use a configuration of `views` as the configuration of a project. Thus they treat a part as a project.

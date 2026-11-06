@@ -8,10 +8,10 @@
 | --- | --- |
 | `environment(changes, values)` | Gives the environment of a command, with the changes of `env`. |
 | `free_port()` | Gives a free port of this machine. |
-| `started(argv, root, timeout, env)` | Starts a command, with a timer that stops it after `timeout` seconds. |
+| `started(argv, root, timeout, env, use)` | Starts a command with `started` of `signals.py`, with a timer that stops it after `timeout` seconds. `use` is the case, or nothing for a helper. |
 | `waited(running, text)` | Reads the output until a line contains the text. It gives false if the output ends first. |
 | `typed(running, text)` | Writes a text to the command. |
-| `ended(running, text)` | Writes the text, closes the input, and waits for the end of the command. It gives the status and the output. |
+| `ended(running, text)` | Writes the text, closes the input, and waits for the end of the command. It gives the status and the output. It reads no output that a step closed. |
 | `ordered(wanted, lines)` | Tells if the lines have each wanted line, in order. |
 | `holding(path, text)` | Tells if a file is there and contains the text. |
 | `same(path, said)` | Tells if a file is there and holds the same text as the output. |
@@ -26,7 +26,7 @@
 | `test(config, values, outputs, groups, broken, said, copies, counted, failing)` | Runs all the groups, and writes each verdict. With `said`, it writes `said.txt`. It gives the names of the cases that failed. |
 | `chosen(groups, text)` | Gives only the cases whose name contains `text`. It stops if no case has it: `no case has <text> in its name`. |
 | `picked(config, groups, args)` | Gives only the groups of the parts of `--part`, as *Groups* tells, then only the cases of `-k`, with `chosen`. |
-| `groups_of(config, values, folder)` | Reads and checks the groups of a folder: `tests/cases`, or `.toolchain/tests/cases` of the repository `my_c23_template`. |
+| `groups_of(config, values, folder)` | Reads and checks the groups of a folder: `tests/cases`, or `.toolchain/tests/cases` of the repository `mc23t`. |
 | `changed(args, run, write, prepared)` | Does the steps of a changed run, as *A changed run* tells. It gives the config, the variables, what `write` gave, the artifacts and the groups. |
 | `scoped(args, entries, key, names)` | Gives the exemptions whose `key` matches one of the names, with `*`. With no `--part`, it gives all the exemptions. |
 | `measured(args)` | Runs the command `test --branches`, as *The branches* tells. |
@@ -40,7 +40,7 @@ Else `main` does these steps:
 
 1. It builds with `build`, which stops if the target does not run on this machine. With `--toolchain`, it only calls `prepared` of `build.py`, and builds nothing.
 2. It stops if an artifact is not linked: `the cases need what is linked: <names>`.
-3. It reads the groups of `[test] cases` (the default is `tests/cases`). With `--toolchain`, it reads `.toolchain/tests/cases` of the repository `my_c23_template`.
+3. It reads the groups of `[test] cases` (the default is `tests/cases`). With `--toolchain`, it reads `.toolchain/tests/cases` of the repository `mc23t`.
 4. If there is no case, it writes `no case: <folder> holds no case`, and ends.
 5. With `--part`, it keeps only the groups of the named parts. With `-k`, it keeps only the cases whose name contains the text.
 6. If a case states `fail`, it makes the run `fail`: *A changed run*, with `failed` of `fail.py`.
@@ -69,6 +69,7 @@ A file with no case gives no group.
 `groups_of` stops if a case:
 
 - has a key that a case does not have, or its false variant or its helper has such a key,
+- holds a step or a value of `ignore` that `allowed` of `signals.py` refuses, also in its false variant: `.toolchain/docs/signals.py.md`, *The checks*,
 - claims nothing: `<path>: the case <name> claims nothing`,
 - has no false variant: `<path>: the case <name> has no false variant`,
 - states a call in `fail`, also in its false variant, that `listed` of `fail.py` does not give: `<path>: the case <name> makes <call> fail, and [fail.calls] does not list it`.
