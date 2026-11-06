@@ -144,6 +144,5 @@ The header gives no function of its own. It declares the functions that one sour
 | `spawn_item` | `window_items.c` |
 | `cut_text` | `window_text.c` |
 | `copy_arena_text` | `window_text.c` |
-| `get_cell` | `window_world.c` |
 | `spawn_entity` | `window_world.c` |
 | `has_room` | `window_world.c` |

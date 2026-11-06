@@ -14,7 +14,8 @@ static void wait_for_events(const bridge_api_t *api)
     double wait = 0.0;
 
     if (window_module.entity)
-        at = get_cell(api, window_module.entity, EVENT_WAIT);
+        at = bridge_native_find_value(api, window_module.entity,
+            EVENT_WAIT);
     if (at && window_module.taken) {
         memcpy(&wait, api->shared_base + at, sizeof(wait));
         left = (int64_t)window_module.taken + (int64_t)(wait * 1e9)

@@ -1,30 +1,6 @@
 # src/platform_abstraction/window_sdl3/window_world.c
 
-This file holds 3 calls on the storage of Bridge that the sources share.
-
-## The cell of a component
-
-`get_cell` gives where the component `slot` of the entity `id` is, in the shared memory, or 0:
-
-```pseudo
-FUNCTION get_cell(id : U64, slot : U32) RETURNS U32
-   DECLARE record : bridge_entity_t
-   DECLARE base : U32
-   record <- entity_index[id MOD 4294967296]
-   base <- column_base[record.table * types + slot]
-   IF base = 0 THEN
-      RETURN 0
-   ENDIF
-   RETURN base + record.row * stride[slot]
-ENDFUNCTION
-```
-
-It follows the steps of https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge_abi.h.md#bridge_entity_t.
-It gives 0 for an entity that does not carry the component.
-The module calls it only with a live entity, so it does not check the generation:
-
-- The entity of the window lives until the end of the run. Its destroy is a leave of the observer `request`, which ends the run: `docs/intern/platform_abstraction/window_sdl3/window_observe.c.md`.
-- An entity of a trigger of `ideatek:ClipboardRequest` carries the request in the barrier of the trigger.
+This file holds 2 calls on the storage of Bridge that the sources share.
 
 ## The room of a round
 
@@ -67,6 +43,5 @@ A display with 255 modes takes 14464 bytes. Thus each display fits in 1 round of
 
 | Function | Result |
 | --- | --- |
-| `get_cell` | Gives where the component of an entity is, or 0. |
 | `spawn_entity` | Spawns an entity, and counts it in `spawned`. |
 | `has_room` | Tells if the round has room for `spawns` more spawns and `bytes` more bytes of changes. |

@@ -48,7 +48,7 @@ PROCEDURE wait_for_events()
    DECLARE left : I64
    at <- 0
    IF window_module.entity <> 0 THEN
-      at <- get_cell(window_module.entity, EVENT_WAIT)
+      at <- bridge_native_find_value(window_module.entity, EVENT_WAIT)
    ENDIF
    left <- 0
    IF at <> 0 AND window_module.taken > 0 THEN
