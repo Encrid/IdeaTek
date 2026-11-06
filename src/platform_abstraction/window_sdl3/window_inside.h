@@ -73,13 +73,17 @@ typedef struct {
     SDL_Window *window;
     SDL_MetalView view;
     const window_driver_t *driver;
+
     uint64_t entity;
     ideatek_window_request_t applied;
     ideatek_window_state_t state;
+
     window_display_t displays[WINDOW_DISPLAYS];
+
     window_half_t drops;
     window_half_t pastes;
     uint64_t items[WINDOW_SPAWNS];
+
     uint64_t taken;
     uint32_t request_list;
     uint32_t clipboard_list;
@@ -89,8 +93,10 @@ typedef struct {
     uint32_t set;
     uint32_t index;
     uint32_t paste_count;
+
     float drop_x;
     float drop_y;
+
     bool pending;
     bool moved;
     bool dirty;
@@ -111,40 +117,56 @@ static inline bool is_same_mode(const SDL_DisplayMode *a,
 }
 
 void declare_types(const bridge_api_t *api);
+
 void enable_events(void);
+
 void apply_request(const bridge_api_t *api);
 window_display_t *get_target(const ideatek_window_request_t *request);
+
 bool open_window(const bridge_api_t *api,
     const ideatek_window_request_t *request);
 void set_mode(const bridge_api_t *api, const ideatek_window_request_t *request,
     const window_display_t *display);
+
 void close_window(void);
+
 const window_driver_t *find_driver(void);
+
 void read_handles(const bridge_api_t *api);
+
 void attach_state(const bridge_api_t *api);
+
 void sync_displays(const bridge_api_t *api);
+
 bool update_display(const bridge_api_t *api, window_display_t *display,
     SDL_DisplayID primary);
 window_display_t *find_display(SDL_DisplayID id, uint64_t entity);
+
 uint32_t read_modes(const bridge_api_t *api, SDL_DisplayID id,
     window_mode_t *modes, uint32_t *listed);
 void spawn_modes(const bridge_api_t *api, window_display_t *display);
 void destroy_modes(const bridge_api_t *api, window_display_t *display);
+
 uint64_t find_mode_entity(const window_display_t *display,
     const SDL_DisplayMode *mode);
 const SDL_DisplayMode *find_mode(const window_display_t *display,
     uint64_t entity);
+
 void take_drops(const bridge_api_t *api);
+
 void count_pastes(void);
 void spawn_pastes(const bridge_api_t *api);
+
 bool start_items(const bridge_api_t *api);
 void turn_items(const bridge_api_t *api);
 bridge_text_t put_bytes(const bridge_api_t *api, window_half_t *half,
     const char *bytes);
 void spawn_item(const bridge_api_t *api, uint32_t slot, const void *value,
     uint32_t size);
+
 bool cut_text(char to[128], const char *from, size_t len);
 char *copy_arena_text(const bridge_api_t *api, bridge_text_t text);
+
 uint32_t get_cell(const bridge_api_t *api, uint64_t id, uint32_t slot);
 uint64_t spawn_entity(const bridge_api_t *api);
 bool has_room(const bridge_api_t *api, uint32_t spawns, uint32_t bytes);
