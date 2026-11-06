@@ -5,7 +5,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["show_state: r4 state windowed none 800x600"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -40,7 +40,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["the title is longer than 127 bytes, and the window shows its first 127 bytes"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -75,7 +75,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r3 state windowed none 640x480", "display Main video"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -110,7 +110,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r3 state exclusive none 1280x720", "display Side video 1 "] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -145,7 +145,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["is not an exclusive mode of the display, so the window fills the display", "r3 state fullscreen none"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -180,7 +180,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["is not an exclusive mode of the display, so the window fills the display", "r3 state fullscreen none"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -215,7 +215,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["the video mode 0 is not an exclusive mode of the display, so the window fills the display", "r3 state fullscreen none"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -250,7 +250,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, matches = ["r4 state [^\\n]* display Side ", "r5 state [^\\n]* display Main "] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''

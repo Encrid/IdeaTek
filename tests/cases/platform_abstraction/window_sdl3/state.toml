@@ -5,7 +5,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r2 state windowed none", "video -1 "] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -40,7 +40,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r3 state windowed none 640x480", "hdr 1 2.00 4.00"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -75,7 +75,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r3 state windowed none 640x480", "hdr 0 1.00 1.00"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -110,7 +110,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r2 attached state"], lacks = ["r4 attached state"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -145,7 +145,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r4 attached state"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -180,7 +180,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, lacks = ["attached state"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''

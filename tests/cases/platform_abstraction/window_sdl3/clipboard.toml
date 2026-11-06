@@ -5,7 +5,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r4 clipboard [hello]"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -40,7 +40,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["the text at 0 with 4 bytes is not in the persistent arena", "r5 clipboard [before]"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -75,7 +75,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["with 1073741824 bytes is not in the persistent arena", "r5 clipboard [before]"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -112,7 +112,7 @@ claims = { status = 1, has = ["no memory for a text of 6 bytes", "r5 clipboard [
 false = { fail = {  } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -136,7 +136,7 @@ claims = { status = 0, has = ["no clipboard: "] }
 false = { fail = {  } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -158,7 +158,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r5 clipboard [before]"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -193,7 +193,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r4 paste [hi]", "r4 pastes 1"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -228,7 +228,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r4 pastes 0", "r4 has keydown 1"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -263,7 +263,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r4 pastes 0"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -298,7 +298,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r4 pastes 0"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -333,7 +333,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r4 pastes 2"], matches = ["r4 paste \\[hi\\] at (\\+\\d+) [^\\n]*\\n[^\\n]*r4 paste \\[hi\\] at \\1 "] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -368,7 +368,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["the paste needs 5 bytes, and the half has 2 free bytes", "r4 pastes 0"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -407,7 +407,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r4 paste []", "r4 pastes 1"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -442,7 +442,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r4 pastes 64"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''

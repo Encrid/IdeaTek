@@ -6,7 +6,7 @@ claims = { status = 0, has = ["r2 state windowed {window_surface1} ", "handles {
 false = { env = { SDL_VIDEO_DRIVER = "offscreen" } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -29,7 +29,7 @@ claims = { status = 0, has = ["r2 state windowed {window_surface2} ", "handles {
 false = { env = { SDL_VIDEO_DRIVER = "offscreen" } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -52,7 +52,7 @@ claims = { status = 0, has = ["r2 state windowed none ", "handles 00"] }
 false = { env = { SDL_VIDEO_DRIVER = "{window_row1}" } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -76,7 +76,7 @@ claims = { status = 1, has = ["the window has no handle of its surface: ", "r2 s
 false = { fail = {  } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -100,7 +100,7 @@ claims = { status = 1, has = ["the window has no handle of its surface: ", "r2 s
 false = { fail = {  } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3"]
 
 [case.files]
 "{case}/d.toml" = '''
