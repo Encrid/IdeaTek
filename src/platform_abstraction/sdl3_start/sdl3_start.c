@@ -10,12 +10,7 @@
 
 #include "sdl3_start.h"
 
-typedef struct {
-    uint32_t first;
-    uint32_t last;
-} sdl3_start_range_t;
-
-static const sdl3_start_range_t OFF[] = {
+static const uint32_t OFF[][2] = {
     { SDL_EVENT_TERMINATING, SDL_EVENT_SYSTEM_THEME_CHANGED },
     { SDL_EVENT_PINCH_BEGIN, SDL_EVENT_PINCH_END },
     { SDL_EVENT_AUDIO_DEVICE_ADDED, SDL_EVENT_AUDIO_DEVICE_FORMAT_CHANGED },
@@ -30,7 +25,7 @@ static const sdl3_start_range_t OFF[] = {
 static void disable_events(void)
 {
     for (size_t i = 0; i < SDL_arraysize(OFF); i++)
-        for (uint32_t type = OFF[i].first; type <= OFF[i].last; type++)
+        for (uint32_t type = OFF[i][0]; type <= OFF[i][1]; type++)
             SDL_SetEventEnabled(type, false);
 }
 
