@@ -42,6 +42,39 @@ Each part has a header in `include` and a document in `docs/extern`, which gives
 
 The documents of `bridge.h` and `bridge_abi.h` of Bridge tell the pairs and what each grant allows.
 
+### The parts
+
+Each part has a readme, which its release holds.
+
+| Part | Package | Readme |
+| --- | --- | --- |
+| `animation` | `BC-IdeaTek-Animation` | `docs/extern/engine_subsystems/animation/readme.md` |
+| `changes` | `BC-IdeaTek-Changes` | `docs/extern/engine_subsystems/changes/readme.md` |
+| `debug_draw` | `BC-IdeaTek-DebugDraw` | `docs/extern/engine_subsystems/debug_draw/readme.md` |
+| `effects` | `BC-IdeaTek-Effects` | `docs/extern/engine_subsystems/effects/readme.md` |
+| `input_mapping` | `BC-IdeaTek-InputMapping` | `docs/extern/engine_subsystems/input_mapping/readme.md` |
+| `localization` | `BC-IdeaTek-Localization` | `docs/extern/engine_subsystems/localization/readme.md` |
+| `navigation` | `BC-IdeaTek-Navigation` | `docs/extern/engine_subsystems/navigation/readme.md` |
+| `networking` | `BC-IdeaTek-Networking` | `docs/extern/engine_subsystems/networking/readme.md` |
+| `persistence` | `BC-IdeaTek-Persistence` | `docs/extern/engine_subsystems/persistence/readme.md` |
+| `physics` | `BC-IdeaTek-Physics` | `docs/extern/engine_subsystems/physics/readme.md` |
+| `rendering` | `BC-IdeaTek-Rendering` | `docs/extern/engine_subsystems/rendering/readme.md` |
+| `services` | `BC-IdeaTek-Services` | `docs/extern/engine_subsystems/services/readme.md` |
+| `sound` | `BC-IdeaTek-Sound` | `docs/extern/engine_subsystems/sound/readme.md` |
+| `space` | `BC-IdeaTek-Space` | `docs/extern/engine_subsystems/space/readme.md` |
+| `terrain` | `BC-IdeaTek-Terrain` | `docs/extern/engine_subsystems/terrain/readme.md` |
+| `ui` | `BC-IdeaTek-Ui` | `docs/extern/engine_subsystems/ui/readme.md` |
+| `frame` | `BC-IdeaTek-Frame` | `docs/extern/kernel/frame/readme.md` |
+| `resources` | `BC-IdeaTek-Resources` | `docs/extern/kernel/resources/readme.md` |
+| `states` | `BC-IdeaTek-States` | `docs/extern/kernel/states/readme.md` |
+| `audio` | `BC-IdeaTek-Audio` | `docs/extern/platform_abstraction/audio/readme.md` |
+| `files` | `BC-IdeaTek-Files` | `docs/extern/platform_abstraction/files/readme.md` |
+| `gpu` | `BC-IdeaTek-Gpu` | `docs/extern/platform_abstraction/gpu/readme.md` |
+| `input` | `BC-IdeaTek-Input` | `docs/extern/platform_abstraction/input/readme.md` |
+| `sockets` | `BC-IdeaTek-Sockets` | `docs/extern/platform_abstraction/sockets/readme.md` |
+| `window` | `BC-IdeaTek-Window` | `docs/extern/platform_abstraction/window/readme.md` |
+| `world` | `BC-IdeaTek-World` | `docs/extern/platform_abstraction/world/readme.md` |
+
 ### The implementations
 
 Each implementation is a part with its own release. A module part fills the role of a module that a contract document names.
