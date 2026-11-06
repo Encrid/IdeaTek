@@ -85,11 +85,42 @@ These keys are the limits of the style of the code. The check of the style reads
 
 ## [prose]
 
-These keys are the limits of the documents. The check of the documents, `.toolchain/tools/prose.py`, reads them.
+These keys are the tags and the limits of the documents. The check of the documents, `.toolchain/tools/prose.py`, reads them.
 
 | Key | Value |
 | --- | --- |
+| `tags` | The tags that a block of code can have. `[check] tags` of the configuration adds more. |
 | `sentence` | The maximum number of words in a sentence. |
 | `step` | The maximum number of words in a sentence of an item of a numbered list. |
 | `paragraph` | The maximum number of sentences in a paragraph, in an item of a list and in a cell of a table. |
 | `description` | The maximum number of characters in the description of the readme. Standard Readme asks for fewer than 120. |
+
+## [dup]
+
+| Key | Value |
+| --- | --- |
+| `words` | The minimum number of words of a passage that `.toolchain/tools/dup.py` reports. |
+
+## [said]
+
+| Key | Value |
+| --- | --- |
+| `own` | The minimum number of own characters of a format that `.toolchain/tools/said.py` checks. |
+
+## [commits]
+
+| Key | Value |
+| --- | --- |
+| `types` | The types that the line of a commit can have, for `.toolchain/tools/commits.py`. |
+| `words` | The maximum number of words in the description of a commit. |
+
+## [runner]
+
+These keys give what `.toolchain/tools/runner.py` installs for each need of a project.
+
+| Key | Value |
+| --- | --- |
+| `packages.<need>` | The packages of Linux for the need. Each key is a need that `[ci] needs` can name. |
+| `mesa.version` | The pinned version of the releases of Mesa of `mmozeiko/build-mesa`. |
+| `mesa.url` | The address of the archive. `runner.py` puts the values in `{version}` and `{arch}`. |
+| `mesa.archives.<cpu>` | For a processor of Windows, as Python gives it: the `arch` of the archive and its `sha256` digest. |
