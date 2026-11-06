@@ -9,6 +9,8 @@ Its 2 files are `BL-IdeaTek-SDL3.zip` and `sha256.txt`. `BL-IdeaTek-SDL3.zip` ha
 For each target, the zip of `sdl3` holds the library, its headers in `include/SDL3`, the notices, and `leaks.toml` for `[leaks] with` of a module.
 The library is `SDL3.dll`, `SDL3.so` with that soname, or `SDL3.dylib` with the install name `@rpath/SDL3.dylib`. A module links it with no import library.
 
+The patch `third_party/sdl3/test_driver.patch` adds `ideatek_test`, the video driver of the tests of `window_sdl3`. Only a build that defines `SDL_VIDEO_DRIVER_IDEATEK_TEST` compiles it, and the release does not define it.
+
 `sdl3` holds the shared library of SDL3 3.4.20. A deployment puts 1 copy of it beside its modules, so each module in the process uses the same SDL3.
 A project names the zip of `BL-IdeaTek-SDL3` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 

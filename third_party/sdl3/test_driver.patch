@@ -1,0 +1,24 @@
+diff --git a/src/video/SDL_sysvideo.h b/src/video/SDL_sysvideo.h
+--- a/src/video/SDL_sysvideo.h
++++ b/src/video/SDL_sysvideo.h
+@@ -540,6 +540,7 @@
+ extern VideoBootStrap KMSDRM_bootstrap;
+ extern VideoBootStrap DUMMY_bootstrap;
+ extern VideoBootStrap DUMMY_evdev_bootstrap;
++extern VideoBootStrap IDEATEK_TEST_bootstrap;
+ extern VideoBootStrap Wayland_preferred_bootstrap;
+ extern VideoBootStrap Wayland_bootstrap;
+ extern VideoBootStrap VIVANTE_bootstrap;
+diff --git a/src/video/SDL_video.c b/src/video/SDL_video.c
+--- a/src/video/SDL_video.c
++++ b/src/video/SDL_video.c
+@@ -149,6 +149,9 @@
+ #ifdef SDL_VIDEO_DRIVER_OFFSCREEN
+     &OFFSCREEN_bootstrap,
+ #endif
++#ifdef SDL_VIDEO_DRIVER_IDEATEK_TEST
++    &IDEATEK_TEST_bootstrap,
++#endif
+ #ifdef SDL_VIDEO_DRIVER_DUMMY
+     &DUMMY_bootstrap,
+ #ifdef SDL_INPUT_LINUXEV
