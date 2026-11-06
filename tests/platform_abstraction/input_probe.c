@@ -10,6 +10,7 @@
 #include "ideatek_input_mouse.h"
 #include "ideatek_input_text.h"
 #include "ideatek_input_touch.h"
+#include "ideatek_window.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
 static const char WHO[] = MANIFEST;
@@ -146,6 +147,15 @@ static const char WHO[] = MANIFEST;
         ideatek_gamepad_event_t), press);
 }
 
+[[maybe_unused]] static void read_focus(const bridge_api_t *api)
+{
+    ENUM(api, "ideatek:ideatek_window_mode_t", ideatek_window_mode_t);
+    ENUM(api, "ideatek:ideatek_display_target_t", ideatek_display_target_t);
+    ENUM(api, "ideatek:ideatek_surface_t", ideatek_surface_t);
+    ENUM(api, "ideatek:ideatek_drop_kind_t", ideatek_drop_kind_t);
+    STRUCT(api, "ideatek:WindowState", ideatek_window_state_t);
+}
+
 BRIDGE_NATIVE(init)
 {
 #if defined(ROLE_LATE)
@@ -155,6 +165,7 @@ BRIDGE_NATIVE(init)
     ask(api);
 #elif defined(ROLE_INPUT)
     report(api);
+    read_focus(api);
 #else
     declare_fields(api);
     declare_module(api);
