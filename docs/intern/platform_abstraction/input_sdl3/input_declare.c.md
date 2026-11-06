@@ -12,17 +12,18 @@ A type that the window module declared first counts once: https://github.com/Enc
 
 | Function | Slots | Types |
 | --- | --- | --- |
-| `declare_fields` | 0 to 8 | `ideatek:ideatek_entity_t`, `ideatek:ideatek_input_event_kind_t`, `ideatek:ideatek_modifier_t`, `ideatek:ideatek_mouse_mode_t`, `ideatek:ideatek_cursor_t`, `ideatek:ideatek_gamepad_button_t`, `ideatek:ideatek_finger_event_kind_t`, `ideatek:ideatek_window_mode_t` and `ideatek:ideatek_surface_t` |
+| `declare_fields` | 0 to 4 | `ideatek:ideatek_entity_t`, `ideatek:ideatek_input_event_kind_t`, `ideatek:ideatek_modifier_t`, `ideatek:ideatek_mouse_mode_t` and `ideatek:ideatek_cursor_t` |
+| `declare_more_fields` | 5 to 8 | `ideatek:ideatek_gamepad_button_t`, `ideatek:ideatek_finger_event_kind_t`, `ideatek:ideatek_window_mode_t` and `ideatek:ideatek_surface_t` |
 | `declare_keys` | 9 to 13 | `ideatek:InputEvent`, `ideatek:Keyboard`, `ideatek:KeyEvent`, `ideatek:TextRequest` and `ideatek:TextEvent` |
 | `declare_mouse` | 14 to 18 | `ideatek:Mouse`, `ideatek:MouseMotion`, `ideatek:MouseButton`, `ideatek:MouseWheel` and `ideatek:MouseRequest` |
-| `declare_pads` | 19 to 25 | `ideatek:Gamepad`, `ideatek:GamepadState`, `ideatek:GamepadEvent`, `ideatek:GamepadRequest`, `ideatek:FingerEvent`, `ideatek:WindowState` and the settings |
+| `declare_pads` | 19 to 25 | The rest: `docs/intern/platform_abstraction/input_sdl3/input_declare_pads.c.md`. |
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `declare_fields` | Declares the 9 field types of the slots 0 to 8. |
+| `declare_fields` | Declares `ideatek:ideatek_entity_t`, and the first 4 enums and bitmasks of the input headers. |
+| `declare_more_fields` | Declares the bitmask of the gamepad buttons, the enum of the finger events, and the 2 enums of `ideatek:WindowState`. |
 | `declare_keys` | Declares the types of the focus, of the keyboard and of the text input. |
 | `declare_mouse` | Declares the types of the mouse. |
-| `declare_pads` | Declares the types of the gamepads and of the fingers, `ideatek:WindowState` and the settings. |
 | `declare_types` | Declares the 26 types, in the order of their slots. |

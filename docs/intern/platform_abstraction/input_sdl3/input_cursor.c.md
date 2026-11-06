@@ -62,6 +62,7 @@ A value of `cursor` outside the enum takes `IDEATEK_CURSOR_DEFAULT`, and a value
 
 | Function | Result |
 | --- | --- |
+| `first_window` | Gives the first window of SDL3, or null. |
 | `apply_mode` | Sets the mode of the mouse, or writes the line of the mode. |
 | `system_cursor` | Gives the cursor of SDL3 of a value of the enum, and makes it the first time. |
 | `apply_cursor` | Sets the cursor, or writes the line of the cursor. |

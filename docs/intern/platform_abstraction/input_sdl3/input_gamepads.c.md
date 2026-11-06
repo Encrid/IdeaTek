@@ -56,7 +56,7 @@ SDL3 stops a rumble after its duration, and a new rumble replaces the one that p
 
 | Function | Result |
 | --- | --- |
-| `find_pad` | Gives the gamepad of an id of SDL3, or of an entity, or null. |
+| `name_pad` | Copies the name of a gamepad, or writes the line of the long name. |
 | `add_pad` | Opens a gamepad that connects, and spawns its entity. |
 | `remove_pad` | Closes a gamepad that disconnects, and destroys its entity. |
 | `play_rumble` | Plays the rumble of a request on a gamepad entity. |

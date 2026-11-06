@@ -77,6 +77,7 @@ Each part has a readme, which its release holds.
 | `sdl3` | `BL-IdeaTek-SDL3` | `docs/extern/platform_abstraction/sdl3/readme.md` |
 | `sdl3_start` | `BL-IdeaTek-SDL3-Start` | `docs/extern/platform_abstraction/sdl3_start/readme.md` |
 | `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `docs/extern/platform_abstraction/window_sdl3/readme.md` |
+| `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `docs/extern/platform_abstraction/input_sdl3/readme.md` |
 
 ### The implementations
 

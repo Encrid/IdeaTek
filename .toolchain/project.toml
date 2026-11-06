@@ -21,3 +21,13 @@ why = "window_module holds the state of the native module between 2 calls, which
 rule = "G4"
 path = "src/platform_abstraction/window_sdl3/window_inside.h"
 why = "The declaration of window_module, the state of the native module between 2 calls."
+
+[[style.exception]]
+rule = "G4"
+path = "src/platform_abstraction/input_sdl3/input_main.c"
+why = "input_module holds the state of the native module between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/platform_abstraction/input_sdl3/input_inside.h"
+why = "The declaration of input_module, the state of the native module between 2 calls."

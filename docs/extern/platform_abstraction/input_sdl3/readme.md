@@ -31,6 +31,7 @@ The component of its settings is `ideatek_input_sdl3:Settings`. It holds the set
 | `reloadable` | `false` | The devices of SDL3 are not in the storage of Bridge. |
 | `spawns` | 256 | At least `round_entities`. |
 | `changes` | 65536 | Less room spreads the events of a round over more rounds. |
+| `persistent` | 4096 | At least the bytes of the path of `mappings`, rounded up to a multiple of 8. |
 | `scratch` | 16384 | Room for the declarations and for the log lines. |
 | `log_ring` | 1024 | Bytes of the log ring, 32 for each line. |
 | `spans` | 65536 | The room of the lists of the 4 observers. |

@@ -67,4 +67,5 @@ Without the room, the next round attaches it.
 | --- | --- |
 | `bridge_events` | Does the work of the round. |
 | `bridge_window` | Reads the focus of each trigger of `ideatek:WindowState`. |
+| `take_change` | Copies a new value of a state, if its bytes changed and the round has room. |
 | `attach_states` | Attaches each state whose bytes changed. |
