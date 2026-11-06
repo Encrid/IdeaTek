@@ -1,0 +1,28 @@
+[parts.sdl3_start]
+name = "BL-IdeaTek-SDL3-Start"
+folder = "platform_abstraction/sdl3_start"
+uses = ["sdl3"]
+third_party = []
+
+[compose.sdl3_start]
+part = "sdl3_start"
+from = "src/platform_abstraction/sdl3_start"
+headers = ["sdl3_start.h"]
+into = "include"
+
+[[artifact]]
+name = "sdl3_start"
+kind = "archive"
+part = "sdl3_start"
+sources = ["src/platform_abstraction/sdl3_start/sdl3_start.c"]
+flags = ["-isystem", "{sdl_root}/include", "-fvisibility=hidden"]
+
+[[artifact]]
+name = "start_probe"
+kind = "program"
+part = "sdl3_start"
+test = true
+sources = ["tests/platform_abstraction/sdl3_start/start_probe.c"]
+include = ["src/platform_abstraction/sdl3_start"]
+link = ["{out}/sdl3_start.a"]
+flags = ["-isystem", "{sdl_root}/include", "{sdl_link}"]

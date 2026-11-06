@@ -1,0 +1,11 @@
+[fail.calls]
+SDL_InitSubSystem = "false"
+SDL_CreateWindow = "nullptr"
+SDL_LoadPNG = "nullptr"
+SDL_SetWindowIcon = "false"
+SDL_Metal_CreateView = "nullptr"
+SDL_GetPointerProperty = "nullptr"
+SDL_SetWindowFullscreenMode = "false"
+SDL_SetClipboardText = "false"
+SDL_GetDisplays = "nullptr"
+SDL_GetFullscreenDisplayModes = "nullptr"
