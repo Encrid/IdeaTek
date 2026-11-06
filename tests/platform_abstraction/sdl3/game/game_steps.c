@@ -24,6 +24,8 @@ static const struct {
     { "keydown", SDL_EVENT_KEY_DOWN },
     { "sensor", SDL_EVENT_SENSOR_UPDATE },
     { "user", SDL_EVENT_USER },
+    { "keymap", SDL_EVENT_KEYMAP_CHANGED },
+    { "joyaxis", SDL_EVENT_JOYSTICK_AXIS_MOTION },
 };
 
 static uint32_t type_of(const char *name)

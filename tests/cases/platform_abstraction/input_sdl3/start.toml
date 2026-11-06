@@ -1,0 +1,191 @@
+[[case]]
+name = "touch_mouse_events at true gives a touch as mouse events"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["button 1 down 1"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:touch 0 7 0.1 0.1"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:touch 0 7 0.1 0.1"
+'''
+
+[[case]]
+name = "touch_mouse_events at false gives no mouse event for a touch"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["finger 7 kind 0"], lacks = ["button 1 down 1"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:touch 0 7 0.1 0.1"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = true
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:touch 0 7 0.1 0.1"
+'''
+
+[[case]]
+name = "mappings of \"none\" reads no file"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, lacks = ["no mappings"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "3:hasmapping 030000005e0400008e02000014010000"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+mappings = { path = "missing.txt" }
+[module."test:game@1.0.0".config]
+script = "3:hasmapping 030000005e0400008e02000014010000"
+'''
+
+[[case]]
+name = "mappings of a file of mappings adds the mappings of the file"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r3 mapping 1"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+mappings = { path = "map.txt" }
+[module."test:game@1.0.0".config]
+script = "3:hasmapping 030000005e0400008e02000014010000"
+'''
+"{case}/map.txt" = "030000005e0400008e02000014010000,Test Pad,a:b0,b:b1,x:b2,y:b3,platform:Windows,\n030000005e0400008e02000014010000,Test Pad,a:b0,b:b1,x:b2,y:b3,platform:Mac OS X,\n030000005e0400008e02000014010000,Test Pad,a:b0,b:b1,x:b2,y:b3,platform:Linux,\n"
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+mappings = "none"
+[module."test:game@1.0.0".config]
+script = "3:hasmapping 030000005e0400008e02000014010000"
+'''
+
+[[case]]
+name = "mappings of a file that SDL3 cannot read writes the line of the mappings, and the round goes on"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["no mappings "], line = ["ended after 3 rounds, as many as it was given"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+mappings = { path = "missing.txt" }
+[module."test:game@1.0.0".config]
+script = ""
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+mappings = "none"
+[module."test:game@1.0.0".config]
+script = ""
+'''

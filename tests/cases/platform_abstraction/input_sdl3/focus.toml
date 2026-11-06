@@ -1,0 +1,112 @@
+[[case]]
+name = "a loss of the focus with a key, a button, a finger and a gamepad button down gives 4 releases, then the loss"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, matches = ["down 0 repeat 0 order 0(.*\\n)*.*button 1 down 0 clicks 0 [^\\n]* order 1(.*\\n)*.*finger 7 kind 3 [^\\n]* order 2(.*\\n)*.*pad button 0x00001 down 0 same 1 order 3(.*\\n)*.*focus lost order 4"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 10
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:addpad Pad|5:keyevent 4 61 0 1 0|5:button 1 1 1 5 5|5:touch 0 7 0.1 0.1|5:padbutton 0 1|7:focus 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 10
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+touch_mouse_events = false
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|3:addpad Pad|5:keyevent 4 61 0 1 0|5:button 1 1 1 5 5|5:touch 0 7 0.1 0.1|5:padbutton 0 1"
+'''
+
+[[case]]
+name = "a loss of the focus with nothing down gives only the loss"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["focus lost order 0"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 8
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|5:focus 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 8
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0|5:focus 0"
+'''
+
+[[case]]
+name = "a loss with no room for all its events does the whole release in a later round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, matches = ["code 0x00070004 [^\\n]* down 0 [^\\n]* order 0(.*\\n)*.*code 0x00070005 [^\\n]* down 0 [^\\n]* order 1"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 10
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+round_entities = 2
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0|4:keyevent 5 62 0 1 0|6:focus 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 10
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0".config]
+round_entities = 2
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0|4:keyevent 5 62 0 1 0"
+'''

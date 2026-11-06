@@ -12,6 +12,7 @@ The release of the part `sdl3` holds it as `leaks.toml`, so a module of a differ
 | `SDL_GL_CreateContext` | `SDL_GL_DestroyContext` |
 | `SDL_CreateSystemCursor` | `SDL_DestroyCursor` |
 | `SDL_LoadPNG` | `SDL_DestroySurface` |
+| `SDL_OpenGamepad` | `SDL_CloseGamepad` |
 
 ## The memory of SDL3
 

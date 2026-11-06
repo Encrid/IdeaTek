@@ -1,0 +1,106 @@
+[[case]]
+name = "the events of a round get the ranks 0, 1 and 2"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["code 0x00070004 key 0x00070004 char 97 mods 0x0000 down 1 repeat 0 order 0", "order 1", "order 2"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0|4:keyevent 5 62 0 1 0|4:keyevent 6 63 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0|4:keyevent 5 62 0 1 0"
+'''
+
+[[case]]
+name = "the ranks start at 0 again in the next round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["down 0 repeat 0 order 0"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0|5:keyevent 4 61 0 0 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0|4:keyevent 4 61 0 0 0"
+'''
+
+[[case]]
+name = "less room in changes than an event needs keeps the event for a later round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, lacks = ["key code"] }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "input_sdl3", "sdl3_game", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_input_sdl3:input@0.1.0"]
+changes = 50
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0"
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_input.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|4:keyevent 4 61 0 1 0"
+'''
