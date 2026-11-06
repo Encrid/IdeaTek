@@ -71,6 +71,11 @@ flags = ["-isystem", "{sdl_root}/include", "{sdl_link}"]
 test = true
 
 [variables]
+sdl3_game_words = [
+    "abi=1", "config=test:Settings", "pinned=true", "reloadable=false", "settings=script",
+    "config.script=none", "scratch=1048576", "log_ring=65536", "spans=4096", "spawns=1024",
+    "changes=262144", "persistent=65536", "hot_reload=false",
+]
 sdl_build = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "-shared", "{pic}", "{soname}", "{optimize}", "{float}", "{errno}", "{define}", "{defines}", "{include}", "{sources}", "{link}", "{flags}", "-o", "{output}"]
 sdl_defines = ["{sdl_config}", "DLL_EXPORT=1", "SDL_BUILD_MAJOR_VERSION=3", "SDL_BUILD_MINOR_VERSION=4", "SDL_BUILD_MICRO_VERSION=20"]
 sdl_flags = ["-isystem", "{sdl_root}/src/video/khronos", "-fvisibility=hidden", "-fno-strict-aliasing", "-w"]
@@ -131,3 +136,30 @@ sdl_config = ["{sdl_config_macos}", "{sdl_simd_aarch64}"]
 sdl_system = ["{sdl_macos_system}"]
 default_gl = "1"
 metal_layer = "1"
+
+[[artifact]]
+name = "SDL3_test"
+kind = "sdl_test"
+part = "sdl3"
+test = true
+folder = "sdl3_test"
+sources = ["{sdl_common}", "{sdl_libm}", "{sdl_sources}", "tests/platform_abstraction/sdl3/test_video/test_video.c"]
+include = ["{sdl_root}/include/build_config", "{sdl_root}/include", "{sdl_root}/src"]
+defines = ["{sdl_defines}", "SDL_VIDEO_DRIVER_IDEATEK_TEST=1"]
+flags = ["{sdl_flags}", "{sdl_system}"]
+
+[[artifact]]
+name = "sdl3_game"
+kind = "native_module"
+part = "sdl3"
+test = true
+sources = ["tests/platform_abstraction/sdl3/game/*.c"]
+include = ["include/platform_abstraction"]
+link = ["{out}/SDL3{library}"]
+flags = ["-isystem", "{sdl_root}/include", "{rpath}"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
+name = "sdl3_game_early"
+defines = ["GAME_EARLY"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]

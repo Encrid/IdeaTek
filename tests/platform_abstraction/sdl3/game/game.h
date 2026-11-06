@@ -3,8 +3,8 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
-#ifndef TEST_WINDOW_GAME_H
-    #define TEST_WINDOW_GAME_H
+#ifndef TEST_SDL3_GAME_H
+    #define TEST_SDL3_GAME_H
 
     #include <SDL3/SDL.h>
 

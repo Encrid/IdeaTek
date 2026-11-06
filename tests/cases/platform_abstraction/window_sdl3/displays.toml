@@ -6,7 +6,7 @@ claims = { status = 0, has = ["r1 display [Main] 1920x1080 scale 1.00 hdr 0 prim
 false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60 1280x720@60,1920x1080@60,desktop,1,1" } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -28,7 +28,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r3 display [Third] 800x600", "r3 mode [Third] 0 800x600 60/1"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -63,7 +63,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r2 display [Side]"], matches_not = ["r3 (display|mode) \\[Side\\]"] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -98,7 +98,7 @@ env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x
 claims = { status = 0, has = ["r7 display [Side]", "r7 attached display Side"], matches = ["r7 state [^\\n]* display Main "] }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -134,7 +134,7 @@ claims = { status = 0, has = ["more than 16 displays: the display "] }
 false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "d0,D0,800x600@60,800x600@60,desktop,1,1;d1,D1,800x600@60,800x600@60,desktop,1,1;d2,D2,800x600@60,800x600@60,desktop,1,1;d3,D3,800x600@60,800x600@60,desktop,1,1;d4,D4,800x600@60,800x600@60,desktop,1,1;d5,D5,800x600@60,800x600@60,desktop,1,1;d6,D6,800x600@60,800x600@60,desktop,1,1;d7,D7,800x600@60,800x600@60,desktop,1,1;d8,D8,800x600@60,800x600@60,desktop,1,1;d9,D9,800x600@60,800x600@60,desktop,1,1;d10,D10,800x600@60,800x600@60,desktop,1,1;d11,D11,800x600@60,800x600@60,desktop,1,1;d12,D12,800x600@60,800x600@60,desktop,1,1;d13,D13,800x600@60,800x600@60,desktop,1,1;d14,D14,800x600@60,800x600@60,desktop,1,1;d15,D15,800x600@60,800x600@60,desktop,1,1" } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -158,7 +158,7 @@ claims = { status = 0, has = ["no list of the displays: ", "r4 display [Main]"] 
 false = { fail = {  } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
@@ -181,7 +181,7 @@ claims = { status = 0, has = ["r1 display [D0]", "r1 display [D1]", "r2 display 
 false = { env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "d0,D0,gen10,4000x2000@60,desktop,1,1;d1,D1,gen10,4000x2000@60,desktop,1,1;d2,D2,gen10,4000x2000@60,desktop,1,1" } }
 
 [case.folders]
-"{case}/m" = ["window_sdl3", "window_sdl3_game", "SDL3_test"]
+"{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''

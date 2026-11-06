@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "window_game.h"
+#include "game.h"
 
 static const char HINT[] = "IDEATEK_TEST_DISPLAYS";
 static const uint64_t DEAD = (7ULL << 32) | 9ULL;

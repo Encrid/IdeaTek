@@ -5,7 +5,7 @@
 */
 #include <string.h>
 
-#include "window_game.h"
+#include "game.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
 static const char WHO[] = MANIFEST;
