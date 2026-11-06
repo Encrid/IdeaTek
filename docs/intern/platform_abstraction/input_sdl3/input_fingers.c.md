@@ -42,5 +42,6 @@ A finger that begins while the list is full still gets its events. Only a loss o
 | --- | --- |
 | `kind_of` | Gives the kind of the contract of a type of SDL3. |
 | `keep_finger` | Adds, moves or removes a finger in the list of the fingers that are down. |
+| `run_finger` | Starts a run with the motion of a finger, or joins it to the run. |
 | `take_finger` | Spawns the event of a finger, or puts its motion into a run. |
 | `cancel_fingers` | Spawns the cancel of each finger that is down. |

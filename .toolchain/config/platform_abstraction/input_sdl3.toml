@@ -1,0 +1,33 @@
+[parts.input_sdl3]
+name = "BM-IdeaTek-Input-SDL3"
+folder = "platform_abstraction/input_sdl3"
+uses = ["world", "window", "input", "sdl3", "sdl3_start", "window_sdl3"]
+third_party = []
+
+[variables]
+input_sdl3_words = [
+    "abi=1", "config=ideatek_input_sdl3:Settings", "pinned=true", "reloadable=false",
+    "settings=mappings round_entities merge_motion touch_mouse_events", "config.mappings=none",
+    "config.round_entities=256", "config.merge_motion=true", "config.touch_mouse_events=true",
+    "scratch=16384", "log_ring=1024", "spans=65536", "spawns=256", "changes=65536",
+    "persistent=4096", "hot_reload=false",
+]
+
+[[artifact]]
+name = "input_sdl3"
+kind = "native_module"
+part = "input_sdl3"
+sources = ["src/platform_abstraction/input_sdl3/*.c"]
+include = ["include/platform_abstraction", "src/platform_abstraction/sdl3_start"]
+link = ["{out}/sdl3_start.a", "{out}/SDL3{library}"]
+flags = ["-isystem", "{sdl_root}/include", "{rpath}"]
+manifest = ["ideatek_input_sdl3:input@0.1.0", "{input_sdl3_words}"]
+
+[[artifact]]
+name = "input_sdl3_reload"
+kind = "program"
+part = "input_sdl3"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/input_sdl3{library}"]
+flags = ["{rpath}"]

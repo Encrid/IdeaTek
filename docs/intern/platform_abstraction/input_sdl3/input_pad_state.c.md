@@ -64,7 +64,8 @@ The sticks and the triggers keep their values.
 
 | Function | Result |
 | --- | --- |
-| `bit_of` | Gives the bit of a button of SDL3, or 0. |
+| `find_pad` | Gives the gamepad of an id of SDL3, or of an entity, or null. |
 | `take_axis` | Sets the field of an axis in the next state. |
 | `take_pad_button` | Spawns the event of a button, and keeps its bit. |
+| `release_pad` | Spawns the release of each button of 1 gamepad that is down. |
 | `release_pads` | Spawns the release of each button that is down. |

@@ -35,5 +35,6 @@ A focus event needs 1 spawn and 32 bytes.
 | --- | --- |
 | `spawn_focus` | Spawns an event of the focus. |
 | `release_buttons` | Spawns the release of the mouse buttons that are down. |
+| `count_bits` | Gives the number of the bits at 1 of a mask. |
 | `count_downs` | Gives the number of events of a release. |
 | `release_all` | Releases each input that is down, then gives the loss. Gives `false` with no room. |
