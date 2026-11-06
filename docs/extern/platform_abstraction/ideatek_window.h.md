@@ -30,6 +30,10 @@ The window module attaches `ideatek:WindowState` again only when a byte of it ch
 
 The window module spawns an entity for each display in its first round, and when the system adds a display.
 It attaches `ideatek:Display` to the entity, and spawns an entity with `ideatek:VideoMode` for each video mode of the display.
+
+The video modes are the exclusive modes that the system lists for the display.
+If the list does not hold the desktop mode or the current mode, that mode gets an entity after the list.
+Only a mode of the list can be the `video_mode` of `IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN`.
 When the system removes a display, the window module destroys the entity of the display and the entities of its video modes.
 Exactly 1 display entity has `is_primary` set to `true`.
 
@@ -44,7 +48,7 @@ It does not move the window back when the display comes back.
 4. The host owns the signals of the system.
 5. At the end of the run, Bridge calls `shutdown` of each module. Each module saves its rows there.
 
-The game closes the window when it destroys its entity. The window module then returns `BRIDGE_END`.
+The game closes the window when it destroys its entity, or when it detaches its `ideatek:WindowRequest`. The window module then returns `BRIDGE_END`.
 
 ## The events of the system
 
@@ -81,6 +85,7 @@ A path names a file of the system, in UTF-8. It can name any file that the user 
 
 If the window module cannot load `icon`, it writes 1 line in the log, and opens the window with the icon of the system.
 The icon does not change while the game runs.
+The deployment states `spawns` of 256 or more for the window module.
 
 ## ideatek:WindowRequest
 
@@ -110,7 +115,7 @@ The bytes 154 to 159 hold no field, because the size of the type is a multiple o
 
 | Constant | Value | The mode |
 | --- | --- | --- |
-| `IDEATEK_WINDOW_MODE_WINDOWED` | 0 | A window with the size of `width` and `height`. The user can resize the window, and `ideatek:WindowState` then tells the new size. |
+| `IDEATEK_WINDOW_MODE_WINDOWED` | 0 | A window with the size of `width` and `height`, at the center of its display when the window module applies the mode. The user can resize the window, and `ideatek:WindowState` then tells the new size. |
 | `IDEATEK_WINDOW_MODE_FULLSCREEN` | 1 | The window fills all the display, with no border. The display keeps its current mode. |
 | `IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN` | 2 | The window fills all the display, and sets the display to `video_mode` while it has the focus. |
 
@@ -208,9 +213,9 @@ Its C type `ideatek_video_mode_t` takes 32 bytes, and its alignment is 8.
 | `pixel_density` | `float` | 16 | The number of pixels in 1 unit of the desktop. |
 | `refresh_numerator` | `int32_t` | 20 | The numerator of the refresh rate, in Hz. |
 | `refresh_denominator` | `int32_t` | 24 | The denominator of the refresh rate. |
-| `order` | `uint32_t` | 28 | The place of the mode in the list of the system. The largest mode is 0. |
+| `order` | `uint32_t` | 28 | The place of the mode in the list of the system. The largest mode is 0. A mode after the list has the next place. |
 
-A refresh rate of 0 Hz tells that the system does not give the refresh rate.
+A refresh rate of 0 Hz tells that the system does not give the refresh rate. Then `refresh_denominator` is 1.
 
 ## ideatek:Drop
 
@@ -219,7 +224,7 @@ Its C type `ideatek_drop_t` takes 48 bytes, with an alignment of 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `window` | `ideatek_entity_t` | 0 | The window entity that got the item. |
+| `window` | `ideatek_entity_t` | 0 | The window entity that got the item. 0 for an item that the system gives to the program with no window, for example a file that the user opens with the program. |
 | `data` | `bridge_text_t` | 8 | With `IDEATEK_DROP_FILE`, the path of the file. With `IDEATEK_DROP_TEXT`, the text. In UTF-8, with no NUL. |
 | `source` | `bridge_text_t` | 16 | The name of the program that sent the item, in UTF-8. Its `len` is 0 if the system does not tell it. |
 | `set` | `uint32_t` | 24 | The number of the drag. The items of 1 drag have the same `set`. The first drag is 1. |

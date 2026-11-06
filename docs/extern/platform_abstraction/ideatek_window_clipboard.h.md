@@ -12,6 +12,8 @@ On the web, the window module sets the clipboard in the next handler of a key or
 The user pastes with Cmd+V on macOS, and with Ctrl+V on each other system.
 On the web, the `paste` event of the browser is the paste.
 For each paste, the window module spawns an entity with `ideatek:Paste`. An observer of `BRIDGE_ON_ENTER` hears the paste.
+
+If the clipboard holds no text, the `len` of the text of the paste is 0.
 The window module destroys the entity in the next round. A reader that keeps the text copies it.
 
 ## The bytes of the pastes

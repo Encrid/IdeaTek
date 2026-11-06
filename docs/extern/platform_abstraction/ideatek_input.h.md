@@ -34,6 +34,11 @@ The input module attaches a new state only when its bytes change.
 
 ## The focus
 
+The input module reads the focus from `focused` of `ideatek:WindowState`: `docs/extern/platform_abstraction/ideatek_window.h.md`, *ideatek:WindowState*.
+The events of the focus of the system go to the window module, so the input module gets none of them.
+In the first phase, a pair of the deployment puts the window module before the input module.
+When `focused` becomes `true`, the input module spawns an `ideatek:InputEvent` with `IDEATEK_INPUT_EVENT_KIND_FOCUS_GAINED`.
+
 When the window loses the keyboard focus, the input module releases each key that is down.
 For each key, it spawns an `ideatek:KeyEvent` with `down` at `false`.
 It also releases each button of the mouse that is down, with an `ideatek:MouseButton`.
@@ -109,5 +114,5 @@ A module declares the field types before the structs.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | The game | No type. | The field types |
-| The input module | `ideatek:InputEvent` | The field types |
+| The input module | `ideatek:InputEvent` | The field types, `ideatek:WindowState` and its field types |
 | A reader | No type. | Its types and the field types |
