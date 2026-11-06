@@ -10,7 +10,7 @@ The module has at most 1 window, so the window is `window` of `window_module`.
 1. It calls `SDL_CreateWindow` with the title, `width`, `height` and the flags of the open.
 2. If SDL3 refuses, it writes the line of no window. The window stays closed until the game attaches a request again.
 3. `set_icon` sets the icon of the setting `icon`.
-4. `read_handles` writes the handles of the window: `docs/intern/platform_abstraction/window_sdl3/window_state.c.md`, *The handles*.
+4. `read_handles` writes the handles of the window: `docs/intern/platform_abstraction/window_sdl3/window_driver.c.md`, *The handles*.
 5. `set_mode` sets the display and the mode of the window.
 6. `SDL_ShowWindow` shows the window.
 
@@ -51,7 +51,7 @@ A system with no icon of a window refuses `SDL_SetWindowIcon`, for example Wayla
 
 ## The mode
 
-`set_mode` puts the window on the display of `get_target`, in the mode of `get_mode`: `docs/intern/platform_abstraction/window_sdl3/window_request.c.md`, *The display and the mode*.
+`set_mode` puts the window on the display of `get_target`: `docs/intern/platform_abstraction/window_sdl3/window_request.c.md`, *The display and the mode*. `set_fullscreen` sets a mode that is not windowed, with the mode of `get_exclusive`.
 
 ```pseudo
 PROCEDURE set_mode(request : ideatek_window_request_t, display : window_display_t)
@@ -80,11 +80,29 @@ A mode of null is the mode `IDEATEK_WINDOW_MODE_FULLSCREEN`: the window fills th
 SDL3 refuses no null mode, so the second call of `SDL_SetWindowFullscreenMode` always succeeds.
 SDL3 can apply a mode later than the call. Then an event of the window comes, and `attach_state` reads the new mode.
 
-## The close
+## The exclusive mode
 
-`close_window` destroys the Metal view, then the window, and sets both to null.
-The view goes first, because it is a part of the window: https://wiki.libsdl.org/SDL3/SDL_Metal_DestroyView.
-`bridge_shutdown` calls it. The GPU module destroys its surface before: `docs/intern/platform_abstraction/window_sdl3/window_state.c.md`, *The handles*.
+`get_exclusive` gives the video mode of SDL3 for `IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN`, or null:
+
+```pseudo
+FUNCTION get_exclusive(request : ideatek_window_request_t, display : window_display_t) RETURNS SDL_DisplayMode
+   DECLARE exclusive : SDL_DisplayMode
+   exclusive <- nullptr
+   IF display <> nullptr AND display.listed > 0 AND request.video_mode = 0 THEN
+      exclusive <- SDL_GetCurrentDisplayMode(display.id)
+   ENDIF
+   IF display <> nullptr AND request.video_mode <> 0 THEN
+      exclusive <- find_mode(display, request.video_mode)
+   ENDIF
+   IF exclusive = nullptr THEN
+      CALL bridge_native_say(BRIDGE_LOG_WARN, "the video mode <id> is not an exclusive mode of the display, so the window fills the display")
+   ENDIF
+   RETURN exclusive
+ENDFUNCTION
+```
+
+A mode of null makes the window fill the display. `find_mode` gives null for a dead entity, and for a mode of a different display: `docs/intern/platform_abstraction/window_sdl3/window_mode_finds.c.md`, *The finds*.
+A display with no mode in the list of SDL3 has no exclusive mode, so the current mode is no exclusive mode there.
 
 ## The branches
 
@@ -100,8 +118,6 @@ The view goes first, because it is a part of the window: https://wiki.libsdl.org
 | An exclusive mode that the system takes. | The display uses the mode while the window has the focus. |
 | An exclusive mode that the system refuses. | The line of the refused mode, and the window fills the display. |
 | No display has an entity. | SDL3 places the window at the center of its display. |
-| The close, with a Metal view. | The view goes, then the window. |
-| The close with no window. | Nothing. |
 
 ## Functions
 
@@ -110,4 +126,5 @@ The view goes first, because it is a part of the window: https://wiki.libsdl.org
 | `open_window` | Opens the window of a request, hidden, then shows it. Gives `true`, or `false` after the line of no window. |
 | `set_icon` | Sets the icon of the setting `icon`, or writes the line of the icon. |
 | `set_mode` | Puts the window on its display, in its mode. |
-| `close_window` | Destroys the Metal view and the window. |
+| `get_exclusive` | Gives the exclusive mode of the request, or null after the line of the video mode. |
+| `set_fullscreen` | Fills the display, in the exclusive mode if the system takes it. |

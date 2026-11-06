@@ -21,16 +21,6 @@ Bridge calls no `shutdown` after an `init` that gave 1. The start then holds no 
 The module does not read its settings in `init`, because Bridge writes them after `init`: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#the-settings-of-a-module.
 Thus the first round reads them: `docs/intern/platform_abstraction/window_sdl3/window_items.c.md`, *The first round*.
 
-## The declarations
-
-Each type states the kind, the storage layout and `on_destroy` of its contract: `docs/extern/platform_abstraction/ideatek_window.h.md`, *The declarations*.
-`ideatek_window_sdl3:Settings` states `BRIDGE_SINGLETON`.
-
-| Types | `on_unload` | Reason |
-| --- | --- | --- |
-| `ideatek:Display`, `ideatek:VideoMode`, `ideatek:Drop` and `ideatek:Paste` | `BRIDGE_SWEEP` | The module spawns these entities, and they carry nothing else. |
-| Each other type | `BRIDGE_STRIP` | An entity of the game keeps the type, or the type is a singleton. |
-
 ## The runs
 
 | Run | Kind | Phase or events | Terms | Changes |
@@ -47,10 +37,16 @@ The deployment maps the phase `first` of the module to the first phase of the ro
 
 ## The stop
 
-`bridge_shutdown` calls `close_window`: `docs/intern/platform_abstraction/window_sdl3/window_open.c.md`, *The close*.
+`bridge_shutdown` calls `close_window`: *The close*.
 Then it stops the video with `sdl3_stop_subsystem` and `SDL_INIT_VIDEO`, and gives 0.
 The module saves no row, because each of its rows is a fact of the system that the next start reads again.
 `bridge_reload` gives 1, because the module is not reloadable.
+
+## The close
+
+`close_window` destroys the Metal view, then the window, and sets both to null.
+The view goes first, because it is a part of the window: https://wiki.libsdl.org/SDL3/SDL_Metal_DestroyView.
+`bridge_shutdown` calls it. The GPU module destroys its surface before: `docs/intern/platform_abstraction/window_sdl3/window_driver.c.md`, *The handles*.
 
 ## The branches
 
@@ -60,13 +56,15 @@ The module saves no row, because each of its rows is a fact of the system that t
 | SDL3 starts the video. | The load gives 0, and the module has 14 types, 1 system and 2 observers. |
 | A reload. | It gives 1. |
 | The end of the run. | The window goes, then the video of SDL3. |
+| The close, with a Metal view. | The view goes, then the window. |
+| The close with no window. | Nothing. |
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
 | `bridge_init` | Starts the video, declares the types, and adds the runs. Gives 0, or 1 when SDL3 refuses. |
-| `declare_types` | Declares the 14 types in the order of their slots. |
 | `add_runs` | Adds the system `events` and the observers `request` and `clipboard`. |
+| `close_window` | Destroys the Metal view and the window. |
 | `bridge_shutdown` | Destroys the window, and stops the video. Gives 0. |
 | `bridge_reload` | Gives 1. |

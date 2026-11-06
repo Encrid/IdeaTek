@@ -34,15 +34,6 @@ The denominator of 1 keeps a refresh rate of 0 Hz with no division by 0.
 `spawn_modes` does not check the room. `add_display` and `update_display` check it: `docs/intern/platform_abstraction/window_sdl3/window_displays.c.md`, *A new display*.
 `destroy_modes` destroys the entity of each mode of a display, and sets `mode_count` and `listed` to 0.
 
-## The finds
-
-`find_mode_entity` gives the entity of the mode of the display that has the same `w`, `h`, `pixel_density`, `refresh_rate_numerator` and `refresh_rate_denominator`.
-It gives 0 for a null mode, and for a mode that the display does not have.
-
-`find_mode` gives the mode of SDL3 of an entity, among the first `listed` modes of the display.
-It gives null for an entity of a different display, for a dead entity, for a mode outside the list, and for 0.
-Thus only a mode of the list of step 1 can be an exclusive mode of the window.
-
 ## The branches
 
 | Case | Result |
@@ -52,15 +43,12 @@ Thus only a mode of the list of step 1 can be an exclusive mode of the window.
 | SDL3 gives no list of the modes. | The line of the modes, and no exclusive mode. |
 | A desktop mode that the list does not hold. | An entity for the desktop mode, after the list. |
 | A mode with no refresh rate. | `refresh_numerator` of 0 and `refresh_denominator` of 1. |
-| `find_mode` with an entity of a different display. | Null. |
-| `find_mode` with the entity of the desktop mode outside the list. | Null. |
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
 | `read_modes` | Reads the modes of a display into a list. Gives the count of the modes. |
+| `add_extras` | Adds the desktop mode and the current mode after the list, if the list lacks them. |
 | `spawn_modes` | Spawns and attaches an `ideatek:VideoMode` for each mode of a display. |
 | `destroy_modes` | Destroys the entities of the modes of a display. |
-| `find_mode_entity` | Gives the entity of a mode of SDL3, or 0. |
-| `find_mode` | Gives the exclusive mode of SDL3 of an entity, or null. |

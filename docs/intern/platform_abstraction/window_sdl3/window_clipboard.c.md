@@ -36,7 +36,7 @@ ENDFUNCTION
 ```
 
 `has_modifier` is the test of the bits of the modifier in `mod`. It is an operator of C, and no function of the file.
-The modifier is `SDL_KMOD_GUI` on macOS and `SDL_KMOD_CTRL` on each other system: `docs/intern/platform_abstraction/window_sdl3/window_state.c.md`, *The driver*.
+The modifier is `SDL_KMOD_GUI` on macOS and `SDL_KMOD_CTRL` on each other system: `docs/intern/platform_abstraction/window_sdl3/window_driver.c.md`, *The driver*.
 `SDLK_V` is the key of the letter V in the layout of the user, so a paste follows the layout of the keyboard.
 A key press with Alt is no paste, because Ctrl and Alt together are the key AltGr on Windows.
 A key that the system repeats is a paste too, as in a text field of the system.
