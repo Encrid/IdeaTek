@@ -69,7 +69,7 @@ The length of a null text is 0, and `put_bytes` gives a text with a `len` of 0 f
 The test of the free bytes comes before the 2 copies, so an item that does not fit takes no byte of the half.
 
 An item that does not fit keeps its place in the drag. Thus `index` still tells the place of each item that gets an entity.
-A drop with no window comes from the system, for example a file that the user opens with the program on macOS. Its `window` is 0.
+SDL3 gives a `windowID` of 0 for an item that comes with no drag, for example on macOS. Its `window` is 0: `docs/extern/platform_abstraction/ideatek_window.h.md`, *ideatek:Drop*.
 
 ## The branches
 
