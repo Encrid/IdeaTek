@@ -224,6 +224,8 @@ def composed(config, values, leave):
         die('%s is not there, and the deliverable needs it' % missing[0])
     for name in files(root, ['license'] + named):
         kit[name] = root / name
+    if config.get('readme') and (root / config['readme']).is_file():
+        kit['readme.md'] = root / config['readme']
     if leave is not None:
         if leave not in kit:
             die('--leave %s: the deliverable holds no %s' % (leave, leave))
@@ -280,7 +282,7 @@ def kept(config, parts):
 def viewed(config, part):
     table = part_table(config, part)
     return dict(kept(config, {part}), project={'name': table['name']}, package=table.get('package', {}),
-                third_party=table['third_party'])
+                third_party=table['third_party'], readme='docs/extern/%s/readme.md' % table['folder'])
 
 
 def views(config, parts):

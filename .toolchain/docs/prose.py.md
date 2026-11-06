@@ -16,7 +16,7 @@ It does not check `license` and `cla.md`, because they are legal texts.
 | `blocks(lines)` | Gives the first line, the last line and the tag of each block of code. `pseudo.py` uses it too. |
 | `units(lines)` | Gives each paragraph, each item of a list and each cell of a table, with its first line. |
 | `faults(lines, limits)` | Gives the faults of a document. |
-| `readme(lines, name, most)` | Gives the faults of the readme. |
+| `readme(lines, name, most, needed)` | Gives the faults of a readme whose title is `name`, and which needs the sections of `needed`. |
 | `main()` | Runs the check. |
 
 ## The limits
@@ -62,6 +62,10 @@ Standard Readme is a specification of the readme of a project: https://github.co
 3. The description has at most `[prose] description` characters.
 4. The sections follow the order of Standard Readme. A section starts with `##`.
 5. The readme has the sections Install, Usage, Contributing and License.
+
+The readme of a part, `docs/extern/<folder>/readme.md`, follows the same rules, with 2 changes.
+Its title is `# <name>` with the `name` of the part. It needs only the sections Install and Usage.
+Its messages start with its path in place of `readme.md`.
 
 The order is Table of Contents, Security, Background, Install, Usage, the extra sections, API, Maintainers, Thanks, Contributing and License.
 A section can also have the title Maintainer, Credits or Acknowledgements, as Standard Readme allows.

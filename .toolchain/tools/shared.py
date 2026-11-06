@@ -14,16 +14,18 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parents[2]
 NAME = re.compile(r'\{([a-z_][a-z0-9_]*)(?::([^{}]*))?\}')
 KEYS = {'step': {'run', 'cwd', 'section', 'text', 'contains', 'copy', 'rename'},
-        'case': {'name', 'run', 'env', 'stdin', 'script', 'helper', 'files', 'folders', 'fail', 'claims', 'false', 'alone'},
-        'false': {'run', 'env', 'stdin', 'script', 'helper', 'files', 'folders', 'fail'},
+        'case': {'name', 'run', 'env', 'stdin', 'script', 'helper', 'files', 'folders', 'fail', 'claims', 'false', 'alone',
+                 'ignore'},
+        'false': {'run', 'env', 'stdin', 'script', 'helper', 'files', 'folders', 'fail', 'ignore'},
         'helper': {'run', 'wait', 'stdin', 'claims'},
-        'script': {'wait', 'put', 'remove', 'type'},
+        'script': {'wait', 'put', 'remove', 'type', 'close', 'signal', 'pause'},
         'claims': {'status', 'status_not', 'line', 'has', 'lacks', 'matches', 'matches_not', 'order', 'output', 'files'},
         'source': {'name', 'url', 'sha256', 'into', 'top', 'patches'},
         'part': {'name', 'folder', 'uses', 'third_party', 'package'},
         'kind': {'takes', 'gives'}}
 SIDES = {'include': 'docs/extern', 'src': 'docs/intern', 'tools': 'docs/tools'}
 TAG = re.compile(r'(?:([a-z0-9_]+)-)?v\d+\.\d+\.\d+')
+UNSET = {}
 
 
 def die(why):
@@ -83,6 +85,8 @@ def expand(text, values):
         if m.group(1) not in values:
             die('no variable {%s} for %s' % (m.group(1), text))
         value = values[m.group(1)]
+        if value is None:
+            die(UNSET[m.group(1)])
         if not isinstance(value, list):
             return expand(str(value), values)
         if m.group(2) is None:
@@ -129,12 +133,26 @@ def sha256(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def macos_sdk():
+    if platform.system() != 'Darwin':
+        return None, 'this host is not a Mac'
+    try:
+        done = subprocess.run(['xcrun', '--show-sdk-path'], capture_output=True, text=True)
+    except OSError:
+        return None, 'xcrun did not start'
+    path = done.stdout.strip()
+    return (path, '') if done.returncode == 0 and path else (None, 'xcrun gave no path')
+
+
 def variables(config, args, target, zig):
     build = (args.out or args.root / config['build']['folder']).resolve()
     sub = target + ('-debug' if args.debug else '')
     values = {'root': args.root.as_posix(), 'build': build.as_posix(), 'home': this_target(config['targets']) or '',
               'dist': (build / sub).as_posix(), 'out': (build / sub / 'scratch').as_posix(), 'target': target,
               'python': Path(sys.executable).as_posix(), 'zig': zig, 'toolchain': (HERE / '.toolchain').as_posix()}
+    sdk, why = macos_sdk()
+    values['macos_sdk'] = sdk
+    UNSET['macos_sdk'] = '{macos_sdk} needs a macOS host with xcrun: ' + why
     values.update(config['targets'][target])
     own = config.get('variables', {})
     if set(own) & set(values):

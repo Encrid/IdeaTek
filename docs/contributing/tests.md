@@ -38,7 +38,7 @@ A group is a file of cases in `tests/cases`, or in a folder of `tests/cases`.
 The name of a group is the path of the file in `tests/cases`, without `.toml`.
 For example, the name of the group `tests/cases/<folder>/<name>.toml` is `<folder>/<name>`.
 If `tests/cases` holds no case, `test` writes `no case: tests/cases holds no case`.
-In a project with parts, the cases of a part are in the group `tests/cases/<folder>.toml`, or in the folder `tests/cases/<folder>`. `.toolchain/docs/project.toml.md`, *[parts]*, gives the folder of a part.
+In a project with parts, the groups of a part are in `tests/cases/<folder>`, with the folder of the part: `.toolchain/docs/project.toml.md`, *[parts]*.
 
 ## The keys of a case
 
@@ -49,6 +49,7 @@ In a project with parts, the cases of a part are in the group `tests/cases/<fold
 | `env` | Changes to the environment of the command. The key is the name of a variable. The value is a text, or `false` to remove the variable. |
 | `stdin` | The text that `test` writes to the command, after the script of the case. |
 | `script` | The steps that `test` does while the command runs. |
+| `ignore` | `["interrupt"]` if the command starts with the interrupt ignored: *Scripts*. |
 | `helper` | A second command that runs at the same time. |
 | `files` | The text files that `test` writes before the command starts. The key is the path, and the value is the text. |
 | `folders` | The folders that `test` makes before the command starts. The key is the path. The value is a list of artifacts or files to copy into the folder. |
@@ -97,14 +98,26 @@ Each key of `[variables]` of `.toolchain/project.toml` is a variable too.
 
 ## Scripts
 
-Each step of a `script` waits for a line of the output that contains the text `wait`.
-Then the step does these actions, in this order:
+Each step of a `script` does these actions, in this order:
 
-1. `put` copies files. The key is the path, and the value is an artifact or a file.
-2. `remove` removes the files of the list.
-3. `type` writes this line to the command.
+1. `wait` waits for a line of the output that contains its text. A step with no `wait` does its actions at once.
+2. `put` copies files. The key is the path, and the value is an artifact or a file.
+3. `remove` removes the files of the list.
+4. `type` writes this line to the command.
+5. `close` closes the output of the command. Its only value is `"output"`. After it, a write of the command to its output fails.
+6. `signal` sends a signal to the command: `interrupt`, `termination` or `hang-up`.
+7. `pause` waits this number of seconds.
 
-If the output ends before the text comes, `test` stops the steps.
+If the output ends before the text of `wait` comes, `test` stops the steps.
+
+On Linux and on macOS, the signals are `SIGINT`, `SIGTERM` and `SIGHUP`.
+On Windows, a command that gets a signal runs on a console of its own. The signals are ctrl-c, ctrl-break and the close of the console.
+Thus `test` refuses 2 scripts on each system:
+
+- A script with an interrupt and a termination. On Windows, ctrl-break needs a process group of its own, and such a group ignores ctrl-c.
+- A script with a signal after a hang-up. On Windows, the hang-up closes the console.
+
+With `ignore`, the command starts with the interrupt ignored. `.toolchain/docs/signals.py.md` tells how `test` starts the command and sends the signals.
 
 ## Helpers
 

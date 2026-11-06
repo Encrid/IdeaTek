@@ -106,7 +106,7 @@ To cite a section of the same document, write its heading between two asterisks.
 
 ## The messages of the code
 
-`readme.md` or a document of `docs/extern` quotes each message of the code.
+The readme of the project, the readme of a part, or a document of `docs/extern` quotes each message of the code.
 `docs/contributing/tests.md`, *The messages of the code*, names the functions that write them.
 In a quote, write `<name>` in place of a conversion such as `%s`.
 
