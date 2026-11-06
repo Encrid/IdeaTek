@@ -62,8 +62,10 @@ When the game attaches the request again, the input module applies each field th
 | Setting | Default | Range | Value |
 | --- | --- | --- | --- |
 | `merge_motion` | `true` | `true` or `false` | `true` joins the motions of the mouse or of a finger that follow each other into 1 event. |
-| `mappings` | `[]` | a list of texts | The lines of gamepad mappings, in the format of SDL_GameControllerDB, that the input module adds. |
+| `mappings` | `"none"` | a path or `"none"` | A file of gamepad mappings, 1 mapping on each line, in the format of SDL_GameControllerDB. The input module adds them at its start. |
 | `touch_mouse_events` | `true` | `true` or `false` | `true` also gives a touch as mouse events. |
+
+A file of `mappings` that the input module cannot read gives 1 line in the log. The gamepads then keep the mappings of the module.
 
 ## ideatek:InputEvent
 
