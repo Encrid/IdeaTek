@@ -91,6 +91,9 @@ The modifiers give the shifted character, for example `A` with Shift. A keycode 
 | A character outside *The characters*. | 0. |
 | A key whose character is printable. | Its code point. |
 | A key whose character is a control character, or that has no character. | 0. |
+| A scancode below 4, or from 232 to 257. | 0. |
+| The characters `1`, `0`, `;` and Delete. | Their usages of *The characters*. |
+| A keycode of 0. | 0. |
 
 ## Functions
 

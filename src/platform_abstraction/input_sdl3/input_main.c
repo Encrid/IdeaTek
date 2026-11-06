@@ -71,10 +71,8 @@ BRIDGE_NATIVE(init)
 
 BRIDGE_NATIVE(shutdown)
 {
-    SDL_Window *window = first_window();
-
-    if (input_module.text_on && window)
-        SDL_StopTextInput(window);
+    if (input_module.text_on)
+        SDL_StopTextInput(first_window());
     for (uint32_t i = 0; i < input_module.pad_count; i++)
         SDL_CloseGamepad(input_module.pads[i].gamepad);
     for (uint32_t i = 0; i < INPUT_CURSORS; i++)

@@ -49,7 +49,7 @@ static bool fits(const bridge_api_t *api, const SDL_Event *e,
     need = f->need;
     if (e->type == SDL_EVENT_TEXT_INPUT)
         need = count_points(e->text.text);
-    return (has_room(api, need, f->bytes * SDL_max(need, 1u)));
+    return (has_room(api, need, f->bytes * (need ? need : 1u)));
 }
 
 void take_events(const bridge_api_t *api)

@@ -26,6 +26,7 @@ With `false`, each round gives 1 again, and Bridge stops the module as `on_error
 | `mappings` of `"none"`. | No file is read. |
 | `mappings` of a file of mappings. | The gamepads of the file get their mappings. |
 | `mappings` of a file that SDL3 cannot read. | The line of the mappings, and the round goes on. |
+| A path of `mappings` of 4096 bytes or more. | The line of the mappings. |
 
 ## Functions
 

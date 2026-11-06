@@ -3,6 +3,8 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
+#include <math.h>
+
 #include "input_inside.h"
 
 static const uint32_t BITS[] = {
@@ -31,16 +33,14 @@ void take_axis([[maybe_unused]] const bridge_api_t *api, const SDL_Event *e)
     float value = (float)e->gaxis.value / 32767.0F;
     float *fields[SDL_GAMEPAD_AXIS_COUNT];
 
-    if (!p || e->gaxis.axis >= SDL_GAMEPAD_AXIS_COUNT)
-        return;
     fields[0] = &p->next.left_x;
     fields[1] = &p->next.left_y;
     fields[2] = &p->next.right_x;
     fields[3] = &p->next.right_y;
     fields[4] = &p->next.left_trigger;
     fields[5] = &p->next.right_trigger;
-    *fields[e->gaxis.axis] = SDL_clamp(value, e->gaxis.axis
-        >= SDL_GAMEPAD_AXIS_LEFT_TRIGGER ? 0.0F : -1.0F, 1.0F);
+    *fields[e->gaxis.axis] = fmaxf(e->gaxis.axis
+        >= SDL_GAMEPAD_AXIS_LEFT_TRIGGER ? 0.0F : -1.0F, fminf(value, 1.0F));
 }
 
 void take_pad_button(const bridge_api_t *api, const SDL_Event *e)
@@ -48,7 +48,7 @@ void take_pad_button(const bridge_api_t *api, const SDL_Event *e)
     input_pad_t *p = find_pad(e->gbutton.which, 0);
     ideatek_gamepad_event_t event = {};
 
-    if (!p || e->gbutton.button >= SDL_arraysize(BITS))
+    if (e->gbutton.button >= SDL_arraysize(BITS))
         return;
     event.gamepad.id = p->entity;
     event.button = BITS[e->gbutton.button];

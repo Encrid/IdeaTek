@@ -3,6 +3,8 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
+#include <math.h>
+
 #include "input_inside.h"
 
 static void name_pad(const bridge_api_t *api, const input_pad_t *p,
@@ -62,8 +64,8 @@ static void play_rumble(const bridge_api_t *api, uint64_t entity)
         return;
     r = (const void *)(api->shared_base + bridge_native_find_value(api,
         entity, GAMEPAD_REQUEST));
-    strong = SDL_clamp(r->strong, 0.0F, 1.0F);
-    weak = SDL_clamp(r->weak, 0.0F, 1.0F);
+    strong = fmaxf(0.0F, fminf(r->strong, 1.0F));
+    weak = fmaxf(0.0F, fminf(r->weak, 1.0F));
     if (!SDL_RumbleGamepad(p->gamepad, (Uint16)(strong * 65535.0F),
         (Uint16)(weak * 65535.0F), r->duration_ms))
         bridge_native_say(api, BRIDGE_LOG_WARN, "no rumble on the gamepad "
