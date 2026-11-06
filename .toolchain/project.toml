@@ -11,3 +11,13 @@ needs = ["display", "gl"]
 [check]
 unicode = ["third_party/sdl3_linux/license"]
 guides = ["layers.md"]
+
+[[style.exception]]
+rule = "G4"
+path = "src/platform_abstraction/window_sdl3/window_main.c"
+why = "window_module holds the state of the native module between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/platform_abstraction/window_sdl3/window_inside.h"
+why = "The declaration of window_module, the state of the native module between 2 calls."
