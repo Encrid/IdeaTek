@@ -95,7 +95,7 @@ The view goes first, because it is a part of the window: https://wiki.libsdl.org
 | `icon` is `"none"`. | The icon of the system. |
 | `icon` names a PNG file. | The icon of the file. |
 | `icon` names no PNG file, or the system refuses the icon. | The line of the icon, and the icon of the system. |
-| The mode `IDEATEK_WINDOW_MODE_WINDOWED`. | A window of `width` and `height`, at the center of its display. |
+| The mode `IDEATEK_WINDOW_MODE_WINDOWED`. | The window has its size, in the middle of its display. |
 | The mode `IDEATEK_WINDOW_MODE_FULLSCREEN`. | The window fills its display. |
 | An exclusive mode that the system takes. | The display uses the mode while the window has the focus. |
 | An exclusive mode that the system refuses. | The line of the refused mode, and the window fills the display. |
