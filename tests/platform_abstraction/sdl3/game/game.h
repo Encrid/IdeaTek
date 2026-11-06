@@ -11,6 +11,12 @@
     #include "bridge_native.h"
     #include "ideatek_window.h"
     #include "ideatek_window_clipboard.h"
+    #include "ideatek_input.h"
+    #include "ideatek_input_gamepad.h"
+    #include "ideatek_input_keyboard.h"
+    #include "ideatek_input_mouse.h"
+    #include "ideatek_input_text.h"
+    #include "ideatek_input_touch.h"
 
     #define GAME_SETTINGS_FIELDS { \
         bridge_text_t script; \
@@ -31,6 +37,25 @@ typedef struct {
 } game_slots_t;
 
 typedef struct {
+    uint32_t input_event;
+    uint32_t keyboard;
+    uint32_t key_event;
+    uint32_t text_request;
+    uint32_t text_event;
+    uint32_t mouse;
+    uint32_t mouse_motion;
+    uint32_t mouse_button;
+    uint32_t mouse_wheel;
+    uint32_t mouse_request;
+    uint32_t gamepad;
+    uint32_t gamepad_state;
+    uint32_t gamepad_event;
+    uint32_t gamepad_request;
+    uint32_t finger_event;
+    uint32_t lists[12];
+} game_input_t;
+
+typedef struct {
     uint64_t entity;
     char name[128];
 } game_display_t;
@@ -43,6 +68,7 @@ typedef struct {
 
 typedef struct {
     game_slots_t slots;
+    game_input_t input;
     char script[65536];
     uint64_t window;
     ideatek_window_request_t request;
@@ -55,6 +81,14 @@ typedef struct {
     uint64_t second;
     uint32_t first_drop;
     uint32_t first_paste;
+    uint64_t input_entity;
+    uint64_t pad_entity;
+    SDL_JoystickID pad_ids[4];
+    SDL_Joystick *pads[4];
+    uint32_t pad_count;
+    float rumble_low;
+    float rumble_high;
+    uint32_t rumble_ms;
 } game_t;
 
 extern game_t game;
@@ -63,5 +97,8 @@ const void *game_cell(const bridge_api_t *api, uint64_t id, uint32_t slot);
 uint64_t game_find_display(const char *name);
 void game_start(const bridge_api_t *api);
 void game_play(const bridge_api_t *api);
+void game_declare_input(const bridge_api_t *api);
+void game_watch_input(const bridge_api_t *api);
+bool game_input_step(const bridge_api_t *api, const char *verb, char *args);
 
 #endif
