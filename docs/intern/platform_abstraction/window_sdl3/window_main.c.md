@@ -30,7 +30,7 @@ Thus the first round reads them: `docs/intern/platform_abstraction/window_sdl3/w
 | `clipboard` | An observer | `BRIDGE_ON_ENTER` and `BRIDGE_ON_ATTACH` | `ideatek:ClipboardRequest`, `BRIDGE_READ` and `BRIDGE_AND` | None. |
 
 `events` has no term. A term of a singleton is optional, and a query of optional terms alone walks each table: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge_abi.h.md#bridge_term_t.
-Thus `events` runs 1 time in each run of its phase. It reads the settings through their kept cell, and `ideatek:EventWait` of the window with `get_cell`.
+Thus `events` runs 1 time in each run of its phase. It reads the settings through their kept cell, and `ideatek:EventWait` of the window with `bridge_native_find_value`.
 
 A pair of the deployment orders `events` after the clock module. Other pairs put it before each module that reads the queue of SDL3.
 The deployment maps the phase `first` of the module to the first phase of the round.

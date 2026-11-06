@@ -167,7 +167,6 @@ void spawn_item(const bridge_api_t *api, uint32_t slot, const void *value,
 bool cut_text(char to[128], const char *from, size_t len);
 char *copy_arena_text(const bridge_api_t *api, bridge_text_t text);
 
-uint32_t get_cell(const bridge_api_t *api, uint64_t id, uint32_t slot);
 uint64_t spawn_entity(const bridge_api_t *api);
 bool has_room(const bridge_api_t *api, uint32_t spawns, uint32_t bytes);
 

@@ -10,7 +10,7 @@ Thus the last request of a barrier is the text that stays on the clipboard. The 
 
 `set_clipboard` does these steps:
 
-1. `get_cell` gives where the request of the entity is. The entity of a trigger of `BRIDGE_ON_ENTER` or `BRIDGE_ON_ATTACH` carries the request.
+1. `bridge_native_find_value` gives where the request of the entity is. The entity of a trigger of `BRIDGE_ON_ENTER` or `BRIDGE_ON_ATTACH` carries the request.
 2. `copy_arena_text` copies the text into a C string: `docs/intern/platform_abstraction/window_sdl3/window_text.c.md`.
 3. If the copy fails, it stops. `copy_arena_text` wrote the line.
 4. If SDL3 refuses `SDL_SetClipboardText`, it writes the line of no clipboard.

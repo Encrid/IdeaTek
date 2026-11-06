@@ -5,7 +5,7 @@ The roles of the request are in `docs/extern/platform_abstraction/ideatek_window
 
 ## The apply
 
-`apply_request` reads the request of the entity of the window with `get_cell`: `docs/intern/platform_abstraction/window_sdl3/window_world.c.md`.
+`apply_request` reads the request of the entity of the window with `bridge_native_find_value`: https://github.com/Encrid/BB-Native/blob/v0.5.1/docs/extern/bridge_native_value.h.md.
 It does these steps:
 
 1. It sets `pending` to `false`. The entity of the window carries its request, because a detach of the request ends the run: `docs/intern/platform_abstraction/window_sdl3/window_observe.c.md`.

@@ -39,7 +39,8 @@ static void read_request(const bridge_api_t *api, uint32_t at,
 
 void apply_request(const bridge_api_t *api)
 {
-    uint32_t at = get_cell(api, window_module.entity, REQUEST);
+    uint32_t at = bridge_native_find_value(api, window_module.entity,
+        REQUEST);
     ideatek_window_request_t r;
     bool was_open = window_module.window;
 
