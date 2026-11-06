@@ -2,7 +2,7 @@
 name = "the first row of the drivers of the system gives its surface and its 2 handles"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 env = { SDL_VIDEO_DRIVER = "{window_row1}" }
-claims = { status = 0, has = ["r2 state windowed {window_surface1} ", "handles 11"] }
+claims = { status = 0, has = ["r2 state windowed {window_surface1} ", "handles {window_handles1}"] }
 false = { env = { SDL_VIDEO_DRIVER = "offscreen" } }
 
 [case.folders]
@@ -25,7 +25,7 @@ script = "1:request Game,640,480,windowed,default,-,-"
 name = "the second row of the drivers of the system gives its surface and its 2 handles"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 env = { SDL_VIDEO_DRIVER = "{window_row2}" }
-claims = { status = 0, has = ["r2 state windowed {window_surface2} ", "handles 11"] }
+claims = { status = 0, has = ["r2 state windowed {window_surface2} ", "handles {window_handles2}"] }
 false = { env = { SDL_VIDEO_DRIVER = "offscreen" } }
 
 [case.folders]
