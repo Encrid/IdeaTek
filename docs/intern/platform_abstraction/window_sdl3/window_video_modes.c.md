@@ -8,13 +8,11 @@ The modes of a display are `modes` of its `window_display_t`, `mode_count` of th
 `read_modes` reads the modes of a display into a list:
 
 1. `SDL_GetFullscreenDisplayModes` gives the exclusive modes of the display, the largest first.
-2. If SDL3 gives no list, the module writes `no video modes of the display <id>: <reason>`, and the list has no exclusive mode.
+2. If SDL3 gives no list, the module writes the line of no video modes. The list then has no exclusive mode.
 3. It copies at most 255 modes, and `listed` is their count.
 4. With more modes, it writes the line of the modes.
 5. It adds the desktop mode and the current mode at the end, if the list lacks them and has room.
 6. It frees the list of SDL3 with `SDL_free`.
-
-The line of step 4 is `the display <id> has <count> video modes, and the module keeps the first 255`.
 
 Step 5 gives an entity to the desktop mode and to the current mode of the display, also when SDL3 does not list them.
 Thus `desktop_mode` and `current_mode` of `ideatek:Display` name an entity. A display with a full list of 255 modes can have 0 there.

@@ -6,14 +6,14 @@ It gives the slots, the limits, the types of the module, and the functions that 
 
 ## The module
 
-The part fills the role of the window module, with the clipboard: `readme.md`, *The implementations*.
+The part fills the role of the window module, with the clipboard: `docs/extern/platform_abstraction/window_sdl3/readme.md`.
 Its identity is `ideatek_window_sdl3:window@0.1.0`, and its package is `BM-IdeaTek-Window-SDL3`.
 It is pinned, because SDL3 drives the windows and the events on 1 thread, and macOS needs the main thread.
 It is not reloadable, because SDL3 keeps the window outside of the storage of Bridge.
 
 ## The slots
 
-Bridge gives the slots in the order of the declarations, from 0: https://github.com/Encrid/Bridge/blob/v0.4.0/docs/extern/bridge_abi.h.md#bridge_entries_t.
+Bridge gives the slots in the order of the declarations, from 0: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge_abi.h.md#bridge_entries_t.
 Each slot is a `constexpr`, and `declare_types` of `docs/intern/platform_abstraction/window_sdl3/window_main.c.md` keeps this order:
 
 | Slot | Name | Type |
@@ -41,7 +41,7 @@ Each slot is a `constexpr`, and `declare_types` of `docs/intern/platform_abstrac
 
 ## The settings
 
-`ideatek_window_sdl3:Settings` is the component of the settings: https://github.com/Encrid/Bridge/blob/v0.4.0/docs/extern/bridge.h.md#the-settings-of-a-module.
+`ideatek_window_sdl3:Settings` is the component of the settings: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#the-settings-of-a-module.
 It is a singleton of the namespace of the module, so it needs no grant.
 The macro `WINDOW_SETTINGS_FIELDS` gives its fields, and the header gives its C type and its descriptor with the macros of `bridge_schema.h`:
 
@@ -111,6 +111,7 @@ The exports of a module get only the API of Bridge, so the state of SDL3 between
 
 Each source writes its messages with `bridge_native_say` of BB-Native.
 Thus `bridge_native_say` is the writer of the messages of the code: `docs/contributing/tests.md`, *The messages of the code*.
+The readme of the part quotes each message: `docs/extern/platform_abstraction/window_sdl3/readme.md`, *The messages*.
 
 ## Functions
 

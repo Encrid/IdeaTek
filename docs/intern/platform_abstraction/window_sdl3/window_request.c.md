@@ -50,7 +50,7 @@ It does these steps:
 6. It keeps the request in `applied`, and sets `pending` and `moved` to `false` and `dirty` to `true`.
 
 A title without a zero in its 128 bytes is longer than the title of the contract.
-Then step 2 writes `the title is longer than 127 bytes, and the window shows its first <count> bytes`.
+Then step 2 writes the line of the long title.
 The module never reads the result of a change from the request. `attach_state` reads the window from SDL3 after the change.
 
 ## The display and the mode

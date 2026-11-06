@@ -48,7 +48,7 @@ FUNCTION copy_arena_text(text : bridge_text_t) RETURNS STRING
 ENDFUNCTION
 ```
 
-`arena_lo` and `arena_hi` are the bounds of the arena that the module can read: https://github.com/Encrid/Bridge/blob/v0.4.0/docs/extern/bridge_abi.h.md#bridge_header_t.
+`arena_lo` and `arena_hi` are the bounds of the arena that the module can read: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge_abi.h.md#bridge_header_t.
 The test compares `len` with the bytes after `at`, so no sum can wrap around.
 SDL3 needs a zero at the end of a path and of a text, and a `bridge_text_t` has none. Thus the copy adds it.
 

@@ -22,14 +22,14 @@ FUNCTION get_cell(id : U64, slot : U32) RETURNS U32
 ENDFUNCTION
 ```
 
-It follows the steps of https://github.com/Encrid/Bridge/blob/v0.4.0/docs/extern/bridge_abi.h.md#bridge_entity_t.
+It follows the steps of https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge_abi.h.md#bridge_entity_t.
 It gives 0 for a dead entity, and for an entity that does not carry the component.
 The module calls it only with an id that Bridge gave in a trigger, so the index of the id is in the entity index.
 
 ## The room of a round
 
 Bridge refuses a spawn after the block of `spawns`, and a change after the room of `changes`.
-A refused call fails the system: https://github.com/Encrid/Bridge/blob/v0.4.0/docs/extern/bridge_abi.h.md#bridge_entries_t.
+A refused call fails the system: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge_abi.h.md#bridge_entries_t.
 Thus each source checks the room with `has_room` before it spawns or attaches:
 
 ```pseudo
