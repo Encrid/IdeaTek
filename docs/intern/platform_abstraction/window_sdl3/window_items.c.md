@@ -78,6 +78,7 @@ The caller checks the room of the round before the call: `docs/intern/platform_a
 
 | Function | Result |
 | --- | --- |
+| `check_bytes` | Writes the line of a setting of the bytes that is out of its range. |
 | `start_items` | Checks the 2 settings of the bytes, and takes their areas. Gives `true`, or `false` after a line. |
 | `turn_items` | Destroys the items of the last round, and turns the halves. |
 | `put_bytes` | Copies a text into the half of the round, and gives its `bridge_text_t`. |

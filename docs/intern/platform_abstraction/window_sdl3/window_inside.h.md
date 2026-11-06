@@ -76,7 +76,7 @@ The defaults and the ranges are in `docs/extern/platform_abstraction/ideatek_win
 | `window_driver_t` | `display_key` | The property of the window that gives `native_display`, or null. |
 | `window_driver_t` | `window_key` | The property of the window that gives `native_window`, or null. |
 
-`docs/intern/platform_abstraction/window_sdl3/window_state.c.md`, *The driver*, gives the rows of `window_driver_t`.
+`docs/intern/platform_abstraction/window_sdl3/window_driver.c.md`, *The driver*, gives the rows of `window_driver_t`.
 
 ## The state of the module
 

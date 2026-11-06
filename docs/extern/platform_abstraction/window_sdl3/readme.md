@@ -1,6 +1,6 @@
 # BM-IdeaTek-Window-SDL3
 
-The window module of IdeaTek on SDL3: the window, the displays, the drops and the clipboard, as a native module of Bridge.
+The window module of IdeaTek on SDL3: the window, the displays, the drops and the clipboard.
 
 ## Install
 

@@ -35,36 +35,6 @@ If the request of the window names the display with `IDEATEK_DISPLAY_TARGET_CHOS
 Then the next apply puts the window on the primary display: `docs/intern/platform_abstraction/window_sdl3/window_request.c.md`, *The display and the mode*.
 A display that comes back gets a new entity. Thus the window stays on the primary display.
 
-## The value of a display
-
-`update_display` reads the list of modes again.
-If the count of the list changed, or `find_mode_entity` finds no entity for a mode of the list, the list changed.
-Then it destroys the old modes, and spawns the new modes, with the room of both.
-
-Then it fills a value of `ideatek:Display`:
-
-| Field | Source |
-| --- | --- |
-| `name` | `SDL_GetDisplayName`, copied with `cut_text`. |
-| `desktop_mode` | `find_mode_entity` for `SDL_GetDesktopDisplayMode`. |
-| `current_mode` | `find_mode_entity` for `SDL_GetCurrentDisplayMode`. |
-| `width` and `height` | `SDL_GetDisplayBounds`. |
-| `content_scale` | `SDL_GetDisplayContentScale`. |
-| `hdr` | `SDL_PROP_DISPLAY_HDR_ENABLED_BOOLEAN` of `SDL_GetDisplayProperties`. |
-| `is_primary` | `true` only for the first id of the list of step 1. |
-
-The primary display of SDL3 is the first display of its list: https://github.com/libsdl-org/SDL/blob/release-3.4.20/src/video/SDL_video.c#L1006.
-Thus exactly 1 display entity has `is_primary` at `true`, if 1 display has an entity.
-
-A name of more than 127 bytes keeps its first whole code points, and the module writes the line of the long name.
-`update_display` attaches the value only when a byte of it differs from `attached`, with 184 bytes of room.
-
-## The find
-
-`find_display` gives the display whose `id` is the `SDL_DisplayID` that it gets, or whose `entity` is the entity that it gets.
-The caller gives 0 for the other one. No display has an id or an entity of 0, so 0 never matches.
-It gives null when no display matches, for example for a display that went.
-
 ## The branches
 
 | Case | Result |
@@ -74,11 +44,7 @@ It gives null when no display matches, for example for a display that went.
 | The system removes a display. | Its entity and the entities of its modes go. |
 | The system removes the display of `IDEATEK_DISPLAY_TARGET_CHOSEN`. | The window moves to the primary display. |
 | A display comes back. | A new entity. The window does not move back. |
-| The primary display changes. | The 2 displays attach with their new `is_primary`. |
-| A change of a mode, a scale or a size of a display. | The display attaches again. |
-| The list of modes of a display changes. | New entities for its modes. |
 | A 17th display. | The line of the 17th display, and no entity. |
-| A name of more than 127 bytes. | The line of the long name, and a name cut at a whole code point. |
 | SDL3 gives no list of the displays. | The line of the list. The entities stay. |
 | No room in the round. | The next round does the rest. |
 
@@ -86,8 +52,8 @@ It gives null when no display matches, for example for a display that went.
 
 | Function | Result |
 | --- | --- |
+| `is_listed` | Tells if an id is in the list of the displays of SDL3. |
+| `match_list` | Removes the displays that went, and adds the new ones. |
 | `sync_displays` | Makes the entities of the displays match the displays of SDL3. |
 | `add_display` | Spawns the entities of a new display and of its modes. |
 | `remove_display` | Destroys the entities of a display that went, and of its modes. |
-| `update_display` | Reads a display again, and attaches its value when a byte changed. |
-| `find_display` | Gives the display of an `SDL_DisplayID` or of an entity, or null. |
