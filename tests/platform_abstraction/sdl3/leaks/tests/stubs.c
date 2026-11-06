@@ -3,14 +3,49 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
+#include <SDL3/SDL_clipboard.h>
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_metal.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_properties.h>
 #include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_surface.h>
 #include <SDL3/SDL_video.h>
 
 static char held[8];
+static SDL_DisplayID displays[2];
+static SDL_DisplayMode *modes[1];
+static char text[1];
+static SDL_Surface icon;
+
+SDL_DisplayID *SDL_GetDisplays(int *count)
+{
+    if (count)
+        *count = 1;
+    return (displays);
+}
+
+SDL_DisplayMode **SDL_GetFullscreenDisplayModes(
+    [[maybe_unused]] SDL_DisplayID displayID, int *count)
+{
+    if (count)
+        *count = 0;
+    return (modes);
+}
+
+char *SDL_GetClipboardText(void)
+{
+    return (text);
+}
+
+SDL_Surface *SDL_LoadPNG([[maybe_unused]] const char *file)
+{
+    return (&icon);
+}
+
+void SDL_DestroySurface([[maybe_unused]] SDL_Surface *surface)
+{
+}
 
 SDL_Window *SDL_CreateWindow([[maybe_unused]] const char *title,
     [[maybe_unused]] int w, [[maybe_unused]] int h,
