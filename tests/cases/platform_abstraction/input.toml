@@ -355,7 +355,7 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:input@1.0.0"]
 write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowState"]
 '''
 
 [case.false.files]
@@ -367,7 +367,39 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:input@1.0.0"]
 write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState"]
-read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:GamepadEvent"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:GamepadEvent", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowState"]
+'''
+
+[[case]]
+name = "the input module loads with read on ideatek:WindowState, for the focus"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:input@1.0.0, native, m/input_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["input_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:input@1.0.0"]
+write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowState"]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:input@1.0.0"]
+write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:FingerEvent", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gamepad_button_t", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t"]
 '''
 
 [[case]]

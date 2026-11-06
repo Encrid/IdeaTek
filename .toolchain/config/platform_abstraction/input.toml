@@ -1,7 +1,7 @@
 [parts.input]
 name = "BC-IdeaTek-Input"
 folder = "platform_abstraction/input"
-uses = ["world"]
+uses = ["world", "window"]
 third_party = []
 
 [parts.input.package]
