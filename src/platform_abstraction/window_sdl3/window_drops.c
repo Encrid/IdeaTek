@@ -17,7 +17,7 @@ static void spawn_drop(const bridge_api_t *api, const SDL_DropEvent *e,
 {
     ideatek_drop_t drop = {};
     uint32_t need = length(e->data) + length(e->source);
-    uint32_t free = window_module.drops.size - window_module.drops.used;
+    uint32_t room = window_module.drops.size - window_module.drops.used;
 
     drop.window.id = e->windowID ? window_module.entity : 0;
     drop.set = window_module.set;
@@ -25,14 +25,14 @@ static void spawn_drop(const bridge_api_t *api, const SDL_DropEvent *e,
     drop.x = e->x;
     drop.y = e->y;
     drop.kind = kind;
-    if (need <= free) {
+    if (need <= room) {
         drop.data = put_bytes(api, &window_module.drops, e->data);
         drop.source = put_bytes(api, &window_module.drops, e->source);
         spawn_item(api, DROP, &drop, sizeof(drop));
     } else
         bridge_native_say(api, BRIDGE_LOG_WARN,
             "the drop %u.%u needs %u bytes, and the half has %u free bytes",
-            drop.set, drop.index, need, free);
+            drop.set, drop.index, need, room);
     window_module.index++;
 }
 
