@@ -15,7 +15,7 @@ It does not check `license` and `cla.md`, because they are legal texts.
 | `documents(root)` | Gives the path and the lines of each document that `prose.py` and `pseudo.py` check. |
 | `blocks(lines)` | Gives the first line, the last line and the tag of each block of code. `pseudo.py` uses it too. |
 | `units(lines)` | Gives each paragraph, each item of a list and each cell of a table, with its first line. |
-| `faults(lines, limits)` | Gives the faults of a document. |
+| `faults(lines, limits, tags)` | Gives the faults of a document. `tags` is the list of the tags of the blocks of code. |
 | `readme(lines, name, most, needed)` | Gives the faults of a readme whose title is `name`, and which needs the sections of `needed`. |
 | `main()` | Runs the check. |
 
@@ -49,8 +49,8 @@ The maximum of a sentence in an item of a numbered list is `step`. The maximum o
 
 A block of code starts and ends with a line that starts with three backticks.
 The text after the first three backticks is the tag of the block.
-The tag is `pseudo`, `c`, `toml`, `sh`, `text` or `mermaid`.
-The message is `<path>:<line>: the tag '<tag>' is not one of pseudo c toml sh text mermaid`.
+The tag is one of `[prose] tags` of `.toolchain/toolchain.toml`, or one of `[check] tags` of the configuration.
+The message is `<path>:<line>: the tag '<tag>' is not one of <tags>`. `<tags>` is the list of these tags, with a space between 2 tags.
 
 ## The readme
 

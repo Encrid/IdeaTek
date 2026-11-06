@@ -7,7 +7,7 @@ It reads the files that `ours` gives, so no rule of `layout.py` applies to a fil
 
 | Function | Result |
 | --- | --- |
-| `own(root)` | Gives the paths of the guides that `[check] guides` of `.toolchain/project.toml` adds, and the path of the readme of each part. |
+| `own(root)` | Gives the paths of the guides that `[check] guides` of the configuration adds, and the path of the readme of each part. |
 | `faults(root, paths)` | Gives the faults of the tree. |
 | `main()` | Runs the check. |
 
@@ -23,11 +23,11 @@ The layout allows only the paths of this table.
 | `.gitattributes`, `.gitignore`, `cla.md`, `license` | Needed. |
 | `project.py`, `.toolchain/project.toml`, `readme.md` | Needed. |
 | `architecture.md` | The map of the project. |
-| `docs/contributing/<name>.md`, for each name of `GUIDES`: `agreement`, `coding_style`, `commits`, `decisions`, `documentation_style`, `needs`, `pull_request` and `tests` | Needed. |
+| `docs/contributing/<name>.md`, for each name of `GUIDES`: `agreement`, `coding_style`, `coding_style_cxx`, `commits`, `decisions`, `documentation_style`, `needs`, `pull_request` and `tests` | Needed. |
 | `docs/contributing/<name>`, for each name of `[check] guides` | A guide of the project. |
 | `docs/extern/<folder>/readme.md`, for the `folder` of each part of `[parts]` | Needed. The readme of the part. |
 | `docs/extern/**.md`, `docs/intern/**.md`, `docs/tools/**.md` | The documents of the files. The section *The documents* gives their rules. |
-| `include/**.h` | The public headers. |
+| `include/**.h`, `include/**.hpp` | The public headers: a `.h` for C, or for C and C++, and a `.hpp` for C++ only. |
 | `src/**` | The sources, the private headers and the other inputs of a build. |
 | `tools/**` | The tools of the project. |
 | `third_party/**` | Any file. |

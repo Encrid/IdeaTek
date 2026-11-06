@@ -57,7 +57,8 @@ def merged(into, more, name, whence, above=()):
 
 def config(root):
     whole, whence = {}, {}
-    files = [('toolchain.toml', HERE / '.toolchain' / 'toolchain.toml'), ('project.toml', root / '.toolchain' / 'project.toml')]
+    own = root / '.toolchain' / 'project.toml'
+    files = [('toolchain.toml', HERE / '.toolchain' / 'toolchain.toml')] + ([('project.toml', own)] if own.is_file() else [])
     where = root / '.toolchain' / 'config'
     files += [('config/' + path.relative_to(where).as_posix(), path) for path in sorted(where.rglob('*.toml'))]
     for name, path in files:

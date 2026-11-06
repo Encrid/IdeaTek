@@ -5,7 +5,6 @@ import re
 
 from shared import arguments, config, ours, project_name, report
 
-TAGS = ('pseudo', 'c', 'toml', 'sh', 'text', 'mermaid')
 ORDER = {'Table of Contents': 0, 'Security': 1, 'Background': 2, 'Install': 3, 'Usage': 4, 'API': 6, 'Maintainer': 7,
          'Maintainers': 7, 'Thanks': 8, 'Credits': 8, 'Acknowledgements': 8, 'Contributing': 9, 'License': 10}
 EXTRA = 5
@@ -56,12 +55,12 @@ def units(lines):
     return found
 
 
-def faults(lines, limits):
+def faults(lines, limits, tags):
     found, text = [], list(lines)
     for start, end, tag in blocks(lines):
         text[start:end + 1] = [''] * (end + 1 - start)
-        if tag not in TAGS:
-            found.append((start + 1, "the tag '%s' is not one of %s" % (tag, ' '.join(TAGS))))
+        if tag not in tags:
+            found.append((start + 1, "the tag '%s' is not one of %s" % (tag, ' '.join(tags))))
     for n, unit, kind in units(text):
         most = limits['step'] if kind == 'step' else limits['sentence']
         sentences = list(SENTENCE.finditer(unit))
@@ -100,9 +99,10 @@ def main():
     read = documents(root)
     parts = {'docs/extern/%s/readme.md' % part['folder']: part['name'] for part in settings.get('parts', {}).values()
              if 'folder' in part and 'name' in part}
+    tags = settings['prose']['tags'] + settings.get('check', {}).get('tags', [])
     found = []
     for path, lines in read:
-        found += [(path, n, what) for n, what in faults(lines, settings['prose'])]
+        found += [(path, n, what) for n, what in faults(lines, settings['prose'], tags)]
         if path == 'readme.md':
             found += [(path, n, what) for n, what in readme(lines, project_name(settings),
                                                            settings['prose']['description'], NEEDED)]

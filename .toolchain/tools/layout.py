@@ -5,13 +5,13 @@ import re
 
 from shared import arguments, config, document, ours, report
 
-GUIDES = ('agreement', 'coding_style', 'commits', 'decisions', 'documentation_style', 'needs', 'pull_request', 'tests')
+GUIDES = ('agreement', 'coding_style', 'coding_style_cxx', 'commits', 'decisions', 'documentation_style', 'needs', 'pull_request', 'tests')
 NEEDED = (('.github/workflows/ci.yml', '.github/workflows/release.yml', '.github/workflows/cla.yml', '.gitattributes',
            '.gitignore', 'cla.md', 'license', 'project.py', '.toolchain/project.toml', 'readme.md')
           + tuple('docs/contributing/%s.md' % guide for guide in GUIDES))
 FOLDERS = ('.toolchain/tools',)
 DOCUMENT = r'docs/(?:extern|intern|tools)/.+\.md'
-ALLOWED = (r'architecture\.md|' + DOCUMENT + r'|include/.+\.h|src/.+|tools/.+'
+ALLOWED = (r'architecture\.md|' + DOCUMENT + r'|include/.+\.(h|hpp)|src/.+|tools/.+'
            r'|\.toolchain/tools/[^/]+\.py|\.toolchain/toolchain\.toml|\.toolchain/config/.+\.toml'
            r'|\.toolchain/header\.txt|\.toolchain/docs/[^/]+\.md|\.toolchain/presets/[^/]+/[^/]+\.toml'
            r'|\.toolchain/runtime/[^/]+\.[ch]|(?:docs/extern|docs/intern|include)/\.gitkeep')
@@ -21,8 +21,6 @@ MADE = re.compile(r'.*\.(?:o|obj|a|so|dll|dylib|exe|gch|d|pyc)|.*~|#.*#|a\.out')
 
 
 def own(root):
-    if not (root / '.toolchain' / 'project.toml').is_file():
-        return (), ()
     settings = config(root)
     guides = tuple('docs/contributing/%s' % name for name in settings.get('check', {}).get('guides', []))
     readmes = tuple('docs/extern/%s/readme.md' % part['folder'] for part in settings.get('parts', {}).values()

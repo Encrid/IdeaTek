@@ -43,7 +43,7 @@ The tools import it. It does not run alone.
 
 ## The configuration
 
-`config` reads `.toolchain/toolchain.toml` of `HERE`, then `.toolchain/project.toml` of the root.
+`config` reads `.toolchain/toolchain.toml` of `HERE`, then `.toolchain/project.toml` of the root, if the root has it.
 Then it reads each `.toml` file of `.toolchain/config` and of its folders, in the order of their paths.
 `merged` adds each key of a later file to the configuration:
 

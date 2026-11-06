@@ -66,7 +66,7 @@ A person checks the other rules of STE, for example these rules:
 
 ## Blocks of code
 
-A block of code has a tag: `c`, `toml`, `sh`, `text`, `pseudo` or `mermaid`.
+A block of code has a tag: `c`, `cpp`, `toml`, `sh`, `text`, `pseudo` or `mermaid`.
 A block with the tag `pseudo` holds pseudo code.
 
 The pseudo code is a subset of the pseudo code of Cambridge International.
@@ -98,9 +98,10 @@ ENDFUNCTION
 A path in a code span names a file of the project. The check refuses a path that names no file.
 To cite a section of a different document, write its path in a code span, a comma, and its heading between two asterisks.
 To cite a section of the same document, write its heading between two asterisks.
+A coding guide can also cite one of its rules by the identifier of the rule, for example A4.
 
 ```text
-`docs/contributing/coding_style.md`, *The legal notice*
+`docs/contributing/coding_style.md`, *G1 - The legal notice*
 *The readme*
 ```
 
