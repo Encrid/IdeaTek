@@ -9,6 +9,7 @@
 #include "events/SDL_windowevents_c.h"
 #include "events/SDL_mouse_c.h"
 #include "events/SDL_keyboard_c.h"
+#include "events/SDL_touch_c.h"
 
 struct SDL_DisplayData {
     char key[16];
@@ -26,6 +27,8 @@ typedef struct {
 
 static const char HINT[] = "IDEATEK_TEST_DISPLAYS";
 static const char FOCUS[] = "IDEATEK_TEST_FOCUS";
+static const char TOUCH[] = "IDEATEK_TEST_TOUCH";
+static const char DENSITY[] = "IDEATEK_TEST_DENSITY";
 static const char FALLBACK[] = "a,Test,1920x1080@60,1920x1080@60,desktop,1,1";
 
 static bool read_mode(const char *text, SDL_DisplayMode *mode)
@@ -223,6 +226,38 @@ static void SDLCALL apply_focus(void *unused, const char *name,
     }
 }
 
+static void SDLCALL apply_touch(void *unused, const char *name,
+    const char *old, const char *value)
+{
+    SDL_VideoDevice *device = SDL_GetVideoDevice();
+    unsigned kind = 0;
+    unsigned long long finger = 0;
+    float x = 0.0f;
+    float y = 0.0f;
+
+    if (!device || !value || SDL_sscanf(value, "%u %llu %f %f", &kind,
+            &finger, &x, &y) != 4) {
+        return;
+    }
+    SDL_AddTouch(1, SDL_TOUCH_DEVICE_DIRECT, "ideatek_test");
+    if (kind == 1) {
+        SDL_SendTouchMotion(0, 1, finger, device->windows, x, y, 1.0f);
+    } else {
+        SDL_SendTouch(0, 1, finger, device->windows, kind == 0
+            ? SDL_EVENT_FINGER_DOWN : (kind == 2 ? SDL_EVENT_FINGER_UP
+            : SDL_EVENT_FINGER_CANCELED), x, y, 1.0f);
+    }
+}
+
+static void TEST_GetWindowSizeInPixels(SDL_VideoDevice *_this,
+    SDL_Window *window, int *w, int *h)
+{
+    int density = SDL_GetHintBoolean(DENSITY, false) ? 2 : 1;
+
+    *w = window->w * density;
+    *h = window->h * density;
+}
+
 static SDL_Cursor *TEST_CreateSystemCursor(SDL_SystemCursor id)
 {
     return SDL_calloc(1, sizeof(SDL_Cursor));
@@ -259,6 +294,7 @@ static bool TEST_VideoInit(SDL_VideoDevice *_this)
     mouse->SetRelativeMouseMode = TEST_SetRelativeMouseMode;
     SDL_AddHintCallback(HINT, apply_displays, NULL);
     SDL_AddHintCallback(FOCUS, apply_focus, NULL);
+    SDL_AddHintCallback(TOUCH, apply_touch, NULL);
     return _this->num_displays > 0;
 }
 
@@ -266,6 +302,7 @@ static void TEST_VideoQuit(SDL_VideoDevice *_this)
 {
     SDL_RemoveHintCallback(HINT, apply_displays, NULL);
     SDL_RemoveHintCallback(FOCUS, apply_focus, NULL);
+    SDL_RemoveHintCallback(TOUCH, apply_touch, NULL);
 }
 
 static void TEST_PumpEvents(SDL_VideoDevice *_this)
@@ -322,6 +359,7 @@ static SDL_VideoDevice *TEST_CreateDevice(void)
     device->SetWindowPosition = TEST_SetWindowPosition;
     device->SetWindowIcon = TEST_SetWindowIcon;
     device->SetWindowMouseGrab = TEST_SetWindowMouseGrab;
+    device->GetWindowSizeInPixels = TEST_GetWindowSizeInPixels;
     device->free = TEST_DeleteDevice;
     return device;
 }

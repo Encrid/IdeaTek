@@ -76,6 +76,6 @@ name = "window_sdl3_reload"
 kind = "program"
 part = "window_sdl3"
 test = true
-sources = ["tests/platform_abstraction/window_sdl3/window_reload.c"]
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
 link = ["{out}/window_sdl3{library}"]
 flags = ["{rpath}"]

@@ -81,20 +81,6 @@ static void push_mouse(const char *verb, const char *args)
     SDL_PushEvent(&e);
 }
 
-static void push_finger(const char *args)
-{
-    SDL_Event e = {};
-    unsigned kind = 0;
-    unsigned long long id = 0;
-
-    sscanf(args, "%u %llu %f %f", &kind, &id, &e.tfinger.x, &e.tfinger.y);
-    e.type = SDL_EVENT_FINGER_DOWN + kind;
-    e.tfinger.touchID = 1;
-    e.tfinger.fingerID = id;
-    e.tfinger.windowID = first_window();
-    SDL_PushEvent(&e);
-}
-
 static bool SDLCALL rumble(void *data, Uint16 low, Uint16 high)
 {
     (void)data;
@@ -108,7 +94,7 @@ static void add_pad(char *args)
     SDL_VirtualJoystickDesc desc;
     SDL_JoystickID id;
 
-    if (game.pad_count >= 4)
+    if (game.pad_count >= 20)
         return;
     SDL_INIT_INTERFACE(&desc);
     desc.type = SDL_JOYSTICK_TYPE_GAMEPAD;
@@ -182,9 +168,40 @@ static void say_rumble(const bridge_api_t *api)
         game.round, game.rumble_low, game.rumble_high);
 }
 
-static void set_focus(const char *args)
+static void set_hint(const char *name, const char *args)
 {
-    SDL_SetHintWithPriority("IDEATEK_TEST_FOCUS", args, SDL_HINT_OVERRIDE);
+    SDL_SetHintWithPriority(name, args, SDL_HINT_OVERRIDE);
+}
+
+static void say_sdl(const bridge_api_t *api, const char *verb,
+    const char *args)
+{
+    SDL_Window *w = SDL_GetWindowFromID(first_window());
+    SDL_GUID guid = SDL_StringToGUID(args);
+    char *mapping = SDL_GetGamepadMappingForGUID(guid);
+
+    if (!strcmp(verb, "textactive"))
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u text active %d",
+            game.round, w && SDL_TextInputActive(w));
+    if (!strcmp(verb, "mousestate"))
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u mouse relative %d grab "
+            "%d shown %d default %d", game.round,
+            w && SDL_GetWindowRelativeMouseMode(w), w && SDL_GetWindowMouseGrab(w),
+            SDL_CursorVisible(), SDL_GetCursor() == SDL_GetDefaultCursor());
+    if (!strcmp(verb, "hint"))
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u hint %s [%s]", game.round,
+            args, SDL_GetHint(args) ? SDL_GetHint(args) : "");
+    if (!strcmp(verb, "hasmapping"))
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u mapping %d", game.round,
+            mapping != nullptr);
+    SDL_free(mapping);
+}
+
+static void ask_text_other(const bridge_api_t *api)
+{
+    ideatek_text_request_t r = { .width = 10.0F, .height = 10.0F };
+
+    BRIDGE_NATIVE_ATTACH(api, api->spawn(api), game.input.text_request, r);
 }
 
 bool game_input_step(const bridge_api_t *api, const char *verb, char *args)
@@ -198,8 +215,6 @@ bool game_input_step(const bridge_api_t *api, const char *verb, char *args)
     else if (!strcmp(verb, "motion") || !strcmp(verb, "wheel")
         || !strcmp(verb, "button"))
         push_mouse(verb, args);
-    else if (!strcmp(verb, "finger"))
-        push_finger(args);
     else if (!strcmp(verb, "addpad"))
         add_pad(args);
     else if (!strcmp(verb, "removepad"))
@@ -217,7 +232,16 @@ bool game_input_step(const bridge_api_t *api, const char *verb, char *args)
     else if (!strcmp(verb, "rumbled"))
         say_rumble(api);
     else if (!strcmp(verb, "focus"))
-        set_focus(args);
+        set_hint("IDEATEK_TEST_FOCUS", args);
+    else if (!strcmp(verb, "touch"))
+        set_hint("IDEATEK_TEST_TOUCH", args);
+    else if (!strcmp(verb, "density"))
+        set_hint("IDEATEK_TEST_DENSITY", args);
+    else if (!strcmp(verb, "textother"))
+        ask_text_other(api);
+    else if (!strcmp(verb, "textactive") || !strcmp(verb, "mousestate")
+        || !strcmp(verb, "hint") || !strcmp(verb, "hasmapping"))
+        say_sdl(api, verb, args);
     else
         done = false;
     return (done);

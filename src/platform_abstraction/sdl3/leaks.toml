@@ -3,6 +3,7 @@ SDL_Metal_CreateView = "SDL_Metal_DestroyView"
 SDL_GL_CreateContext = "SDL_GL_DestroyContext"
 SDL_CreateSystemCursor = "SDL_DestroyCursor"
 SDL_LoadPNG = "SDL_DestroySurface"
+SDL_OpenGamepad = "SDL_CloseGamepad"
 
 [leaks.kinds.sdl3_memory]
 takes = { SDL_GetWindows = "result", SDL_GetDisplays = "result", SDL_GetFullscreenDisplayModes = "result", SDL_GetClipboardText = "result" }

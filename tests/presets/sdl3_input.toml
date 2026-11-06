@@ -3,3 +3,6 @@ presets = ["sdl3.toml"]
 [module."ideatek_input_sdl3:input@0.1.0"]
 write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:FingerEvent"]
 read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:WindowState", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest"]
+
+[order]
+before = [["ideatek_window_sdl3:window:events", "ideatek_input_sdl3:input:events"]]

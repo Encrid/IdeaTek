@@ -52,7 +52,7 @@ typedef struct {
     uint32_t gamepad_event;
     uint32_t gamepad_request;
     uint32_t finger_event;
-    uint32_t lists[12];
+    uint32_t lists[13];
 } game_input_t;
 
 typedef struct {
@@ -83,8 +83,8 @@ typedef struct {
     uint32_t first_paste;
     uint64_t input_entity;
     uint64_t pad_entity;
-    SDL_JoystickID pad_ids[4];
-    SDL_Joystick *pads[4];
+    SDL_JoystickID pad_ids[20];
+    SDL_Joystick *pads[20];
     uint32_t pad_count;
     float rumble_low;
     float rumble_high;

@@ -191,6 +191,15 @@ SEEN(seen_mouse, 9, mouse, print_mouse)
 SEEN(seen_pad_state, 10, gamepad_state, print_pad_state)
 SEEN(seen_pad, 11, gamepad, print_pad)
 
+BRIDGE_NATIVE(seen_pad_left)
+{
+    const bridge_list_t *l = bridge_native_get_list(api, game.input.lists[12]);
+
+    for (uint32_t i = 0; i < l->count; i++)
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u pad left", game.round + 1);
+    return (0);
+}
+
 #define WATCH(api, name, index, field, events) \
     game.input.lists[index] = BRIDGE_NATIVE_OBSERVER(api, name, events, \
         (&(bridge_term_t){ game.input.field, BRIDGE_READ, BRIDGE_AND, 0 }), \
@@ -212,4 +221,5 @@ void game_watch_input(const bridge_api_t *api)
     WATCH(api, "seen_mouse", 9, mouse, both);
     WATCH(api, "seen_pad_state", 10, gamepad_state, both);
     WATCH(api, "seen_pad", 11, gamepad, both);
+    WATCH(api, "seen_pad_left", 12, gamepad, BRIDGE_ON_LEAVE);
 }
