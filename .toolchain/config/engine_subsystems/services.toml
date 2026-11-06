@@ -16,12 +16,12 @@ into = "include"
 
 [variables]
 services_probe_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
     "spans=65536", "spawns=none", "changes=65536", "persistent=none", "hot_reload=false",
 ]
 
 services_spawn_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=65536", "log_ring=512",
     "spans=65536", "spawns=1", "changes=65536", "persistent=none", "hot_reload=false",
 ]
 

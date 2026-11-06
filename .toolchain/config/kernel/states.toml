@@ -16,12 +16,12 @@ into = "include"
 
 [variables]
 states_probe_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
     "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
 ]
 
 states_spawn_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
     "spans=4096", "spawns=1", "changes=1024", "persistent=none", "hot_reload=false",
 ]
 

@@ -16,17 +16,17 @@ into = "include"
 
 [variables]
 audio_probe_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
     "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
 ]
 
 audio_game_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
     "spans=4096", "spawns=1", "changes=1024", "persistent=64", "hot_reload=false",
 ]
 
 audio_module_words = [
-    "abi=3", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=8192", "log_ring=512",
     "spans=4096", "spawns=1", "changes=1024", "persistent=16", "hot_reload=false",
 ]
 
