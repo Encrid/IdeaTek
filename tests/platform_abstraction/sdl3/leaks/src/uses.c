@@ -6,11 +6,13 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <SDL3/SDL_clipboard.h>
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_metal.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_properties.h>
 #include <SDL3/SDL_stdinc.h>
+#include <SDL3/SDL_surface.h>
 #include <SDL3/SDL_video.h>
 
 static void use_pairs(bool give)
@@ -28,6 +30,21 @@ static void use_pairs(bool give)
         SDL_Metal_DestroyView(view);
     }
     SDL_DestroyWindow(window);
+}
+
+static void use_lists(bool give)
+{
+    SDL_DisplayID *displays = SDL_GetDisplays(nullptr);
+    SDL_DisplayMode **modes = SDL_GetFullscreenDisplayModes(1, nullptr);
+    char *text = SDL_GetClipboardText();
+    SDL_Surface *icon = SDL_LoadPNG("leaks.png");
+
+    if (give) {
+        SDL_DestroySurface(icon);
+        SDL_free(text);
+        SDL_free(modes);
+        SDL_free(displays);
+    }
 }
 
 static void use_windows(bool both)
@@ -63,6 +80,8 @@ int main(int argc, char **argv)
 
     if (all || strcmp(mode, "pairs") == 0)
         use_pairs(all);
+    if (all || strcmp(mode, "pairs") == 0)
+        use_lists(all);
     if (all || strcmp(mode, "window") == 0)
         use_windows(all);
     if (all || strcmp(mode, "subsystem") == 0)
