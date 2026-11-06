@@ -160,6 +160,7 @@ A close request and a quit in 1 round are 1 request. SDL3 sends both when the us
 | A key press of the keyboard. | It stays in the queue. |
 | An event of a type that no part takes. | It never comes into the queue. |
 | An event of each range of *The ranges of the module*. | It comes into the queue, and the round takes it. |
+| An `ideatek:EventWait` in the first round. | No wait, because no round took the events before. |
 
 ## Functions
 

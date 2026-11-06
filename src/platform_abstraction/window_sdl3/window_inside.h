@@ -25,7 +25,7 @@ constexpr uint32_t SETTINGS = 13;
 
 constexpr uint32_t WINDOW_SPAWNS = 256;
 constexpr uint32_t WINDOW_DISPLAYS = 16;
-constexpr uint32_t WINDOW_MODES = 255;
+constexpr uint32_t WINDOW_MODES = 253;
 constexpr uint32_t WINDOW_PEEKS = 64;
 constexpr uint32_t WINDOW_REASON = 256;
 

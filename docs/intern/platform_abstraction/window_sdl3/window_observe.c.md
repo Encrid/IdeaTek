@@ -44,6 +44,7 @@ In both cases the module hides the window and ends the run. It destroys the wind
 | A second entity gets `ideatek:WindowRequest`. | The line of the second window. No window opens. |
 | The game destroys the entity of the window, or detaches its request. | The window hides, and the observer gives `BRIDGE_END`. |
 | A different entity leaves the terms. | Nothing. |
+| The game destroys the entity of the window before the window opens. | The observer gives `BRIDGE_END`. |
 
 ## Functions
 

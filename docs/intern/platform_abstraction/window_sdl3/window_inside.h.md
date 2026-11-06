@@ -35,7 +35,7 @@ Each slot is a `constexpr`, and `declare_types` of `docs/intern/platform_abstrac
 | --- | --- | --- |
 | `WINDOW_SPAWNS` | 256 | The most entities that the module spawns in 1 round. The manifest states it as `spawns`. |
 | `WINDOW_DISPLAYS` | 16 | The most displays that get an entity. |
-| `WINDOW_MODES` | 255 | The most video modes of 1 display. With its display, they fit in the spawns of 1 round. |
+| `WINDOW_MODES` | 253 | The most listed video modes of 1 display. With the desktop mode, the current mode and the display, they fit in the 256 spawns of 1 round. |
 | `WINDOW_PEEKS` | 64 | The most key presses that the module reads in 1 round to find a paste. |
 | `WINDOW_REASON` | 256 | The size of the buffer for the reason of a failure of SDL3. |
 

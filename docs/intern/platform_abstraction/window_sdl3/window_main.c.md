@@ -44,9 +44,9 @@ The module saves no row, because each of its rows is a fact of the system that t
 
 ## The close
 
-`close_window` destroys the Metal view, then the window, and sets both to null.
+`close_window` destroys the Metal view on macOS, then the window, and sets both to null. Only macOS has the view: `docs/intern/platform_abstraction/window_sdl3/window_handles.c.md`, *The handles*.
 The view goes first, because it is a part of the window: https://wiki.libsdl.org/SDL3/SDL_Metal_DestroyView.
-`bridge_shutdown` calls it. The GPU module destroys its surface before: `docs/intern/platform_abstraction/window_sdl3/window_driver.c.md`, *The handles*.
+`bridge_shutdown` calls it. The GPU module destroys its surface before: `docs/intern/platform_abstraction/window_sdl3/window_handles.c.md`, *The handles*.
 
 ## The branches
 

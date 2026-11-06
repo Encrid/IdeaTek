@@ -40,6 +40,8 @@ It gives null when no display matches, for example for a display that went.
 | A change of a mode, a scale or a size of a display. | The display attaches again. |
 | The list of modes of a display changes. | New entities for its modes. |
 | A name of more than 127 bytes. | The line of the long name, and a name cut at a whole code point. |
+| SDL3 gives no name of a display. | A name of length 0. |
+| No room in the round for the new modes or for the display. | The next round does it. |
 
 ## Functions
 

@@ -10,7 +10,7 @@ The module has at most 1 window, so the window is `window` of `window_module`.
 1. It calls `SDL_CreateWindow` with the title, `width`, `height` and the flags of the open.
 2. If SDL3 refuses, it writes the line of no window. The window stays closed until the game attaches a request again.
 3. `set_icon` sets the icon of the setting `icon`.
-4. `read_handles` writes the handles of the window: `docs/intern/platform_abstraction/window_sdl3/window_driver.c.md`, *The handles*.
+4. `read_handles` writes the handles of the window: `docs/intern/platform_abstraction/window_sdl3/window_handles.c.md`, *The handles*.
 5. `set_mode` sets the display and the mode of the window.
 6. `SDL_ShowWindow` shows the window.
 
@@ -118,6 +118,8 @@ A display with no mode in the list of SDL3 has no exclusive mode, so the current
 | An exclusive mode that the system takes. | The display uses the mode while the window has the focus. |
 | An exclusive mode that the system refuses. | The line of the refused mode, and the window fills the display. |
 | No display has an entity. | SDL3 places the window at the center of its display. |
+| No memory for the path of the icon. | The line of the memory, and the icon of the system. |
+| `IDEATEK_WINDOW_MODE_EXCLUSIVE_FULLSCREEN` and no display has an entity. | The line of the video mode, and the window fills the display of SDL3. |
 
 ## Functions
 

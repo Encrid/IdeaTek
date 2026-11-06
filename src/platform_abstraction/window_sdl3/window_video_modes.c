@@ -13,7 +13,7 @@ static uint32_t add_extras(SDL_DisplayID id, window_mode_t *modes,
     bool found;
 
     for (uint32_t e = 0; e < 2; e++) {
-        found = !extra[e] || count >= WINDOW_MODES + 2;
+        found = !extra[e];
         for (uint32_t i = 0; !found && i < count; i++)
             found = is_same_mode(&modes[i].mode, extra[e]);
         if (!found)
@@ -38,7 +38,7 @@ uint32_t read_modes(const bridge_api_t *api, SDL_DisplayID id,
     }
     if (list && (uint32_t)got > WINDOW_MODES)
         bridge_native_say(api, BRIDGE_LOG_WARN, "the display %u has %d video "
-            "modes, and the module keeps the first 255", id, got);
+            "modes, and the module keeps the first 253", id, got);
     *listed = count;
     SDL_free(list);
     return (add_extras(id, modes, count));
