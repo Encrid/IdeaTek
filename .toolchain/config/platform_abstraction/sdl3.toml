@@ -69,7 +69,6 @@ flags = ["-isystem", "{sdl_root}/include", "{sdl_link}"]
 test = true
 
 [variables]
-macsdk = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk"
 sdl_defines = ["{sdl_config}", "DLL_EXPORT=1", "SDL_BUILD_MAJOR_VERSION=3", "SDL_BUILD_MINOR_VERSION=4", "SDL_BUILD_MICRO_VERSION=20"]
 sdl_flags = ["-isystem", "{sdl_root}/src/video/khronos", "-fvisibility=hidden", "-fno-strict-aliasing", "-w"]
 sdl_link = "{out}/SDL3{library}"
@@ -79,8 +78,8 @@ sdl_windows_system = [
 ]
 sdl_linux_system = ["-pthread", "-I", "{sdl_deps}/src", "-isystem", "{sdl_deps}/include"]
 sdl_macos_system = [
-    "-isystem", "{macsdk}/usr/include", "-iframework", "{macsdk}/System/Library/Frameworks",
-    "-F", "{macsdk}/System/Library/Frameworks", "-L", "{macsdk}/usr/lib", "-fobjc-arc",
+    "-isystem", "{macos_sdk}/usr/include", "-iframework", "{macos_sdk}/System/Library/Frameworks",
+    "-F", "{macos_sdk}/System/Library/Frameworks", "-L", "{macos_sdk}/usr/lib", "-fobjc-arc",
     "-framework", "CoreMedia", "-framework", "CoreVideo", "-framework", "Cocoa",
     "-weak_framework", "UniformTypeIdentifiers", "-framework", "IOKit", "-framework", "ForceFeedback",
     "-framework", "Carbon", "-framework", "CoreAudio", "-framework", "AudioToolbox",
