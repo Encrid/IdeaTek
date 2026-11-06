@@ -1,35 +1,35 @@
 [targets.x86_64-windows-gnu]
 section = ".bridge"
 bridge_sha256 = "e96446757c5fe4d846415364f45515ce012c1857fe686410b3d1c2a1d8bc1cfa"
-bb_native_sha256 = "7841a5f1b10b3edd4ce935c0ba0db58a15390cc3c08a8fa3e27c5054d51cffc6"
+bb_native_sha256 = "114dbc8e7216e01f44c09559416f0c2b361a24cc23034cf47ecf68fd814c362b"
 bridge_host_sha256 = "6be4023ad3d60c8e97ab27bddc28307168632eeb08129665461b6e52943639d7"
 
 [targets.x86_64-linux-gnu]
 section = ".bridge"
 bridge_sha256 = "27b0ef2cf16727e644c474ffe90af4d0d45b38ef594306dd2511ef51a2c3d27d"
-bb_native_sha256 = "89dd6313bdb202aa1af262fd54dbfa27bad5a91d4c2350989cb401a6aab5dc85"
+bb_native_sha256 = "de4cd6b6c403133a138f1a88e204f63713e4dd02436153c07c0002e7d590da8a"
 bridge_host_sha256 = "4fe4d6862cb722771101ca87c1608459a411534cef383fa89e44f41b09e1fe03"
 
 [targets.aarch64-macos]
 section = "__TEXT,.bridge"
 bridge_sha256 = "5d6fdc261736c9fc9a4455957878b67b1c5b5b426e6bab832c38e67f2cdaa73c"
-bb_native_sha256 = "68170b84409bd86f08aadfcc74bf5ffcdd0e34cb0cb6c4c367dcfb3880dc818b"
+bb_native_sha256 = "89b77c22874865facee563436d870cf17ca782125b3aeb59f2439419f572cd0d"
 bridge_host_sha256 = "bc777f8e53e49bd4c95bfc095f56de8a673a7e81e9c3649f6ed6c722f30c76be"
 
 [targets.aarch64-linux-gnu]
 section = ".bridge"
 bridge_sha256 = "e5cdd310f59c957f93286511acdd5a7e1f56a856e7376976cbcc688e4b6f30b1"
-bb_native_sha256 = "42d3c3087262b3cf37486446ce9e58ac7422479ef9e1aed62fddcb74533c0c21"
+bb_native_sha256 = "d040c97d5f1a4c565004b232c79f223f5d06245bb49036b92cd5570b03b7d642"
 bridge_host_sha256 = "cfe58fc7fd3eec2b08b07c24f6ee4961f2a942d79eda46b22493bd2a2041a112"
 
 [targets.x86_64-macos]
 section = "__TEXT,.bridge"
 bridge_sha256 = "dfcbd23640686c3fdfd12a24869304fccc9620f818e059c21ac3510548efec95"
-bb_native_sha256 = "c164791c29bdb2310d9081a0f7dde7f11f693ea41d3e5f74177018ec8a76007b"
+bb_native_sha256 = "f345e8b6a26293cce984834c8f977e9945d1880699b4b8da211a0e0be33893aa"
 bridge_host_sha256 = "b5fccd537bbaee837b840ccce5e133b288e3d77980f7489761c2c57b77e86708"
 
 [targets.aarch64-windows-gnu]
 section = ".bridge"
 bridge_sha256 = "838c14c2558b242165987df3fa0133330df8238b1ac2ef921f5b4b411f34d546"
-bb_native_sha256 = "38b3ff8cae7f8055990afa786a4cefa76372535f67ffa8235c1906dbae3c01c2"
+bb_native_sha256 = "14b5758c5ae95c9caa10ae1179594d4a373ad32097c149f9cfde9b04fd303eb8"
 bridge_host_sha256 = "17c94b175c6908a0b5e19dc407fa6a1ddc80c4e8f28b836e219425a98d9cfe44"
