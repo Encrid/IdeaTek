@@ -34,42 +34,48 @@ window_row1 = "windows"
 window_row2 = "windows"
 window_surface1 = "windows"
 window_surface2 = "windows"
-paste_mods = "ctrl"
+window_handles1 = "11"
+window_handles2 = "11"
 
 [targets.aarch64-windows-gnu]
 window_row1 = "windows"
 window_row2 = "windows"
 window_surface1 = "windows"
 window_surface2 = "windows"
-paste_mods = "ctrl"
+window_handles1 = "11"
+window_handles2 = "11"
 
 [targets.x86_64-linux-gnu]
 window_row1 = "x11"
 window_row2 = "wayland"
 window_surface1 = "xlib"
 window_surface2 = "wayland"
-paste_mods = "ctrl"
+window_handles1 = "11"
+window_handles2 = "11"
 
 [targets.aarch64-linux-gnu]
 window_row1 = "x11"
 window_row2 = "wayland"
 window_surface1 = "xlib"
 window_surface2 = "wayland"
-paste_mods = "ctrl"
+window_handles1 = "11"
+window_handles2 = "11"
 
 [targets.x86_64-macos]
 window_row1 = "cocoa"
 window_row2 = "cocoa"
 window_surface1 = "metal"
 window_surface2 = "metal"
-paste_mods = "gui"
+window_handles1 = "01"
+window_handles2 = "01"
 
 [targets.aarch64-macos]
 window_row1 = "cocoa"
 window_row2 = "cocoa"
 window_surface1 = "metal"
 window_surface2 = "metal"
-paste_mods = "gui"
+window_handles1 = "01"
+window_handles2 = "01"
 
 [[artifact]]
 name = "SDL3_test"

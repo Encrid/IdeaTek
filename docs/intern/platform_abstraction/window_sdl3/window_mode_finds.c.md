@@ -18,7 +18,7 @@ Thus only a mode of the list of step 1 can be an exclusive mode of the window.
 | `find_mode` with an entity of a different display. | Null. |
 | `find_mode` with the entity of the desktop mode outside the list. | Null. |
 | `find_mode_entity` with no mode. | 0. |
-| 2 modes that differ only in `pixel_density` or in `refresh_rate_denominator`. | 2 entities. |
+| Modes that differ only in `h`, `pixel_density`, `refresh_rate_numerator` or `refresh_rate_denominator`. | 1 entity for each mode. |
 
 ## Functions
 

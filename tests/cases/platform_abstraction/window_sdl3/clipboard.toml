@@ -205,7 +205,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:key v {paste_mods}"
+script = "2:setclip hi|3:key v ctrl"
 '''
 
 [case.false.files]
@@ -253,7 +253,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:key v {paste_mods}|4:has keydown"
+script = "2:setclip hi|3:key v ctrl|4:has keydown"
 '''
 
 [[case]]
@@ -275,7 +275,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:key v {paste_mods}+alt"
+script = "2:setclip hi|3:key v ctrl+alt"
 '''
 
 [case.false.files]
@@ -288,7 +288,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:key v {paste_mods}"
+script = "2:setclip hi|3:key v ctrl"
 '''
 
 [[case]]
@@ -310,7 +310,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:key x {paste_mods}"
+script = "2:setclip hi|3:key x ctrl"
 '''
 
 [case.false.files]
@@ -323,7 +323,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:key v {paste_mods}"
+script = "2:setclip hi|3:key v ctrl"
 '''
 
 [[case]]
@@ -345,7 +345,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:keys 2 v {paste_mods}"
+script = "2:setclip hi|3:keys 2 v ctrl"
 '''
 
 [case.false.files]
@@ -358,7 +358,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:keys 1 v {paste_mods}"
+script = "2:setclip hi|3:keys 1 v ctrl"
 '''
 
 [[case]]
@@ -382,7 +382,7 @@ library = "{bb_native}/bridge_native"
 [module."ideatek_window_sdl3:window@0.1.0".config]
 clipboard_bytes = 4
 [module."test:game@1.0.0".config]
-script = "2:setclip hello|3:key v {paste_mods}"
+script = "2:setclip hello|3:key v ctrl"
 '''
 
 [case.false.files]
@@ -397,7 +397,7 @@ library = "{bb_native}/bridge_native"
 [module."ideatek_window_sdl3:window@0.1.0".config]
 clipboard_bytes = 64
 [module."test:game@1.0.0".config]
-script = "2:setclip hello|3:key v {paste_mods}"
+script = "2:setclip hello|3:key v ctrl"
 '''
 
 [[case]]
@@ -419,7 +419,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:noclip|3:key v {paste_mods}"
+script = "2:noclip|3:key v ctrl"
 '''
 
 [case.false.files]
@@ -432,7 +432,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip x|3:key v {paste_mods}"
+script = "2:setclip x|3:key v ctrl"
 '''
 
 [[case]]
@@ -454,7 +454,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:keys 70 v {paste_mods}"
+script = "2:setclip hi|3:keys 70 v ctrl"
 '''
 
 [case.false.files]
@@ -467,5 +467,5 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:setclip hi|3:keys 60 v {paste_mods}"
+script = "2:setclip hi|3:keys 60 v ctrl"
 '''
