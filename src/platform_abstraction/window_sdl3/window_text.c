@@ -8,20 +8,6 @@
 
 #include "window_inside.h"
 
-bool cut_text(char to[128], const char *from, size_t len)
-{
-    size_t keep = len;
-
-    if (len > 127) {
-        keep = 127;
-        while (keep > 0 && ((unsigned char)from[keep] & 0xC0) == 0x80)
-            keep--;
-    }
-    memcpy(to, from, keep);
-    to[keep] = '\0';
-    return (keep < len);
-}
-
 char *copy_arena_text(const bridge_api_t *api, bridge_text_t text)
 {
     const bridge_header_t *h = bridge_native_get_header(api);

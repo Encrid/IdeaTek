@@ -142,7 +142,6 @@ The header gives no function of its own. It declares the functions that one sour
 | `turn_items` | `window_items.c` |
 | `put_bytes` | `window_items.c` |
 | `spawn_item` | `window_items.c` |
-| `cut_text` | `window_text.c` |
 | `copy_arena_text` | `window_text.c` |
 | `spawn_entity` | `window_world.c` |
 | `has_room` | `window_world.c` |

@@ -42,9 +42,9 @@ static ideatek_display_t read_display(const bridge_api_t *api,
     ideatek_display_t value = {};
     SDL_Rect bounds = {};
     const char *name = SDL_GetDisplayName(display->id);
-    SDL_PropertiesID props = SDL_GetDisplayProperties(display->id);
+    size_t len = name ? SDL_strlen(name) : 0;
 
-    if (name && cut_text(value.name, name, SDL_strlen(name)))
+    if (SDL_utf8strlcpy(value.name, name ? name : "", sizeof(value.name)) < len)
         bridge_native_say(api, BRIDGE_LOG_WARN,
             "the name of the display %u is longer than 127 bytes",
             display->id);
@@ -56,7 +56,7 @@ static ideatek_display_t read_display(const bridge_api_t *api,
     value.width = (uint32_t)bounds.w;
     value.height = (uint32_t)bounds.h;
     value.content_scale = SDL_GetDisplayContentScale(display->id);
-    value.hdr = SDL_GetBooleanProperty(props,
+    value.hdr = SDL_GetBooleanProperty(SDL_GetDisplayProperties(display->id),
         SDL_PROP_DISPLAY_HDR_ENABLED_BOOLEAN, false);
     return (value);
 }

@@ -12,7 +12,7 @@ Then it fills a value of `ideatek:Display`:
 
 | Field | Source |
 | --- | --- |
-| `name` | `SDL_GetDisplayName`, copied with `cut_text`. |
+| `name` | `SDL_GetDisplayName`, copied with `SDL_utf8strlcpy`. |
 | `desktop_mode` | `find_mode_entity` for `SDL_GetDesktopDisplayMode`. |
 | `current_mode` | `find_mode_entity` for `SDL_GetCurrentDisplayMode`. |
 | `width` and `height` | `SDL_GetDisplayBounds`. |
@@ -23,7 +23,7 @@ Then it fills a value of `ideatek:Display`:
 The primary display of SDL3 is the first display of its list: https://github.com/libsdl-org/SDL/blob/release-3.4.20/src/video/SDL_video.c#L1006.
 Thus exactly 1 display entity has `is_primary` at `true`, if 1 display has an entity.
 
-A name of more than 127 bytes keeps its first whole code points. Then the line of the long name comes.
+A name of more than 127 bytes keeps its first whole code points, because `SDL_utf8strlcpy` cuts at a whole code point. Then the line of the long name comes.
 `update_display` attaches the value only when a byte of it differs from `attached`, with 184 bytes of room.
 
 ## The find
@@ -40,6 +40,7 @@ It gives null when no display matches, for example for a display that went.
 | A change of a mode, a scale or a size of a display. | The display attaches again. |
 | The list of modes of a display changes. | New entities for its modes. |
 | A name of more than 127 bytes. | The line of the long name, and a name cut at a whole code point. |
+| A name of more than 127 bytes with no first byte of a code point. | The line of the long name, and the first 127 bytes. |
 | SDL3 gives no name of a display. | A name of length 0. |
 | No room in the round for the new modes or for the display. | The next round does it. |
 
