@@ -93,7 +93,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "3:hasmapping 030000005e0400008e02000014010000"
+script = "3:hasmapping 03000000341200007856000000000000"
 '''
 
 [case.false.files]
@@ -108,7 +108,7 @@ library = "{bb_native}/bridge_native"
 [module."ideatek_input_sdl3:input@0.1.0".config]
 mappings = { path = "missing.txt" }
 [module."test:game@1.0.0".config]
-script = "3:hasmapping 030000005e0400008e02000014010000"
+script = "3:hasmapping 03000000341200007856000000000000"
 '''
 
 [[case]]
@@ -132,9 +132,9 @@ library = "{bb_native}/bridge_native"
 [module."ideatek_input_sdl3:input@0.1.0".config]
 mappings = { path = "map.txt" }
 [module."test:game@1.0.0".config]
-script = "3:hasmapping 030000005e0400008e02000014010000"
+script = "3:hasmapping 03000000341200007856000000000000"
 '''
-"{case}/map.txt" = "030000005e0400008e02000014010000,Test Pad,a:b0,b:b1,x:b2,y:b3,platform:Windows,\n030000005e0400008e02000014010000,Test Pad,a:b0,b:b1,x:b2,y:b3,platform:Mac OS X,\n030000005e0400008e02000014010000,Test Pad,a:b0,b:b1,x:b2,y:b3,platform:Linux,\n"
+"{case}/map.txt" = "03000000341200007856000000000000,Test Pad,a:b0,b:b1,x:b2,y:b3,platform:Windows,\n03000000341200007856000000000000,Test Pad,a:b0,b:b1,x:b2,y:b3,platform:Mac OS X,\n03000000341200007856000000000000,Test Pad,a:b0,b:b1,x:b2,y:b3,platform:Linux,\n"
 
 [case.false.files]
 "{case}/d.toml" = '''
@@ -148,7 +148,7 @@ library = "{bb_native}/bridge_native"
 [module."ideatek_input_sdl3:input@0.1.0".config]
 mappings = "none"
 [module."test:game@1.0.0".config]
-script = "3:hasmapping 030000005e0400008e02000014010000"
+script = "3:hasmapping 03000000341200007856000000000000"
 '''
 
 [[case]]
