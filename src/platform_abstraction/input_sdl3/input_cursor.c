@@ -27,18 +27,17 @@ SDL_Window *first_window(void)
 static void apply_mode(const bridge_api_t *api, SDL_Window *w,
     ideatek_mouse_mode_t mode)
 {
-    bool done;
+    bool done = true;
 
     if (mode > IDEATEK_MOUSE_MODE_CONFINED)
         mode = IDEATEK_MOUSE_MODE_NORMAL;
-    done = SDL_SetWindowRelativeMouseMode(w,
+    done &= SDL_SetWindowRelativeMouseMode(w,
         mode == IDEATEK_MOUSE_MODE_RELATIVE);
-    done = SDL_SetWindowMouseGrab(w, mode == IDEATEK_MOUSE_MODE_CONFINED)
-        && done;
+    done &= SDL_SetWindowMouseGrab(w, mode == IDEATEK_MOUSE_MODE_CONFINED);
     if (mode == IDEATEK_MOUSE_MODE_HIDDEN)
-        done = SDL_HideCursor() && done;
+        done &= SDL_HideCursor();
     else if (mode != IDEATEK_MOUSE_MODE_RELATIVE)
-        done = SDL_ShowCursor() && done;
+        done &= SDL_ShowCursor();
     if (!done)
         bridge_native_say(api, BRIDGE_LOG_WARN, "no mouse mode %u: %s", mode,
             SDL_GetError());

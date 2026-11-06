@@ -29,6 +29,7 @@ Thus the run keeps its room in the round, and its place among the other events.
 | `merge_motion` at `false`. | Each motion is a run of 1 motion. |
 | An event that is not a motion. | The run ends before it. |
 | The end of the take. | The pending run ends. |
+| A motion of the mouse after a motion of a finger. | The run of the finger ends, and a new run starts. |
 
 ## Functions
 

@@ -42,7 +42,7 @@ The clamp keeps -32768 at -1. An axis needs no room, because only the state chan
 
 Each other button of SDL3 has no bit and no event: the misc buttons, the paddles and the touchpad. The contract keeps only the standard mapping of the W3C.
 A button event needs 1 spawn and 48 bytes.
-An event of a gamepad with no entity changes nothing.
+SDL3 sends the events of a gamepad only while the module holds it open, and each gamepad that the module opens has an entity. Thus `find_pad` always finds it.
 
 ## The release
 
@@ -57,8 +57,7 @@ The sticks and the triggers keep their values.
 | A trigger at 32767. | 1. |
 | A button of the table goes down, then up. | 2 events, and its bit at 1, then at 0. |
 | A button outside the table. | No event, and no bit. |
-| An event of a gamepad with no entity. | Nothing. |
-| A loss of the focus with 1 button down. | 1 event with `down` at `false`, and the bits at 0. The sticks keep their values. |
+| A loss of the focus with the button EAST down, and no button below it. | 1 event with `down` at `false`, and the bits at 0. The sticks keep their values. |
 
 ## Functions
 

@@ -35,6 +35,8 @@ A finger that begins while the list is full still gets its events. Only a loss o
 | SDL3 cancels a finger. | 1 event of `IDEATEK_FINGER_EVENT_KIND_CANCELED`. |
 | The 17th finger that is down. | Its events, and no place in the list. |
 | A loss of the focus with 2 fingers down. | 2 events of `IDEATEK_FINGER_EVENT_KIND_CANCELED`. |
+| A finger that is not in the list ends. | Its event. The list does not change. |
+| A finger with no window. | Its places of SDL3, from 0 to 1. |
 
 ## Functions
 

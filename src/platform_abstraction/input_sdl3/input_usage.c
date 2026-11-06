@@ -13,8 +13,9 @@ static const uint32_t OTHER_PAGES[] = {
     0x000C0224, 0x000C0225, 0x000C0226, 0x000C0227, 0x000C022A,
 };
 
-static const char PUNCTUATION[] = "\r\x1b\b\t -=[]\\";
-static const char MORE_PUNCTUATION[] = ";'`,./";
+static const char FIRST_KEYS[] = "abcdefghijklmnopqrstuvwxyz1234567890"
+    "\r\x1b\b\t -=[]\\";
+static const char MORE_KEYS[] = ";'`,./";
 
 uint32_t usage_of_scancode(SDL_Scancode scancode)
 {
@@ -28,20 +29,17 @@ uint32_t usage_of_scancode(SDL_Scancode scancode)
 
 static uint32_t usage_of_character(uint32_t c)
 {
-    const char *at = SDL_strchr(PUNCTUATION, (int)c);
-    const char *more = SDL_strchr(MORE_PUNCTUATION, (int)c);
+    const char *at;
 
-    if (c >= 'a' && c <= 'z')
-        return (0x00070004u + (c - 'a'));
-    if (c >= '1' && c <= '9')
-        return (0x0007001Eu + (c - '1'));
-    if (c == '0' || c == 0x7F)
-        return (c == '0' ? 0x00070027u : 0x0007004Cu);
-    if (c && c < 0x80 && at)
-        return (0x00070028u + (uint32_t)(at - PUNCTUATION));
-    if (c && c < 0x80 && more)
-        return (0x00070033u + (uint32_t)(more - MORE_PUNCTUATION));
-    return (0);
+    if (c == 0 || c >= 0x80)
+        return (0);
+    if (c == 0x7F)
+        return (0x0007004Cu);
+    at = SDL_strchr(FIRST_KEYS, (int)c);
+    if (at)
+        return (0x00070004u + (uint32_t)(at - FIRST_KEYS));
+    at = SDL_strchr(MORE_KEYS, (int)c);
+    return (at ? 0x00070033u + (uint32_t)(at - MORE_KEYS) : 0);
 }
 
 uint32_t usage_of_keycode(SDL_Keycode keycode)

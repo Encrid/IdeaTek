@@ -51,6 +51,7 @@ SDL3 stops a rumble after its duration, and a new rumble replaces the one that p
 | A force of 2, and a force of -1. | 1 and 0. |
 | A rumble that SDL3 refuses. | The line of the rumble. |
 | A request on another entity. | Nothing. |
+| SDL3 gives no name of a gamepad. | A name of length 0. |
 
 ## Functions
 

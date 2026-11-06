@@ -57,6 +57,8 @@ A value of `cursor` outside the enum takes `IDEATEK_CURSOR_DEFAULT`, and a value
 | A cursor that SDL3 does not make. | The line of the cursor. |
 | `IDEATEK_CURSOR_DEFAULT`. | The default cursor of SDL3. |
 | A request on another entity, or with no window. | Nothing. |
+| SDL3 refuses the grab, or the hide of the cursor. | The line of the mode. |
+| SDL3 refuses to set a cursor that it made. | The line of the cursor. |
 
 ## Functions
 

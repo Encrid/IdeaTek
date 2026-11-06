@@ -42,7 +42,7 @@ BRIDGE_NATIVE(text)
             continue;
         if (t[i].events != BRIDGE_ON_LEAVE)
             apply_text(api, t[i].id);
-        else if (input_module.text_on && w)
+        else if (input_module.text_on)
             input_module.text_on = !SDL_StopTextInput(w);
     }
     return (0);
@@ -52,8 +52,8 @@ uint32_t count_points(const char *text)
 {
     uint32_t count = 0;
 
-    while (text && *text && SDL_StepUTF8(&text, nullptr))
-        count++;
+    for (; *text; count++)
+        SDL_StepUTF8(&text, nullptr);
     return (count);
 }
 
@@ -61,13 +61,9 @@ void take_text(const bridge_api_t *api, const SDL_Event *e)
 {
     const char *at = e->text.text;
     ideatek_text_event_t event = {};
-    uint32_t point;
 
-    while (at && *at) {
-        point = SDL_StepUTF8(&at, nullptr);
-        if (!point)
-            break;
-        event.code_point = point;
+    while (*at) {
+        event.code_point = SDL_StepUTF8(&at, nullptr);
         event.order = next_order();
         spawn_event(api, TEXT_EVENT, &event, sizeof(event));
     }
