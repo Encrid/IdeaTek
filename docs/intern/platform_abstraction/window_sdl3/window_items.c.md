@@ -16,7 +16,7 @@ Bridge writes the settings after `init`, so the first round of `events` reads th
 The line and the failure follow `readme.md`, *The contracts*. The range in the line is `2 to 1073741824, an even number`.
 A setting out of its range fails each round, and the line comes in each round, until Bridge stops the module or the world.
 The share must hold `drop_bytes`, `clipboard_bytes` and the text of `icon`. Bridge rounds each one up to a multiple of 8.
-If the share is too small, Bridge refuses `alloc`, and its record names the reason: https://github.com/Encrid/Bridge/blob/v0.4.0/docs/extern/bridge_abi.h.md#alloc.
+If the share is too small, Bridge refuses `alloc`, and its record names the reason: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge_abi.h.md#alloc.
 
 ## A turn
 

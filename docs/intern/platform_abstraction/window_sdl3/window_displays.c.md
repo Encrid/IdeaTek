@@ -9,7 +9,7 @@ The module keeps each display in a `window_display_t` of `displays`: `docs/inter
 `displays_dirty` is `true` in the first round, and after each event of a display.
 
 1. `SDL_GetDisplays` gives the ids of the displays. The first id is the primary display.
-2. If SDL3 gives no list, it writes `no list of the displays: <reason>`, and stops.
+2. If SDL3 gives no list, it writes the line of the list, and stops.
 3. For each display of `displays` whose id is not in the list, it calls `remove_display`.
 4. For each id of the list with no display in `displays`, it calls `add_display`.
 5. For each display of `displays`, it calls `update_display` with the id of the primary display.
@@ -24,7 +24,7 @@ Thus the next round does the rest. Each other end of `sync_displays` sets `displ
 It needs room for 1 spawn and 184 bytes for the display, and for 1 spawn and 56 bytes for each mode.
 With the room, it spawns the entity of the display, calls `spawn_modes`, and adds the display at the end of `displays`.
 
-With 16 displays in `displays`, a new display gets no entity, and the module writes `more than 16 displays: the display <id> gets no entity`.
+With 16 displays in `displays`, a new display gets no entity, and the module writes the line of the 17th display.
 
 ## A display that goes
 
@@ -56,7 +56,7 @@ Then it fills a value of `ideatek:Display`:
 The primary display of SDL3 is the first display of its list: https://github.com/libsdl-org/SDL/blob/release-3.4.20/src/video/SDL_video.c#L1006.
 Thus exactly 1 display entity has `is_primary` at `true`, if 1 display has an entity.
 
-A name of more than 127 bytes keeps its first whole code points, and the module writes `the name of the display <id> is longer than 127 bytes`.
+A name of more than 127 bytes keeps its first whole code points, and the module writes the line of the long name.
 `update_display` attaches the value only when a byte of it differs from `attached`, with 184 bytes of room.
 
 ## The find

@@ -75,6 +75,8 @@ Each part has a readme, which its release holds.
 | `window` | `BC-IdeaTek-Window` | `docs/extern/platform_abstraction/window/readme.md` |
 | `world` | `BC-IdeaTek-World` | `docs/extern/platform_abstraction/world/readme.md` |
 | `sdl3` | `BL-IdeaTek-SDL3` | `docs/extern/platform_abstraction/sdl3/readme.md` |
+| `sdl3_start` | `BL-IdeaTek-SDL3-Start` | `docs/extern/platform_abstraction/sdl3_start/readme.md` |
+| `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `docs/extern/platform_abstraction/window_sdl3/readme.md` |
 
 ### The implementations
 
@@ -83,6 +85,7 @@ Each implementation is a part with its own release. A module part fills the role
 | Part | Package | Identity | Fills the role of | Beside it |
 | --- | --- | --- | --- | --- |
 | `sdl3` | `BL-IdeaTek-SDL3` | A library: no identity | | |
+| `sdl3_start` | `BL-IdeaTek-SDL3-Start` | A library: no identity | | |
 | `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `ideatek_window_sdl3:window@0.1.0` | The window module, with the clipboard | The SDL3 library |
 | `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `ideatek_input_sdl3:input@0.1.0` | The input module | The SDL3 library |
 | `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `ideatek_gpu_vulkan:gpu@0.1.0` | The GPU module | The Vulkan loader. On macOS, the bundled loader with KosmicKrisp and MoltenVK |

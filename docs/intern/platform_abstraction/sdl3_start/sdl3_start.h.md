@@ -5,7 +5,7 @@ It includes `SDL3/SDL_init.h` for `SDL_InitFlags`, and `stddef.h` for `size_t`.
 
 ## The part
 
-The package of the part is `BL-IdeaTek-SDL3-Start`. Its artifact is the static archive `sdl3_start.a`.
+The package of the part is `BL-IdeaTek-SDL3-Start`: `docs/extern/platform_abstraction/sdl3_start/readme.md`.
 Each module that starts a subsystem of SDL3 links the archive, for example the window module and the input module.
 Thus each module holds its own copy of the code, and the shared library of the part `sdl3` holds the one state of SDL3.
 
@@ -17,10 +17,7 @@ Thus the functions stay out of the exports of each module, and 2 modules never c
 
 ## The rules of a caller
 
-- The caller starts and stops on the thread that starts the video of SDL3. A pinned module does this in `init` and `shutdown`.
-- The caller gives to the stop the same flags that it gave to the start, after a start that gave `true`.
-- After its start, the caller turns on the types of events that it takes, with `SDL_SetEventEnabled`.
-- After a start that gave `false`, the caller stops nothing. The start then holds no subsystem.
+`docs/extern/platform_abstraction/sdl3_start/readme.md`, *Usage*, gives the rules of a caller.
 
 ## Functions
 

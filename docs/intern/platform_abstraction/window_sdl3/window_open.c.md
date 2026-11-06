@@ -8,7 +8,7 @@ The module has at most 1 window, so the window is `window` of `window_module`.
 `open_window` opens the window of a request:
 
 1. It calls `SDL_CreateWindow` with the title, `width`, `height` and the flags of the open.
-2. If SDL3 refuses, it writes `no window: <reason>`, and the window stays closed until the game attaches a request again.
+2. If SDL3 refuses, it writes the line of no window. The window stays closed until the game attaches a request again.
 3. `set_icon` sets the icon of the setting `icon`.
 4. `read_handles` writes the handles of the window: `docs/intern/platform_abstraction/window_sdl3/window_state.c.md`, *The handles*.
 5. `set_mode` sets the display and the mode of the window.
@@ -91,7 +91,7 @@ The view goes first, because it is a part of the window: https://wiki.libsdl.org
 | Case | Result |
 | --- | --- |
 | SDL3 opens the window. | The window shows, with its title, its size, its display and its mode. |
-| SDL3 refuses the window. | The line `no window: <reason>`, and no `ideatek:WindowState`. |
+| SDL3 refuses the window. | The line of no window, and no `ideatek:WindowState`. |
 | `icon` is `"none"`. | The icon of the system. |
 | `icon` names a PNG file. | The icon of the file. |
 | `icon` names no PNG file, or the system refuses the icon. | The line of the icon, and the icon of the system. |

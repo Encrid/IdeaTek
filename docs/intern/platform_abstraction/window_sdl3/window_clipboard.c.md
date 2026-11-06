@@ -13,7 +13,7 @@ Thus the last request of a barrier is the text that stays on the clipboard. The 
 1. `get_cell` gives where the request of the entity is. With no request, it stops.
 2. `copy_arena_text` copies the text into a C string: `docs/intern/platform_abstraction/window_sdl3/window_text.c.md`.
 3. If the copy fails, it stops. `copy_arena_text` wrote the line.
-4. If SDL3 refuses `SDL_SetClipboardText`, it writes `no clipboard: <reason>`.
+4. If SDL3 refuses `SDL_SetClipboardText`, it writes the line of no clipboard.
 5. It frees the C string.
 
 The text of the request is in the share of the game, and the game can write a wrong `at` or `len`.
@@ -77,7 +77,7 @@ A paste takes 1 spawn and 32 bytes of `changes`. Without the room, the next roun
 | The game attaches `ideatek:ClipboardRequest`. | The clipboard holds the text. |
 | A text outside of the persistent arena. | The line of the text, and the clipboard does not change. |
 | No memory for the copy. | The line of the memory, and the clipboard does not change. |
-| SDL3 refuses the text. | The line `no clipboard: <reason>`. |
+| SDL3 refuses the text. | The line of no clipboard. |
 | Ctrl+V, or Cmd+V on macOS. | 1 entity of `ideatek:Paste` with the text of the clipboard. |
 | V with no modifier, or with Alt. | No paste. The key press stays in the queue. |
 | 2 pastes in 1 round. | 2 entities that share 1 copy of the text. |
