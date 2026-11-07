@@ -1,0 +1,57 @@
+[parts.vulkan]
+name = "BL-IdeaTek-Vulkan"
+folder = "platform_abstraction/vulkan"
+uses = []
+third_party = ["volk", "vulkan_headers"]
+
+[compose.vulkan]
+part = "vulkan"
+from = "{vulkan_root}"
+headers = ["include/vulkan/*.h", "include/vk_video/*.h"]
+into = "include"
+
+[compose.volk]
+part = "vulkan"
+from = "{volk_root}"
+headers = ["volk.h"]
+into = "include"
+
+[[source]]
+name = "vulkan_headers"
+url = "https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/vulkan-sdk-1.4.363.0.tar.gz"
+sha256 = "4a078be12bef21cfebc09d878b77a63cff9d68f899254a0b00d0e37ef73e7f7e"
+into = "build/third_party/vulkan_headers"
+top = "Vulkan-Headers-vulkan-sdk-1.4.363.0"
+
+[[source]]
+name = "volk"
+url = "https://github.com/zeux/volk/archive/refs/tags/1.4.350.tar.gz"
+sha256 = "e47c6efe5294bb03729a976b385864bba5daf46ec60f0bdea11e1d1446345f9a"
+into = "build/third_party/volk"
+top = "volk-1.4.350"
+
+[variables]
+vulkan_root = "build/third_party/vulkan_headers/Vulkan-Headers-vulkan-sdk-1.4.363.0"
+volk_root = "build/third_party/volk/volk-1.4.350"
+vulkan_include = ["-isystem", "{vulkan_root}/include", "-isystem", "{volk_root}"]
+
+[[artifact]]
+name = "volk"
+kind = "archive"
+part = "vulkan"
+sources = ["{volk_root}/volk.c"]
+flags = ["{vulkan_include}", "-fvisibility=hidden"]
+
+[[artifact]]
+name = "vulkan_probe"
+kind = "program"
+part = "vulkan"
+test = true
+sources = [
+    "tests/platform_abstraction/vulkan/probe.c",
+    "tests/platform_abstraction/vulkan/probe_gpus.c",
+    "tests/platform_abstraction/vulkan/probe_features.c",
+]
+include = ["tests/platform_abstraction/vulkan"]
+link = ["{out}/volk.a"]
+flags = ["{vulkan_include}"]

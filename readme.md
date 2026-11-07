@@ -76,6 +76,7 @@ Each part has a readme, which its release holds.
 | `world` | `BC-IdeaTek-World` | `docs/extern/platform_abstraction/world/readme.md` |
 | `sdl3` | `BL-IdeaTek-SDL3` | `docs/extern/platform_abstraction/sdl3/readme.md` |
 | `sdl3_start` | `BL-IdeaTek-SDL3-Start` | `docs/extern/platform_abstraction/sdl3_start/readme.md` |
+| `vulkan` | `BL-IdeaTek-Vulkan` | `docs/extern/platform_abstraction/vulkan/readme.md` |
 | `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `docs/extern/platform_abstraction/window_sdl3/readme.md` |
 | `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `docs/extern/platform_abstraction/input_sdl3/readme.md` |
 
@@ -87,6 +88,7 @@ Each implementation is a part with its own release. A module part fills the role
 | --- | --- | --- | --- | --- |
 | `sdl3` | `BL-IdeaTek-SDL3` | A library: no identity | | |
 | `sdl3_start` | `BL-IdeaTek-SDL3-Start` | A library: no identity | | |
+| `vulkan` | `BL-IdeaTek-Vulkan` | A library: no identity | | |
 | `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `ideatek_window_sdl3:window@0.1.0` | The window module, with the clipboard | The SDL3 library |
 | `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `ideatek_input_sdl3:input@0.1.0` | The input module | The SDL3 library |
 | `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `ideatek_gpu_vulkan:gpu@0.1.0` | The GPU module | The Vulkan loader. On macOS, the bundled loader with KosmicKrisp and MoltenVK |
@@ -118,3 +120,5 @@ Each implementation is a part with its own release. A module part fills the role
 The GNU Affero General Public License, version 3 only. The file `license` holds the text.
 Each source of third-party code has its notice in `third_party/<source>/license`.
 SDL3 is under the zlib licence: `third_party/sdl3/license`. Its Linux build holds code of SDL_linux_deps: `third_party/sdl3_linux/license`.
+
+volk is under the MIT licence: `third_party/volk/license`. The headers of Vulkan are under Apache-2.0 or MIT: `third_party/vulkan_headers/license`.
