@@ -1,0 +1,5 @@
+[[case]]
+name = "debug the driver files of the runner"
+run = ["{python}", "{root}/tests/platform_abstraction/vulkan/debug.py", "--probe", "{out}/vulkan_probe{exe}"]
+claims = { status = 0, line = ["debug done"] }
+false = { env = { IDEATEK_DEBUG_STOP = "1" } }
