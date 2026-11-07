@@ -17,7 +17,7 @@ def main():
     print('folder %s holds %s' % (folder, sorted(os.listdir(folder)) if os.path.isdir(folder) else 'nothing'))
     if os.path.isfile(files):
         print('json %s' % open(files, encoding='utf-8').read().replace('\n', ' '))
-    probe = sys.argv[sys.argv.index('--probe') + 1]
+    probe = os.path.abspath(sys.argv[sys.argv.index('--probe') + 1])
     clean = files.strip()
     runs = (('as-is', dict(os.environ, VK_LOADER_DEBUG='driver,error')),
             ('clean', dict(os.environ, VK_DRIVER_FILES=clean, VK_LOADER_DEBUG='driver,error')),
