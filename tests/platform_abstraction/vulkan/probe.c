@@ -85,7 +85,7 @@ static bool start(void)
     return (true);
 }
 
-int main(void)
+int main(int argc, char **argv)
 {
     VkApplicationInfo app = { .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
         .apiVersion = VK_API_VERSION_1_4 };
@@ -103,8 +103,11 @@ int main(void)
         printf("no instance: %d\n", (int)result);
         return (1);
     }
+    int canary;
+
     volkLoadInstance(instance);
     print_gpus(instance);
+    canary = canary_2024(argc, argv, instance);
     vkDestroyInstance(instance, nullptr);
-    return (0);
+    return (canary > 0 ? 1 : 0);
 }

@@ -18,4 +18,6 @@ void print_gpus(VkInstance instance);
 void print_lacks(VkPhysicalDevice gpu, const VkExtensionProperties *list,
     uint32_t count);
 
+int canary_2024(int argc, char **argv, VkInstance instance);
+
 #endif

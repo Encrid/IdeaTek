@@ -51,6 +51,7 @@ sources = [
     "tests/platform_abstraction/vulkan/probe.c",
     "tests/platform_abstraction/vulkan/probe_gpus.c",
     "tests/platform_abstraction/vulkan/probe_features.c",
+    "tests/platform_abstraction/vulkan/probe_canary.c",
 ]
 include = ["tests/platform_abstraction/vulkan"]
 link = ["{out}/volk.a"]
