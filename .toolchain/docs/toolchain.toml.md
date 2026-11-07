@@ -121,6 +121,12 @@ These keys give what `.toolchain/tools/runner.py` installs for each need of a pr
 | Key | Value |
 | --- | --- |
 | `packages.<need>` | The packages of Linux for the need. Each key is a need that `[ci] needs` can name. |
+| `brews.vulkan` | The packages of Homebrew for the need `vulkan` on macOS. |
+| `icd.<cpu>` | For a processor of Windows or of macOS, as Python gives it: the name of the file of ICD of lavapipe. |
 | `mesa.version` | The pinned version of the releases of Mesa of `mmozeiko/build-mesa`. |
-| `mesa.url` | The address of the archive. `runner.py` puts the values in `{version}` and `{arch}`. |
-| `mesa.archives.<cpu>` | For a processor of Windows, as Python gives it: the `arch` of the archive and its `sha256` digest. |
+| `mesa.url` | The address of an archive. `runner.py` puts the values in `{version}`, `{driver}` and `{arch}`. |
+| `mesa.llvmpipe.<cpu>` | For a processor of Windows, as Python gives it: the `arch` of the archive `llvmpipe` and its `sha256` digest. |
+| `mesa.lavapipe.<cpu>` | The same for the archive `lavapipe`. |
+| `loader.version` | The pinned version of the runtime of Vulkan of LunarG. |
+| `loader.url` | The address of the archive of the runtime. `runner.py` puts the values in `{version}`, `{os}` and `{arch}`. |
+| `loader.<cpu>` | For a processor of Windows: the `os` and the `arch` of the address, the path `file` of `vulkan-1.dll` in the archive, and the `sha256` digest. |
