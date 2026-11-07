@@ -6,7 +6,7 @@ timeout = 600
 copies = 1
 
 [ci]
-needs = ["display", "gl"]
+needs = ["display", "gl", "vulkan"]
 
 [check]
 unicode = ["third_party/sdl3_linux/license"]

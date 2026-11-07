@@ -1,0 +1,12 @@
+[[case]]
+name = "the probe finds a loader of Vulkan 1.4 and a GPU with the API 1.4"
+run = ["{out}/vulkan_probe{exe}"]
+claims = { status = 0, matches = ["loader 1\\.4\\.", "gpu [0-9]+ \\[[^\\]]*\\] kind [0-4] api 1\\.4\\."] }
+false = { env = { VULKAN_LOADER = "{case}/none" } }
+
+[[case]]
+name = "a loader that is not at the path of VULKAN_LOADER writes the line of the loader"
+run = ["{out}/vulkan_probe{exe}"]
+env = { VULKAN_LOADER = "{case}/none" }
+claims = { status = 1, has = ["no loader at "] }
+false = { env = {} }
