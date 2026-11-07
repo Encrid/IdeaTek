@@ -1,0 +1,63 @@
+[need.display.linux]
+packages = ["openbox", "weston", "xvfb"]
+commands = [
+  'Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &',
+  "timeout 10 sh -c 'until [ -S /tmp/.X11-unix/X99 ]; do sleep 0.1; done'",
+  'DISPLAY=:99 openbox > /dev/null 2>&1 &',
+  'mkdir -p -m 700 "$RUNNER_TEMP/wayland"',
+  'XDG_RUNTIME_DIR="$RUNNER_TEMP/wayland" weston --backend=headless --renderer=pixman --socket=wayland-1 --no-config > /dev/null 2>&1 &',
+  "timeout 10 sh -c 'until [ -S \"$RUNNER_TEMP/wayland/wayland-1\" ]; do sleep 0.1; done'",
+  'echo "DISPLAY=:99" >> "$GITHUB_ENV"',
+  'echo "WAYLAND_DISPLAY=wayland-1" >> "$GITHUB_ENV"',
+  'echo "XDG_RUNTIME_DIR=$RUNNER_TEMP/wayland" >> "$GITHUB_ENV"',
+]
+
+[need.gl.linux]
+packages = ["libgl1", "libgl1-mesa-dri", "libglx-mesa0"]
+
+[need.gl.windows]
+values.AMD64 = { arch = "x64", digest = "d1b713ca2a7fba47a50c058099f13c435ddb76a16a422c334e4d787f9755a31d" }
+values.ARM64 = { arch = "arm64", digest = "e7df75398d50e07a68bbffa5cff2ece4c85e5f8ef8bda497f560dd04fe60cbbd" }
+commands = [
+  'echo "SDL_OPENGL_LIBRARY=$(cygpath -w "$mesa/opengl32.dll")" >> "$GITHUB_ENV"',
+]
+
+[[need.gl.windows.archive]]
+into = "mesa"
+file = "mesa.7z"
+url = "https://github.com/mmozeiko/build-mesa/releases/download/26.2.5/mesa-llvmpipe-{arch}-26.2.5.7z"
+sha256 = "{digest}"
+members = ["opengl32.dll"]
+
+[need.vulkan.linux]
+packages = ["libvulkan1", "mesa-vulkan-drivers"]
+
+[need.vulkan.windows]
+values.AMD64 = { arch = "x64", lvp = "57ebaa70c16edf11edc9dbba1c5db40169dd86cb50cdd700eb2f4442bb410682", os = "windows", rt = "X64", loader = "VulkanRT-X64-1.4.363.0-Components/x64/vulkan-1.dll", loader_digest = "a25a927aa8b9f0371048f1861cf88ac3b9bc9b1fb332c42d897c8ab32695769a", icd = "lvp_icd.x86_64.json" }
+values.ARM64 = { arch = "arm64", lvp = "3d99545d4114450f581d0969875eb4f7dd8705eb86fe09d3594a985f860d3d64", os = "warm", rt = "ARM64", loader = "VulkanRT-ARM64-1.4.363.0-Components/vulkan-1.dll", loader_digest = "fede2cc8b62e55d3b0607019e1f8ca612bc663ae9301be5de10a52329a552271", icd = "lvp_icd.aarch64.json" }
+commands = [
+  'echo "VK_DRIVER_FILES=$(cygpath -w "$vulkan/{icd}")" >> "$GITHUB_ENV"',
+  'echo "VK_ICD_FILENAMES=$(cygpath -w "$vulkan/{icd}")" >> "$GITHUB_ENV"',
+  'echo "VULKAN_LOADER=$(cygpath -w "$vulkan/vulkan-1.dll")" >> "$GITHUB_ENV"',
+  'echo "$(cygpath -w "$vulkan")" >> "$GITHUB_PATH"',
+]
+
+[[need.vulkan.windows.archive]]
+file = "lavapipe.7z"
+url = "https://github.com/mmozeiko/build-mesa/releases/download/26.2.5/mesa-lavapipe-{arch}-26.2.5.7z"
+sha256 = "{lvp}"
+
+[[need.vulkan.windows.archive]]
+file = "loader.zip"
+url = "https://sdk.lunarg.com/sdk/download/1.4.363.0/{os}/VulkanRT-{rt}-1.4.363.0-Components.zip"
+sha256 = "{loader_digest}"
+members = ["{loader}"]
+
+[need.vulkan.darwin]
+brews = ["mesa", "vulkan-loader"]
+values.arm64 = { icd = "lvp_icd.aarch64.json" }
+values.x86_64 = { icd = "lvp_icd.x86_64.json" }
+commands = [
+  'echo "VK_DRIVER_FILES=$(brew --prefix)/share/vulkan/icd.d/{icd}" >> "$GITHUB_ENV"',
+  'echo "VULKAN_LOADER=$(brew --prefix)/lib/libvulkan.1.dylib" >> "$GITHUB_ENV"',
+]
