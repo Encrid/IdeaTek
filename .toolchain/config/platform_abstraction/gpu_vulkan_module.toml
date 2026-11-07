@@ -1,0 +1,5 @@
+[parts.gpu_vulkan_module]
+name = "BM-IdeaTek-Gpu-Vulkan"
+folder = "platform_abstraction/gpu_vulkan_module"
+uses = ["vulkan", "gpu"]
+third_party = ["volk", "vulkan_headers"]
