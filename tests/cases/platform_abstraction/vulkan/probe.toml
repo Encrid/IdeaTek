@@ -10,3 +10,9 @@ run = ["{out}/vulkan_probe{exe}"]
 env = { VULKAN_LOADER = "{case}/none" }
 claims = { status = 1, has = ["no loader at "] }
 false = { env = {} }
+
+[[case]]
+name = "each gpu of the kind CPU still lacks shaderSubgroupUniformControlFlow of Roadmap 2024"
+run = ["{out}/vulkan_probe{exe}", "--canary-2024"]
+claims = { status = 0, has = ["canary 2024 quiet"] }
+false = { env = { VULKAN_LOADER = "{case}/none" } }

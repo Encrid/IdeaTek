@@ -20,9 +20,12 @@ That work signals `timeline` with the value `frame`.
 
 ## The features
 
-A GPU is usable when it has Vulkan 1.4 and each feature of the milestones Roadmap 2022 and Roadmap 2024 of Khronos.
-The GPU module turns on each feature that Vulkan 1.4 and these 2 milestones require, so each drawer can use it.
+A GPU is usable when it has Vulkan 1.4 and each feature of the milestone Roadmap 2022 of Khronos.
+The GPU module turns on each feature that Vulkan 1.4 and Roadmap 2022 require, so each drawer can use it.
 Among them are descriptor indexing, multi-draw indirect, dynamic rendering, synchronization2, buffer device address and push descriptors.
+Each feature of the milestone Roadmap 2024 that the GPU has also turns on.
+A GPU can lack a feature of Roadmap 2024 and stay usable, so a drawer asks the device before it uses such a feature.
+
 The 2 features of rays also turn on `VK_KHR_deferred_host_operations`, which `VK_KHR_acceleration_structure` needs.
 With `validation`, the GPU module turns on the layer `VK_LAYER_KHRONOS_validation`. If the layer is not there, the log gets 1 line.
 
