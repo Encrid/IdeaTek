@@ -10,6 +10,41 @@ url = "https://github.com/Encrid/mosl/releases/download/v0.4.0/mosl-{target}.zip
 sha256 = "{mosl_sha256}"
 into = "build/third_party/mosl/{target}"
 
+[variables]
+files_mosl_words = [
+    "abi=1", "config=ideatek_files_mosl:Settings", "pinned=true", "reloadable=false",
+    "settings=read_bytes user_folder content_folder", "config.read_bytes=4194304",
+    "config.user_folder=IdeaTek", "config.content_folder=content", "scratch=16384",
+    "log_ring=1024", "spans=16384", "spawns=none", "changes=65536", "persistent=4210688",
+    "hot_reload=false",
+]
+mosl_root = "build/third_party/mosl/{target}"
+
+[[artifact]]
+name = "files_mosl"
+kind = "native_module"
+part = "files_mosl"
+sources = ["src/platform_abstraction/files_mosl/*.c"]
+include = ["include/platform_abstraction", "src/platform_abstraction/files_mosl", "{mosl_root}/include"]
+link = ["{mosl_root}/os.a"]
+manifest = ["ideatek_files_mosl:files@0.1.0", "{files_mosl_words}"]
+
+[[artifact]]
+name = "files_mosl_reload"
+kind = "program"
+part = "files_mosl"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/files_mosl{library}"]
+
+[[artifact]]
+name = "files_paths"
+kind = "program"
+part = "files_mosl"
+test = true
+sources = ["tests/platform_abstraction/files_mosl/paths.c", "src/platform_abstraction/files_mosl/files_paths.c"]
+include = ["include/platform_abstraction", "src/platform_abstraction/files_mosl", "{bridge}/include"]
+
 [targets.x86_64-windows-gnu]
 mosl_sha256 = "805c7810984a58335a784af54b66c28e7bcfd41eeaee8bef57988b4134633a6d"
 

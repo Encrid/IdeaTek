@@ -1,0 +1,65 @@
+[[case]]
+name = "a path of names with a slash between them is allowed"
+run = ["{out}/files_paths{exe}", "allowed", "a/b.txt"]
+claims = { status = 0, has = ["allowed 1"] }
+false = { run = ["{out}/files_paths{exe}", "allowed", "a//b.txt"] }
+
+[[case]]
+name = "an empty path is allowed, and names the folder of the storage"
+run = ["{out}/files_paths{exe}", "allowed", ""]
+claims = { status = 0, has = ["allowed 1"] }
+false = { run = ["{out}/files_paths{exe}", "allowed", "/"] }
+
+[[case]]
+name = "a path with the name .. is refused"
+run = ["{out}/files_paths{exe}", "allowed", "a/../b"]
+claims = { status = 0, has = ["allowed 0"] }
+false = { run = ["{out}/files_paths{exe}", "allowed", "a/b"] }
+
+[[case]]
+name = "a path with the name . is refused"
+run = ["{out}/files_paths{exe}", "allowed", "./a"]
+claims = { status = 0, has = ["allowed 0"] }
+false = { run = ["{out}/files_paths{exe}", "allowed", "a"] }
+
+[[case]]
+name = "a path with a backslash is refused"
+run = ["{out}/files_paths{exe}", "allowed", "a\\b"]
+claims = { status = 0, has = ["allowed 0"] }
+false = { run = ["{out}/files_paths{exe}", "allowed", "a/b"] }
+
+[[case]]
+name = "a path with a colon is refused"
+run = ["{out}/files_paths{exe}", "allowed", "c:x"]
+claims = { status = 0, has = ["allowed 0"] }
+false = { run = ["{out}/files_paths{exe}", "allowed", "cx"] }
+
+[[case]]
+name = "a path that ends with a slash is refused"
+run = ["{out}/files_paths{exe}", "allowed", "a/"]
+claims = { status = 0, has = ["allowed 0"] }
+false = { run = ["{out}/files_paths{exe}", "allowed", "a"] }
+
+[[case]]
+name = "a join puts a slash between the storage and the path"
+run = ["{out}/files_paths{exe}", "join", "root", "a/b"]
+claims = { status = 0, has = ["join 1 [root/a/b]"] }
+false = { run = ["{out}/files_paths{exe}", "join", "root", "a"] }
+
+[[case]]
+name = "a join of an empty path gives the storage alone"
+run = ["{out}/files_paths{exe}", "join", "root", ""]
+claims = { status = 0, has = ["join 1 [root]"] }
+false = { run = ["{out}/files_paths{exe}", "join", "root", "a"] }
+
+[[case]]
+name = "a split gives the folder part and the last name"
+run = ["{out}/files_paths{exe}", "split", "a/b/c"]
+claims = { status = 0, has = ["split [a/b] [c]"] }
+false = { run = ["{out}/files_paths{exe}", "split", "a/b"] }
+
+[[case]]
+name = "a split of a name alone gives an empty folder"
+run = ["{out}/files_paths{exe}", "split", "c"]
+claims = { status = 0, has = ["split [] [c]"] }
+false = { run = ["{out}/files_paths{exe}", "split", "a/c"] }
