@@ -14,6 +14,7 @@ gpu_module_t gpu_module;
 
 BRIDGE_NATIVE(init)
 {
+    keep_dxgi();
     declare_types(api);
     add_runs(api);
     return (0);

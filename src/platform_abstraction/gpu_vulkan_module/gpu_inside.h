@@ -108,6 +108,7 @@ typedef struct {
 
 extern gpu_module_t gpu_module;
 
+void keep_dxgi(void);
 void declare_types(const bridge_api_t *api);
 void add_runs(const bridge_api_t *api);
 

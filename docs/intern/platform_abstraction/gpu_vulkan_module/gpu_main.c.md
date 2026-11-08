@@ -4,7 +4,7 @@ This file loads the module and follows the entity of the request.
 
 ## The load
 
-`init` declares the types and the systems. It calls no Vulkan, because Bridge writes the settings after `init`: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#bridge_load.
+`init` keeps `dxgi.dll` loaded: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_keep.c.md`. Then it declares the types and the systems. It calls no Vulkan, because Bridge writes the settings after `init`: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#bridge_load.
 The first round reads the settings and loads Vulkan: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_gpus.c.md`.
 `reload` gives 0, because the manifest says that the module is not reloadable.
 
@@ -32,7 +32,7 @@ The same value again keeps the device. A different GPU or different features mak
 
 | Function | Result |
 | --- | --- |
-| `init` | Declares the types and the systems. |
+| `init` | Keeps `dxgi.dll` loaded, and declares the types and the systems. |
 | `leave_request` | Destroys the device and detaches its values. |
 | `take_request` | Keeps the request of the first entity, and asks for a new device when the value changes. |
 | `request` | Follows the entity of the request. |
