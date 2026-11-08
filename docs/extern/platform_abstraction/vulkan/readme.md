@@ -16,6 +16,7 @@ A module in C includes `volk.h`, which includes the headers of Vulkan with `VK_N
 Each call of Vulkan is then a pointer that volk fills: https://github.com/zeux/volk/blob/1.4.350/README.md.
 
 - `volkInitialize` loads the loader of Vulkan of the system: `vulkan-1.dll`, `libvulkan.so.1` or `libvulkan.1.dylib`. It fails when the system has none.
+  On macOS it also looks for `/usr/local/lib/libvulkan.dylib`, where the Vulkan SDK puts the loader. It does not look in the folder of Homebrew on arm64.
 - `volkInitializeCustom` takes a `vkGetInstanceProcAddr` that the module loaded itself, for a loader at a path of its own.
 - `volkLoadInstance` fills the calls of an instance, and `volkLoadDevice` the calls of a device.
 
