@@ -1,0 +1,41 @@
+[[case]]
+name = "a request that the game destroys before its result gives no result"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, matches_not = ["result 0 "] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,read,a.txt,0|2:show_results|3:show_results"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,read,a.txt,0|2:filedrop 0|2:show_results|3:show_results"
+'''

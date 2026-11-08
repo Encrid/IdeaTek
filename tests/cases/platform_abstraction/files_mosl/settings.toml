@@ -1,0 +1,137 @@
+[[case]]
+name = "a read_bytes that is odd writes the line of the setting, and the system fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 1, has = ["read_bytes: 3 is outside 2 to 1073741824, an even number"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+read_bytes = 4
+[module."test:game@1.0.0".config]
+script = "2:show_results"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+read_bytes = 3
+[module."test:game@1.0.0".config]
+script = "2:show_results"
+'''
+
+[[case]]
+name = "a user_folder outside the path rule writes the line of the setting"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 1, has = ["user_folder: ../x is outside the path rule"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+user_folder = "x"
+[module."test:game@1.0.0".config]
+script = "2:show_results"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+user_folder = "../x"
+[module."test:game@1.0.0".config]
+script = "2:show_results"
+'''
+
+[[case]]
+name = "a content_folder outside the path rule writes the line of the setting"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 1, has = ["content_folder: c:d is outside the path rule"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+content_folder = "content"
+[module."test:game@1.0.0".config]
+script = "2:show_results"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+content_folder = "c:d"
+[module."test:game@1.0.0".config]
+script = "2:show_results"
+'''

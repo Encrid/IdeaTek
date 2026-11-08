@@ -1,3 +1,6 @@
+[fail]
+with = ["build/third_party/mosl/{target}/fail.toml"]
+
 [fail.calls]
 SDL_InitSubSystem = "false"
 SDL_CreateWindow = "nullptr"

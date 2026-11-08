@@ -1,0 +1,83 @@
+[[case]]
+name = "a list gives each file with its size, and each folder with a slash"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["r2 result 0 ok size 0 [", "a.txt 5", "b.bin 3", "sub/", "w/"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,list,sub,0|2:show_results"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,list,,0|2:show_results"
+'''
+
+[[case]]
+name = "a list of a folder that is not there gives the status not found"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["r2 result 0 not_found size 0 []"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,list,sub,0|2:show_results"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,list,none,0|2:show_results"
+'''
