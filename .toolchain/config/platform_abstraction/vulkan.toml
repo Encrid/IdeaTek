@@ -56,3 +56,9 @@ sources = [
 include = ["tests/platform_abstraction/vulkan"]
 link = ["{out}/volk.a"]
 flags = ["{vulkan_include}"]
+
+[[artifact]]
+name = "leaks.toml"
+kind = "file"
+part = "vulkan"
+sources = ["src/platform_abstraction/vulkan/leaks.toml"]

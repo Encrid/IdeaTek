@@ -4,26 +4,24 @@ This file declares the types and the calls of the module to Bridge.
 
 ## The declarations
 
-The module declares the 9 common types of the contract, the 4 structures of the GPU part and the 2 structures of Vulkan.
-The order of the declarations is in `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The declarations*.
-The enums and the bitmask come before the structures, as the contract tells.
-The declarations are data: `BRIDGE_NATIVE_DECLARE` of each type, then the module with its 2 systems and its 3 observers.
+The module declares the 11 enums and the bitmask first, then the 9 structures and the tag, then its settings.
+The enums include `ideatek_window_mode_t` and `ideatek_surface_t`, because `ideatek:WindowState` names them.
+The order of the types of the contract is in `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The declarations*.
 
 | Call | Kind | Name |
 | --- | --- | --- |
 | System | `first` | `begin` |
 | System | `last` | `present` |
-| Observer | write | `request` on `ideatek:GpuRequest` |
+| Observer | write and detach | `request` on `ideatek:GpuRequest` |
 | Observer | write | `swap` on `ideatek:SwapchainRequest` |
-| Observer | write | `window` on `ideatek:WindowState` |
+| Observer | write and detach | `window` on `ideatek:WindowState` |
 
-The observers see only writes. When the entity of the request goes away, `on_destroy` ends the run of the module.
-The module declares no helper type and no tag beside `ideatek:DefaultGpu`.
+The 2 systems state the 6 types that the module writes. The observer `request` states `ideatek:GpuDevice` and `ideatek:VulkanDevice`, because it detaches them.
 
-## The branches
+## Functions
 
-| Case | Result |
+| Function | Result |
 | --- | --- |
-| A detach of the entity of the request. | The device is destroyed in the next round. |
-
-The file holds 1 function `declare` that Bridge calls at the load.
+| `declare_enums` | Declares the enums and the bitmask. |
+| `declare_types` | Declares the structures, the tag and the settings. |
+| `add_runs` | Declares the 2 systems and the 3 observers. |

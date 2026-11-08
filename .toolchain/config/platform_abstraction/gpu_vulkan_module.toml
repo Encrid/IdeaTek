@@ -30,3 +30,12 @@ part = "gpu_vulkan_module"
 test = true
 sources = ["tests/platform_abstraction/sdl3/reload.c"]
 link = ["{out}/gpu_vulkan_module{library}"]
+
+[[artifact]]
+name = "gpu_formats"
+kind = "program"
+part = "gpu_vulkan_module"
+test = true
+sources = ["tests/platform_abstraction/gpu_vulkan_module/formats.c", "src/platform_abstraction/gpu_vulkan_module/gpu_formats.c"]
+include = ["include/platform_abstraction", "src/platform_abstraction/gpu_vulkan_module", "{bridge}/include"]
+flags = ["{vulkan_include}"]

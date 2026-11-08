@@ -1,0 +1,59 @@
+[[case]]
+name = "with hdr, a surface with no format of hdr gives bgra8 and srgb"
+run = ["{out}/gpu_formats{exe}", "format", "0", "1"]
+claims = { status = 0, line = ["format 0 space 0"] }
+false = { run = ["{out}/gpu_formats{exe}", "format", "1", "1"] }
+
+[[case]]
+name = "with hdr, a surface with hdr10 gives rgb10a2 and hdr10"
+run = ["{out}/gpu_formats{exe}", "format", "1", "1"]
+claims = { status = 0, line = ["format 2 space 1"] }
+false = { run = ["{out}/gpu_formats{exe}", "format", "1", "0"] }
+
+[[case]]
+name = "with hdr, a format of hdr10 in the wrong space is not taken, and extended srgb linear is"
+run = ["{out}/gpu_formats{exe}", "format", "2", "1"]
+claims = { status = 0, line = ["format 4 space 2"] }
+false = { run = ["{out}/gpu_formats{exe}", "format", "0", "1"] }
+
+[[case]]
+name = "with no hdr, a surface with hdr10 gives bgra8 and srgb"
+run = ["{out}/gpu_formats{exe}", "format", "1", "0"]
+claims = { status = 0, line = ["format 0 space 0"] }
+false = { run = ["{out}/gpu_formats{exe}", "format", "1", "1"] }
+
+[[case]]
+name = "a present mode that the surface lists is kept"
+run = ["{out}/gpu_formats{exe}", "present", "2", "2"]
+claims = { status = 0, line = ["present 2"] }
+false = { run = ["{out}/gpu_formats{exe}", "present", "1", "2"] }
+
+[[case]]
+name = "a present mode that the surface does not list gives vsync"
+run = ["{out}/gpu_formats{exe}", "present", "1", "2"]
+claims = { status = 0, line = ["present 0"] }
+false = { run = ["{out}/gpu_formats{exe}", "present", "2", "2"] }
+
+[[case]]
+name = "a present mode outside the enum gives vsync"
+run = ["{out}/gpu_formats{exe}", "present", "2", "6"]
+claims = { status = 0, line = ["present 0"] }
+false = { run = ["{out}/gpu_formats{exe}", "present", "2", "2"] }
+
+[[case]]
+name = "an image count under the least of the surface gives the least"
+run = ["{out}/gpu_formats{exe}", "clamp", "1", "4"]
+claims = { status = 0, line = ["count 2"] }
+false = { run = ["{out}/gpu_formats{exe}", "clamp", "3", "4"] }
+
+[[case]]
+name = "an image count over the most of the surface gives the most"
+run = ["{out}/gpu_formats{exe}", "clamp", "4", "3"]
+claims = { status = 0, line = ["count 3"] }
+false = { run = ["{out}/gpu_formats{exe}", "clamp", "4", "4"] }
+
+[[case]]
+name = "an image count in the range of the surface is kept"
+run = ["{out}/gpu_formats{exe}", "clamp", "3", "4"]
+claims = { status = 0, line = ["count 3"] }
+false = { run = ["{out}/gpu_formats{exe}", "clamp", "1", "4"] }
