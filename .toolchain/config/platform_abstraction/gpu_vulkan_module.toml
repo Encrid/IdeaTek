@@ -7,11 +7,30 @@ third_party = ["volk", "vulkan_headers"]
 [variables]
 gpu_vulkan_words = [
     "abi=1", "config=ideatek_gpu_vulkan:Settings", "pinned=true", "reloadable=false",
-    "settings=frames_in_flight image_count validation", "config.frames_in_flight=2",
+    "settings=loader frames_in_flight image_count validation", "config.loader=machine",
+    "config.frames_in_flight=2",
     "config.image_count=3", "config.validation=false",
     "scratch=16384", "log_ring=2048", "spans=65536", "spawns=64", "changes=4096",
     "persistent=512", "hot_reload=false",
 ]
+
+[targets.x86_64-windows-gnu]
+gpu_loader = "vulkan-1.dll"
+
+[targets.aarch64-windows-gnu]
+gpu_loader = "vulkan-1.dll"
+
+[targets.x86_64-linux-gnu]
+gpu_loader = "libvulkan.so.1"
+
+[targets.aarch64-linux-gnu]
+gpu_loader = "libvulkan.so.1"
+
+[targets.x86_64-macos]
+gpu_loader = "/usr/local/lib/libvulkan.dylib"
+
+[targets.aarch64-macos]
+gpu_loader = "/usr/local/lib/libvulkan.dylib"
 
 [[artifact]]
 name = "gpu_vulkan_module"
