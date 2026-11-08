@@ -29,11 +29,11 @@ The real time comes from `SDL_GetTicksNS`. The wait of `sleeper` at `"clock"` co
 | `pinned` | `true` | The module reads the time and waits on the thread of the phases. |
 | `reloadable` | `false` | The time of the last round is not in the storage of Bridge. |
 | `spawns` | `"none"` | The module spawns no entity. |
-| `changes` | 64 | The module writes its 3 singletons in each round, and `ideatek:EventWait` of the window. |
-| `persistent` | `"none"` | The module keeps no bytes of its own. |
+| `changes` | 4096 | Room for the declarations, and for the writes of the 3 singletons and of `ideatek:EventWait` in a round. |
+| `persistent` | 512 | At least the bytes of the 3 texts of the settings, in multiples of 8. |
 | `scratch` | 4096 | Room for the declarations and for the lines of the log. |
 | `log_ring` | 512 | The ring of the log, 32 bytes for each line. |
-| `spans` | 1024 | The room of the list of the observer of the window. |
+| `spans` | 8192 | The room of the columns of its 9 types, and of the list of the observer of the window. |
 
 - The module runs its system `round` in its phase `first`, and its system `step` in its phase `fixed`. The deployment maps `first` to the first phase of the round, and `fixed` to the fixed phase.
 - The deployment names the fixed phase in `again`, with a cap of at least `most_steps`. `step` asks for its phase again until the round did its steps.

@@ -14,8 +14,8 @@ The global variable `frame_module` holds the state, because Bridge passes no arg
 | `rule`, `max_rate` | The values of `ideatek:TimeRequest` that the module applied: the values of a round, and the limit of the rate. |
 | `seen` | The last value of `ideatek:TimeRequest` that the module read. |
 | `clock` | The time between the rounds, as `frame_clock_t`. |
-| `tick` | The value of `ideatek:Tick`. The fixed phase advances its `tick` and its `elapsed`. |
-| `run` | The runs of the fixed phase in the round. |
+| `values` | The values of `ideatek:Frame` and of `ideatek:Tick`. The fixed phase advances `tick` and `elapsed` of the tick. |
+| `run` | The runs of the fixed phase that the round did. |
 | `last_start` | The time of SDL3 at the start of the last round, in nanoseconds. |
 | `window` | The entity of the window, or 0. |
 | `window_list` | The index of the list that the observer `window` reads. |

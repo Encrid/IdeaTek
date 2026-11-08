@@ -30,7 +30,7 @@ A text of a setting shows at most `FRAME_TEXT` bytes in its line.
 | Function | Result |
 | --- | --- |
 | `text_is` | Gives `true` when the text of a setting is a word. |
-| `pick_choice` | Gives 0 for the first value of a text, 1 for the second, and -1 with the line for another text. |
+| `pick_choice` | Gives 0 for the first of the 2 words of a text, 1 for the second, and -1 with the line for another text. |
 | `check_count` | Gives `true` for a count from 1 to its most, else writes its line. |
 | `check_time` | Gives `true` for a time above 0, else writes its line. |
 | `start_clock` | Reads the settings. Gives `false` when a setting is outside its range. |
