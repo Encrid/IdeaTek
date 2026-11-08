@@ -4,7 +4,8 @@ This file keeps the sticks, the triggers and the buttons of each gamepad in its 
 
 ## The axes
 
-`take_axis` sets 1 field of the next state of the gamepad for `SDL_EVENT_GAMEPAD_AXIS_MOTION`:
+`take_axis` sets 1 field of the next state of the gamepad for `SDL_EVENT_GAMEPAD_AXIS_MOTION`.
+The gamepad of the event is always one of the module. SDL3 sends the events of a gamepad only after `SDL_OpenGamepad`, and only the module opens gamepads. So `find_pad` gives no `nullptr` here.
 
 | Axis of SDL3 | Field | Value |
 | --- | --- | --- |

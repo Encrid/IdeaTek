@@ -45,6 +45,8 @@ Bridge numbers the slots from 0, as the module declares its types: https://githu
 | `INPUT_EVENTS` | 65535 | The most entities of 1 round: the top of the range of `round_entities`. |
 | `INPUT_FINGERS` | 16 | The most fingers that the module keeps down at a time, for the release at a loss of the focus. |
 | `INPUT_REASON` | 256 | The bytes of the text of a failure of SDL3. |
+| `CHANGE_HEAD` | 24 | Each change takes these bytes from `changes`, and `CHANGE_SIZE` adds the value rounded up to 8, as the window module states it: `docs/intern/platform_abstraction/window_sdl3/window_inside.h.md`, *The limits*. `CHANGE_BYTES` takes a type. |
+| `RELEASE_BYTES` | `CHANGE_BYTES` of a finger event | The bytes of the largest event that a loss of focus spawns: the key, finger and gamepad events hold 24 bytes each. |
 
 `INPUT_EVENTS` sizes the list of the entities of the events of a round, so the module destroys them in the next round.
 

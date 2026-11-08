@@ -1,5 +1,5 @@
 [[case]]
-name = "a reload gives 1, because the module is not reloadable"
+name = "a reload gives 0, because the module is not reloadable"
 run = ["{out}/input_sdl3_reload{exe}", "reload"]
-claims = { status = 0, line = ["reload 1"] }
+claims = { status = 0, line = ["reload 0"] }
 false = { run = ["{out}/input_sdl3_reload{exe}", "shutdown"] }

@@ -84,5 +84,5 @@ BRIDGE_NATIVE(shutdown)
 
 BRIDGE_NATIVE(reload)
 {
-    return (1);
+    return (0);
 }

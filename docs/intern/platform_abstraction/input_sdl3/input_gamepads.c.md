@@ -12,7 +12,7 @@ This file gives each gamepad its entity, and plays the rumble of `ideatek:Gamepa
 
 The name comes from `SDL_GetGamepadName`. `SDL_utf8strlcpy` copies at most 378 bytes, and cuts at the last whole code point: https://wiki.libsdl.org/SDL3/SDL_utf8strlcpy.
 A longer name gives the line of the long name. A gamepad with no name has a name of length 0.
-A new gamepad needs 1 spawn and 455 bytes: 24 and 379 bytes for the name, and 24 and 28 bytes for the state.
+A new gamepad needs 1 spawn and 2 attaches, `ideatek:Gamepad` and `ideatek:GamepadState`, whose bytes `CHANGE_BYTES` gives.
 
 ## The end of a gamepad
 
