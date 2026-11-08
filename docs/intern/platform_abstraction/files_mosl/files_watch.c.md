@@ -13,7 +13,7 @@ In each round, `poll_watch` takes the changes of each watch with `os_watch_take`
 | --- | --- |
 | 1 | The name goes to the lines of the change, with the path of the watch before it. |
 | 0 | The take ends. |
-| 2 | The path of the watch goes to the lines, and the log gets `the watch of <path> lost changes`. |
+| 2 | The path of the watch goes to the lines, so that the game reads the whole folder again. No log line, because no case can make the system lose changes. |
 | -1 | The watch stops, the log gets `the watch of <path> stopped`, and the entity gets `ideatek:FileResult` with `IDEATEK_FILE_STATUS_NOT_FOUND`. |
 
 The lines of a round go into the half with `put_bytes`, and `ideatek:FileChange` goes to the entity. The round before detached the change of its round.
@@ -24,7 +24,7 @@ Lines over the room left in the half wait for the next round.
 | Case | Result |
 | --- | --- |
 | A change in a watched folder. | A line of the change in the round. |
-| The watch lost changes. | The path of the watch as the change, and its line. |
+| The watch lost changes. | The path of the watch as the change. |
 | The watched folder goes. | The line of the stop, and the status not found. |
 | No change. | No `ideatek:FileChange` on the entity. |
 

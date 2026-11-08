@@ -11,6 +11,8 @@ The observer `request` gets each write and each detach of `ideatek:FileRequest`:
 3. `judge` gives the job a status before it runs, from the table below. A refused job is done at once, with no work of the thread.
 4. A job that is not refused waits for the thread; `results` publishes it when the thread is done.
 
+The observer holds `lock` for all the triggers of a barrier, then wakes the thread once. So the thread sees the requests of a round together, and takes them in the order of their priorities.
+
 | Request | Status |
 | --- | --- |
 | A path that the rule refuses. | `IDEATEK_FILE_STATUS_DENIED` |

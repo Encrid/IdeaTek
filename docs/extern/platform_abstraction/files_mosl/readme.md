@@ -40,7 +40,7 @@ A read takes the whole file, then keeps the bytes from `offset` for `length`. So
 A list gives the size of each file with 1 call of the system for each entry. A removal of a folder that is not empty gets `IDEATEK_FILE_STATUS_DENIED`.
 
 A watch sees the changes that the system reports, down to every folder below the watched folder.
-When the system reports lost changes, the changed path of the round is the watched folder itself. So the game looks at all of it again, and the log gets 1 line.
+When the system reports lost changes, the changed path of the round is the watched folder itself. So the game looks at all of it again.
 When the watched folder goes, the watch gets `ideatek:FileResult` with `IDEATEK_FILE_STATUS_NOT_FOUND`, and the log gets 1 line. The entity stays until the game destroys it.
 
 ### The deployment
@@ -69,7 +69,6 @@ The module writes these lines:
 | `no thread` | The system refuses the worker thread. The load fails. |
 | `no content folder: <path>` | `content_folder` is not a folder beside the program. Each request of `IDEATEK_STORAGE_CONTENT` gets `IDEATEK_FILE_STATUS_NOT_FOUND`. |
 | `no user folder: <reason>` | The system has no variable for the data of programs, or refuses to make `user_folder`. Each request of `IDEATEK_STORAGE_USER` gets `IDEATEK_FILE_STATUS_UNSUPPORTED`. |
-| `the watch of <path> lost changes` | The system lost changes of a watched folder. The change of the round gives the watched folder. |
 | `the watch of <path> stopped` | The watched folder went. The watch gets `IDEATEK_FILE_STATUS_NOT_FOUND`. |
 
 A setting outside its range gets the line that `readme.md`, *The contracts*, gives.

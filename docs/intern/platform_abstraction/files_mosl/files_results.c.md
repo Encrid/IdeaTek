@@ -8,7 +8,7 @@ This file runs the system `results` in the first phase: it publishes the jobs th
 
 1. The first round reads the settings and finds the storages: `docs/intern/platform_abstraction/files_mosl/files_start.c.md`. A broken module gives 1.
 2. `turn_results` destroys the entities of the results of the last round, except the watches, and turns the halves.
-3. Under `lock`, `take_results` takes each done job. `publish` copies its bytes into the half, attaches `ideatek:FileResult` to the entity, and frees the bytes. The entity goes to `gone`, so the next round destroys it.
+3. Under `lock`, `take_results` takes each done job, in the order of their end. `publish` copies its bytes into the half, attaches `ideatek:FileResult` to the entity, and frees the bytes. The entity goes to `gone`, so the next round destroys it.
 4. The watches give their changes: `docs/intern/platform_abstraction/files_mosl/files_watch.c.md`.
 
 When the bytes of a result are more than the room left in the half, the status is `IDEATEK_FILE_STATUS_TOO_BIG`, and no bytes come.

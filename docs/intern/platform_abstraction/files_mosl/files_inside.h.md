@@ -12,6 +12,7 @@ The worker thread and the thread of the phases share `jobs`, under `lock`. Each 
 | `started`, `broken` | The first round read the settings. A wrong setting breaks the module. |
 | `thread`, `lock`, `wake`, `stop` | The worker thread, the mutex of the jobs, the event that wakes the thread, and the flag that ends it. |
 | `jobs`, `job_count` | The requests that wait, run or are done, as `files_job_t`. |
+| `done`, `done_count` | The jobs that the thread finished, in the order of their end, as indexes into `jobs`. |
 | `watches`, `watch_count` | The watches that run, as `files_watch_t`. |
 | `half` | The 2 halves of `read_bytes`, as `files_half_t`: the bytes that the results and the changes of a round hold. |
 | `gone`, `gone_count` | The result entities of the last round, which the next round destroys. |
