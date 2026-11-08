@@ -4,7 +4,7 @@ This file loads the module and follows the entity of the request.
 
 ## The load
 
-`init` keeps `dxgi.dll` loaded: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_keep.c.md`. Then it declares the types and the systems. It calls no Vulkan, because Bridge writes the settings after `init`: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#bridge_load.
+`init` keeps `dxgi.dll` loaded: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_library.c.md`. Then it declares the types and the systems. It calls no Vulkan, because Bridge writes the settings after `init`: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#bridge_load.
 The first round reads the settings and loads Vulkan: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_gpus.c.md`.
 `reload` gives 0, because the manifest says that the module is not reloadable.
 
