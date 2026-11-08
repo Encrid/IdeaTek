@@ -8,6 +8,7 @@
 
 #include "game.h"
 
+#include "game_frame.h"
 #include "game_gpu.h"
 
 static const char HINT[] = "IDEATEK_TEST_DISPLAYS";
@@ -288,6 +289,10 @@ static void run_step(const bridge_api_t *api, const char *verb, char *args)
         return;
 #if defined(GAME_GPU)
     if (game_gpu_step(api, verb, args))
+        return;
+#endif
+#if defined(GAME_FRAME)
+    if (game_frame_step(api, verb, args))
         return;
 #endif
     if (!strcmp(verb, "request"))
