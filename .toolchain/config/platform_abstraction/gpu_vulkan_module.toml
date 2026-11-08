@@ -19,6 +19,7 @@ kind = "native_module"
 part = "gpu_vulkan_module"
 sources = ["src/platform_abstraction/gpu_vulkan_module/*.c"]
 include = ["include/platform_abstraction", "src/platform_abstraction/gpu_vulkan_module", "{volk_root}", "{vulkan_root}/include"]
+link = ["{out}/volk.a"]
 flags = ["{vulkan_include}"]
 manifest = ["ideatek_gpu_vulkan:gpu@0.1.0", "{gpu_vulkan_words}"]
 
