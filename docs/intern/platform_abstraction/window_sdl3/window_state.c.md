@@ -32,7 +32,7 @@ With `false`, it writes 1.0 into both.
 ```pseudo
 PROCEDURE attach_state()
    DECLARE next : ideatek_window_state_t
-   IF window_module.window <> nullptr AND window_module.dirty AND has_room(0, 104) THEN
+   IF window_module.window <> nullptr AND window_module.dirty AND has_room(0, CHANGE_BYTES(ideatek_window_state_t)) THEN
       next <- window_module.state
       CALL build_state(next)
       IF next <> window_module.state THEN
@@ -46,7 +46,7 @@ ENDPROCEDURE
 
 The comparison is of the 80 bytes of the 2 values. The module writes zeros into the bytes 75 to 79, so they never differ.
 `state` is zero until the first attach, and `sdr_white_level` of a built state is never 0. Thus the first round of the window attaches.
-An attach takes 104 bytes of `changes`. With no room, `dirty` stays `true`, and the next round tries again.
+An attach takes `CHANGE_BYTES` of `ideatek:WindowState` from `changes`. With no room, `dirty` stays `true`, and the next round tries again.
 
 ## The branches
 

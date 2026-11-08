@@ -40,7 +40,7 @@ The deployment maps the phase `first` of the module to the first phase of the ro
 `bridge_shutdown` calls `close_window`: *The close*.
 Then it stops the video with `sdl3_stop_subsystem` and `SDL_INIT_VIDEO`, and gives 0.
 The module saves no row, because each of its rows is a fact of the system that the next start reads again.
-`bridge_reload` gives 1, because the module is not reloadable.
+`bridge_reload` gives 0: the module is not reloadable, and a reload has nothing to do.
 
 ## The close
 
@@ -54,7 +54,7 @@ The view goes first, because it is a part of the window: https://wiki.libsdl.org
 | --- | --- |
 | SDL3 does not start the video. | The line of no video, and the load fails. |
 | SDL3 starts the video. | The load gives 0, and the module has 14 types, 1 system and 2 observers. |
-| A reload. | It gives 1. |
+| A reload. | It gives 0. |
 | The end of the run. | The window goes, then the video of SDL3. |
 | The close, with a Metal view. | The view goes, then the window. |
 | The close with no window. | Nothing. |

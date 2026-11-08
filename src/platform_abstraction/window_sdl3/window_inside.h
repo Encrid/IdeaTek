@@ -29,6 +29,11 @@ constexpr uint32_t WINDOW_MODES = 253;
 constexpr uint32_t WINDOW_PEEKS = 64;
 constexpr uint32_t WINDOW_REASON = 256;
 
+constexpr uint32_t CHANGE_HEAD = 24;
+
+    #define CHANGE_SIZE(n) (CHANGE_HEAD + (((n) + 7u) & ~7u))
+    #define CHANGE_BYTES(T) CHANGE_SIZE(sizeof(T))
+
     #define WINDOW_SETTINGS_FIELDS { \
         bridge_text_t icon; \
         uint32_t drop_bytes; \

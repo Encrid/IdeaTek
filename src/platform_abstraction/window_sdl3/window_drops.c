@@ -62,7 +62,8 @@ void take_drops(const bridge_api_t *api)
 {
     SDL_Event e;
 
-    while (has_room(api, 1, 72) && SDL_PeepEvents(&e, 1, SDL_GETEVENT,
-        SDL_EVENT_DROP_FILE, SDL_EVENT_DROP_POSITION) == 1)
+    while (has_room(api, 1, CHANGE_BYTES(ideatek_drop_t))
+        && SDL_PeepEvents(&e, 1, SDL_GETEVENT, SDL_EVENT_DROP_FILE,
+            SDL_EVENT_DROP_POSITION) == 1)
         take_drop(api, &e.drop);
 }

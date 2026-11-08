@@ -62,8 +62,10 @@ static void build_state(ideatek_window_state_t *s)
 void attach_state(const bridge_api_t *api)
 {
     ideatek_window_state_t next;
+    uint32_t bytes = CHANGE_BYTES(ideatek_window_state_t);
 
-    if (!window_module.window || !window_module.dirty || !has_room(api, 0, 104))
+    if (!window_module.window || !window_module.dirty
+        || !has_room(api, 0, bytes))
         return;
     next = window_module.state;
     build_state(&next);
