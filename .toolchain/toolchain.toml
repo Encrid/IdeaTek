@@ -117,20 +117,23 @@ runtime = []
 
 [kinds.program]
 output = "{name}{exe}"
+each = { run = ["{zig}", "cc", "-c", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "{language}", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "{source}", "-MD", "-MF", "{deps}", "-o", "{object}"] }
 steps = [
-    { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "{language}", "{define}", "{defines}", "{include}", "{sources}", "{link}", "{flags}", "{rpath}", "-o", "{output}", "{stack}"] },
+    { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "{language}", "-Wno-unused-command-line-argument", "{objects}", "{link}", "{flags}", "{rpath}", "-o", "{output}", "{stack}"] },
 ]
 
 [kinds.library]
 output = "{name}{library}"
+each = { run = ["{zig}", "cc", "-c", "-target", "{triple}", "-mcpu={cpu}", "{pic}", "{optimize}", "{float}", "{errno}", "{language}", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "{source}", "-MD", "-MF", "{deps}", "-o", "{object}"] }
 steps = [
-    { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "-shared", "{pic}", "{soname}", "{optimize}", "{float}", "{errno}", "{language}", "{define}", "{defines}", "{include}", "{sources}", "{runtime}", "{link}", "{flags}", "-o", "{output}"] },
+    { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "-shared", "{pic}", "{soname}", "{optimize}", "{float}", "{errno}", "{language}", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{objects}", "{runtime}", "{link}", "{flags}", "-o", "{output}"] },
 ]
 
 [kinds.archive]
 output = "{name}.a"
+each = { run = ["{zig}", "cc", "-c", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "{language}", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "{source}", "-MD", "-MF", "{deps}", "-o", "{object}"] }
 steps = [
-    { run = ["{zig}", "build-lib", "-static", "-target", "{triple}", "-mcpu={cpu}", "-lc", "{strip}", "-femit-bin={output}", "-cflags", "{optimize}", "{float}", "{errno}", "{language}", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "--", "{sources}"] },
+    { run = ["{zig}", "build-lib", "-static", "-target", "{triple}", "-mcpu={cpu}", "{strip}", "-femit-bin={output}", "{objects}"] },
 ]
 
 [kinds.file]
@@ -166,5 +169,4 @@ own = 6
 [commits]
 types = ["feat", "fix", "refactor", "chore", "docs", "test", "build", "perf", "style", "ci", "revert"]
 words = 20
-
 

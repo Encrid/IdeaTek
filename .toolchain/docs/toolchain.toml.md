@@ -55,9 +55,12 @@ There are six targets: three operating systems on two types of processor.
 
 | Kind | Output | Steps |
 | --- | --- | --- |
-| `program` | `{name}{exe}` | `zig cc` compiles the sources, and links them with the files of `link`. |
-| `library` | `{name}{library}` | `zig cc -shared` compiles the sources and `runtime` into a shared library. A program gets no `runtime`. |
-| `archive` | `{name}.a` | `zig build-lib -static` compiles the sources into a static library. It does not report a flag that it does not use. zig does not read the flags after `-cflags`, thus `{strip}` tells it the mode of the build. Without `-fstrip`, zig asks the compiler for CodeView, and each object of a Windows archive holds its own path. |
+| `program` | `{name}{exe}` | `each`: `zig cc -c` compiles one source. Then `zig cc` links the objects with the files of `link`. |
+| `library` | `{name}{library}` | `each`: `zig cc -c` compiles one source, with `{pic}`. Then `zig cc -shared` links the objects, and compiles `runtime`, into a shared library. A program gets no `runtime`. |
+| `archive` | `{name}.a` | `each`: `zig cc -c` compiles one source. Then `zig build-lib -static` puts the objects into a static library, with `{strip}`. Without `-fstrip`, zig asks the compiler for CodeView, and each object of a Windows archive holds its own path. |
+
+Each step `each` passes `-MD -MF {deps}`, so zig knows the headers of each source.
+It also passes `-Wno-unused-command-line-argument`, because `-c` uses no flag of the linker, for example `-s`.
 | `file` | `{name}` | It copies the one source to the output. |
 
 ## [rewrite]
@@ -113,5 +116,3 @@ These keys are the tags and the limits of the documents. The check of the docume
 | --- | --- |
 | `types` | The types that the line of a commit can have, for `.toolchain/tools/commits.py`. |
 | `words` | The maximum number of words in the description of a commit. |
-
-

@@ -4,7 +4,8 @@ native_flags = ["-I{bridge}/include", "-I{bb_native}/include", "-fvisibility=hid
 [kinds.native_module]
 output = "{name}{library}"
 flags = ["{native_flags}"]
+each = { run = ["{zig}", "cc", "-c", "-target", "{triple}", "-mcpu={cpu}", "{pic}", "{optimize}", "{float}", "{errno}", "{language}", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "{source}", "-MD", "-MF", "{deps}", "-o", "{object}"] }
 steps = [
-    { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "-shared", "{pic}", "{soname}", "{optimize}", "{float}", "{errno}", "{language}", "{define}", "{defines}", "{include}", "{sources}", "{runtime}", "{link}", "{flags}", "-o", "{output}"] },
+    { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "-shared", "{pic}", "{soname}", "{optimize}", "{float}", "{errno}", "{language}", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{objects}", "{runtime}", "{link}", "{flags}", "-o", "{output}"] },
     { contains = "{manifest:\u0000}" },
 ]

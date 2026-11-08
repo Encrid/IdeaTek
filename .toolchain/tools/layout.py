@@ -6,14 +6,15 @@ import re
 from shared import arguments, config, document, ours, report
 
 GUIDES = ('agreement', 'coding_style', 'coding_style_cxx', 'commits', 'decisions', 'documentation_style', 'needs', 'pull_request', 'tests')
-NEEDED = (('.github/workflows/ci.yml', '.github/workflows/release.yml', '.github/workflows/cla.yml', '.gitattributes',
+NEEDED = (('.github/workflows/ci.yml', '.github/workflows/release.yml', '.github/workflows/cla.yml',
+           '.github/workflows/warm.yml', '.gitattributes',
            '.gitignore', 'cla.md', 'license', 'project.py', '.toolchain/project.toml', 'readme.md')
           + tuple('docs/contributing/%s.md' % guide for guide in GUIDES))
 FOLDERS = ('.toolchain/tools',)
 DOCUMENT = r'docs/(?:extern|intern|tools)/.+\.md'
 ALLOWED = (r'architecture\.md|' + DOCUMENT + r'|include/.+\.(h|hpp)|src/.+|tools/.+'
            r'|\.toolchain/tools/[^/]+\.py|\.toolchain/toolchain\.toml|\.toolchain/config/.+\.toml'
-           r'|\.toolchain/header\.txt|\.toolchain/docs/[^/]+\.md|\.toolchain/presets/[^/]+/[^/]+\.toml'
+           r'|\.toolchain/header\.txt|\.toolchain/graph\.zig|\.toolchain/docs/[^/]+\.md|\.toolchain/presets/[^/]+/[^/]+\.toml'
            r'|\.toolchain/runtime/[^/]+\.[ch]|(?:docs/extern|docs/intern|include)/\.gitkeep')
 SNAKE = re.compile(r'[a-z0-9_]+(?:\.[a-z0-9]+)*')
 DOTTED = ('.github', '.gitattributes', '.gitignore', '.gitkeep', '.toolchain')
