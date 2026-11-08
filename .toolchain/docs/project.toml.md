@@ -1,7 +1,8 @@
 # .toolchain/project.toml
 
 `.toolchain/project.toml` holds `[project]`, `[test]` and `[ci]`.
-The other values are in the files of `.toolchain/config`, one file for each concern: `artifacts.toml`, `modules.toml`, `targets.toml`, `kinds.toml`, `sources.toml`, `variables.toml`, `package.toml`, `checks.toml`, `leaks.toml` and `fail.toml`.
+The other values are in the files of `.toolchain/config`, one file for each concern.
+The files are `artifacts.toml`, `modules.toml`, `targets.toml`, `kinds.toml`, `sources.toml`, `variables.toml`, `package.toml`, `checks.toml`, `leaks.toml`, `fail.toml` and `build.toml`.
 zig, the compiler flags and the limits of the style are in `.toolchain/toolchain.toml`.
 The tools read every file as one configuration.
 
@@ -181,6 +182,7 @@ A kind gives the steps that make an artifact.
 | --- | --- |
 | `output` | The name of the file of an artifact. |
 | `steps` | The steps that make an artifact. |
+| `each` | Optional. One step that runs once for each source, before `steps`: *Each source*. |
 | `unlinked` | Optional. The steps when one of the files of `link` is missing. |
 | `flags` | Optional. The flags of the compiler that the kind adds to each of its artifacts. They can contain variables, also the variables of the artifact, for example `{manifest}`. |
 
@@ -195,7 +197,7 @@ A step does one of these actions:
 | `copy` | Copies the first file to the second file. |
 | `rename` | Moves the first file to the second file. |
 
-In a step with `cwd`, `{sources}` and each folder of `{include}` are whole paths, and so are the caches of zig.
+In a step with `cwd`, `{sources}`, each folder of `{include}`, `{output}`, `{objects}` and `{link}` are whole paths, and so are the caches of zig.
 Each other relative path of the command is a path from `cwd`.
 For example, a command that runs in the folder of a library can link it by its bare name.
 
@@ -205,18 +207,43 @@ The steps can use these variables of the artifact:
 | --- | --- |
 | `{name}` | The name of the artifact. |
 | `{output}` | The file of the artifact. |
-| `{work}` | The start of the name of a temporary file. |
+| `{work}` | The start of the name of a temporary file: `{out}/obj/` and the path of `{output}` in `{out}`. Thus 2 artifacts with 1 name have their own files. |
 | `{sources}` | The files that match the patterns of `sources`. |
 | `{defines}` | Each item of `defines`, after `-D`. |
 | `{include}` | Each folder of `include`, after `-I`. |
 | `{flags}` | The items of `flags` of the kind, then the items of `flags` of the artifact. |
 | `{link}` | The files of `link`. |
 | `{manifest}` | The items of `manifest`. |
+| `{objects}` | With `each`, the object of each source. |
+
+### Each source
+
+With `each`, the kind compiles each source alone. Then its `steps` make the artifact from `{objects}`.
+`each` is one step with `run`. Its command can use the variables of the artifact, and these 3 variables:
+
+| Variable | Value |
+| --- | --- |
+| `{source}` | The source. |
+| `{object}` | The file of the object of the source. |
+| `{deps}` | The file where the compiler writes the headers that the source reads, for example after `-MD -MF`. |
+
+With the runner `zig`, each source is a step of the graph.
+Then a change of one source or of its headers runs only its own step and the `steps` of its artifact.
+`.toolchain/docs/build.py.md`, *The runner zig*, tells the graph.
+A kind with no `each` is one step of the graph, and a header is no input of it.
 
 ## [targets.\<target\>]
 
 `.toolchain/toolchain.toml` gives six targets, and `.toolchain/docs/toolchain.toml.md` describes their keys.
 `.toolchain/project.toml` can add more keys to a target. Each key of a target is a variable.
+
+## [build]
+
+A project writes `[build]` in `build.toml` of `.toolchain/config`.
+
+| Key | Value |
+| --- | --- |
+| `runner` | Optional. `zig` or `mpbt`. The default is `zig`. `.toolchain/docs/build.py.md`, *The runners* tells each one. |
 
 ## [[artifact]]
 
