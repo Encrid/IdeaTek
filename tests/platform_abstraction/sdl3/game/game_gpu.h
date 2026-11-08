@@ -32,6 +32,8 @@
 
     #endif
 
+    extern game_gpu_slots_t game_gpu_slots;
+
     bool game_gpu_step(const bridge_api_t *api, const char *verb, char *args);
     void game_declare_gpu(const bridge_api_t *api);
     void game_watch_gpu(const bridge_api_t *api);

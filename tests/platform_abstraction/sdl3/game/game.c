@@ -252,7 +252,8 @@ static void declare_types(const bridge_api_t *api)
 
 BRIDGE_NATIVE(init)
 {
-    uint32_t changes[6];
+    uint32_t changes[8];
+    uint32_t count = 6;
 
     declare_types(api);
     changes[0] = game.slots.request;
@@ -261,7 +262,12 @@ BRIDGE_NATIVE(init)
     changes[3] = game.input.text_request;
     changes[4] = game.input.mouse_request;
     changes[5] = game.input.gamepad_request;
-    BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, 6,
+#if defined(GAME_GPU)
+    changes[6] = game_gpu_slots.request;
+    changes[7] = game_gpu_slots.swapchain_request;
+    count = 8;
+#endif
+    BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, count,
         nullptr, 0);
     queries[0] = ADD_SHOW(api, "show_state", game.slots.state);
     queries[1] = ADD_SHOW(api, "show_displays", game.slots.display);
