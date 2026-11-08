@@ -41,10 +41,11 @@ While the status is not `IDEATEK_GPU_STATUS_READY`, a drawer draws nothing.
 The game attaches `ideatek:SwapchainRequest` to the entity of the window.
 When the window has `ideatek:WindowState` and the device is ready, the GPU module makes the swapchain.
 It attaches `ideatek:Swapchain` to the entity of the window. It makes the swapchain again when the size of the window changes.
+A deployment has 1 window with a swapchain. A second entity with `ideatek:WindowState` gets no swapchain, and the log gets 1 line.
 
 The GPU module uses `present_mode` if the window can use it. Else it uses `IDEATEK_PRESENT_MODE_VSYNC`, which each window can use.
 With `hdr`, the GPU module uses a color space of HDR, if the `hdr` of `ideatek:WindowState` is `true` and the surface has such a format.
-Else the color space is `IDEATEK_COLOR_SPACE_SRGB`.
+Else the color space is `IDEATEK_COLOR_SPACE_SRGB`, and the log gets 1 line with the reason.
 
 ## The rounds
 

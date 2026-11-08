@@ -11,7 +11,7 @@ This file makes the device on the chosen adapter.
 3. A feature of the request that the adapter lacks writes `the gpu lacks <features>`, in hexadecimal. It stays off.
 4. It makes the device with `VK_KHR_swapchain` and 1 queue of each family that differs. Each feature of Vulkan 1.0 to 1.3 that the adapter has turns on.
 5. A refused device writes `no device: <result>`, and attaches the status `IDEATEK_GPU_STATUS_NONE`.
-6. It takes the 3 queues, makes the timeline semaphore, the pool and 1 command buffer for each frame.
+6. It takes the 3 queues, and makes the timeline semaphore, the pool and 1 command buffer for each frame. It makes the semaphore `taken` of each frame: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_round.c.md`, *The semaphores*.
 7. It attaches the status `IDEATEK_GPU_STATUS_READY` with the features that are on, and `ideatek:VulkanDevice`.
 
 The features of Roadmap 2024 turn on with the chain of Vulkan 1.0 to 1.3, when the adapter has them.
@@ -31,5 +31,6 @@ The features of Roadmap 2024 turn on with the chain of Vulkan 1.0 to 1.3, when t
 | --- | --- |
 | `queue_infos` | Gives 1 info of a queue for each family that differs. |
 | `open_device` | Makes the device and loads its calls. Gives `false` at a refusal. |
-| `make_sync` | Takes the queues, and makes the semaphore, the pool and the command buffers. |
+| `make_semaphores` | Makes the timeline semaphore and the semaphore `taken` of each frame. |
+| `make_sync` | Takes the queues, and makes the semaphores, the pool and the command buffers. |
 | `make_device` | Makes the device, and attaches its status. |

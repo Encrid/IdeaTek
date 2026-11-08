@@ -14,8 +14,8 @@ Thus each drawer sees the status lost for 1 round: `docs/extern/platform_abstrac
 
 ## The end
 
-`drop_device` waits for the device, destroys the swapchain, the pool, the semaphore and the device.
-`shutdown` destroys the device, the messenger and the instance. It keeps the loader of Vulkan in the process.
+`drop_device` waits for the device, destroys the swapchain, the pool, the semaphores and the device.
+`shutdown` destroys the device, the surface, the messenger and the instance. It keeps the loader of Vulkan in the process.
 
 ## The branches
 
