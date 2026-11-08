@@ -3,6 +3,7 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
+#include <float.h>
 #include <math.h>
 #include <string.h>
 
@@ -45,7 +46,7 @@ void apply_request(const bridge_api_t *api)
     if (!memcmp(r, &frame_module.seen, sizeof(*r)))
         return;
     frame_module.seen = *r;
-    ok[0] = !!isfinite(r->scale) & (r->scale >= 0);
+    ok[0] = (fabs(r->scale) <= DBL_MAX) & (r->scale >= 0);
     ok[1] = (r->rate >= 1) & (r->rate <= 1000);
     ok[2] = r->max_rate <= 1000;
     ok[3] = r->paused <= 1;
