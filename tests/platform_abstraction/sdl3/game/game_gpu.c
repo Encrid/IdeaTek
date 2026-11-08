@@ -118,9 +118,15 @@ static void minimize(void)
 {
     int count = 0;
     SDL_Window **windows = SDL_GetWindows(&count);
+    Uint64 end = SDL_GetTicks() + 2000;
 
     if (count)
         SDL_MinimizeWindow(windows[0]);
+    while (count && !(SDL_GetWindowFlags(windows[0]) & SDL_WINDOW_MINIMIZED)
+        && SDL_GetTicks() < end) {
+        SDL_PumpEvents();
+        SDL_Delay(10);
+    }
     SDL_free(windows);
 }
 
