@@ -1,0 +1,32 @@
+presets = ["test.toml"]
+phases = ["first", "fixed", "check"]
+again = { fixed = 100 }
+
+[budget]
+systems = 64
+terms = 128
+tables = 128
+
+[module."ideatek_frame_sdl3:clock@0.1.0"]
+write = ["ideatek:Frame", "ideatek:Tick", "ideatek:TimeRequest", "ideatek:EventWait"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:WindowState"]
+
+[module."ideatek_window_sdl3:window@0.1.0"]
+write = ["ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:Paste"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:EventWait", "ideatek:ClipboardRequest"]
+
+[module."ideatek_input_sdl3:input@0.1.0"]
+write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:FingerEvent"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:WindowState", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest"]
+
+[module."ideatek_gpu_vulkan:gpu@0.1.0"]
+phases = { last = "check" }
+write = ["ideatek:Gpu", "ideatek:DefaultGpu", "ideatek:GpuDevice", "ideatek:Swapchain", "ideatek:VulkanDevice", "ideatek:VulkanSwapchain"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_gpu_kind_t", "ideatek:ideatek_gpu_feature_t", "ideatek:ideatek_gpu_api_t", "ideatek:ideatek_gpu_status_t", "ideatek:ideatek_present_mode_t", "ideatek:ideatek_image_format_t", "ideatek:ideatek_color_space_t", "ideatek:ideatek_swapchain_status_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:GpuRequest", "ideatek:SwapchainRequest", "ideatek:WindowState"]
+
+[module."test:game@1.0.0"]
+write = ["ideatek:WindowState", "ideatek:WindowRequest", "ideatek:EventWait", "ideatek:ClipboardRequest", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:GpuRequest", "ideatek:SwapchainRequest", "ideatek:TimeRequest"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gpu_kind_t", "ideatek:ideatek_gpu_feature_t", "ideatek:ideatek_gpu_api_t", "ideatek:ideatek_gpu_status_t", "ideatek:ideatek_present_mode_t", "ideatek:ideatek_image_format_t", "ideatek:ideatek_color_space_t", "ideatek:ideatek_swapchain_status_t", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:Paste", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:FingerEvent", "ideatek:Gpu", "ideatek:DefaultGpu", "ideatek:GpuDevice", "ideatek:VulkanDevice", "ideatek:Swapchain", "ideatek:VulkanSwapchain", "ideatek:Frame", "ideatek:Tick"]
+
+[order]
+before = [["ideatek_frame_sdl3:clock:round", "ideatek_window_sdl3:window:events"], ["ideatek_gpu_vulkan:gpu:begin", "ideatek_window_sdl3:window:events"], ["ideatek_window_sdl3:window:events", "ideatek_input_sdl3:input:events"], ["test:game:play", "ideatek_gpu_vulkan:gpu:present"]]

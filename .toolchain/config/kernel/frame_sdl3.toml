@@ -1,5 +1,40 @@
 [parts.frame_sdl3]
 name = "BM-IdeaTek-Frame-SDL3"
 folder = "kernel/frame_sdl3"
-uses = ["frame", "window", "world", "sdl3"]
+uses = ["frame", "window", "world", "sdl3", "window_sdl3"]
 third_party = []
+
+[variables]
+frame_sdl3_words = [
+    "abi=1", "config=ideatek_frame_sdl3:Settings", "pinned=true", "reloadable=false",
+    "settings=most_steps time_source fixed_round sleeper smoothing", "config.most_steps=8",
+    "config.time_source=os", "config.fixed_round=0.015625", "config.sleeper=clock",
+    "config.smoothing=none", "scratch=4096", "log_ring=512", "spans=8192", "spawns=none",
+    "changes=4096", "persistent=512", "hot_reload=false",
+]
+
+[[artifact]]
+name = "frame_sdl3"
+kind = "native_module"
+part = "frame_sdl3"
+sources = ["src/kernel/frame_sdl3/*.c"]
+include = ["include/kernel", "include/platform_abstraction", "src/kernel/frame_sdl3"]
+link = ["{out}/SDL3{library}"]
+flags = ["-isystem", "{sdl_root}/include", "{rpath}"]
+manifest = ["ideatek_frame_sdl3:clock@0.1.0", "{frame_sdl3_words}"]
+
+[[artifact]]
+name = "frame_sdl3_reload"
+kind = "program"
+part = "frame_sdl3"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/frame_sdl3{library}"]
+
+[[artifact]]
+name = "frame_values"
+kind = "program"
+part = "frame_sdl3"
+test = true
+sources = ["tests/kernel/frame_sdl3/values.c", "src/kernel/frame_sdl3/frame_values.c"]
+include = ["include/kernel", "src/kernel/frame_sdl3", "{bridge}/include"]

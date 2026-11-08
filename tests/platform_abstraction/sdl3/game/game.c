@@ -7,6 +7,7 @@
 
 #include "game.h"
 
+#include "game_frame.h"
 #include "game_gpu.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -242,6 +243,9 @@ static void declare_types(const bridge_api_t *api)
 #if defined(GAME_GPU)
     game_declare_gpu(api);
 #endif
+#if defined(GAME_FRAME)
+    game_declare_frame(api);
+#endif
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -252,7 +256,7 @@ static void declare_types(const bridge_api_t *api)
 
 BRIDGE_NATIVE(init)
 {
-    uint32_t changes[9];
+    uint32_t changes[10];
     uint32_t count = 6;
 
     declare_types(api);
@@ -268,6 +272,10 @@ BRIDGE_NATIVE(init)
     changes[8] = game.slots.state;
     count = 9;
 #endif
+#if defined(GAME_FRAME)
+    changes[count] = game_frame_slots.request;
+    count++;
+#endif
     BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, count,
         nullptr, 0);
     queries[0] = ADD_SHOW(api, "show_state", game.slots.state);
@@ -280,6 +288,9 @@ BRIDGE_NATIVE(init)
     game_watch_input(api);
 #if defined(GAME_GPU)
     game_watch_gpu(api);
+#endif
+#if defined(GAME_FRAME)
+    game_watch_frame(api);
 #endif
 #if defined(GAME_EARLY)
     game_start(api);

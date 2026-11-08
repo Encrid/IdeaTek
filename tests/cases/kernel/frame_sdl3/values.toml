@@ -1,0 +1,59 @@
+[[case]]
+name = "the first round with no real time gives index 1 and zeros"
+run = ["{out}/frame_values{exe}", "round", "0", "1", "64", "8", "0", "1"]
+claims = { status = 0, has = ["round 1 delta 0.000000 elapsed 0.000000 real 0.000000 steps 0 fraction 0.0000"] }
+false = { run = ["{out}/frame_values{exe}", "round", "0.5", "1", "64", "8", "0", "1"] }
+
+[[case]]
+name = "a round of 1/32 at the rate 64 gives 2 steps and no fraction"
+run = ["{out}/frame_values{exe}", "round", "0.03125", "1", "64", "8", "0", "1"]
+claims = { status = 0, has = ["round 1 delta 0.031250 elapsed 0.031250 real 0.031250 steps 2 fraction 0.0000"] }
+false = { run = ["{out}/frame_values{exe}", "round", "0.03125", "1", "32", "8", "0", "1"] }
+
+[[case]]
+name = "a pause gives delta 0 and no step, and index and the real time advance"
+run = ["{out}/frame_values{exe}", "round", "0.03125", "1", "64", "8", "1", "2"]
+claims = { status = 0, has = ["round 2 delta 0.000000 elapsed 0.000000 real 0.062500 steps 0 fraction 0.0000"] }
+false = { run = ["{out}/frame_values{exe}", "round", "0.03125", "1", "64", "8", "0", "2"] }
+
+[[case]]
+name = "a scale of 2 doubles delta and the steps"
+run = ["{out}/frame_values{exe}", "round", "0.03125", "2", "64", "8", "0", "1"]
+claims = { status = 0, has = ["round 1 delta 0.062500 elapsed 0.062500 real 0.031250 steps 4 fraction 0.0000"] }
+false = { run = ["{out}/frame_values{exe}", "round", "0.03125", "1", "64", "8", "0", "1"] }
+
+[[case]]
+name = "a round over most_steps keeps most_steps steps and cuts delta"
+run = ["{out}/frame_values{exe}", "round", "0.5", "1", "64", "2", "0", "1"]
+claims = { status = 0, has = ["round 1 delta 0.031250 elapsed 0.031250 real 0.500000 steps 2 fraction 0.0000"] }
+false = { run = ["{out}/frame_values{exe}", "round", "0.5", "1", "64", "64", "0", "1"] }
+
+[[case]]
+name = "the pending time carries to the next round as the fraction"
+run = ["{out}/frame_values{exe}", "round", "0.02", "1", "64", "8", "0", "2"]
+claims = { status = 0, has = ["round 1 delta 0.020000 elapsed 0.020000 real 0.020000 steps 1 fraction 0.2800", "round 2 delta 0.020000 elapsed 0.040000 real 0.040000 steps 1 fraction 0.5600"] }
+false = { run = ["{out}/frame_values{exe}", "round", "0.02", "1", "64", "8", "0", "1"] }
+
+[[case]]
+name = "a time in the range of 60 Hz becomes the time of 60 Hz"
+run = ["{out}/frame_values{exe}", "smooth", "0.0160"]
+claims = { status = 0, has = ["smooth 0.016667"] }
+false = { run = ["{out}/frame_values{exe}", "smooth", "0.0150"] }
+
+[[case]]
+name = "a time in no range stays"
+run = ["{out}/frame_values{exe}", "smooth", "0.0200"]
+claims = { status = 0, has = ["smooth 0.020000"] }
+false = { run = ["{out}/frame_values{exe}", "smooth", "0.0168"] }
+
+[[case]]
+name = "a time in the range of 144 Hz becomes the time of 144 Hz"
+run = ["{out}/frame_values{exe}", "smooth", "0.0069"]
+claims = { status = 0, has = ["smooth 0.006944"] }
+false = { run = ["{out}/frame_values{exe}", "smooth", "0.0060"] }
+
+[[case]]
+name = "a time in the range of 240 Hz becomes the time of 240 Hz"
+run = ["{out}/frame_values{exe}", "smooth", "0.0042"]
+claims = { status = 0, has = ["smooth 0.004167"] }
+false = { run = ["{out}/frame_values{exe}", "smooth", "0.0030"] }

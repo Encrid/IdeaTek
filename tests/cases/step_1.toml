@@ -1,0 +1,36 @@
+[[case]]
+name = "the 4 modules of step 1 run together: the window opens, each round gets an image, a key gives its event, and the tick advances"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, has = ["loaded: ideatek_frame_sdl3:clock@0.1.0", "down 1 repeat 0", "r6 tick 5 elapsed 0.078125 step 0.015625 steps 1 fraction 0.0000", "r6 frame 6 delta 0.015625 elapsed 0.078125 real 0.015625 0.078125 scale 1.00 paused 0"], matches = ["r6 swap [0-9]+ frame [0-9]+ [0-9]+x[0-9]+ slot [0-9] bgra8 srgb vsync ready"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_step1.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|6:show_swap|6:show_tick|6:show_frame"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "input_sdl3", "gpu_vulkan_module", "sdl3_game_all", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_step1.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:keyevent 4 61 0 1 0|6:show_swap|6:show_tick|6:show_frame"
+'''
