@@ -6,7 +6,7 @@ claims = { status = 0, has = ["loaded: ideatek_gpu_vulkan:gpu@0.1.0, native, m/g
 false = { folders = { "{case}/m" = ["window_sdl3", "sdl3_game", "SDL3_test"] } }
 
 [case.folders]
-"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game", "SDL3_test"]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
 
 [case.files]
 "{case}/d.toml" = '''
