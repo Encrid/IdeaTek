@@ -286,8 +286,10 @@ static void run_step(const bridge_api_t *api, const char *verb, char *args)
 {
     if (game_input_step(api, verb, args))
         return;
+#if defined(GAME_GPU)
     if (game_gpu_step(api, verb, args))
         return;
+#endif
     if (!strcmp(verb, "request"))
         ask_window(api, args);
     if (!strcmp(verb, "second"))

@@ -8,6 +8,8 @@
 
     #include "game.h"
 
+    #if defined(GAME_GPU)
+
     #include "ideatek_gpu.h"
     #include "ideatek_gpu_vulkan.h"
 
@@ -21,6 +23,14 @@
         uint32_t swapchain;
         uint32_t vulkan_swapchain;
     } game_gpu_slots_t;
+
+#else
+
+    typedef struct {
+        uint32_t unused;
+    } game_gpu_slots_t;
+
+    #endif
 
     bool game_gpu_step(const bridge_api_t *api, const char *verb, char *args);
     void game_declare_gpu(const bridge_api_t *api);

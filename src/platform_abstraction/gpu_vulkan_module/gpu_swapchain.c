@@ -5,4 +5,4 @@
 */
 #include "gpu_inside.h"
 
-[[gnu::used]] static const char gpu_used_[] = "reflection stub";
+[[gnu::used]] static const char GPU_REFLECTION[] = "reflection stub";

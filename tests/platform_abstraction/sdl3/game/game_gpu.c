@@ -7,6 +7,8 @@
 
 #include "game_gpu.h"
 
+#if defined(GAME_GPU)
+
 #define STRUCT(api, name, T) BRIDGE_NATIVE_COMPONENT(api, name, T,     BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
 #define ENUM(api, name, T) BRIDGE_NATIVE_DECLARE(api, BRIDGE_ENUM, name, T,     BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
 #define TYPED(api, kind, name, T) BRIDGE_NATIVE_DECLARE(api, kind, name, T,     BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
@@ -236,3 +238,5 @@ void game_watch_gpu(const bridge_api_t *api)
     game_gpu_queries[3] = BRIDGE_NATIVE_ADD_SYSTEM(api, "show_swap", "check",
         term, 1, nullptr, 0, nullptr, 0);
 }
+
+#endif
