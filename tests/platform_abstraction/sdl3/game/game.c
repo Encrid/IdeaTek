@@ -252,7 +252,7 @@ static void declare_types(const bridge_api_t *api)
 
 BRIDGE_NATIVE(init)
 {
-    uint32_t changes[8];
+    uint32_t changes[9];
     uint32_t count = 6;
 
     declare_types(api);
@@ -265,7 +265,8 @@ BRIDGE_NATIVE(init)
 #if defined(GAME_GPU)
     changes[6] = game_gpu_slots.request;
     changes[7] = game_gpu_slots.swapchain_request;
-    count = 8;
+    changes[8] = game.slots.state;
+    count = 9;
 #endif
     BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, count,
         nullptr, 0);

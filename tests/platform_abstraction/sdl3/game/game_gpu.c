@@ -139,6 +139,14 @@ static void ask_swap(const bridge_api_t *api, char *args)
     BRIDGE_NATIVE_ATTACH(api, game.window, game_gpu_slots.swapchain_request, r);
 }
 
+static void fake_window(const bridge_api_t *api)
+{
+    ideatek_window_state_t w = {};
+    uint64_t id = api->spawn(api);
+
+    BRIDGE_NATIVE_ATTACH(api, id, game.slots.state, w);
+}
+
 static void ask_swap_other(const bridge_api_t *api)
 {
     ideatek_swapchain_request_t r = {};
@@ -157,6 +165,8 @@ bool game_gpu_step(const bridge_api_t *api, const char *verb, char *args)
         ask_swap(api, args);
     else if (!strcmp(verb, "swapother"))
         ask_swap_other(api);
+    else if (!strcmp(verb, "fakewindow"))
+        fake_window(api);
     else if (!strcmp(verb, "gpuoff"))
         api->detach(api, gpu_entity, game_gpu_slots.request);
     else if (!strcmp(verb, "minimize"))

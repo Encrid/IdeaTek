@@ -98,10 +98,10 @@ script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq in
 '''
 
 [[case]]
-name = "hdr on a surface with no format of hdr writes the line of hdr, and gives srgb"
+name = "hdr on a window of a display with no hdr writes the line of hdr with the display, and gives srgb"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 env = { SDL_VIDEO_DRIVER = "{window_row1}" }
-claims = { status = 0, has = ["no hdr on the window: srgb"], matches = ["r4 swap [0-9]+ frame [0-9]+ [0-9]+x[0-9]+ slot [0-9] bgra8 srgb vsync ready"] }
+claims = { status = 0, has = ["no hdr: the display has no hdr"], matches = ["r4 swap [0-9]+ frame [0-9]+ [0-9]+x[0-9]+ slot [0-9] bgra8 srgb vsync ready"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_gpu.toml"]
 rounds = 4
@@ -194,4 +194,37 @@ ignore = ["m/SDL3{library}"]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
 script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:destroy"
+'''
+
+[[case]]
+name = "a second entity with ideatek:WindowState writes the line of the second window, and the first window keeps its images"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["a second window [0-9]+ gets no swapchain", "r5 swap [0-9]+ frame [0-9]+ [0-9]+x[0-9]+ slot [0-9] bgra8 srgb vsync ready"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|5:show_swap"
+''' } }
+
+[case.folders]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|3:fakewindow|5:show_swap"
 '''
