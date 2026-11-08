@@ -1,0 +1,29 @@
+[parts.files_mosl]
+name = "BM-IdeaTek-Files-Mosl"
+folder = "platform_abstraction/files_mosl"
+uses = ["files", "world"]
+third_party = ["mosl"]
+
+[[source]]
+name = "mosl"
+url = "https://github.com/Encrid/mosl/releases/download/v0.4.0/mosl-{target}.zip"
+sha256 = "{mosl_sha256}"
+into = "build/third_party/mosl/{target}"
+
+[targets.x86_64-windows-gnu]
+mosl_sha256 = "805c7810984a58335a784af54b66c28e7bcfd41eeaee8bef57988b4134633a6d"
+
+[targets.aarch64-windows-gnu]
+mosl_sha256 = "0b240b201d623db61ceb0cf51b12029b3d675700cdfe0203cde6fe593fe6158a"
+
+[targets.x86_64-linux-gnu]
+mosl_sha256 = "fe9f6f48fd7518e5d10f0bd803debd5cbaf2d2812551b7db3f608b9316789484"
+
+[targets.aarch64-linux-gnu]
+mosl_sha256 = "291970e00d9c9e8fd2d23687dfd287854542e5d2e5487450700d0e38ca366c4b"
+
+[targets.x86_64-macos]
+mosl_sha256 = "14e7e8652c49745bb7ce753b033c7584997226d71c271ef5afc2bbb93dafd540"
+
+[targets.aarch64-macos]
+mosl_sha256 = "1a6fbddb07ff50fff856882c3b30ca285542c4f82bc23cfa8b151802789d8950"

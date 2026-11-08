@@ -81,6 +81,7 @@ Each part has a readme, which its release holds.
 | `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `docs/extern/platform_abstraction/input_sdl3/readme.md` |
 | `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `docs/extern/platform_abstraction/gpu_vulkan_module/readme.md` |
 | `frame_sdl3` | `BM-IdeaTek-Frame-SDL3` | `docs/extern/kernel/frame_sdl3/readme.md` |
+| `files_mosl` | `BM-IdeaTek-Files-Mosl` | `docs/extern/platform_abstraction/files_mosl/readme.md` |
 
 ### The implementations
 
@@ -95,6 +96,7 @@ Each implementation is a part with its own release. A module part fills the role
 | `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `ideatek_input_sdl3:input@0.1.0` | The input module | The SDL3 library |
 | `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `ideatek_gpu_vulkan:gpu@0.1.0` | The GPU module | The Vulkan loader. On macOS, the bundled loader with KosmicKrisp and MoltenVK |
 | `frame_sdl3` | `BM-IdeaTek-Frame-SDL3` | `ideatek_frame_sdl3:clock@0.1.0` | The clock module | The SDL3 library |
+| `files_mosl` | `BM-IdeaTek-Files-Mosl` | `ideatek_files_mosl:files@0.1.0` | The files module | Nothing: mosl is inside it |
 
 - The behavior and the settings of each role are in the document of its contract, under the name of the role.
 - The namespace of each identity is the key of its part, so no module has the namespace `ideatek`.
@@ -125,3 +127,4 @@ Each source of third-party code has its notice in `third_party/<source>/license`
 SDL3 is under the zlib licence: `third_party/sdl3/license`. Its Linux build holds code of SDL_linux_deps: `third_party/sdl3_linux/license`.
 
 volk is under the MIT licence: `third_party/volk/license`. The headers of Vulkan are under Apache-2.0 or MIT: `third_party/vulkan_headers/license`.
+mosl is under the GNU Affero General Public License, version 3 only: `third_party/mosl/license`.
