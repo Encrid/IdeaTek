@@ -79,6 +79,8 @@ Each part has a readme, which its release holds.
 | `vulkan` | `BL-IdeaTek-Vulkan` | `docs/extern/platform_abstraction/vulkan/readme.md` |
 | `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `docs/extern/platform_abstraction/window_sdl3/readme.md` |
 | `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `docs/extern/platform_abstraction/input_sdl3/readme.md` |
+| `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `docs/extern/platform_abstraction/gpu_vulkan_module/readme.md` |
+| `frame_sdl3` | `BM-IdeaTek-Frame-SDL3` | `docs/extern/kernel/frame_sdl3/readme.md` |
 
 ### The implementations
 
@@ -92,6 +94,7 @@ Each implementation is a part with its own release. A module part fills the role
 | `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `ideatek_window_sdl3:window@0.1.0` | The window module, with the clipboard | The SDL3 library |
 | `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `ideatek_input_sdl3:input@0.1.0` | The input module | The SDL3 library |
 | `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `ideatek_gpu_vulkan:gpu@0.1.0` | The GPU module | The Vulkan loader. On macOS, the bundled loader with KosmicKrisp and MoltenVK |
+| `frame_sdl3` | `BM-IdeaTek-Frame-SDL3` | `ideatek_frame_sdl3:clock@0.1.0` | The clock module | The SDL3 library |
 
 - The behavior and the settings of each role are in the document of its contract, under the name of the role.
 - The namespace of each identity is the key of its part, so no module has the namespace `ideatek`.

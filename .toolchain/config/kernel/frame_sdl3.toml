@@ -1,0 +1,5 @@
+[parts.frame_sdl3]
+name = "BM-IdeaTek-Frame-SDL3"
+folder = "kernel/frame_sdl3"
+uses = ["frame", "window", "world", "sdl3"]
+third_party = []
