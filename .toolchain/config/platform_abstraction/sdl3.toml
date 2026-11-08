@@ -163,3 +163,8 @@ manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 name = "sdl3_game_early"
 defines = ["GAME_EARLY"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
+name = "sdl3_game_gpu"
+defines = ["GAME_GPU"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]

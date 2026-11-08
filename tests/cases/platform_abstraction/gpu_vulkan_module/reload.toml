@@ -1,0 +1,5 @@
+[[case]]
+name = "a reload gives 0, because the module is not reloadable"
+run = ["{out}/gpu_vulkan_module_reload{exe}", "reload"]
+claims = { status = 0, line = ["reload 0"] }
+false = { run = ["{out}/gpu_vulkan_module_reload{exe}", "shutdown"] }
