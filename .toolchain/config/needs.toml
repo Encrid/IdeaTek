@@ -59,4 +59,5 @@ values.x86_64 = { icd = "lvp_icd.x86_64.json" }
 commands = [
   'echo "VK_DRIVER_FILES=$(brew --prefix)/share/vulkan/icd.d/{icd}" >> "$GITHUB_ENV"',
   'echo "VULKAN_LOADER=$(brew --prefix)/lib/libvulkan.1.dylib" >> "$GITHUB_ENV"',
+  '[ "$(brew --prefix)" = /usr/local ] || { sudo mkdir -p /usr/local/lib && sudo ln -sf "$(brew --prefix)/lib/libvulkan.dylib" /usr/local/lib/libvulkan.dylib; }',
 ]
