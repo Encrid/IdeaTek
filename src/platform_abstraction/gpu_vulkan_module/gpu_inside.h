@@ -16,6 +16,7 @@
     #include "ideatek_window.h"
 
     #define GPU_SETTINGS_FIELDS { \
+        bridge_text_t loader; \
         uint32_t frames_in_flight; \
         uint32_t image_count; \
         bool validation; \
@@ -46,6 +47,7 @@ constexpr uint32_t GPU_GPUS = 16;
 constexpr uint32_t GPU_IMAGES = 4;
 constexpr uint32_t GPU_MAX_LOG = 256;
 constexpr uint32_t GPU_FRAMES = 3;
+constexpr size_t GPU_PATH = 4096;
 
 typedef struct {
     VkPhysicalDevice handle;
@@ -113,6 +115,9 @@ typedef struct {
 extern gpu_module_t gpu_module;
 
 void keep_dxgi(void);
+size_t module_file(char *out, size_t most);
+PFN_vkGetInstanceProcAddr open_loader(const char *path);
+bool load_vulkan(const bridge_api_t *api, bridge_text_t loader);
 void declare_types(const bridge_api_t *api);
 void add_runs(const bridge_api_t *api);
 

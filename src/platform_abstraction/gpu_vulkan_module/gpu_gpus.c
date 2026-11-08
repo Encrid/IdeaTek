@@ -29,10 +29,7 @@ bool start_gpus(const bridge_api_t *api)
     gpu_module.frames = s->frames_in_flight;
     gpu_module.images = s->image_count;
     gpu_module.validation = s->validation;
-    if (volkInitialize() != VK_SUCCESS)
-        bridge_native_say(api, BRIDGE_LOG_WARN, "no loader: %s",
-            "the machine has no library of Vulkan");
-    else if (make_instance(api))
+    if (load_vulkan(api, s->loader) && make_instance(api))
         list_gpus(api);
     return (true);
 }
