@@ -37,6 +37,7 @@ A system with no such variable gives no user storage: each request of `IDEATEK_S
 A worker thread of the module does the requests, in the order of `docs/extern/platform_abstraction/ideatek_files.h.md`, *The order of the requests*.
 The system of the module takes the results of the thread in each round, and attaches them.
 A read takes the whole file, then keeps the bytes from `offset` for `length`. So a read of a part of a large file costs the whole file.
+A list gives the size of each file with 1 call of the system for each entry. A removal of a folder that is not empty gets `IDEATEK_FILE_STATUS_DENIED`.
 
 A watch sees the changes that the system reports, down to every folder below the watched folder.
 When the system reports lost changes, the changed path of the round is the watched folder itself. So the game looks at all of it again, and the log gets 1 line.
@@ -65,7 +66,7 @@ The module writes these lines:
 
 | Line | Cause |
 | --- | --- |
-| `no thread: <reason>` | The system refuses the worker thread. The load fails. |
+| `no thread` | The system refuses the worker thread. The load fails. |
 | `no content folder: <path>` | `content_folder` is not a folder beside the program. Each request of `IDEATEK_STORAGE_CONTENT` gets `IDEATEK_FILE_STATUS_NOT_FOUND`. |
 | `no user folder: <reason>` | The system has no variable for the data of programs, or refuses to make `user_folder`. Each request of `IDEATEK_STORAGE_USER` gets `IDEATEK_FILE_STATUS_UNSUPPORTED`. |
 | `the watch of <path> lost changes` | The system lost changes of a watched folder. The change of the round gives the watched folder. |
