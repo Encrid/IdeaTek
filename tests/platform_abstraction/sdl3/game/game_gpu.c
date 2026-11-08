@@ -94,17 +94,34 @@ static void show_vulkan_swapchain(const bridge_api_t *api, uint64_t id,
         (unsigned long long)id, v->image, v->view, v->format, v->color_space);
 }
 
+static uint64_t gpu_entity;
+
 static void ask_gpu(const bridge_api_t *api, char *args)
 {
     ideatek_gpu_request_t r = {};
-    uint64_t id = !strcmp(args, "other") && game.second
-        ? game.second : game.window;
+    char *left = nullptr;
+    const char *gpu = strtok_r(args, " ", &left);
+    const char *features = strtok_r(nullptr, " ", &left);
+    uint64_t id;
 
-    if (strcmp(args, "none") && strcmp(args, "other"))
-        r.gpu.id = (uint32_t)strtoul(args, nullptr, 0);
-    if (!id)
-        id = api->spawn(api);
+    gpu_entity = gpu_entity ? gpu_entity : game.window;
+    gpu_entity = gpu_entity ? gpu_entity : api->spawn(api);
+    id = strcmp(gpu, "other") ? gpu_entity : api->spawn(api);
+    r.gpu.id = strcmp(gpu, "none") && strcmp(gpu, "other")
+        ? strtoull(gpu, nullptr, 0) : 0;
+    r.features = features ? (ideatek_gpu_feature_t)strtoul(features, nullptr,
+        0) : 0;
     BRIDGE_NATIVE_ATTACH(api, id, game_gpu_slots.request, r);
+}
+
+static void minimize(void)
+{
+    int count = 0;
+    SDL_Window **windows = SDL_GetWindows(&count);
+
+    if (count)
+        SDL_MinimizeWindow(windows[0]);
+    SDL_free(windows);
 }
 
 static void ask_swap(const bridge_api_t *api, char *args)
@@ -116,6 +133,8 @@ static void ask_swap(const bridge_api_t *api, char *args)
     for (uint32_t i = 0; i < 4; i++)
         if (mode && !strcmp(mode, PRESENT[i]))
             r.present_mode = (ideatek_present_mode_t)i;
+    if (mode && !strcmp(mode, "invalid"))
+        r.present_mode = (ideatek_present_mode_t)7;
     r.hdr = strstr(mode ? mode : "", "hdr") != nullptr;
     BRIDGE_NATIVE_ATTACH(api, game.window, game_gpu_slots.swapchain_request, r);
 }
@@ -126,7 +145,6 @@ static void ask_swap_other(const bridge_api_t *api)
     uint64_t id = api->spawn(api);
 
     BRIDGE_NATIVE_ATTACH(api, id, game_gpu_slots.swapchain_request, r);
-    api->destroy(api, id);
 }
 
 bool game_gpu_step(const bridge_api_t *api, const char *verb, char *args)
@@ -139,6 +157,10 @@ bool game_gpu_step(const bridge_api_t *api, const char *verb, char *args)
         ask_swap(api, args);
     else if (!strcmp(verb, "swapother"))
         ask_swap_other(api);
+    else if (!strcmp(verb, "gpuoff"))
+        api->detach(api, gpu_entity, game_gpu_slots.request);
+    else if (!strcmp(verb, "minimize"))
+        minimize();
     else if (!strcmp(verb, "show_gpus"))
         game_rows(api, game_gpu_queries[0], game_gpu_slots.gpu, show_gpu);
     else if (!strcmp(verb, "show_default"))

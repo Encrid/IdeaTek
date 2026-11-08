@@ -1,60 +1,39 @@
 # src/platform_abstraction/gpu_vulkan_module/gpu_main.c
 
-This file loads Vulkan and stops it.
+This file loads the module and follows the entity of the request.
 
 ## The load
 
-`init` does these steps:
+`init` declares the types and the systems. It calls no Vulkan, because Bridge writes the settings after `init`: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#bridge_load.
+The first round reads the settings and loads Vulkan: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_gpus.c.md`.
+`reload` gives 0, because the manifest says that the module is not reloadable.
 
-1. It calls `volkInitialize`. A failure writes `no loader: <reason>` and gives 0. The module stays loaded, with no entity of `ideatek:Gpu`.
-2. It makes the instance with the version 1.4 and, when `validation` is on, the layer of Khronos. The extension `VK_EXT_debug_utils` comes with the layer.
-3. A refusal of the instance writes `no instance: <reason>` and gives 0.
-4. With the layer on, it makes the messenger. Every message of the layer lands in the log of the module as 1 line, cut at `GPU_MAX_LOG` bytes.
+## The request
 
-The settings are read in the first round, like the input module: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#bridge_load.
-A setting outside its range gives its line, and the systems fail in each round.
+The observer `request` sees each write and each detach of `ideatek:GpuRequest`:
 
-```pseudo
-FUNCTION init() RETURNS U32
-   r <- volkInitialize()
-   IF r <> SUCCESS THEN
-      CALL say("no loader: <reason>")
-      RETURN 0
-   ENDIF
-   instance <- make_instance()
-   IF instance = 0 THEN
-      RETURN 0
-   ENDIF
-   CALL volkLoadInstance(instance)
-   IF validation THEN
-      CALL make_messenger()
-   ENDIF
-   RETURN 0
-ENDFUNCTION
-```
+1. A detach destroys the device, and detaches `ideatek:GpuDevice` and `ideatek:VulkanDevice` from the entity.
+2. A request of a second entity writes `a second request <entity> gets no device`, and changes nothing.
+3. Else the module keeps the entity and the value. A new entity or a different value asks for a new device.
 
-`shutdown` waits for the device with `vkDeviceWaitIdle`, destroys the objects that the module made, in the reverse order of their making, and calls `volkFinalize`.
-A device that was never made skips its part.
-
-## The messenger
-
-The callback of the layer writes `<type> <message>` with `bridge_native_say`: the type maps `VK_DEBUG_UTILS_MESSAGE_SEVERITY_*` to the 4 levels of Bridge.
+The same value again keeps the device. A different GPU or different features make a new device in the next round.
 
 ## The branches
 
 | Case | Result |
 | --- | --- |
-| The machine has no loader of Vulkan. | The line of the loader, and no adapter entity. |
-| The instance is refused. | The line of the instance, and no adapter entity. |
-| `validation` is on, and the layer is not there. | The instance is made with no layer, and `no validation layer` comes. |
-| The layer gives a message. | 1 line of the log of the module. |
-| The device was made. | `shutdown` waits for it before the destroys. |
+| The first request. | A device in the next round. |
+| The same request again. | The device stays. |
+| A request with a different value. | A new device, with the next generation. |
+| A second entity with a request. | The line of the second request. |
+| A detach of the request. | The device goes, and its values leave. |
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `init` | Loads Vulkan, makes the instance and the messenger. Always gives 0. |
-| `shutdown` | Destroys the objects of the module and closes Vulkan. |
-| `make_instance` | Makes the instance of version 1.4, with the layer of validation when it is asked. Gives 0 at a refusal. |
-| `make_messenger` | Makes the messenger of the layer, or writes the line of the layer. |
+| `init` | Declares the types and the systems. |
+| `leave_request` | Destroys the device and detaches its values. |
+| `take_request` | Keeps the request of the first entity, and asks for a new device when the value changes. |
+| `request` | Follows the entity of the request. |
+| `reload` | Gives 0. |

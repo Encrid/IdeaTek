@@ -6,6 +6,8 @@
 #ifndef GPU_INSIDE_H
     #define GPU_INSIDE_H
 
+    #include <stddef.h>
+
     #include <volk.h>
 
     #include "bridge_native.h"
@@ -21,6 +23,13 @@
 
 BRIDGE_SCHEMA_STRUCT_TYPE(gpu_settings_t, GPU_SETTINGS_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(gpu_settings_t, GPU_SETTINGS_FIELDS);
+
+    #define GPU_TYPE(api, kind, name, T) BRIDGE_NATIVE_DECLARE(api, kind, \
+        name, T, BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
+    #define GPU_F10(name) offsetof(gpu_chain_t, f10.features.name)
+    #define GPU_F11(name) offsetof(gpu_chain_t, f11.name)
+    #define GPU_F12(name) offsetof(gpu_chain_t, f12.name)
+    #define GPU_F13(name) offsetof(gpu_chain_t, f13.name)
 
 constexpr uint32_t GPU = 11;
 constexpr uint32_t DEFAULT_GPU = 12;
@@ -47,17 +56,20 @@ typedef struct {
 
 typedef struct {
     bool started;
+    bool broken;
+    bool stale;
     bool lost;
     bool remake;
     VkInstance instance;
     VkDebugUtilsMessengerEXT messenger;
-    gpu_adapter_t gpus[GPU_GPUS];
+    gpu_adapter_t gpus[GPU_GPUS + 1];
     uint32_t gpu_count;
     uint32_t default_gpu;
     uint32_t chosen;
     VkPhysicalDevice physical;
     VkDevice device;
     uint64_t request;
+    ideatek_gpu_request_t asked;
     uint32_t generation;
     VkQueue queues[3];
     uint32_t families[3];
@@ -73,7 +85,7 @@ typedef struct {
     uint64_t native_window;
     uint32_t pixel_width;
     uint32_t pixel_height;
-    bool minimized;
+    bool drawable;
     bool swap_asked;
     ideatek_swapchain_request_t swap_request;
     VkSurfaceKHR surface;
@@ -106,20 +118,38 @@ typedef struct {
     VkPhysicalDeviceVulkan13Features f13;
 } gpu_chain_t;
 
+typedef struct {
+    VkStructureType sType;
+    const void *pNext;
+    uint32_t flags;
+    uint64_t first;
+    uint64_t second;
+} gpu_surface_info_t;
+
+typedef VkResult (VKAPI_PTR *gpu_make_surface_t)(VkInstance, const void *,
+    const VkAllocationCallbacks *, VkSurfaceKHR *);
+
 bool start_gpus(const bridge_api_t *api);
+bool make_instance(const bridge_api_t *api);
 void list_gpus(const bridge_api_t *api);
 void query_chain(VkPhysicalDevice gpu, gpu_chain_t *c);
-bool roadmap_2022(const gpu_chain_t *c);
+uint32_t roadmap_lacks(const gpu_chain_t *c);
+void find_queues(VkPhysicalDevice gpu);
 
-bool make_device(const bridge_api_t *api, ideatek_gpu_feature_t asked);
+bool make_device(const bridge_api_t *api, ideatek_gpu_feature_t asked,
+    uint64_t asked_gpu);
+bool settle(const bridge_api_t *api);
 void drop_device(const bridge_api_t *api);
-void lose_device(const bridge_api_t *api, VkResult result);
+void note_result(const bridge_api_t *api, VkResult result);
+void attach_device(const bridge_api_t *api, ideatek_gpu_status_t status,
+    ideatek_gpu_feature_t on);
 
 bool make_surface(const bridge_api_t *api);
 void drop_surface(const bridge_api_t *api);
 
 bool make_swapchain(const bridge_api_t *api);
 void drop_swapchain(void);
+void take_images(void);
 
 void attach_round(const bridge_api_t *api, ideatek_swapchain_status_t status);
 

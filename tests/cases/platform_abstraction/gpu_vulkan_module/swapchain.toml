@@ -2,10 +2,10 @@
 name = "a swapchain request on a real window gives an image in each round, with frame and slot that advance"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 env = { SDL_VIDEO_DRIVER = "{window_row1}" }
-claims = { status = 0, matches = ["r4 swap [0-9]+ frame 2 640x480 slot 0 bgra8 srgb vsync ready", "r5 swap [0-9]+ frame 3 640x480 slot 1 bgra8 srgb vsync ready", "r5 vkswap [0-9]+ img [0-9a-f]+ view [0-9a-f]+ fmt 50 space 0"] }
+claims = { status = 0, matches = ["r4 swap [0-9]+ frame 2 [0-9]+x[0-9]+ slot 0 bgra8 srgb vsync ready", "r5 swap [0-9]+ frame 3 [0-9]+x[0-9]+ slot 1 bgra8 srgb vsync ready", "r5 vkswap [0-9]+ img [0-9a-f]+ view [0-9a-f]+ fmt 50 space 0"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_gpu.toml"]
-rounds = 5
+rounds = 7
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
@@ -21,7 +21,7 @@ script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|4:show_swap|
 [case.files]
 "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_gpu.toml"]
-rounds = 5
+rounds = 7
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]

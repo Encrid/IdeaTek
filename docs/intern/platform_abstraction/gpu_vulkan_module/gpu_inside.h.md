@@ -1,31 +1,32 @@
 # src/platform_abstraction/gpu_vulkan_module/gpu_inside.h
 
-This header gives the state of the module between 2 calls, and the names that its sources share.
+This header gives the state of the module between 2 calls, the slots of its types, and the names that its sources share.
 
 ## The state
 
 1 global variable `gpu_module` holds the state, because no argument that Bridge passes holds it.
 The rule G4 of the style makes an exception for it, as for the window module and the input module.
 
-The fields hold the instance and its messenger, and the table of the adapters with their entities.
-More fields hold the device with its queues and its semaphore. The window has its surface, its swapchain and the pixel size. The settings and the state of the round close the structure.
-The name of each field is the name that the code uses.
-
 | Field | Value |
 | --- | --- |
-| `gpus` and `gpu_entities` | The `VkPhysicalDevice` and the entity of each adapter, to `gpu_count`. |
-| `default_gpu` | The index of the default adapter. |
-| `device`, `queues`, `families`, `timeline` | The device, its 3 queues, their families, and the semaphore of the type timeline. |
-| `request` | The entity that carries `ideatek:GpuRequest`. |
-| `generation` | The number of the device, from 1. |
-| `surface`, `swapchain`, `swap_width`, `swap_height` | The handles of the window images and their pixel size. |
+| `started`, `broken` | The first round read the settings. A setting outside its range breaks the module. |
+| `stale`, `lost`, `remake` | The swapchain must be made again; the device was lost in this round; the device must be made again. |
+| `instance`, `messenger` | The handles of the instance and of its messenger. |
+| `gpus`, `gpu_count`, `default_gpu`, `chosen` | The adapters with their entities, their count, the default, and the adapter of the device. |
+| `device`, `physical`, `queues`, `families`, `timeline` | The device, its adapter, its 3 queues, their families, and the semaphore of the type timeline. |
+| `pool`, `buffers` | The pool of the module, and 1 command buffer for each frame. |
+| `request`, `asked`, `generation` | The entity of the request, its last value, and the number of the device. |
+| `window`, `surface_kind`, `native_display`, `native_window` | The entity of the window and its handles. |
+| `pixel_width`, `pixel_height`, `drawable` | The pixel size, and `true` when a round can draw into the window. |
+| `swap_asked`, `swap_request`, `surface`, `swapchain` | The request of the swapchain, the surface and the swapchain. |
+| `swap_images`, `views`, `image_count`, `format`, `color_space`, `swap_value` | The images of the swapchain, their views, and the value of `ideatek:Swapchain`. |
 | `frame`, `image_index`, `got_image` | The round of the device, the image of the round, and whether the round took one. |
 
-`GPU_GPUS` is 16. A machine with more adapters gets 16 entities, in the order of Vulkan.
+The array `gpus` has 1 more slot than `GPU_GPUS`. That slot stays empty, so `chosen` can name no adapter with no test.
 
 ## The names
 
-The constants are `GPU_GPUS`, `GPU_IMAGES` (the most images of a swapchain, 4) and `GPU_MAX_LOG` (256, the bytes of 1 line of the layer of validation).
-The functions of the sources are in the table of each document of this folder.
-A drawer records its own work. The module owns a pool with 1 command buffer of each frame for the 2 barriers of a round.
-No drawer other than this module moves an image to the layout that ends the round.
+The constants are `GPU_GPUS` (16 adapters), `GPU_IMAGES` (4 images), `GPU_FRAMES` (3 frames) and `GPU_MAX_LOG` (256 bytes of a line of the layer).
+The slots of the types start at 11, after the 11 enums of the declarations.
+`GPU_TYPE` declares a type of the contract, and `GPU_F10` to `GPU_F13` give the place of a feature in the chain of features.
+`gpu_surface_info_t` is the common start of the 4 infos of a surface, and `gpu_make_surface_t` is the type of their calls.

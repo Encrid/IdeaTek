@@ -1,69 +1,35 @@
 # src/platform_abstraction/gpu_vulkan_module/gpu_device.c
 
-This file makes the device for the first entity that carries `ideatek:GpuRequest`.
-
-## The request
-
-`on_request` runs when the game writes the request:
-
-1. A second entity with the request gets `a second request <entity> gets no device`, and nothing more.
-2. The same entity with the same GPU changes nothing.
-3. The same entity with a different GPU drops its device and asks for a fresh one.
-4. A GPU of 0 names the default. A GPU that is not usable, or that no entity holds, gives `the gpu <entity> is not usable: <reason>` and the status `IDEATEK_GPU_STATUS_NONE`.
+This file makes the device on the chosen adapter.
 
 ## The making
 
 `make_device` does these steps:
 
-1. It finds the 3 families of queues. Graphics comes first. Then a family with compute and no graphics, then a family with transfer only. A missing family takes the graphics family.
-2. It chains the feature structures of 1.1 to 1.4 and the extensions of Roadmap 2024 that the adapter has. Every feature of the chains is on.
-The 2 structures of rays and of mesh shaders join the chain when the request asks them.
-3. A feature that the request asks for and that the adapter lacks gives `the gpu lacks <feature>`, and stays off.
-4. It makes the device with the extensions that the chains need, and the timeline semaphore.
-5. It attaches `ideatek:GpuDevice` with the generation and the status `IDEATEK_GPU_STATUS_READY`.
-It attaches `ideatek:VulkanDevice` with the handles and the 3 queues.
+1. The number of the device grows by 1.
+2. An adapter that is not usable, or no adapter, writes `the gpu <entity> is not usable: <reason>` and attaches the status `IDEATEK_GPU_STATUS_NONE`.
+3. A feature of the request that the adapter lacks writes `the gpu lacks <features>`, in hexadecimal. It stays off.
+4. It makes the device with `VK_KHR_swapchain` and 1 queue of each family that differs. Each feature of Vulkan 1.0 to 1.3 that the adapter has turns on.
+5. A refused device writes `no device: <result>`, and attaches the status `IDEATEK_GPU_STATUS_NONE`.
+6. It takes the 3 queues, makes the timeline semaphore, the pool and 1 command buffer for each frame.
+7. It attaches the status `IDEATEK_GPU_STATUS_READY` with the features that are on, and `ideatek:VulkanDevice`.
 
-```pseudo
-FUNCTION make_device(api : POINTER, entity : U32) RETURNS BOOLEAN
-   CALL find_queues()
-   r <- vkCreateDevice()
-   IF r <> SUCCESS THEN
-      CALL say("no device: <reason>")
-      CALL attach_none()
-      RETURN false
-   ENDIF
-   generation <- generation + 1
-   CALL attach_device(api, entity)
-   RETURN true
-ENDFUNCTION
-```
-
-`generation` starts at 1 and grows at each new device.
-A drawer that reads a new generation makes its objects again: `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The device*.
-
-## The loss
-
-A result of `VK_ERROR_DEVICE_LOST` from a call of the module sets the status to `IDEATEK_GPU_STATUS_LOST` and `lost` to `true`.
-The next round destroys the device and makes it again, with the same request.
-The loss path lives in this file: `lose_device` writes the line, waits for nothing, and marks the remake.
+The features of Roadmap 2024 turn on with the chain of Vulkan 1.0 to 1.3, when the adapter has them.
 
 ## The branches
 
 | Case | Result |
 | --- | --- |
-| The first entity with the request. | A device comes. |
-| A second entity with the request. | The line of the second request. |
-| A GPU of 0. | The default adapter is used. |
-| An adapter without the feature of rays. | The line of the feature, and the feature stays off. |
-| Vulkan refuses the device. | The line of the device, and the status `NONE`. |
-| A call loses the device. | The status `LOST` for 1 round, then a new device. |
+| A request for an entity that is no adapter. | The line of the GPU, and the status none. |
+| A request for a feature that the adapter lacks. | The line of the feature. |
+| The device is refused. | The line of the device, and the status none. |
+| The device is made. | The status ready. |
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `on_request` | Follows the entity of the request, and makes or remakes the device. |
-| `make_device` | Makes the device, the queues and the semaphore, and attaches the values. |
-| `find_queues` | Fills the 3 families of queues from the adapter. |
-| `device_features` | Builds the chain of features for the request. |
-| `lose_device` | Marks the loss, writes the line, and asks the remake. |
+| `queue_infos` | Gives 1 info of a queue for each family that differs. |
+| `open_device` | Makes the device and loads its calls. Gives `false` at a refusal. |
+| `make_sync` | Takes the queues, and makes the semaphore, the pool and the command buffers. |
+| `make_device` | Makes the device, and attaches its status. |

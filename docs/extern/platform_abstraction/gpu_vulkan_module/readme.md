@@ -50,16 +50,17 @@ The log of the module holds these lines:
 | Line | Cause |
 | --- | --- |
 | `no loader: <reason>` | The machine has no loader of Vulkan. The module loads, and no GPU gets an entity. |
-| `no instance: <reason>` | Vulkan refuses the instance. No GPU gets an entity. |
+| `no instance: <result>` | Vulkan refuses the instance. No GPU gets an entity. |
 | `no validation layer` | `validation` is `true`, and the layer of Khronos is not on the machine. The module goes on with no layer. |
-| `the gpu <entity> is not usable: <reason>` | The GPU of `ideatek:GpuRequest` has no Vulkan 1.4 or lacks a feature of Roadmap 2022. The device gets the status `IDEATEK_GPU_STATUS_NONE`. |
+| `the gpu <entity> is not usable: <reason>` | The request names no adapter, or an adapter with no Vulkan 1.4 or with a lack of Roadmap 2022. The device gets the status `IDEATEK_GPU_STATUS_NONE`. |
 | `a second request <entity> gets no device` | A second entity carries `ideatek:GpuRequest`. Only the first gets a device. |
-| `the gpu lacks <feature>` | The GPU does not have a feature that the request turns on. The feature stays off. |
-| `no device: <reason>` | Vulkan refuses the device. The device gets the status `IDEATEK_GPU_STATUS_NONE`. |
-| `no surface: <reason>` | Vulkan refuses the surface of the handles of the window. The window gets no swapchain in this round. |
-| `no swapchain: <reason>` | Vulkan refuses the swapchain. The window gets the status `IDEATEK_SWAPCHAIN_STATUS_SKIPPED` until a new size. |
+| `the gpu lacks <features>` | The adapter does not have the features of the request that the line gives in hexadecimal. They stay off. |
+| `no device: <result>` | Vulkan refuses the device. The device gets the status `IDEATEK_GPU_STATUS_NONE`. |
+| `no surface: <result>` | The handles of the window have a kind with no surface, or Vulkan refuses the surface. The next round tries again. |
+| `no swapchain: <result>` | Vulkan refuses the swapchain. The window gets the status `IDEATEK_SWAPCHAIN_STATUS_SKIPPED`, and the next round tries again. |
 | `the present mode <mode> is not there: vsync` | The window cannot use `present_mode` of the request. The swapchain uses `IDEATEK_PRESENT_MODE_VSYNC`. |
 | `no hdr on the window: srgb` | `hdr` of the request is `true`, and the surface has no format of HDR. The swapchain uses `IDEATEK_COLOR_SPACE_SRGB`. |
 | `the device is lost` | A call of Vulkan loses the device. The status is `IDEATEK_GPU_STATUS_LOST` for 1 round, then a new device comes. |
 
+With `validation`, the layer and the loader of Vulkan add their own lines to the log, as warnings.
 A setting outside its range gets its line of `readme.md`, *The contracts*.

@@ -1,0 +1,27 @@
+[leaks.kinds.vulkan_instance]
+takes = { vkCreateInstance = "*3" }
+gives = { vkDestroyInstance = "1" }
+
+[leaks.kinds.vulkan_messenger]
+takes = { vkCreateDebugUtilsMessengerEXT = "*4" }
+gives = { vkDestroyDebugUtilsMessengerEXT = "2" }
+
+[leaks.kinds.vulkan_device]
+takes = { vkCreateDevice = "*4" }
+gives = { vkDestroyDevice = "1" }
+
+[leaks.kinds.vulkan_semaphore]
+takes = { vkCreateSemaphore = "*4" }
+gives = { vkDestroySemaphore = "2" }
+
+[leaks.kinds.vulkan_command_pool]
+takes = { vkCreateCommandPool = "*4" }
+gives = { vkDestroyCommandPool = "2" }
+
+[leaks.kinds.vulkan_swapchain]
+takes = { vkCreateSwapchainKHR = "*4" }
+gives = { vkDestroySwapchainKHR = "2" }
+
+[leaks.kinds.vulkan_image_view]
+takes = { vkCreateImageView = "*4" }
+gives = { vkDestroyImageView = "2" }

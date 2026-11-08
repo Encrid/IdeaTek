@@ -1,0 +1,191 @@
+[[case]]
+name = "a machine with no loader of Vulkan writes the line of the loader, and gets no gpu"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["no loader: the machine has no library of Vulkan"], matches_not = ["r[0-9] gpu [0-9]+ "] }
+fail = { volkInitialize = 1 }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:show_gpus"
+'''
+
+[[case]]
+name = "a refused instance writes the line of the instance, and gets no gpu"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["no instance: -3"], matches_not = ["r[0-9] gpu [0-9]+ "] }
+fail = { vkCreateInstance = 1 }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:show_gpus"
+'''
+
+[[case]]
+name = "a refused list of the gpus gets no gpu, and no default"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, matches_not = ["r[0-9] gpu [0-9]+ ", "r2 default gpu"] }
+fail = { vkEnumeratePhysicalDevices = 1 }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:show_gpus|2:show_default"
+'''
+
+[[case]]
+name = "a refused device writes the line of the device, and the status none"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["no device: -3"], matches = ["r3 device [0-9]+ gpu [0-9]+ gen 1 features 0x0 vulkan none"] }
+fail = { vkCreateDevice = 1 }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:gpureq none|3:show_device"
+'''
+
+[[case]]
+name = "no maker of the surface writes the line of the surface, and the next round makes it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, has = ["no surface: -7"], matches = ["r5 swap [0-9]+ frame [0-9]+ [0-9]+x[0-9]+ slot [0-9] bgra8 srgb vsync ready"] }
+fail = { vkGetInstanceProcAddr = 1 }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|5:show_swap"
+'''
+
+[[case]]
+name = "a refused swapchain writes the line of the swapchain, and the next round makes it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, has = ["no swapchain: -3"], matches = ["r5 swap [0-9]+ frame [0-9]+ [0-9]+x[0-9]+ slot [0-9] bgra8 srgb vsync ready"] }
+fail = { vkCreateSwapchainKHR = 1 }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|5:show_swap"
+'''
+
+[[case]]
+name = "an image that is out of date skips the round, and the next rounds draw"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["r3 swap [0-9]+ frame 1 [0-9]+x[0-9]+ slot 1 bgra8 srgb vsync skipped", "r5 swap [0-9]+ frame [0-9]+ [0-9]+x[0-9]+ slot [0-9] bgra8 srgb vsync ready"] }
+fail = { vkAcquireNextImageKHR = 1 }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|3:show_swap|5:show_swap"
+'''
+
+[[case]]
+name = "a lost device gives the status lost for 1 round, then a new device"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, has = ["the device is lost"], matches = ["r4 device [0-9]+ gpu [0-9]+ gen 1 features 0x0 vulkan lost", "r5 device [0-9]+ gpu [0-9]+ gen 2 features 0x0 vulkan ready"] }
+fail = { vkQueuePresentKHR = 1 }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["gpu_vulkan_module", "window_sdl3", "sdl3_game_gpu", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gpu.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:show_device|5:show_device"
+'''

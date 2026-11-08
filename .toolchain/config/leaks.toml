@@ -1,2 +1,2 @@
 [leaks]
-with = ["src/platform_abstraction/sdl3/leaks.toml"]
+with = ["src/platform_abstraction/sdl3/leaks.toml", "src/platform_abstraction/vulkan/leaks.toml"]
