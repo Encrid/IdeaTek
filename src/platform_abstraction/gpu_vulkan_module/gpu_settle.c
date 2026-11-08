@@ -27,7 +27,8 @@ static void settle_device(const bridge_api_t *api)
 static void settle_window(const bridge_api_t *api)
 {
     if (gpu_module.device && gpu_module.window && !gpu_module.surface
-        && gpu_module.surface_kind != IDEATEK_SURFACE_NONE)
+        && gpu_module.surface_kind != IDEATEK_SURFACE_NONE
+        && !gpu_module.no_present)
         make_surface(api);
     if (gpu_module.stale) {
         drop_swapchain();

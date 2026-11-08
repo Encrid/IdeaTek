@@ -74,6 +74,8 @@ typedef struct {
     VkQueue queues[3];
     uint32_t families[3];
     VkSemaphore timeline;
+    VkSemaphore taken[GPU_FRAMES];
+    VkSemaphore done[GPU_IMAGES];
     VkCommandPool pool;
     VkCommandBuffer buffers[GPU_FRAMES];
     uint32_t frames;
@@ -86,6 +88,8 @@ typedef struct {
     uint32_t pixel_width;
     uint32_t pixel_height;
     bool drawable;
+    bool window_hdr;
+    bool no_present;
     bool swap_asked;
     ideatek_swapchain_request_t swap_request;
     VkSurfaceKHR surface;
@@ -126,6 +130,14 @@ typedef struct {
     uint64_t first;
     uint64_t second;
 } gpu_surface_info_t;
+
+typedef struct {
+    VkImageLayout from;
+    VkImageLayout to;
+    VkSemaphore wait;
+    VkSemaphore signal;
+    uint64_t value;
+} gpu_submit_t;
 
 typedef VkResult (VKAPI_PTR *gpu_make_surface_t)(VkInstance, const void *,
     const VkAllocationCallbacks *, VkSurfaceKHR *);

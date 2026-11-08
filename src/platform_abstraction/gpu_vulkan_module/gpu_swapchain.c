@@ -16,29 +16,39 @@ static const VkSwapchainCreateInfoKHR SWAPCHAIN_INFO = {
     .clipped = VK_TRUE,
 };
 
+static const char *const NO_HDR[] = { "the display has no hdr",
+    "the surface has no format of hdr" };
+
+static void say_no_hdr(const bridge_api_t *api, const gpu_format_t *chosen)
+{
+    bool lost = gpu_module.swap_request.hdr
+        & (chosen->out_space == IDEATEK_COLOR_SPACE_SRGB);
+
+    if (lost)
+        bridge_native_say(api, BRIDGE_LOG_WARN, "no hdr: %s",
+            NO_HDR[gpu_module.window_hdr]);
+}
+
 static void choose_format(const bridge_api_t *api,
     VkSwapchainCreateInfoKHR *info)
 {
     VkSurfaceFormatKHR list[64];
     uint32_t count = 64;
+    bool hdr = gpu_module.swap_request.hdr & gpu_module.window_hdr;
     gpu_format_t chosen;
-    bool lost;
     VkResult result;
 
     result = vkGetPhysicalDeviceSurfaceFormatsKHR(gpu_module.physical,
         gpu_module.surface, &count, list);
     count *= result >= 0;
-    chosen = pick_format(list, count, gpu_module.swap_request.hdr);
+    chosen = pick_format(list, count, hdr);
     gpu_module.format = chosen.format;
     gpu_module.color_space = chosen.space;
     gpu_module.swap_value.format = chosen.out_format;
     gpu_module.swap_value.color_space = chosen.out_space;
     info->imageFormat = chosen.format;
     info->imageColorSpace = chosen.space;
-    lost = gpu_module.swap_request.hdr
-        & (chosen.out_space == IDEATEK_COLOR_SPACE_SRGB);
-    if (lost)
-        bridge_native_say(api, BRIDGE_LOG_WARN, "no hdr on the window: srgb");
+    say_no_hdr(api, &chosen);
 }
 
 static void choose_present(const bridge_api_t *api,

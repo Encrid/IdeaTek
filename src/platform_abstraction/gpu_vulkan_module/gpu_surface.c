@@ -21,14 +21,6 @@ static const struct {
         VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR, 0 },
 };
 
-void drop_surface([[maybe_unused]] const bridge_api_t *api)
-{
-    drop_swapchain();
-    if (gpu_module.surface)
-        vkDestroySurfaceKHR(gpu_module.instance, gpu_module.surface, nullptr);
-    gpu_module.surface = VK_NULL_HANDLE;
-}
-
 static gpu_make_surface_t find_maker(gpu_surface_info_t *info)
 {
     uint64_t handles[2] = { gpu_module.native_display,
@@ -46,6 +38,23 @@ static gpu_make_surface_t find_maker(gpu_surface_info_t *info)
     return (make);
 }
 
+static bool can_present(const bridge_api_t *api)
+{
+    VkBool32 ok = VK_FALSE;
+    VkResult result = vkGetPhysicalDeviceSurfaceSupportKHR(
+        gpu_module.physical, gpu_module.families[0], gpu_module.surface,
+        &ok);
+    bool refused = (result < 0) | !ok;
+
+    if (refused) {
+        bridge_native_say(api, BRIDGE_LOG_WARN,
+            "no present on the queue: %d", result);
+        drop_surface(api);
+    }
+    gpu_module.no_present = refused;
+    return (!refused);
+}
+
 bool make_surface(const bridge_api_t *api)
 {
     gpu_surface_info_t info = { .second = gpu_module.native_window };
@@ -59,42 +68,5 @@ bool make_surface(const bridge_api_t *api)
         gpu_module.surface = VK_NULL_HANDLE;
         return (false);
     }
-    return (true);
-}
-
-static void take_state(const bridge_api_t *api, uint64_t id, uint32_t at)
-{
-    const ideatek_window_state_t *w = (const void *)(api->shared_base + at);
-    bool resized = (w->pixel_width != gpu_module.pixel_width)
-        | (w->pixel_height != gpu_module.pixel_height);
-
-    if (w->native_window != gpu_module.native_window)
-        drop_surface(api);
-    gpu_module.window = id;
-    gpu_module.surface_kind = w->surface;
-    gpu_module.native_display = w->native_display;
-    gpu_module.native_window = w->native_window;
-    gpu_module.drawable = !w->minimized & (w->pixel_width > 0)
-        & (w->pixel_height > 0);
-    gpu_module.stale |= resized;
-    gpu_module.pixel_width = w->pixel_width;
-    gpu_module.pixel_height = w->pixel_height;
-}
-
-BRIDGE_NATIVE(window)
-{
-    const bridge_list_t *list = bridge_native_get_list(api,
-        gpu_module.window_list);
-    const bridge_trigger_t *t = (const void *)(api->private_base + list->at);
-
-    for (uint32_t i = 0; i < list->count; i++) {
-        if (t[i].events & BRIDGE_ON_LEAVE) {
-            drop_surface(api);
-            gpu_module.window = 0;
-            continue;
-        }
-        take_state(api, t[i].id, bridge_native_find_value(api, t[i].id,
-            WINDOW_STATE));
-    }
-    return (0);
+    return (can_present(api));
 }
