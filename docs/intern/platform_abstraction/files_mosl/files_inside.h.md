@@ -49,6 +49,8 @@ The worker thread and the thread of the phases share `jobs`, under `lock`. Each 
 | `FILES_WAIT` | 100000000 | The nanoseconds that the worker thread waits for a job before it looks again. |
 | `CHANGE_HEAD` | 24 | The bytes of a change in `changes` before its value; `CHANGE_SIZE` and `CHANGE_BYTES` add the value rounded up to 8, as in the window module. |
 
+`FILES_PATH` is in `files_paths.h`, so that the paths program uses it alone. This header includes `files_paths.h`.
+
 ## The slots
 
 The slots are, in the order of the declarations: `STORAGE`, `ACTION`, `STATUS`, `REQUEST`, `RESULT`, `CHANGE`, then `SETTINGS`.
