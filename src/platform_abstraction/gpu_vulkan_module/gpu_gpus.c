@@ -3,3 +3,6 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
+#include "gpu_inside.h"
+
+[[gnu::used]] static const char gpu_used_[] = "reflection stub";

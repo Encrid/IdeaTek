@@ -7,6 +7,8 @@
 
 #include "game.h"
 
+#include "game_gpu.h"
+
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
 static const char WHO[] = MANIFEST;
 
@@ -14,6 +16,7 @@ game_t game;
 
 static uint32_t queries[6];
 static uint32_t lists[2];
+
 
 static const char *const MODES[] = { "windowed", "fullscreen", "exclusive" };
 static const char *const SURFACES[] = { "none", "windows", "metal", "xlib",
@@ -236,6 +239,7 @@ static void declare_types(const bridge_api_t *api)
     s->paste = SWEPT(api, "ideatek:Paste", ideatek_paste_t);
     s->event_wait = STRUCT(api, "ideatek:EventWait", ideatek_event_wait_t);
     game_declare_input(api);
+    game_declare_gpu(api);
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -265,6 +269,7 @@ BRIDGE_NATIVE(init)
     lists[0] = ADD_SEEN(api, "seen_state", game.slots.state);
     lists[1] = ADD_SEEN(api, "seen_display", game.slots.display);
     game_watch_input(api);
+    game_watch_gpu(api);
 #if defined(GAME_EARLY)
     game_start(api);
 #endif
