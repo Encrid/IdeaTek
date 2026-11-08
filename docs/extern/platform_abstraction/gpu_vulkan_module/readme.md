@@ -6,7 +6,7 @@ The GPU module of IdeaTek on Vulkan. It gives the GPUs, the device and the windo
 
 The release of `BM-IdeaTek-Gpu-Vulkan` has the tag `gpu_vulkan_module-v<version>`: https://github.com/Encrid/IdeaTek/releases.
 Its 2 files are `BM-IdeaTek-Gpu-Vulkan.zip` and `sha256.txt`. `BM-IdeaTek-Gpu-Vulkan.zip` has a folder for each target.
-In `BM-IdeaTek-Gpu-Vulkan`, each folder holds the module `gpu_vulkan.dll`, `gpu_vulkan.so` or `gpu_vulkan.dylib`, and the notices of volk and of the headers of Vulkan.
+In `BM-IdeaTek-Gpu-Vulkan`, each folder holds the module `gpu_vulkan_module.dll`, `gpu_vulkan_module.so` or `gpu_vulkan_module.dylib`, and the notices of volk and of the headers of Vulkan.
 Each folder of `BM-IdeaTek-Gpu-Vulkan.zip` also holds this readme and the licence.
 
 The module needs no library beside it: volk loads the loader of Vulkan of the machine at start.
@@ -26,7 +26,7 @@ The component of its settings is `ideatek_gpu_vulkan:Settings`. It holds the set
 | --- | --- | --- |
 | `pinned` | `true` | The module takes an image and gives it back in the phases. |
 | `reloadable` | `false` | The device of Vulkan and its queues are not in the storage of Bridge. |
-| `spawns` | 64 | 1 entity for each adapter of the machine, and 1 for the device. |
+| `spawns` | 64 | 1 entity for each adapter of the machine. |
 | `changes` | 4096 | The module attaches its values in the rounds of a new device and of a new swapchain. |
 | `persistent` | 512 | Room for the log lines. |
 | `scratch` | 16384 | Room for the declarations, the list of the GPUs and the messages of the validation layer. |
@@ -34,6 +34,7 @@ The component of its settings is `ideatek_gpu_vulkan:Settings`. It holds the set
 | `spans` | 65536 | The room of the lists of the 3 observers. |
 
 - The module takes the grants that the 2 headers of the GPU part give to the GPU module: `docs/extern/platform_abstraction/ideatek_gpu.h.md` and `docs/extern/platform_abstraction/ideatek_gpu_vulkan.h.md`, *The grants*.
+- The module serves 1 window. A second entity with `ideatek:WindowState` gets the line of the second window, and no swapchain.
 - The deployment loads the module before the window module.
   The module reads `ideatek:WindowState` for the handles of the surface. So it starts before the window opens, and the request of the swapchain comes later.
 - Its system `begin` runs in its phase `first`.
@@ -57,9 +58,11 @@ The log of the module holds these lines:
 | `the gpu lacks <features>` | The adapter does not have the features of the request that the line gives in hexadecimal. They stay off. |
 | `no device: <result>` | Vulkan refuses the device. The device gets the status `IDEATEK_GPU_STATUS_NONE`. |
 | `no surface: <result>` | The handles of the window have a kind with no surface, or Vulkan refuses the surface. The next round tries again. |
+| `no present on the queue: <result>` | The graphics queue cannot show images on the surface of the window. The window gets the status `IDEATEK_SWAPCHAIN_STATUS_SKIPPED` until its handles change. |
+| `a second window <entity> gets no swapchain` | A second entity carries `ideatek:WindowState`. Only the first gets a swapchain. |
 | `no swapchain: <result>` | Vulkan refuses the swapchain. The window gets the status `IDEATEK_SWAPCHAIN_STATUS_SKIPPED`, and the next round tries again. |
 | `the present mode <mode> is not there: vsync` | The window cannot use `present_mode` of the request. The swapchain uses `IDEATEK_PRESENT_MODE_VSYNC`. |
-| `no hdr on the window: srgb` | `hdr` of the request is `true`, and the surface has no format of HDR. The swapchain uses `IDEATEK_COLOR_SPACE_SRGB`. |
+| `no hdr: <reason>` | `hdr` of the request is `true`, and `hdr` of the window is `false` (`the display has no hdr`), or the surface has no format of HDR (`the surface has no format of hdr`). The swapchain uses `IDEATEK_COLOR_SPACE_SRGB`. |
 | `the device is lost` | A call of Vulkan loses the device. The status is `IDEATEK_GPU_STATUS_LOST` for 1 round, then a new device comes. |
 
 With `validation`, the layer and the loader of Vulkan add their own lines to the log, as warnings.

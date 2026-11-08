@@ -9,7 +9,7 @@ This file brings the device, the surface and the swapchain to the state that the
 1. The first round reads the settings: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_gpus.c.md`. A broken module stops here.
 2. A new request makes the device: the request names an adapter, or 0 for the default.
 3. A device that was lost in the round before asks for a new device in the next round.
-4. A device and a window with handles make the surface.
+4. A device and a window with handles make the surface, unless the queue cannot show on it: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_surface.c.md`, *The present*.
 5. A stale swapchain goes.
 6. A device, a surface, a request of the swapchain and a window that can draw make the swapchain.
 
