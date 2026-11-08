@@ -40,7 +40,7 @@ BRIDGE_NATIVE(window)
 static bool take_change(const bridge_api_t *api, void *last,
     const void *next, uint32_t size)
 {
-    if (!memcmp(last, next, size) || !has_room(api, 0, 24 + size))
+    if (!memcmp(last, next, size) || !has_room(api, 0, CHANGE_SIZE(size)))
         return (false);
     memcpy(last, next, size);
     return (true);

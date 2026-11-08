@@ -54,7 +54,7 @@ It keeps the index of the list of each observer in `input_module`.
 4. It stops the video and the gamepads with `sdl3_stop_subsystem`, and gives 0.
 
 No row of the module is saved: each row is a fact of the devices, and the next start reads it again.
-`bridge_reload` gives 1: Bridge never reloads this module.
+`bridge_reload` gives 0: Bridge never reloads this module, and a reload has nothing to do.
 
 ## The branches
 
@@ -62,7 +62,7 @@ No row of the module is saved: each row is a fact of the devices, and the next s
 | --- | --- |
 | SDL3 does not start the video or the gamepads. | The line of no input, and the load fails. |
 | SDL3 starts them. | The load gives 0. The input entity has `ideatek:Keyboard` and `ideatek:Mouse`. |
-| A reload. | It gives 1. |
+| A reload. | It gives 0. |
 | The end of a run with the text input on, 1 gamepad and 1 cursor. | Each goes, then the video and the gamepads of SDL3. |
 | The end of a run with no device. | The video and the gamepads of SDL3 go. |
 

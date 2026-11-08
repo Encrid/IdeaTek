@@ -42,6 +42,13 @@ constexpr uint32_t INPUT_FINGERS = 16;
 constexpr uint32_t INPUT_REASON = 256;
 constexpr uint32_t INPUT_CURSORS = 11;
 
+constexpr uint32_t CHANGE_HEAD = 24;
+
+    #define CHANGE_SIZE(n) (CHANGE_HEAD + (((n) + 7u) & ~7u))
+    #define CHANGE_BYTES(T) CHANGE_SIZE(sizeof(T))
+
+constexpr uint32_t RELEASE_BYTES = CHANGE_BYTES(ideatek_finger_event_t);
+
     #define INPUT_SETTINGS_FIELDS { \
         bridge_text_t mappings; \
         uint32_t round_entities; \

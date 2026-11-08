@@ -30,8 +30,8 @@ bool start_input(const bridge_api_t *api)
             "round_entities: %u is outside 1 to 65535", s->round_entities);
         return (false);
     }
-    SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, s->touch_mouse_events ? "1"
-        : "0");
+    SDL_SetHintWithPriority(SDL_HINT_TOUCH_MOUSE_EVENTS,
+        s->touch_mouse_events ? "1" : "0", SDL_HINT_OVERRIDE);
     add_mappings(api, s->mappings);
     input_module.started = true;
     return (true);

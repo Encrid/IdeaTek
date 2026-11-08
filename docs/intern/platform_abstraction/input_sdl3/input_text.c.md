@@ -11,7 +11,7 @@ For an enter or an attach, `apply_text` does these steps:
 
 1. It reads the request with `bridge_native_find_value`.
 2. It takes the window of SDL3 from `SDL_GetWindows`, because the window module owns 1 window.
-3. It sets the hint `SDL_HINT_ENABLE_SCREEN_KEYBOARD` to `"1"` or `"0"`, from `screen_keyboard`.
+3. It sets the hint `SDL_HINT_ENABLE_SCREEN_KEYBOARD` to `"1"` or `"0"`, from `screen_keyboard`, with the priority of an override.
 4. It calls `SDL_SetTextInputArea` with the field and the caret of the request, divided by `SDL_GetWindowPixelDensity`. The contract gives pixels, and SDL3 takes the coordinates of the window.
 5. If the text input does not run, it calls `SDL_StartTextInput`. If SDL3 refuses, it writes `no text input: <reason>`. Else `text_on` is `true`.
 6. If the text input runs and `screen_keyboard` changed, it stops and starts the text input again. Then SDL3 reads the hint again.

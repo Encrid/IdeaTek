@@ -6,20 +6,27 @@
 #include "input_inside.h"
 
 static const input_family_t FAMILIES[] = {
-    { SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP, 1, 44, take_key },
-    { SDL_EVENT_TEXT_INPUT, SDL_EVENT_TEXT_INPUT, 1, 32, take_text },
-    { SDL_EVENT_MOUSE_MOTION, SDL_EVENT_MOUSE_MOTION, 1, 48, take_motion },
-    { SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP, 1, 40,
-        take_button },
-    { SDL_EVENT_MOUSE_WHEEL, SDL_EVENT_MOUSE_WHEEL, 1, 36, take_wheel },
+    { SDL_EVENT_KEY_DOWN, SDL_EVENT_KEY_UP, 1,
+        CHANGE_BYTES(ideatek_key_event_t), take_key },
+    { SDL_EVENT_TEXT_INPUT, SDL_EVENT_TEXT_INPUT, 1,
+        CHANGE_BYTES(ideatek_text_event_t), take_text },
+    { SDL_EVENT_MOUSE_MOTION, SDL_EVENT_MOUSE_MOTION, 1,
+        CHANGE_BYTES(ideatek_mouse_motion_t), take_motion },
+    { SDL_EVENT_MOUSE_BUTTON_DOWN, SDL_EVENT_MOUSE_BUTTON_UP, 1,
+        CHANGE_BYTES(ideatek_mouse_button_t), take_button },
+    { SDL_EVENT_MOUSE_WHEEL, SDL_EVENT_MOUSE_WHEEL, 1,
+        CHANGE_BYTES(ideatek_mouse_wheel_t), take_wheel },
     { SDL_EVENT_GAMEPAD_AXIS_MOTION, SDL_EVENT_GAMEPAD_AXIS_MOTION, 0, 0,
         take_axis },
-    { SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP, 1, 48,
-        take_pad_button },
-    { SDL_EVENT_GAMEPAD_ADDED, SDL_EVENT_GAMEPAD_ADDED, 1, 455, add_pad },
-    { SDL_EVENT_GAMEPAD_REMOVED, SDL_EVENT_GAMEPAD_REMOVED, 0, 24,
+    { SDL_EVENT_GAMEPAD_BUTTON_DOWN, SDL_EVENT_GAMEPAD_BUTTON_UP, 1,
+        CHANGE_BYTES(ideatek_gamepad_event_t), take_pad_button },
+    { SDL_EVENT_GAMEPAD_ADDED, SDL_EVENT_GAMEPAD_ADDED, 1,
+        CHANGE_BYTES(ideatek_gamepad_t)
+        + CHANGE_BYTES(ideatek_gamepad_state_t), add_pad },
+    { SDL_EVENT_GAMEPAD_REMOVED, SDL_EVENT_GAMEPAD_REMOVED, 0, CHANGE_HEAD,
         remove_pad },
-    { SDL_EVENT_FINGER_DOWN, SDL_EVENT_FINGER_CANCELED, 1, 48, take_finger },
+    { SDL_EVENT_FINGER_DOWN, SDL_EVENT_FINGER_CANCELED, 1,
+        CHANGE_BYTES(ideatek_finger_event_t), take_finger },
 };
 
 static const input_family_t *family_of(const SDL_Event *e)

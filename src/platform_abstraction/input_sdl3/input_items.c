@@ -9,7 +9,8 @@ bool has_room(const bridge_api_t *api, uint32_t spawns, uint32_t bytes)
 {
     const input_settings_t *s = bridge_native_get_single(api, SETTINGS);
     const bridge_header_t *h = bridge_native_get_header(api);
-    uint32_t held = input_module.run.pending ? 24 + input_module.run.size : 0;
+    uint32_t held = input_module.run.pending
+        ? CHANGE_SIZE(input_module.run.size) : 0;
 
     return (input_module.spawned + spawns <= s->round_entities
         && h->changes_left >= bytes + held);

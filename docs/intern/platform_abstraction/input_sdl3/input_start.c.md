@@ -7,7 +7,7 @@ This file reads the settings of the module in its first round, because Bridge wr
 `start_input` does these steps, and sets `started` to `true` when they end:
 
 1. It checks `round_entities`. A value outside 1 to 65535 gives `round_entities: <value> is outside 1 to 65535`, and `start_input` gives `false`: `readme.md`, *The contracts*.
-2. It sets the hint `SDL_HINT_TOUCH_MOUSE_EVENTS` to `"1"` or `"0"`, from `touch_mouse_events`.
+2. It sets the hint `SDL_HINT_TOUCH_MOUSE_EVENTS` from `touch_mouse_events`, as an override, so the environment does not win.
 3. If `mappings` is not `"none"`, it calls `SDL_AddGamepadMappingsFromFile` with the path.
 4. If SDL3 gives -1, it writes `no mappings <path>: <reason>`. The gamepads keep the mappings of SDL3.
 

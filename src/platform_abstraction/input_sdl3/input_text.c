@@ -14,8 +14,8 @@ static void apply_text(const bridge_api_t *api, uint64_t id)
     SDL_Rect area = { (int)(r->x / d), (int)(r->y / d), (int)(r->width / d),
         (int)(r->height / d) };
 
-    SDL_SetHint(SDL_HINT_ENABLE_SCREEN_KEYBOARD, r->screen_keyboard ? "1"
-        : "0");
+    SDL_SetHintWithPriority(SDL_HINT_ENABLE_SCREEN_KEYBOARD,
+        r->screen_keyboard ? "1" : "0", SDL_HINT_OVERRIDE);
     if (input_module.text_on && r->screen_keyboard
         != input_module.screen_keyboard)
         input_module.text_on = !SDL_StopTextInput(w);

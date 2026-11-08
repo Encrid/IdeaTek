@@ -12,7 +12,7 @@ This file turns each key event of SDL3 into an `ideatek:KeyEvent`, and keeps the
 4. For a key of the page 0x07, it sets or clears the bit of the id in `keys` of `next_keyboard`.
 5. It sets `modifiers` of `next_keyboard` to the modifiers of the event.
 
-A key event needs 1 spawn and 44 bytes: 24 bytes for the attach, and 20 bytes for its value.
+A key event needs 1 spawn and 1 attach of `ideatek:KeyEvent`, whose bytes `CHANGE_BYTES` gives.
 A repeat of a key that is down keeps its bit at 1.
 
 ## The modifiers

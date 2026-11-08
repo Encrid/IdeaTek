@@ -54,7 +54,7 @@ bool release_all(const bridge_api_t *api)
 {
     uint32_t count = count_downs();
 
-    if (!has_room(api, count, count * 48))
+    if (!has_room(api, count, count * RELEASE_BYTES))
         return (false);
     release_keys(api);
     release_buttons(api);
