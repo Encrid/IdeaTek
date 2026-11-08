@@ -37,6 +37,8 @@ void drop_device([[maybe_unused]] const bridge_api_t *api)
     drop_swapchain();
     vkDestroyCommandPool(gpu_module.device, gpu_module.pool, nullptr);
     vkDestroySemaphore(gpu_module.device, gpu_module.timeline, nullptr);
+    for (uint32_t f = 0; f < gpu_module.frames; f++)
+        vkDestroySemaphore(gpu_module.device, gpu_module.taken[f], nullptr);
     vkDestroyDevice(gpu_module.device, nullptr);
     gpu_module.device = VK_NULL_HANDLE;
     gpu_module.pool = VK_NULL_HANDLE;
@@ -57,6 +59,7 @@ void note_result(const bridge_api_t *api, VkResult result)
 BRIDGE_NATIVE(shutdown)
 {
     drop_device(api);
+    drop_surface(api);
     if (gpu_module.messenger)
         vkDestroyDebugUtilsMessengerEXT(gpu_module.instance,
             gpu_module.messenger, nullptr);

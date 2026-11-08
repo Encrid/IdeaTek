@@ -57,10 +57,21 @@ static const VkSemaphoreTypeCreateInfo TIMELINE = {
     .semaphoreType = VK_SEMAPHORE_TYPE_TIMELINE,
 };
 
-static void make_sync(void)
+static void make_semaphores(void)
 {
     VkSemaphoreCreateInfo sem = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO, .pNext = &TIMELINE };
+    VkSemaphoreCreateInfo binary = {
+        .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO };
+
+    vkCreateSemaphore(gpu_module.device, &sem, nullptr, &gpu_module.timeline);
+    for (uint32_t f = 0; f < gpu_module.frames; f++)
+        vkCreateSemaphore(gpu_module.device, &binary, nullptr,
+            &gpu_module.taken[f]);
+}
+
+static void make_sync(void)
+{
     VkCommandPoolCreateInfo pool = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
@@ -73,7 +84,7 @@ static void make_sync(void)
     for (uint32_t f = 0; f < 3; f++)
         vkGetDeviceQueue(gpu_module.device, gpu_module.families[f], 0,
             &gpu_module.queues[f]);
-    vkCreateSemaphore(gpu_module.device, &sem, nullptr, &gpu_module.timeline);
+    make_semaphores();
     vkCreateCommandPool(gpu_module.device, &pool, nullptr, &gpu_module.pool);
     buffers.commandPool = gpu_module.pool;
     vkAllocateCommandBuffers(gpu_module.device, &buffers, gpu_module.buffers);
