@@ -13,7 +13,7 @@ A reference that the module never frees keeps `dxgi.dll` mapped. The destroy sta
 ## The file of the module
 
 `module_file` gives the path of the file of this module, in UTF-8. It asks the system for the library that holds the address of `MARK`, a byte of this file.
-On Windows, `GetModuleHandleExW` gives the handle and `GetModuleFileNameW` the path. On the other systems, `dladdr` gives the path.
+On Windows, `GetModuleHandleExW` gives the handle and `GetModuleFileNameW` the path. On the other systems, `dladdr` gives the path. The library of Linux declares it only with `_GNU_SOURCE`, which the artifact of the module defines.
 A system that gives no path gives an empty text.
 
 ## The loader
