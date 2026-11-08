@@ -17,7 +17,7 @@ Each call of Vulkan is then a pointer that volk fills: https://github.com/zeux/v
 
 - `volkInitialize` loads the loader of Vulkan of the system: `vulkan-1.dll`, `libvulkan.so.1` or `libvulkan.1.dylib`. It fails when the system has none.
   On macOS it also looks for `/usr/local/lib/libvulkan.dylib`, where the Vulkan SDK puts the loader. It does not look in the folder of Homebrew on arm64.
-- `volkInitializeCustom` takes a `vkGetInstanceProcAddr` that the module loaded itself, for a loader at a path of its own.
+- `volkInitializeCustom` takes a `vkGetInstanceProcAddr` that the module loaded itself, for a loader at a path of its own. The GPU module uses it for its setting `loader`.
 - `volkLoadInstance` fills the calls of an instance, and `volkLoadDevice` the calls of a device.
 
 The test program `vulkan_probe` loads the loader and prints each GPU of the machine. It prints the features of the 2 milestones of Khronos that the GPU lacks.

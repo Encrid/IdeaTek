@@ -69,9 +69,12 @@ A pair also orders each 2 drawers of a phase, and that order is the order of the
 
 | Setting | Default | Range | Value |
 | --- | --- | --- | --- |
+| `loader` | `"machine"` | `"machine"`, a name or a path | The loader of Vulkan. `machine` is the loader of the system. A name without a folder goes to the library search of the system. A path is a file; a path that is not absolute starts at the folder of the module. |
 | `frames_in_flight` | 2 | 2 to 3 | The rounds that the GPU can work on at the same time. |
 | `image_count` | 3 | 2 to 4 | The images of the swapchain. |
 | `validation` | `false` | `true` or `false` | `true` turns on the validation layer of the API. Each message of the layer goes to the log of the GPU module. |
+
+A loader that does not open gives 1 line in the log, and no GPU.
 
 ## ideatek:Gpu
 

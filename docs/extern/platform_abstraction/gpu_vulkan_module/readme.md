@@ -9,7 +9,8 @@ Its 2 files are `BM-IdeaTek-Gpu-Vulkan.zip` and `sha256.txt`. `BM-IdeaTek-Gpu-Vu
 In `BM-IdeaTek-Gpu-Vulkan`, each folder holds the module `gpu_vulkan_module.dll`, `gpu_vulkan_module.so` or `gpu_vulkan_module.dylib`, and the notices of volk and of the headers of Vulkan.
 Each folder of `BM-IdeaTek-Gpu-Vulkan.zip` also holds this readme and the licence.
 
-The module needs no library beside it: volk loads the loader of Vulkan of the machine at start.
+The module loads the loader of Vulkan at its start: the loader of the machine, or the one that the setting `loader` names.
+A game that ships its own loader puts it beside the module, and puts the manifest of its driver in `vulkan/icd.d` beside the program.
 A machine with no loader of Vulkan, or with no Vulkan 1.4, gets no entity of `ideatek:Gpu`, and the module writes 1 line.
 A project names the zip of `BM-IdeaTek-Gpu-Vulkan` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
@@ -18,7 +19,7 @@ A project names the zip of `BM-IdeaTek-Gpu-Vulkan` in a `[[source]]`: `.toolchai
 The identity of the module is `ideatek_gpu_vulkan:gpu@0.1.0`.
 Its role is the GPU module: `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The roles*.
 Its handles of Vulkan are `ideatek:VulkanDevice` and `ideatek:VulkanSwapchain`: `docs/extern/platform_abstraction/ideatek_gpu_vulkan.h.md`.
-The component of its settings is `ideatek_gpu_vulkan:Settings`. It holds the settings of `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The settings of the GPU module*: `frames_in_flight`, `image_count` and `validation`. The module adds no setting of its own.
+The component of its settings is `ideatek_gpu_vulkan:Settings`. It holds the settings of `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The settings of the GPU module*: `loader`, `frames_in_flight`, `image_count` and `validation`. The module adds no setting of its own.
 
 ### The deployment
 
@@ -50,7 +51,7 @@ The log of the module holds these lines:
 
 | Line | Cause |
 | --- | --- |
-| `no loader: <reason>` | The machine has no loader of Vulkan. The module loads, and no GPU gets an entity. |
+| `no loader: <reason>` | The loader of Vulkan does not open: `the machine has no library of Vulkan`, or `no library at <path>` for the setting `loader`. The module loads, and no GPU gets an entity. |
 | `no instance: <result>` | Vulkan refuses the instance. No GPU gets an entity. |
 | `no validation layer` | `validation` is `true`, and the layer of Khronos is not on the machine. The module goes on with no layer. |
 | `the gpu <entity> is not usable: <reason>` | The request names no adapter, or an adapter with no Vulkan 1.4 or with a lack of Roadmap 2022. The device gets the status `IDEATEK_GPU_STATUS_NONE`. |
