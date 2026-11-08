@@ -11,7 +11,7 @@ This file runs the system `round` in the first phase.
 3. With `sleeper` at `clock` and a `max_rate`, it waits until `1 / max_rate` passed since the last round, with `SDL_DelayPrecise`. The first round does not wait.
 4. It reads the real time: `SDL_GetTicksNS` since the start of the last round, or `fixed_round` with `time_source` at `fixed`. The first round reads 0.
 5. With `smoothing` at `refresh`, the time goes through `smoothed`: `docs/intern/kernel/frame_sdl3/frame_values.c.md`.
-6. It computes the values with `start_round`. The runs of the fixed phase start at 0.
+6. It computes the values with `start_round`. With steps, `ideatek:Tick` takes the first step of the round, so the first run of the fixed phase reads it. The runs start at 0.
 
 Then it writes `ideatek:Frame` and `ideatek:Tick`.
 With `sleeper` at `events` and a window, it writes `ideatek:EventWait` on the window: `1 / max_rate`, or 0 with no limit. The first write attaches it.
@@ -31,5 +31,6 @@ With `sleeper` at `events` and a window, it writes `ideatek:EventWait` on the wi
 | --- | --- |
 | `wait_turn` | Waits for the turn of the round with `sleeper` at `clock`, and keeps the start of the round. |
 | `read_real` | Gives the real time of the round. |
+| `first_step` | Puts the first step of the round into `ideatek:Tick`, and resets the runs. |
 | `write_wait` | Writes `ideatek:EventWait` of the window. |
 | `round` | Runs the steps of the round. Gives 1 when the module is broken. |

@@ -6,6 +6,7 @@ This header gives the types and the functions of the values of a round, for the 
 
 `frame_clock_t` holds the time between the rounds: `pending`, `elapsed`, `real_elapsed` and `index`.
 `frame_rule_t` holds the values of the round: `scale`, `rate`, `most_steps` and `paused`.
+`frame_values_t` holds the 2 results of a round: the value of `ideatek:Frame` and the value of `ideatek:Tick`.
 
 ## Functions
 
