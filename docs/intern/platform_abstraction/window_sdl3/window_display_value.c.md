@@ -24,7 +24,7 @@ The primary display of SDL3 is the first display of its list: https://github.com
 Thus exactly 1 display entity has `is_primary` at `true`, if 1 display has an entity.
 
 A name of more than 127 bytes keeps its first whole code points, because `SDL_utf8strlcpy` cuts at a whole code point. Then the line of the long name comes.
-`update_display` attaches the value only when a byte of it differs from `attached`, with 184 bytes of room.
+`update_display` attaches the value only when a byte of it differs from `attached`, with the room of 1 attach of `ideatek:Display`.
 
 ## The find
 

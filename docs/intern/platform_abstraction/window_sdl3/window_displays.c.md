@@ -8,7 +8,7 @@ The module keeps each display in a `window_display_t` of `displays`: `docs/inter
 `sync_displays` runs in a round when `displays_dirty` is `true`.
 `displays_dirty` is `true` in the first round, and after each event of a display.
 
-1. `SDL_GetDisplays` gives the ids of the displays. The first id is the primary display.
+1. `SDL_GetDisplays` gives the ids of the displays, and `SDL_GetPrimaryDisplay` the id of the primary display.
 2. If SDL3 gives no list, it writes the line of the list, and stops.
 3. For each display of `displays` whose id is not in the list, it calls `remove_display`.
 4. For each id of the list with no display in `displays`, it calls `add_display`.
@@ -21,7 +21,7 @@ Thus the next round does the rest. Each other end of `sync_displays` sets `displ
 ## A new display
 
 `add_display` reads the modes with `read_modes`: `docs/intern/platform_abstraction/window_sdl3/window_video_modes.c.md`.
-It needs room for 1 spawn and 184 bytes for the display, and for 1 spawn and 56 bytes for each mode.
+It needs room for 1 spawn and 1 attach of `ideatek:Display`, and for 1 spawn and 1 attach of `ideatek:VideoMode` for each mode.
 With the room, it spawns the entity of the display, calls `spawn_modes`, and adds the display at the end of `displays`.
 
 With 16 displays in `displays`, a new display gets no entity, and the module writes the line of the 17th display.

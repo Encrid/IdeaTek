@@ -19,12 +19,12 @@ Bridge tells no count of the spawns that are left. Thus `spawn_entity` counts th
 
 | Change | Spawns | Bytes of `changes` |
 | --- | --- | --- |
-| A destroy | 0 | 24 |
-| An attach of `ideatek:WindowState` | 0 | 104 |
-| A new display | 1 | 184 |
-| A new video mode | 1 | 56 |
-| A new drop | 1 | 72 |
-| A new paste | 1 | 32 |
+| A destroy | 0 | `CHANGE_HEAD` |
+| An attach of `ideatek:WindowState` | 0 | `CHANGE_BYTES(ideatek_window_state_t)` |
+| A new display | 1 | `CHANGE_BYTES(ideatek_display_t)` |
+| A new video mode | 1 | `CHANGE_BYTES(ideatek_video_mode_t)` |
+| A new drop | 1 | `CHANGE_BYTES(ideatek_drop_t)` |
+| A new paste | 1 | `CHANGE_BYTES(ideatek_paste_t)` |
 
 The manifest states `spawns` at 256, which is `WINDOW_SPAWNS`, and `changes` at 65536.
 A deployment that states less `spawns` makes the spawns fail. A deployment that states less `changes` makes the rounds do less work.

@@ -57,10 +57,11 @@ void spawn_pastes(const bridge_api_t *api)
 {
     window_half_t *half = &window_module.pastes;
     ideatek_paste_t paste = {};
+    uint32_t bytes = CHANGE_BYTES(ideatek_paste_t);
     char *text;
     uint32_t len;
 
-    if (!window_module.paste_count || !has_room(api, 1, 32))
+    if (!window_module.paste_count || !has_room(api, 1, bytes))
         return;
     text = SDL_GetClipboardText();
     len = text ? (uint32_t)SDL_strlen(text) : 0;
@@ -70,7 +71,7 @@ void spawn_pastes(const bridge_api_t *api)
         window_module.paste_count = 0;
     }
     paste.text = put_bytes(api, half, window_module.paste_count ? text : "");
-    for (; window_module.paste_count && has_room(api, 1, 32);
+    for (; window_module.paste_count && has_room(api, 1, bytes);
         window_module.paste_count--)
         spawn_item(api, PASTE, &paste, sizeof(paste));
     SDL_free(text);

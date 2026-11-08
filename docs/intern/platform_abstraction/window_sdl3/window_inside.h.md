@@ -38,6 +38,7 @@ Each slot is a `constexpr`, and `declare_types` of `docs/intern/platform_abstrac
 | `WINDOW_MODES` | 253 | The most listed video modes of 1 display. With the desktop mode, the current mode and the display, they fit in the 256 spawns of 1 round. |
 | `WINDOW_PEEKS` | 64 | The most key presses that the module reads in 1 round to find a paste. |
 | `WINDOW_REASON` | 256 | The size of the buffer for the reason of a failure of SDL3. |
+| `CHANGE_HEAD` | 24 | The bytes that each change takes from `changes`: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md. `CHANGE_SIZE` adds a value rounded up to 8 bytes, and `CHANGE_BYTES` takes the type of the value. |
 
 ## The settings
 

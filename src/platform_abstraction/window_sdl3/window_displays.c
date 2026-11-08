@@ -16,6 +16,7 @@ static bool is_listed(SDL_DisplayID id, const SDL_DisplayID *ids, int count)
 static bool add_display(const bridge_api_t *api, SDL_DisplayID id)
 {
     window_display_t *display;
+    uint32_t bytes;
 
     if (window_module.display_count >= WINDOW_DISPLAYS) {
         bridge_native_say(api, BRIDGE_LOG_WARN,
@@ -26,8 +27,9 @@ static bool add_display(const bridge_api_t *api, SDL_DisplayID id)
     *display = (window_display_t){ .id = id };
     display->mode_count = read_modes(api, id, display->modes,
         &display->listed);
-    if (!has_room(api, 1 + display->mode_count,
-        184 + 56 * display->mode_count))
+    bytes = CHANGE_BYTES(ideatek_display_t)
+        + CHANGE_BYTES(ideatek_video_mode_t) * display->mode_count;
+    if (!has_room(api, 1 + display->mode_count, bytes))
         return (false);
     display->entity = spawn_entity(api);
     spawn_modes(api, display);
@@ -39,7 +41,7 @@ static bool remove_display(const bridge_api_t *api, uint32_t at)
 {
     window_display_t *display = &window_module.displays[at];
 
-    if (!has_room(api, 0, 24 * (1 + display->mode_count)))
+    if (!has_room(api, 0, CHANGE_HEAD * (1 + display->mode_count)))
         return (false);
     if (window_module.applied.target == IDEATEK_DISPLAY_TARGET_CHOSEN
         && window_module.applied.display.id == display->entity)
@@ -68,6 +70,7 @@ void sync_displays(const bridge_api_t *api)
 {
     int count = 0;
     SDL_DisplayID *ids = SDL_GetDisplays(&count);
+    SDL_DisplayID primary = SDL_GetPrimaryDisplay();
     bool done;
 
     if (!ids) {
@@ -77,7 +80,7 @@ void sync_displays(const bridge_api_t *api)
     }
     done = match_list(api, ids, count);
     for (uint32_t i = 0; i < window_module.display_count; i++)
-        done &= update_display(api, &window_module.displays[i], ids[0]);
+        done &= update_display(api, &window_module.displays[i], primary);
     window_module.displays_dirty = !done;
     SDL_free(ids);
 }

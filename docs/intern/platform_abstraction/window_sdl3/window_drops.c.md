@@ -16,7 +16,7 @@ PROCEDURE take_drops()
 ENDPROCEDURE
 ```
 
-An item takes 1 spawn and 72 bytes of `changes`: 24 bytes for the attach, and 48 bytes for its value.
+An item takes 1 spawn and 1 attach of `ideatek:Drop`, whose bytes of `changes` `CHANGE_BYTES` gives.
 Without the room, the other events of the drops stay in the queue, in their order, and the next round takes them.
 SDL3 keeps the text of an event only until the next pump, so `take_drop` copies it in the same round.
 

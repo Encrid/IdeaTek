@@ -23,10 +23,12 @@ static bool renew_modes(const bridge_api_t *api, window_display_t *display)
     static window_mode_t modes[WINDOW_MODES + 2];
     uint32_t listed = 0;
     uint32_t count = read_modes(api, display->id, modes, &listed);
+    uint32_t bytes = CHANGE_HEAD * display->mode_count
+        + CHANGE_BYTES(ideatek_video_mode_t) * count;
 
     if (!has_new_modes(display, modes, count))
         return (true);
-    if (!has_room(api, count, 24 * display->mode_count + 56 * count))
+    if (!has_room(api, count, bytes))
         return (false);
     destroy_modes(api, display);
     memcpy(display->modes, modes, count * sizeof(modes[0]));
@@ -72,7 +74,7 @@ bool update_display(const bridge_api_t *api, window_display_t *display,
     value.is_primary = display->id == primary;
     if (!memcmp(&value, &display->attached, sizeof(value)))
         return (true);
-    if (!has_room(api, 0, 184))
+    if (!has_room(api, 0, CHANGE_BYTES(ideatek_display_t)))
         return (false);
     BRIDGE_NATIVE_ATTACH(api, display->entity, DISPLAY, value);
     display->attached = value;
