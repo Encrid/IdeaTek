@@ -35,10 +35,11 @@ It also stops where `signed` of `rewrite.py` stops: `.toolchain/docs/rewrite.py.
 
 A loader gives a pointer for the name of its second argument: `GetProcAddress` on Windows, and `dlsym` on Linux and macOS.
 A **loaded call** of a file is a listed function that the file names in a text literal, and does not call by its name.
+A file with no call of a loader has no loaded call.
 For each loaded call, the layer adds to the end of the file:
 
 - the count and the number of `C23_FAIL`, as for a listed call;
-- a pointer `typeof(&<function>) c23b_fp_<function>`;
+- a pointer `typeof(*<function>) *c23b_fp_<function>`. That type is a pointer to the function, also when the name is a pointer variable: `.toolchain/docs/rewrite.py.md`, *The pointer variables*;
 - a stand-in `c23b_ft_<function>` with the parameters of its declaration. It counts the call,
   gives the failure value at its number, and else calls the pointer.
 
