@@ -144,7 +144,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:wait 0.2|7:show_swap"
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|7:show_swap"
 ''' } }
 
 [case.folders]
@@ -160,7 +160,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:minimize|4:wait 0.2|7:show_swap"
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:minimize|7:show_swap"
 '''
 
 [[case]]
