@@ -8,7 +8,7 @@ This file reads the settings in the first round, and loads Vulkan.
 
 1. It checks `frames_in_flight` against 2 to 3, and `image_count` against 2 to 4. It checks both, so each wrong setting writes its line.
 2. A setting outside its range marks the module as broken. Then the system `begin` gives 1 in each round: `readme.md`, *The contracts*.
-3. It loads the loader with `volkInitialize`. No loader writes `no loader: the machine has no library of Vulkan`.
+3. It loads the loader that the setting `loader` names: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_loader.c.md`. No loader writes `no loader: <reason>`.
 4. It makes the instance: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_instance.c.md`.
 5. It lists the adapters: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_adapters.c.md`.
 

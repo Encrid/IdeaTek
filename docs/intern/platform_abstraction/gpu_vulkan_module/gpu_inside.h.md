@@ -28,7 +28,9 @@ The array `gpus` has 1 more slot than `GPU_GPUS`. That slot stays empty, so `cho
 
 ## The names
 
-The constants are `GPU_GPUS` (16 adapters), `GPU_IMAGES` (4 images), `GPU_FRAMES` (3 frames) and `GPU_MAX_LOG` (256 bytes of a line of the layer).
+The constants are `GPU_GPUS` (16 adapters), `GPU_IMAGES` (4 images) and `GPU_FRAMES` (3 frames). `GPU_MAX_LOG` is 256 bytes of a line of the layer, and `GPU_PATH` is 4096 bytes of a path.
+
+The settings are `gpu_settings_t`: `loader` is a text, the 2 counts and `validation`.
 The slots of the types start at 11, after the 11 enums of the declarations.
 `GPU_TYPE` declares a type of the contract, and `GPU_F10` to `GPU_F13` give the place of a feature in the chain of features.
 `gpu_surface_info_t` is the common start of the 4 infos of a surface, and `gpu_make_surface_t` is the type of their calls.
