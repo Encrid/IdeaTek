@@ -43,3 +43,4 @@ A processor without them refuses each connection with the line of GameNetworking
 ### The test
 
 The program `gns_smoke` of the tests connects 2 peers of 1 process on the local host, and carries 1 reliable message.
+It runs GameNetworkingSockets in its manual poll mode, and polls it for 10 milliseconds in each turn of its loop. The thread of GameNetworkingSockets carried no packet on some targets.
