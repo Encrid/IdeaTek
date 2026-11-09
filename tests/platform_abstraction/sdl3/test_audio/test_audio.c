@@ -180,10 +180,26 @@ static bool TEST_OpenDevice(SDL_AudioDevice *device)
     return true;
 }
 
+static void wait_device(SDL_AudioDevice *device)
+{
+    Uint32 waited = 0;
+
+    while (waited < device->hidden->io_delay
+            && !SDL_GetAtomicInt(&device->shutdown)) {
+        SDL_Delay(10);
+        waited += 10;
+    }
+}
+
 static bool TEST_WaitDevice(SDL_AudioDevice *device)
 {
-    SDL_Delay(device->hidden->io_delay);
+    wait_device(device);
     return true;
+}
+
+static void TEST_ThreadInit(SDL_AudioDevice *device)
+{
+    wait_device(device);
 }
 
 static bool TEST_PlayDevice(SDL_AudioDevice *device, const Uint8 *buffer,
@@ -246,6 +262,7 @@ static bool TEST_Init(SDL_AudioDriverImpl *impl)
 {
     impl->DetectDevices = TEST_DetectDevices;
     impl->OpenDevice = TEST_OpenDevice;
+    impl->ThreadInit = TEST_ThreadInit;
     impl->WaitDevice = TEST_WaitDevice;
     impl->PlayDevice = TEST_PlayDevice;
     impl->GetDeviceBuf = TEST_GetDeviceBuf;
