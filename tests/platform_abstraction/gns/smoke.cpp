@@ -3,14 +3,17 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
-#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <thread>
 
 #include <steam/isteamnetworkingutils.h>
 #include <steam/steamnetworkingsockets.h>
+
+extern "C" {
+void SteamNetworkingSockets_SetManualPollMode(bool manual);
+void SteamNetworkingSockets_Poll(int most_wait);
+}
 
 static HSteamNetConnection server_side = k_HSteamNetConnection_Invalid;
 static bool connected;
@@ -59,6 +62,7 @@ int main(int argc, char **argv)
     bool sent = false;
     bool received = false;
 
+    SteamNetworkingSockets_SetManualPollMode(true);
     if (!GameNetworkingSockets_Init(nullptr, error)) {
         std::printf("no init: %s\n", error);
         return (1);
@@ -72,6 +76,7 @@ int main(int argc, char **argv)
     listen = sockets->CreateListenSocketIP(address, 0, nullptr);
     client = sockets->ConnectByIPAddress(address, 0, nullptr);
     for (int i = 0; i < 500 && !received; i++) {
+        SteamNetworkingSockets_Poll(10);
         sockets->RunCallbacks();
         if (connected && !sent) {
             sockets->SendMessageToConnection(client, text,
@@ -80,7 +85,6 @@ int main(int argc, char **argv)
             sent = true;
         }
         received = receive(sockets);
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
     sockets->CloseConnection(client, 0, nullptr, false);
     sockets->CloseListenSocket(listen);
