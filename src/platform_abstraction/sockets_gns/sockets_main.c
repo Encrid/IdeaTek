@@ -56,19 +56,15 @@ BRIDGE_NATIVE(shutdown)
     os_mutex_unlock(sockets_module.lock);
     os_event_set(sockets_module.wake);
     os_thread_join(sockets_module.thread);
-");
     if (sockets_module.sockets) {
         close_listens();
-        fprintf(stderr, "diag: listens closed
-");
+        fprintf(stderr, "diag: listens closed\n");
         GameNetworkingSockets_Kill();
-        fprintf(stderr, "diag: gns killed
-");
+        fprintf(stderr, "diag: gns killed\n");
     }
     sockets_module.sockets = nullptr;
     free_thread();
-    fprintf(stderr, "diag: shutdown done
-");
+    fprintf(stderr, "diag: shutdown done\n");
     return (0);
 }
 
