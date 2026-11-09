@@ -29,6 +29,10 @@ static void on_status(SteamNetConnectionStatusChangedCallback_t *info)
         connected = true;
         std::printf("connected\n");
     }
+    if (state == k_ESteamNetworkingConnectionState_ProblemDetectedLocally
+        || state == k_ESteamNetworkingConnectionState_ClosedByPeer)
+        std::printf("%s ended: %d %s\n", listened ? "server" : "client",
+            info->m_info.m_eEndReason, info->m_info.m_szEndDebug);
 }
 
 static bool receive(ISteamNetworkingSockets *sockets)
