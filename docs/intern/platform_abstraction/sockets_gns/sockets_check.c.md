@@ -11,7 +11,7 @@ The check goes through every setting, so the log names each wrong one.
 ## The texts
 
 `TEXTS` is a constant table of the 9 text settings: the offset of each field in `sockets_settings_t`, and its name. `TEXT_*` of the header gives the index of each one.
-`copy_text` copies 1 text from the arena of the share into its text of `SOCKETS_TEXT` bytes, with a zero at the end. A text outside the arena, or of `SOCKETS_TEXT` bytes or more, writes `<setting>: a text of <count> bytes is outside 0 to 1023`, and gives `false`.
+`copy_text` copies 1 text from the arena of the share into its text of `SOCKETS_TEXT` bytes, with a zero at the end. A text outside the arena, or of `SOCKETS_TEXT` bytes or more, gives its line, with the count of its bytes, and `false`.
 `copy_texts` copies the 9 texts and `debug_output`, which has its own text `debug_level`. A wrong `debug_output` leaves an empty text.
 
 ## The words

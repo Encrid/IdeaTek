@@ -20,8 +20,8 @@ The settings are set before the first connection, so it sees them. GameNetworkin
 
 | Case | Result |
 | --- | --- |
-| A wrong setting. | Its line, and `round` gives 1 in each round. |
-| GameNetworkingSockets does not start. | `no sockets: <reason>`, and `round` gives 1 in each round. |
+| A wrong setting. | Its line, and each round fails. |
+| GameNetworkingSockets does not start. | `no sockets: <reason>`, and each round fails. |
 
 ## Functions
 
