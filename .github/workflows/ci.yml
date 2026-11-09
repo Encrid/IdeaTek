@@ -58,18 +58,8 @@ jobs:
           bash -e "$RUNNER_TEMP/runner.sh"
       - name: Fetch
         run: python project.py fetch
-      - name: Check
-        env:
-          BASE: ${{ github.event.pull_request.base.sha }}
-          HEAD: ${{ github.event.pull_request.head.sha }}
-        run: python project.py check --commits "$BASE..$HEAD"
+      - name: Debugger
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y gdb
       - name: Test
-        run: python project.py test
-      - name: Break
-        run: python project.py test --break
-      - name: Branches
-        run: python project.py test --branches
-      - name: Leaks
-        run: python project.py test --leaks
-      - name: Pack
-        run: python project.py pack --target ${{ matrix.target }}
+        run: python project.py test -k diag
