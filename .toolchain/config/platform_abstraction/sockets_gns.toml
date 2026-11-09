@@ -42,7 +42,7 @@ part = "sockets_gns"
 sources = ["src/platform_abstraction/sockets_gns/*.c"]
 include = ["include/platform_abstraction", "src/platform_abstraction/sockets_gns", "{mosl_root}/include"]
 link = ["{out}/gns.a", "{out}/gns_c.a", "{out}/protobuf.a", "{out}/sodium.a", "{mosl_root}/os.a"]
-flags = ["{gns_system}", "-lc++"]
+flags = ["{gns_system}", "{sockets_system}", "-lc++"]
 manifest = ["ideatek_sockets_gns:sockets@0.1.0", "{sockets_gns_words}"]
 
 [[artifact]]
@@ -85,3 +85,21 @@ part = "sockets_gns"
 test = true
 sources = ["tests/platform_abstraction/sockets_gns/values.c", "src/platform_abstraction/sockets_gns/sockets_values.c", "src/platform_abstraction/sockets_gns/sockets_flags.c", "src/platform_abstraction/sockets_gns/sockets_records.c"]
 include = ["include/platform_abstraction", "src/platform_abstraction/sockets_gns", "{bridge}/include"]
+
+[targets.x86_64-windows-gnu]
+sockets_system = []
+
+[targets.aarch64-windows-gnu]
+sockets_system = []
+
+[targets.x86_64-linux-gnu]
+sockets_system = ["-Wl,-z,nodelete"]
+
+[targets.aarch64-linux-gnu]
+sockets_system = ["-Wl,-z,nodelete"]
+
+[targets.x86_64-macos]
+sockets_system = []
+
+[targets.aarch64-macos]
+sockets_system = []
