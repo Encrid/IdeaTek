@@ -206,9 +206,11 @@ They act on all the connections of the program. The delay comes first, then the 
 | `allow_without_auth` | `"allow"` | `"refuse"`, `"warn"` or `"allow"` | What a connection over IP does with a peer that is not authenticated. |
 | `allow_localhost_without_auth` | `"allow"` | `"refuse"`, `"warn"` or `"allow"` | The same, for a peer on the local host. The more open of the two applies. |
 | `unencrypted` | `"never"` | `"never"`, `"allowed"`, `"preferred"` or `"required"` | A connection with no encryption. The peer must allow it too. |
-| `stun_servers` | `[]` | a list of texts | The STUN servers that P2P uses to find the public address, as `host:port`. |
-| `turn_servers` | `[]` | a list of tables with `url`, `user` and `password` | The TURN servers that carry P2P when no direct route works. |
-| `ice_transports` | `["relay", "private", "public"]` | a list of `"relay"`, `"private"` and `"public"` | The kinds of route that P2P tries: TURN, the local network, the public addresses. |
+| `stun_servers` | `""` | a text of 0 to 1023 bytes | The STUN servers that P2P uses to find the public address, as `host:port`, with a comma between 2 servers. |
+| `turn_servers` | `""` | a text of 0 to 1023 bytes | The TURN servers that carry P2P when no direct route works, as `turn:host:port`, with a comma between 2 servers. |
+| `turn_users` | `""` | a text of 0 to 1023 bytes | The user of each TURN server, in the order of `turn_servers`, with a comma between 2 users. |
+| `turn_passwords` | `""` | a text of 0 to 1023 bytes | The password of each TURN server, in the order of `turn_servers`, with a comma between 2 passwords. |
+| `ice_transports` | `"relay,private,public"` | a text of the words `relay`, `private` and `public`, with a comma between 2 words | The kinds of route that P2P tries: TURN, the local network, the public addresses. An empty text tries no route. |
 | `ice_penalty` | 0 | 0 to 2147483647 | The milliseconds that P2P adds to the score of a route through ICE. |
 | `ice_implementation` | `"auto"` | `"auto"`, `"native"` or `"webrtc"` | The ICE client. `"auto"` takes WebRTC if the build has it, else the native client. |
 | `fake_loss_send` | 0 | 0 to 100 | The percent of the packets that go out that the sockets module drops. |

@@ -84,6 +84,7 @@ Each part has a readme, which its release holds.
 | `frame_sdl3` | `BM-IdeaTek-Frame-SDL3` | `docs/usage/kernel/frame_sdl3.md` |
 | `files_mosl` | `BM-IdeaTek-Files-Mosl` | `docs/usage/platform_abstraction/files_mosl.md` |
 | `audio_sdl3` | `BM-IdeaTek-Audio-SDL3` | `docs/usage/platform_abstraction/audio_sdl3.md` |
+| `sockets_gns` | `BM-IdeaTek-Sockets-GNS` | `docs/usage/platform_abstraction/sockets_gns.md` |
 
 ### The implementations
 
@@ -101,6 +102,7 @@ Each implementation is a part with its own release. A module part fills the role
 | `frame_sdl3` | `BM-IdeaTek-Frame-SDL3` | `ideatek_frame_sdl3:clock@0.1.0` | The clock module | The SDL3 library |
 | `files_mosl` | `BM-IdeaTek-Files-Mosl` | `ideatek_files_mosl:files@0.1.0` | The files module | Nothing: mosl is inside it |
 | `audio_sdl3` | `BM-IdeaTek-Audio-SDL3` | `ideatek_audio_sdl3:audio@0.1.0` | The audio module | The SDL3 library of IdeaTek |
+| `sockets_gns` | `BM-IdeaTek-Sockets-GNS` | `ideatek_sockets_gns:sockets@0.1.0` | The sockets module | Nothing: GameNetworkingSockets is inside it |
 
 - The behavior and the settings of each role are in the document of its contract, under the name of the role.
 - The namespace of each identity is the key of its part, so no module has the namespace `ideatek`.
