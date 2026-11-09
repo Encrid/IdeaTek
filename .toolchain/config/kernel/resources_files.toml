@@ -33,3 +33,51 @@ part = "resources_files"
 test = true
 sources = ["tests/platform_abstraction/sdl3/reload.c"]
 link = ["{out}/resources_files{library}"]
+
+[[artifact]]
+name = "resources_hash"
+kind = "program"
+part = "resources_files"
+test = true
+sources = ["tests/kernel/resources_files/hash.c", "src/kernel/resources_files/resources_hash.c", "src/kernel/resources_files/resources_key.c"]
+include = ["src/kernel/resources_files"]
+
+[[artifact]]
+name = "resources_paths"
+kind = "program"
+part = "resources_files"
+test = true
+sources = ["tests/kernel/resources_files/paths.c", "src/kernel/resources_files/resources_paths.c", "src/kernel/resources_files/resources_joins.c", "src/kernel/resources_files/resources_key.c"]
+include = ["src/kernel/resources_files"]
+
+[[artifact]]
+name = "resources_meta"
+kind = "program"
+part = "resources_files"
+test = true
+sources = ["tests/kernel/resources_files/meta.c", "src/kernel/resources_files/resources_meta.c", "src/kernel/resources_files/resources_words.c"]
+include = ["src/kernel/resources_files"]
+
+[[artifact]]
+name = "resources_arena"
+kind = "program"
+part = "resources_files"
+test = true
+sources = ["tests/kernel/resources_files/arena.c", "src/kernel/resources_files/resources_arena.c"]
+include = ["src/kernel/resources_files"]
+
+[[artifact]]
+name = "resources_pick"
+kind = "program"
+part = "resources_files"
+test = true
+sources = ["tests/kernel/resources_files/pick.c", "src/kernel/resources_files/resources_pick.c", "src/kernel/resources_files/resources_key.c"]
+include = ["src/kernel/resources_files", "include/kernel", "include/platform_abstraction", "{bridge}/include"]
+
+[[artifact]]
+name = "resources_fold"
+kind = "program"
+part = "resources_files"
+test = true
+sources = ["tests/kernel/resources_files/fold.c", "src/kernel/resources_files/resources_fold.c"]
+include = ["src/kernel/resources_files", "include/kernel", "include/platform_abstraction", "{bridge}/include"]

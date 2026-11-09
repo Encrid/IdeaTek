@@ -1,6 +1,6 @@
 # src/kernel/resources_files/resources_finish.c
 
-This file ends the loads when their loader answers, folds the states and turns the tags of 1 round.
+This file ends the loads when their loader answers.
 
 ## The outcomes
 
@@ -9,21 +9,13 @@ In the round, `finish_loads` ends each resource at `STEP_LOADER` with an outcome
 A reload that ends attaches `ideatek:ResourceModified`, and reloads each `owner` of its uses that asked `reload_owner`: `docs/intern/kernel/resources_files/resources_reload.c.md`.
 An outcome of a range frees its block and detaches the 2 components, and the state stays.
 
-## The fold
-
-`fold_states` runs in a dirty round. Each pass walks the uses with an `owner` that is a resource, and folds the states of their resources into the owner, as `docs/intern/kernel/resources_files/resources_fold.c.md` says. The passes stop when one changes nothing, or at `RES_PASSES`.
-`write_view` attaches `ideatek:Resource` to each resource whose view changed. `ideatek:ResourceReady` comes when `recursive` becomes `IDEATEK_LOAD_STATE_LOADED`, and `ideatek:ResourceFailed` when a state becomes `IDEATEK_LOAD_STATE_FAILED`.
-
-## The tags
-
-`turn_tags` runs first in each round. It detaches the tags of the round before: `ideatek:ResourceReady`, `ideatek:ResourceFailed`, `ideatek:ResourceModified` and `ideatek:RawBytes`, and frees the block of a raw resource.
+The fold of the states and the views are in `docs/intern/kernel/resources_files/resources_states.c.md`, and the tags of 1 round in `docs/intern/kernel/resources_files/resources_tags.c.md`.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
 | `outcomes` | The observer of the outcomes. |
+| `reload_owners` | Reloads each owner that asked `reload_owner` of a reloaded resource. |
+| `end_load` | Ends 1 load: the state, the tags, the owners and the labels. |
 | `finish_loads` | Ends the resources whose loader answered. |
-| `fold_states` | Folds `dependencies` and `recursive` of each resource. |
-| `write_view` | Writes `ideatek:Resource` and the tags of a resource that changed. |
-| `turn_tags` | Detaches the tags of the round before. |

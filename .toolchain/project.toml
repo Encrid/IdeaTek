@@ -122,3 +122,13 @@ line = 17
 col = 9
 side = "true"
 why = "A rendezvous message of GameNetworkingSockets holds a certificate, the keys and the ICE candidates: a few hundred bytes, far below 4096."
+
+[[style.exception]]
+rule = "G4"
+path = "src/kernel/resources_files/resources_main.c"
+why = "res_module holds the tables of the native module between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/kernel/resources_files/resources_inside.h"
+why = "The declaration of res_module, the tables of the native module between 2 calls."

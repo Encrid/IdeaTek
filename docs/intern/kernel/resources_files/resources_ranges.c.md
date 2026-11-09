@@ -14,6 +14,7 @@ A range that ends past the file, or a failed read, attaches `ideatek:ResourceByt
 
 | Function | Result |
 | --- | --- |
+| `set_range` | Records the range of a resource. |
 | `ranges` | The observer of `ideatek:ResourceRead`. |
 | `start_ranges` | Starts the reads of the ranges. |
 | `give_range` | Attaches the bytes of a range to the resource. |

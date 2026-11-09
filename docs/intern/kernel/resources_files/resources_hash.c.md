@@ -8,7 +8,7 @@ The map is open addressing with linear probing. The home slot of a key is `key %
 
 - `map_find` gives the value of a key, or `RES_NONE` when the key is not in the map.
 - `map_put` writes the value of a key. It takes the first removed or free slot of the walk when the key is new. It gives `false` when the map is full.
-- `map_drop` marks the slot of a key as removed. A removed slot keeps the walks of the other keys whole.
+- `map_drop` frees the slot of a key. Then it moves down each later slot of the walk whose home is before the hole, so the walks of the other keys stay whole.
 - `map_clear` frees each slot.
 
 A key of 0 is not allowed: an entity id is never 0, and a hash of 0 becomes 1.
@@ -17,7 +17,7 @@ A key of 0 is not allowed: an entity id is never 0, and a hash of 0 becomes 1.
 FUNCTION map_find(map : U64, key : U64) RETURNS U32
    i <- key MOD map.slots
    WHILE map.slot[i].key <> 0
-      IF map.slot[i].key = key AND map.slot[i].value <> RES_GONE THEN
+      IF map.slot[i].key = key THEN
          RETURN map.slot[i].value
       ENDIF
       i <- (i + 1) MOD map.slots
@@ -26,17 +26,16 @@ FUNCTION map_find(map : U64, key : U64) RETURNS U32
 ENDFUNCTION
 ```
 
-## The hash of a text
+## The keys
 
-`res_hash_text` folds each byte of a text into the 64-bit FNV-1a hash, then turns a result of 0 into 1.
-The key of a resource is the hash of its path, a zero, and its type. A collision of 2 keys is possible, so the caller compares the texts after a find.
+`docs/intern/kernel/resources_files/resources_key.c.md` hashes the keys. A collision of 2 keys is possible, so the caller compares the texts after a find.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `res_hash_text` | The FNV-1a hash of a text, never 0. |
 | `map_find` | The value of a key, or `RES_NONE`. |
 | `map_put` | Writes a value. `false` when the map is full. |
-| `map_drop` | Removes a key. |
+| `moves_down` | `true` when a slot moves into the hole of a removed key. |
+| `map_drop` | Removes a key, and moves the slots that its hole would cut. |
 | `map_clear` | Frees each slot. |

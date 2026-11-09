@@ -20,30 +20,26 @@ FUNCTION meta_read(bytes : U64, len : U32, meta : U64) RETURNS BOOLEAN
    line <- 1
    at <- 0
    WHILE at < len
-      end <- line_end(bytes, len, at)
-      IF is_header(bytes, at, end) THEN
-         meta.settings <- end + 1
-         RETURN TRUE
-      ENDIF
-      IF NOT read_key(bytes, at, end, meta) THEN
-         meta.line <- line
+      verdict <- read_key(bytes, at, meta)
+      IF verdict = 0 THEN
          RETURN FALSE
       ENDIF
-      at <- end + 1
-      line <- line + 1
+      IF verdict = 2 THEN
+         CALL take_rest(bytes, meta, at)
+         RETURN TRUE
+      ENDIF
+      at <- line_end(bytes, at) + 1
+      meta.line <- meta.line + 1
    ENDWHILE
    RETURN TRUE
 ENDFUNCTION
 ```
 
-A line ends with `\n`. A `\r` before it is a space.
+A line ends with `\n`. A `\r` before it is a space. The words of a line are in `docs/intern/kernel/resources_files/resources_words.c.md`, and the lines in `docs/intern/kernel/resources_files/resources_lines.c.md`.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `line_end` | Where a line ends. |
-| `read_word` | The quoted word of a `key = "word"` line, or a length of 0. |
-| `read_key` | Reads 1 line before the header into the meta. `false` for a fault. |
-| `is_header` | `true` when the line is `[settings]`. |
+| `read_key` | Reads 1 line: 0 for a fault, 1 for a key or an empty line, 2 for the header. |
 | `meta_read` | Reads the file. `false` with the number of the refused line. |
