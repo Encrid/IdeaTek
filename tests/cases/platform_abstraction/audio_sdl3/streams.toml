@@ -276,7 +276,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "2:audioreq r,default,-,48000,100,1|3:stall 300"
+script = "2:audioreq r,default,-,48000,100,1|3:stall 1500"
 ''' } }
 
 [case.folders]
