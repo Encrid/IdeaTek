@@ -1,0 +1,5 @@
+[[case]]
+name = "GameNetworkingSockets connects 2 peers of 1 process on the local host, and carries a reliable message"
+run = ["{out}/gns_smoke{exe}", "{port}", "hello"]
+claims = { status = 0, line = ["accepted", "connected", "received hello", "done"] }
+false = { run = ["{out}/gns_smoke{exe}", "{port}", "other"] }
