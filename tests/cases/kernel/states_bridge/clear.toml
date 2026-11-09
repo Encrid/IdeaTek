@@ -1,0 +1,230 @@
+[[case]]
+name = "the scoped entities of the old value go, and the scoped entities of another value stay"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 scoped 0 gone", "r2 scoped 1 alive"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:scoped 0,1|1:scoped 0,2|2:show_scoped"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:scoped 0,1|1:scoped 0,2|1:statereq 0,2|2:show_scoped"
+'''
+
+[[case]]
+name = "a sub state takes its own scoped entities with it, at the same barrier"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 state 0 value 2", "r2 state 1 gone", "r2 scoped 0 gone"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:submachine 0,1,5|1:scoped 1,5|1:statereq 1,6|2:show_states|2:show_scoped"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:submachine 0,1,5|1:scoped 1,5|1:statereq 0,2|2:show_states|2:show_scoped"
+'''
+
+[[case]]
+name = "a request on a sub state clears its own scoped entities only"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 scoped 0 gone", "r2 scoped 1 alive", "r2 state 1 value 6", "r2 state 0 value 1"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:submachine 0,1,5|1:scoped 1,5|1:scoped 0,1|1:statereq 0,2|2:show_scoped|2:show_states"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:submachine 0,1,5|1:scoped 1,5|1:scoped 0,1|1:statereq 1,6|2:show_scoped|2:show_states"
+'''
+
+[[case]]
+name = "the scoped entities of a state machine that the game destroyed go in the next round"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 scoped 0 alive", "r3 scoped 0 gone"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:scoped 0,1|2:show_scoped|3:show_scoped"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:scoped 0,1|2:statekill 0|2:show_scoped|3:show_scoped"
+'''
+
+[[case]]
+name = "an entity scoped to an entity with no state goes, and that entity stays"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 scoped 0 alive", "r2 scoped 1 gone"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:scoped 0,2|1:scoped 0,3|2:show_scoped"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:scopedbare 0,2|2:show_scoped"
+'''
+
+[[case]]
+name = "a chain of more than 8 state machines writes the line, and the entity stays"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the scoped chain of [0-9]+ is deeper than 8"], has = ["r2 scoped 0 alive"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:submachine 0,1,1|1:submachine 1,1,1|1:submachine 2,1,1|1:submachine 3,1,1|1:submachine 4,1,1|1:submachine 5,1,1|1:submachine 6,1,1|1:scoped 7,1|2:show_scoped"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:submachine 0,1,1|1:submachine 1,1,1|1:submachine 2,1,1|1:submachine 3,1,1|1:submachine 4,1,1|1:submachine 5,1,1|1:submachine 6,1,1|1:submachine 7,1,1|1:scoped 8,1|2:show_scoped"
+'''
+
+[[case]]
+name = "a chain of 8 state machines leaves when the root changes"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 scoped 0 gone", "r2 state 7 gone", "r2 state 1 gone", "r2 state 0 value 2"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:submachine 0,1,1|1:submachine 1,1,1|1:submachine 2,1,1|1:submachine 3,1,1|1:submachine 4,1,1|1:submachine 5,1,1|1:submachine 6,1,1|1:scoped 7,1|2:show_scoped|2:show_states"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:submachine 0,1,1|1:submachine 1,1,1|1:submachine 2,1,1|1:submachine 3,1,1|1:submachine 4,1,1|1:submachine 5,1,1|1:submachine 6,1,1|1:scoped 7,1|1:statereq 0,2|2:show_scoped|2:show_states"
+'''

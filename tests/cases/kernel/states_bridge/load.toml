@@ -1,0 +1,44 @@
+[[case]]
+name = "the states module loads with the game, and a request changes the state machine in the next round"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["loaded: ideatek_states_bridge:states@0.1.0", "r2 state 0 value 2", "r2 change 0 from 1 to 2"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|2:show_states"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:statereq 0,2|2:show_states"
+'''
+
+[[case]]
+name = "a reload gives 0, because the module is not reloadable"
+run = ["{out}/states_bridge_reload{exe}", "reload"]
+claims = { status = 0, line = ["reload 0"] }
+false = { run = ["{out}/states_bridge_reload{exe}", "shutdown"] }
+
+[[case]]
+name = "a shutdown gives 0, because the module holds nothing"
+run = ["{out}/states_bridge_reload{exe}", "shutdown"]
+claims = { status = 0, line = ["shutdown 0"] }
+false = { run = ["{out}/states_bridge_reload{exe}", "reload"] }
