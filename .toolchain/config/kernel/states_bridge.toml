@@ -25,3 +25,11 @@ part = "states_bridge"
 test = true
 sources = ["tests/platform_abstraction/sdl3/reload.c"]
 link = ["{out}/states_bridge{library}"]
+
+[[artifact]]
+name = "states_chain"
+kind = "program"
+part = "states_bridge"
+test = true
+sources = ["tests/kernel/states_bridge/chain.c", "src/kernel/states_bridge/states_chain.c"]
+include = ["src/kernel/states_bridge"]
