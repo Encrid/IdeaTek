@@ -1,0 +1,12 @@
+diff --git a/src/libsodium/sodium/runtime.c b/src/libsodium/sodium/runtime.c
+--- a/src/libsodium/sodium/runtime.c
++++ b/src/libsodium/sodium/runtime.c
+@@ -251,7 +251,7 @@
+             pop ecx
+             pop eax
+         }
+-# elif defined(HAVE_AVX_ASM)
++# elif defined(HAVE_AVX_ASM) || defined(__GNUC__)
+         __asm__ __volatile__(".byte 0x0f, 0x01, 0xd0" /* XGETBV */
+                              : "=a"(xcr0)
+                              : "c"((uint32_t) 0U)
