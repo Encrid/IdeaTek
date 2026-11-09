@@ -4,7 +4,7 @@ This file takes the callback of GameNetworkingSockets for the state of a connect
 
 ## The callback
 
-GameNetworkingSockets calls `on_changed` from `gns_run_callbacks`, on the thread of the phases, with the handle, the info and the old state.
+GameNetworkingSockets calls `on_changed` from `RunCallbacks`, on the thread of the phases, with the handle, the info and the old state.
 The user data of the connection is the index of its slot, or -1 for a connection that the module does not know.
 
 1. An unknown connection in the state connecting, with a listen socket, is an inbound connection: `take_inbound`.

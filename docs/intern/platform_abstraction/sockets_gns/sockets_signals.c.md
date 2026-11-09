@@ -4,18 +4,18 @@ This file gives GameNetworkingSockets the signaling of the module, carries its s
 
 ## The signaling
 
-GameNetworkingSockets asks the module for a signaling object in 3 ways. `make_signaling` answers each one with `gns_signaling`, with `send_signal` as the send callback and `release_signaling` as the release callback:
+GameNetworkingSockets asks the module for a signaling object in 3 ways. `make_signaling` answers each one with `CreateCustomSignaling`, with `send_signal` as the send callback and `release_signaling` as the release callback:
 
 - A P2P connect of the game: `docs/intern/platform_abstraction/sockets_gns/sockets_connect.c.md`.
 - A session that the game opens, through the callback `Callback_CreateConnectionSignaling`: `docs/intern/platform_abstraction/sockets_gns/sockets_config.c.md`.
-- A connection that came through a signal, in `on_connect_request` of `gns_received_signal`.
+- A connection that came through a signal, in `on_connect_request` of `ReceivedP2PCustomSignal2`.
 
 `send_signal` runs on the thread of the network, whenever GameNetworkingSockets wants. Under `lock`, it writes a record of `ideatek:SignalsOut` into the ring `signals`. The record holds the entity of the connection, from its user data, the text of the peer, and the bytes of the signal.
 A signal that does not fit in the ring gives `false`, and GameNetworkingSockets sends it again later. `release_signaling` does nothing: the module keeps no object for a signaling.
 
 ## The signals in
 
-The observer `signals_in` gets each write of `ideatek:SignalsIn`. For each record, `read_signal` reads the bytes, and `gns_received_signal` gives them to GameNetworkingSockets, with `on_connect_request` and `send_rejection`.
+The observer `signals_in` gets each write of `ideatek:SignalsIn`. For each record, `read_signal` reads the bytes, and `ReceivedP2PCustomSignal2` gives them to GameNetworkingSockets, with `on_connect_request` and `send_rejection`.
 `on_connect_request` gives a signaling for a connection that a peer opens. `send_rejection` writes a rejection record into the ring, whose `connection` is 0, for a signal that no listen socket takes.
 A signal that GameNetworkingSockets refuses writes `a signal of <count> bytes is refused`. A malformed batch writes its line.
 
