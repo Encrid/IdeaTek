@@ -17,7 +17,7 @@ This file holds the manifest of the window module, its exports `init`, `shutdown
 
 `docs/intern/platform_abstraction/window_sdl3/window_events.c.md`, *The ranges of the module*, gives the types of step 4.
 
-Bridge calls no `shutdown` after an `init` that gave 1. The start then holds no subsystem: `docs/extern/platform_abstraction/sdl3_start/readme.md`, *Usage*.
+Bridge calls no `shutdown` after an `init` that gave 1. The start then holds no subsystem: `docs/usage/platform_abstraction/sdl3_start.md`, *Usage*.
 The module does not read its settings in `init`, because Bridge writes them after `init`: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#the-settings-of-a-module.
 Thus the first round reads them: `docs/intern/platform_abstraction/window_sdl3/window_items.c.md`, *The first round*.
 

@@ -10,8 +10,8 @@ In `BM-IdeaTek-Audio-SDL3`, each folder holds the module `audio_sdl3.dll`, `audi
 Each folder of `BM-IdeaTek-Audio-SDL3.zip` also holds this readme and the licence.
 
 The module links `BL-IdeaTek-SDL3` by the name of its shared library, which must be in the folder of the module.
-So the module and that library share 1 folder of the deployment: `docs/extern/platform_abstraction/sdl3/readme.md`.
-The module needs the SDL3 of IdeaTek, because it calls `SDL_GetDefaultAudioDeviceID`, which that library adds: `docs/extern/platform_abstraction/sdl3/readme.md`, *The additions of IdeaTek*.
+So the module and that library share 1 folder of the deployment: `docs/usage/platform_abstraction/sdl3.md`.
+The module needs the SDL3 of IdeaTek, because it calls `SDL_GetDefaultAudioDeviceID`, which that library adds: `docs/usage/platform_abstraction/sdl3.md`, *The additions of IdeaTek*.
 A project names the zip of `BM-IdeaTek-Audio-SDL3` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
 ## Usage

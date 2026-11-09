@@ -9,7 +9,7 @@ This file gives and takes back the jobs and the early results, under the lock.
 ## The early results
 
 `put_early` keeps a result that is decided before the thread, for the next round.
-When `FILES_EARLY` results wait already, the result is lost, and the log gets a line with the entity and the count: `docs/extern/platform_abstraction/files_mosl/readme.md`, *The messages*.
+When `FILES_EARLY` results wait already, the result is lost, and the log gets a line with the entity and the count: `docs/usage/platform_abstraction/files_mosl.md`, *The messages*.
 `drop_early` forgets the early result of an entity.
 
 ## The cancel

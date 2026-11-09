@@ -9,7 +9,7 @@ Its 2 files are `BL-IdeaTek-SDL3-Start.zip` and `sha256.txt`. `BL-IdeaTek-SDL3-S
 In `BL-IdeaTek-SDL3-Start`, each folder holds the static archive `sdl3_start.a`, and `sdl3_start.h` in `include`.
 Each folder of `BL-IdeaTek-SDL3-Start.zip` also holds this readme and the licence.
 
-A module links `sdl3_start.a` and the shared library of `BL-IdeaTek-SDL3`: `docs/extern/platform_abstraction/sdl3/readme.md`.
+A module links `sdl3_start.a` and the shared library of `BL-IdeaTek-SDL3`: `docs/usage/platform_abstraction/sdl3.md`.
 The archive needs the headers of SDL3 of that part to compile. It holds no code of SDL3.
 A project names the zip of `BL-IdeaTek-SDL3-Start` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
