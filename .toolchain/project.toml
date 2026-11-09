@@ -71,6 +71,9 @@ why = "audio_module holds the state of the native module between 2 calls, which 
 rule = "G4"
 path = "src/platform_abstraction/audio_sdl3/audio_inside.h"
 why = "The declaration of audio_module, the state of the native module between 2 calls."
+
+[[style.exception]]
+rule = "G4"
 path = "src/platform_abstraction/sockets_gns/sockets_main.c"
 why = "sockets_module holds the state of the native module between 2 calls, which no argument of a call carries."
 
