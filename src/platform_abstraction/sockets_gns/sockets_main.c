@@ -56,7 +56,6 @@ BRIDGE_NATIVE(shutdown)
     os_mutex_unlock(sockets_module.lock);
     os_event_set(sockets_module.wake);
     os_thread_join(sockets_module.thread);
-    fprintf(stderr, "diag: thread joined
 ");
     if (sockets_module.sockets) {
         close_listens();
