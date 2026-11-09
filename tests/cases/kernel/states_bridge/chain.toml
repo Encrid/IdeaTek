@@ -1,0 +1,41 @@
+[[case]]
+name = "a link whose state machine has a request at the value of the link leaves"
+run = ["{out}/states_chain{exe}", "1,1,0,2,2"]
+claims = { status = 0, line = ["verdict leaves"] }
+false = { run = ["{out}/states_chain{exe}", "1,1,0,2,3"] }
+
+[[case]]
+name = "a link whose state machine has a request at another value stays"
+run = ["{out}/states_chain{exe}", "1,1,0,2,3"]
+claims = { status = 0, line = ["verdict stays"] }
+false = { run = ["{out}/states_chain{exe}", "1,1,0,2,2"] }
+
+[[case]]
+name = "a link whose state machine has no request stays, also at the value of the link"
+run = ["{out}/states_chain{exe}", "1,0,0,2,2"]
+claims = { status = 0, line = ["verdict stays"] }
+false = { run = ["{out}/states_chain{exe}", "1,1,0,2,2"] }
+
+[[case]]
+name = "a link whose state machine carries no state leaves"
+run = ["{out}/states_chain{exe}", "0,0,0,0,1"]
+claims = { status = 0, line = ["verdict leaves"] }
+false = { run = ["{out}/states_chain{exe}", "1,0,0,0,1"] }
+
+[[case]]
+name = "a scoped link that stays passes the verdict to the next link"
+run = ["{out}/states_chain{exe}", "1,0,1,1,1", "1,1,0,5,5"]
+claims = { status = 0, line = ["verdict leaves"] }
+false = { run = ["{out}/states_chain{exe}", "1,0,1,1,1", "1,1,0,5,6"] }
+
+[[case]]
+name = "a chain of scoped links that all stay is too deep"
+run = ["{out}/states_chain{exe}", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2"]
+claims = { status = 0, line = ["verdict deep"] }
+false = { run = ["{out}/states_chain{exe}", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,1,1,2", "1,0,0,1,2"] }
+
+[[case]]
+name = "the program refuses more than 16 links"
+run = ["{out}/states_chain{exe}", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+claims = { status = 2 }
+false = { run = ["{out}/states_chain{exe}", "1"] }

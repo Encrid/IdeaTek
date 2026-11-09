@@ -1,0 +1,197 @@
+[[case]]
+name = "2 requests in 1 phase keep the last"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 state 0 value 3"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:statereq 0,3|1:statereq 0,2|2:show_states"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:statereq 0,2|1:statereq 0,3|2:show_states"
+'''
+
+[[case]]
+name = "a request with the current value is a change from the value to itself, and the scoped entities of the value go"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r3 state 0 value 1", "r3 change 0 from 1 to 1", "r3 scoped 0 gone"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:scoped 0,1|2:statereq 0,2|3:show_states|3:show_scoped"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:scoped 0,1|2:statereq 0,1|3:show_states|3:show_scoped"
+'''
+
+[[case]]
+name = "a request on an entity with no state writes the line and is detached"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["no state machine for [0-9]+"], has = ["r2 bare 0 request gone"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:statereq 0,5|2:show_bare"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:reqbare 5|2:show_bare"
+'''
+
+[[case]]
+name = "the change is detached in the round after the change"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 change 0 from 1 to 2", "r3 state 0 value 2"], lacks = ["r3 change 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:statereq 0,2|2:statereq 0,2|2:show_states|3:show_states"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:statereq 0,2|2:show_states|3:show_states"
+'''
+
+[[case]]
+name = "an observer of the enter of the state hears the first value of a state machine"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 entered 0 value 7"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 8"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 7"
+'''
+
+[[case]]
+name = "an observer of the attach of the change hears the change at the barrier of the first phase"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r2 changed 0 from 1 to 2"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:statereq 0,3"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["states_bridge", "sdl3_game_states", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_states.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:machine 1|1:statereq 0,2"
+'''

@@ -13,6 +13,7 @@
 #include "game_frame.h"
 #include "game_gpu.h"
 #include "game_sockets.h"
+#include "game_states.h"
 
 static const char HINT[] = "IDEATEK_TEST_DISPLAYS";
 static const uint64_t DEAD = (7ULL << 32) | 9ULL;
@@ -308,6 +309,10 @@ static void run_step(const bridge_api_t *api, const char *verb, char *args)
 #endif
 #if defined(GAME_SOCKETS)
     if (game_sockets_step(api, verb, args))
+        return;
+#endif
+#if defined(GAME_STATES)
+    if (game_states_step(api, verb, args))
         return;
 #endif
     if (!strcmp(verb, "request"))

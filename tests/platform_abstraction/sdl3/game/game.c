@@ -10,6 +10,7 @@
 #include "game_audio.h"
 #include "game_files.h"
 #include "game_sockets.h"
+#include "game_states.h"
 #include "game_frame.h"
 #include "game_gpu.h"
 
@@ -258,6 +259,9 @@ static void declare_types(const bridge_api_t *api)
 #if defined(GAME_SOCKETS)
     game_declare_sockets(api);
 #endif
+#if defined(GAME_STATES)
+    game_declare_states(api);
+#endif
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -308,6 +312,11 @@ BRIDGE_NATIVE(init)
     changes[count++] = game_sockets_slots.session_messages_out;
     changes[count++] = game_sockets_slots.signals_in;
 #endif
+#if defined(GAME_STATES)
+    changes[count++] = game_states_slots.state;
+    changes[count++] = game_states_slots.request;
+    changes[count++] = game_states_slots.scoped;
+#endif
     BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, count,
         nullptr, 0);
     queries[0] = ADD_SHOW(api, "show_state", game.slots.state);
@@ -326,6 +335,9 @@ BRIDGE_NATIVE(init)
 #endif
 #if defined(GAME_FILES)
     game_watch_files(api);
+#endif
+#if defined(GAME_STATES)
+    game_watch_states(api);
 #endif
 #if defined(GAME_AUDIO)
     game_watch_audio(api);

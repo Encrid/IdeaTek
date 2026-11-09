@@ -1,0 +1,17 @@
+presets = ["test.toml"]
+phases = ["first", "check"]
+again = {}
+
+[budget]
+systems = 64
+terms = 128
+tables = 128
+persistent = 8388608
+
+[module."ideatek_states_bridge:states@0.1.0"]
+write = ["ideatek:State", "ideatek:StateChange", "ideatek:StateRequest", "ideatek:StateScoped"]
+read = ["ideatek:ideatek_entity_t"]
+
+[module."test:game@1.0.0"]
+write = ["ideatek:WindowRequest", "ideatek:EventWait", "ideatek:ClipboardRequest", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:State", "ideatek:StateRequest", "ideatek:StateScoped"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:Paste", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:FingerEvent", "ideatek:StateChange"]
