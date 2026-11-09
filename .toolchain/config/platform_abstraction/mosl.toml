@@ -1,0 +1,26 @@
+[[source]]
+name = "mosl"
+url = "https://github.com/Encrid/mosl/releases/download/v0.5.0/mosl-{target}.zip"
+sha256 = "{mosl_sha256}"
+into = "build/third_party/mosl/{target}"
+
+[variables]
+mosl_root = "build/third_party/mosl/{target}"
+
+[targets.x86_64-windows-gnu]
+mosl_sha256 = "42b867a1bbd5eb1539fe9809362a24ac3b7f6a25a7acdcfbd364abc282784b0e"
+
+[targets.aarch64-windows-gnu]
+mosl_sha256 = "9462532ce374a1520d98472e8af42c107f2741c405b2083db8657e56d6fbcd4f"
+
+[targets.x86_64-linux-gnu]
+mosl_sha256 = "e6e8019fd990ca2842d730927168cc6955f5a1da7f0208646dee37475bda74c8"
+
+[targets.aarch64-linux-gnu]
+mosl_sha256 = "1690a460831ddea4111a749f2e0441bf2cfeac0514ff1450e1b5c25e45f8dfa6"
+
+[targets.x86_64-macos]
+mosl_sha256 = "016189b7e9594607615896914821b4c5b3791c83dab56a7dad9f198c9ca50267"
+
+[targets.aarch64-macos]
+mosl_sha256 = "ddc7d356f6ebca60fad586bb1bd7ef373e78f86392e17461004764484aea7196"
