@@ -9,9 +9,9 @@ Its 2 files are `BM-IdeaTek-Sockets-GNS.zip` and `sha256.txt`. `BM-IdeaTek-Socke
 In `BM-IdeaTek-Sockets-GNS`, each folder holds the module `sockets_gns.dll`, `sockets_gns.so` or `sockets_gns.dylib`, and the 4 notices of GameNetworkingSockets, protobuf, libsodium and mosl.
 Each folder of `BM-IdeaTek-Sockets-GNS.zip` also holds this readme and the licence.
 
-The module holds the 4 archives of `BL-IdeaTek-GameNetworkingSockets`, the C++ runtime of zig and mosl for its thread, so nothing stands beside it: `docs/extern/platform_abstraction/gns/readme.md`.
+The module holds the 4 archives of `BL-IdeaTek-GameNetworkingSockets`, the C++ runtime of zig and mosl for its thread, so nothing stands beside it: `docs/usage/platform_abstraction/gns.md`.
 On Windows, the module links `ws2_32`, `crypt32`, `winmm` and `iphlpapi` of the system.
-The processor must have the AES instructions: `docs/extern/platform_abstraction/gns/readme.md`, *The processor*.
+The processor must have the AES instructions: `docs/usage/platform_abstraction/gns.md`, *The processor*.
 A project names the zip of `BM-IdeaTek-Sockets-GNS` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
 ## Usage
@@ -29,7 +29,7 @@ The component of its settings is `ideatek_sockets_gns:Settings`. It holds the se
 | `debug_output` | text | `warning` | `none`, `bug`, `error`, `important`, `warning`, `msg`, `verbose`, `debug` or `everything` | The lines of GameNetworkingSockets that go to the log of the module, from the least to the most. |
 
 The module reads the settings in its first round. It gives each setting of the contract to GameNetworkingSockets as the global value of the same meaning, before it starts.
-`ice_implementation` with `auto` takes the native client, because the build holds no WebRTC: `docs/extern/platform_abstraction/gns/readme.md`, *The build*.
+`ice_implementation` with `auto` takes the native client, because the build holds no WebRTC: `docs/usage/platform_abstraction/gns.md`, *The build*.
 
 ### The C face
 
