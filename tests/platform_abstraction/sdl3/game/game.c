@@ -9,6 +9,7 @@
 
 #include "game_audio.h"
 #include "game_files.h"
+#include "game_sockets.h"
 #include "game_frame.h"
 #include "game_gpu.h"
 
@@ -254,6 +255,9 @@ static void declare_types(const bridge_api_t *api)
 #if defined(GAME_AUDIO)
     game_declare_audio(api);
 #endif
+#if defined(GAME_SOCKETS)
+    game_declare_sockets(api);
+#endif
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -264,7 +268,7 @@ static void declare_types(const bridge_api_t *api)
 
 BRIDGE_NATIVE(init)
 {
-    uint32_t changes[13];
+    uint32_t changes[32];
     uint32_t count = 6;
 
     declare_types(api);
@@ -293,6 +297,17 @@ BRIDGE_NATIVE(init)
     changes[count + 1] = game_audio_slots.frames;
     count += 2;
 #endif
+#if defined(GAME_SOCKETS)
+    changes[count++] = game_sockets_slots.identity_request;
+    changes[count++] = game_sockets_slots.listen_request;
+    changes[count++] = game_sockets_slots.connection_request;
+    changes[count++] = game_sockets_slots.lanes_request;
+    changes[count++] = game_sockets_slots.session_request;
+    changes[count++] = game_sockets_slots.address_request;
+    changes[count++] = game_sockets_slots.messages_out;
+    changes[count++] = game_sockets_slots.session_messages_out;
+    changes[count++] = game_sockets_slots.signals_in;
+#endif
     BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, count,
         nullptr, 0);
     queries[0] = ADD_SHOW(api, "show_state", game.slots.state);
@@ -314,6 +329,9 @@ BRIDGE_NATIVE(init)
 #endif
 #if defined(GAME_AUDIO)
     game_watch_audio(api);
+#endif
+#if defined(GAME_SOCKETS)
+    game_watch_sockets(api);
 #endif
 #if defined(GAME_EARLY)
     game_start(api);

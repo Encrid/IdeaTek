@@ -1,0 +1,577 @@
+[[case]]
+name = "a session to a peer opens through the signals, and its message comes after the accept"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+helper = { run = ["{bridge_host}/bridge-host{exe}", "{case}/s.toml"], wait = "listen 0 listening", stdin = "", claims = { has = ["session 1 [str:client]", "[hello session]"] } }
+claims = { status = 0, has = ["r36 session 0 [str:server]", "conn 0 connected"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:sess open,str:server,0|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|31:show_sessions|36:show_sessions|36:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/s.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 46
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:server|1:signals {case}/sig|2:listen p2p,0,7|3:stall 200|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:sess accept,str:client,0,1|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:stall 200|37:stall 200|38:stall 200|39:stall 200|40:stall 200|41:stall 200|42:stall 200|43:stall 200|44:stall 200|45:show_sessions|45:show_conns"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:sess open,str:server,0|4:sesssend 0,0,reliable,hello session|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|31:show_sessions|36:show_sessions|36:show_conns"
+'''
+
+[[case]]
+name = "a close of a channel leaves the session, and a close of the session ends its entity in the next round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+helper = { run = ["{bridge_host}/bridge-host{exe}", "{case}/s.toml"], wait = "listen 0 listening", stdin = "", claims = { has = ["session 1 [str:client]"] } }
+claims = { status = 0, has = ["r31 session 0 [str:server]"], matches_not = ["r36 session 0 "] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:sess open,str:server,0|4:sesssend 0,0,reliable,hello session|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|31:show_sessions|30:sess closechannel,-,0,0|36:show_sessions|36:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/s.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 46
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:server|1:signals {case}/sig|2:listen p2p,0,7|3:stall 200|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:sess accept,str:client,0,1|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:stall 200|37:stall 200|38:stall 200|39:stall 200|40:stall 200|41:stall 200|42:stall 200|43:stall 200|44:stall 200|45:show_sessions|45:show_conns"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:sess open,str:server,0|4:sesssend 0,0,reliable,hello session|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|31:show_sessions|30:sess closechannel,-,0,0|32:sess close,-,0,0|36:show_sessions|36:show_conns"
+'''
+
+[[case]]
+name = "a session request on an entity that is a connection writes the line of the action"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the request of [0-9]+: action 1 is outside a session"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:stall 30|3:show_sessions"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:sess accept,str:x,0,0|2:stall 30|3:show_sessions"
+'''
+
+[[case]]
+name = "a session open with a text that is no identity writes its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the request of [0-9]+: remote bogus is outside an identity"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 60000
+[module."test:game@1.0.0".config]
+script = "1:sess open,str:fine,0|2:stall 30|3:show_sessions"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 60000
+[module."test:game@1.0.0".config]
+script = "1:sess open,bogus,0|2:stall 30|3:show_sessions"
+'''
+
+[[case]]
+name = "a session open above max_connections writes the line of the bound"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["more than 2 connections: the request of [0-9]+ fails"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+max_connections = 3
+timeout_initial = 60000
+[module."test:game@1.0.0".config]
+script = "1:pair|1:sess open,str:fine,0|2:stall 30|3:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+max_connections = 2
+timeout_initial = 60000
+[module."test:game@1.0.0".config]
+script = "1:pair|1:sess open,str:fine,0|2:stall 30|3:show_conns"
+'''
+
+[[case]]
+name = "a session message on a channel outside session_channels is a failed send with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: outside the limits"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 60000
+session_channels = 16
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:sesssend 0,0,reliable,x|3:stall 30|4:show_sessions"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 60000
+session_channels = 16
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:sesssend 0,99,reliable,x|3:stall 30|4:show_sessions"
+'''
+
+[[case]]
+name = "a session message for an entity that is a connection is a failed send with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: "] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:send 0,0,reliable,x|2:stall 30|3:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:sesssend 0,0,reliable,x|2:stall 30|3:show_count"
+'''
+
+[[case]]
+name = "a session open that GameNetworkingSockets refuses at the first message is a failed send with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+fail = { SteamAPI_ISteamNetworkingMessages_SendMessageToUser = 1 }
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: GameNetworkingSockets refused it"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 60000
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:sesssend 0,0,reliable,x|3:stall 30|4:show_sessions"
+'''
+
+[[case]]
+name = "a session whose peer never answers gets the problem after timeout_initial"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["conn 0 problem"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 60000
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:sesssend 0,0,reliable,x|3:stall 500|4:stall 500|5:stall 500|6:stall 500|7:show_sessions|7:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 1000
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:sesssend 0,0,reliable,x|3:stall 500|4:stall 500|5:stall 500|6:stall 500|7:show_sessions|7:show_conns"
+'''
+
+[[case]]
+name = "a peer that connects to a session the game opened is accepted at once"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+helper = { run = ["{bridge_host}/bridge-host{exe}", "{case}/s.toml"], wait = "listen 0 listening", stdin = "", claims = { has = ["session 1 [str:client]"] } }
+claims = { status = 0, has = ["conn 0 connected", "[hi]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:show_sessions|36:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/s.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 46
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:server|1:signals {case}/sig|2:listen p2p,0,7|3:stall 200|4:sess open,str:client,0|5:sesssend 1,0,reliable,hi|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:stall 200|37:stall 200|38:stall 200|39:stall 200|40:stall 200|41:stall 200|42:stall 200|43:stall 200|44:stall 200|45:stall 200|46:show_sessions"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:sess open,str:server,0|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:show_sessions|36:show_conns|36:show_msgs"
+'''
+
+[[case]]
+name = "a session that a peer opens above max_connections is closed, with the line of the bound"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+helper = { run = ["{bridge_host}/bridge-host{exe}", "{case}/s.toml"], wait = "listen 0 listening", stdin = "", claims = { has = ["more than 1 connections: the request of"] } }
+claims = { status = 0 }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:show_sessions|36:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/s.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 46
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+max_connections = 1
+[module."test:game@1.0.0".config]
+script = "1:identity str:server|1:signals {case}/sig|2:listen p2p,0,7|3:sess open,str:other,0|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:stall 200|37:stall 200|38:stall 200|39:stall 200|40:stall 200|41:stall 200|42:stall 200|43:stall 200|44:stall 200|45:stall 200|46:show_count"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:sess open,str:server,0|4:sesssend 0,0,reliable,hello session|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:show_sessions"
+'''
+
+[[case]]
+name = "a session open on an entity that has a session writes the line of the action"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the request of [0-9]+: action 0 is outside a session"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|4:show_sessions"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:sess open,str:far,0,0|4:show_sessions"
+'''
+
+[[case]]
+name = "a session open to an IP identity writes its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the request of [0-9]+: remote ip:::1 is outside an identity"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,ip:::1,0|3:show_count"
+'''
+
+[[case]]
+name = "a session action outside its enum writes the line of the action"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the request of [0-9]+: action 4 is outside a session"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|4:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:sess 4,-,0,0|4:show_count"
+'''
+
+[[case]]
+name = "an accept of a session that GameNetworkingSockets refuses writes its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the request of [0-9]+: action 1 is outside a session of a peer"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|4:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:sess accept,-,0,0|4:show_count"
+'''

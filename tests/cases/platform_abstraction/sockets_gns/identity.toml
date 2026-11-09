@@ -1,0 +1,205 @@
+[[case]]
+name = "an identity request gives the sockets entity the new identity"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["r3 identity \\[str:alpha\\] none request [0-9]+"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:beta|2:stall 30|3:show_identity"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:alpha|2:stall 30|3:show_identity"
+'''
+
+[[case]]
+name = "an identity change gives each connection the problem of the identity, and each listen socket the failure"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["conn 1 connected", "identity changed", "listen 0 kind 0", "listen 0 failed"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 13
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|13:show_conns|13:show_listens"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 13
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:identity str:gamma|10:stall 30|11:stall 30|12:stall 30|13:show_conns|13:show_listens"
+'''
+
+[[case]]
+name = "a text that is no identity is refused with its line, and the identity stays"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["the identity bogus is refused"], matches = ["r3 identity \\[ip:::1\\]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:ok|2:stall 30|3:show_identity"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity bogus|2:stall 30|3:show_identity"
+'''
+
+[[case]]
+name = "a certificate that GameNetworkingSockets refuses writes its line, and the status is failed"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["the certificate is refused: "], matches = ["r3 identity \\[str:alpha\\] failed"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:alpha|2:stall 30|3:show_identity"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:alpha,notacertificate|2:stall 30|3:show_identity"
+'''
+
+[[case]]
+name = "a GameNetworkingSockets that gives no request of a certificate leaves the request empty"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+fail = { SteamAPI_ISteamNetworkingSockets_GetCertificateRequest = 2 }
+claims = { status = 0, matches = ["r3 identity \\[str:alpha\\] none request 0"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:alpha|2:stall 30|3:show_identity"
+'''
+
+[[case]]
+name = "an identity request on another entity than the sockets entity does nothing"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["r3 identity \\[ip:::1\\]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:zeta|2:stall 30|3:show_identity"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:identityother str:zeta|2:stall 30|3:show_identity"
+'''
+
+[[case]]
+name = "a GameNetworkingSockets that does not start again breaks the module with the line of the start"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+fail = { GameNetworkingSockets_Init = 2 }
+claims = { status = 1, has = ["no sockets: "] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:alpha|2:stall 30|3:show_identity"
+'''

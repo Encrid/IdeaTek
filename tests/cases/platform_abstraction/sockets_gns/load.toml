@@ -1,0 +1,119 @@
+[[case]]
+name = "the sockets module loads with the game, and the sockets entity has the identity of the local host"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["loaded: ideatek_sockets_gns:sockets@0.1.0"], matches = ["identity \\[ip:::1\\] none request [0-9]+"] }
+false = { folders = { "{case}/m" = ["sdl3_game_sockets", "SDL3_test"] } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:show_identity"
+'''
+
+[[case]]
+name = "a reload gives 0, because the module is not reloadable"
+run = ["{out}/sockets_gns_reload{exe}", "reload"]
+claims = { status = 0, line = ["reload 0"] }
+false = { run = ["{out}/sockets_gns_reload{exe}", "shutdown"] }
+
+[[case]]
+name = "a system that refuses the mutex of the module fails the load with the line of the thread"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+fail = { os_mutex_create = 1 }
+claims = { has = ["no thread"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:show_count"
+'''
+
+[[case]]
+name = "a system that refuses the event of the module fails the load with the line of the thread"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+fail = { os_event_create = 1 }
+claims = { has = ["no thread"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:show_count"
+'''
+
+[[case]]
+name = "a system that refuses the worker thread fails the load with the line of the thread"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+fail = { os_thread_start = 1 }
+claims = { has = ["no thread"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:show_count"
+'''
+
+[[case]]
+name = "a GameNetworkingSockets that does not start breaks the module with the line of the start"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+fail = { GameNetworkingSockets_Init = 1 }
+claims = { status = 1, has = ["no sockets: "] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:show_count"
+'''

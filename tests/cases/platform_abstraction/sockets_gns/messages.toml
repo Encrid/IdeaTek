@@ -1,0 +1,410 @@
+[[case]]
+name = "a reliable message of the client comes to the inbound connection in the next round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["msg 2 number 1 lane 0 flags 1 len 5 \\[hello\\]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:stall 30|11:stall 30|12:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,0,reliable,hello|10:stall 30|11:stall 30|12:show_count"
+'''
+
+[[case]]
+name = "a batch with 2 records sends 2 messages in their order"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["number 1 lane 0 flags 1 len 3 \\[one\\]", "number 2 lane 0 flags 1 len 3 \\[two\\]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,0,reliable,one|10:stall 30|11:stall 30|12:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,0,reliable,one;1,0,reliable,two|10:stall 30|11:stall 30|12:show_count"
+'''
+
+[[case]]
+name = "an unreliable message on the loopback comes with the flags 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["msg 2 number [0-9]+ lane 0 flags 0 len 4 \\[fast\\]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:stall 30|11:stall 30|12:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,0,unreliable,fast|10:stall 30|11:stall 30|12:show_count"
+'''
+
+[[case]]
+name = "a message that does not fit in the send buffer is a failed send with its line, and failed_sends counts it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: ", "conn 1 connected .* failed 1"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+send_buffer = 524288
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,0,reliable,big3000;1,0,reliable,big3000|10:stall 30|11:stall 30|12:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+send_buffer = 4096
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,0,reliable,big3000;1,0,reliable,big3000|10:stall 30|11:stall 30|12:show_conns"
+'''
+
+[[case]]
+name = "a lane that the connection does not have is a failed send with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: "] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,0,reliable,x|10:stall 30|11:stall 30|12:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,3,reliable,x|10:stall 30|11:stall 30|12:show_conns"
+'''
+
+[[case]]
+name = "a record for no connection is a failed send with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: no connection"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:send 0,0,reliable,x|2:stall 30|3:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:send 7,0,reliable,x|2:stall 30|3:show_count"
+'''
+
+[[case]]
+name = "a record for a listen entity is a failed send with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: no connection"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:send 0,0,reliable,x|2:stall 30|3:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|2:send 0,0,reliable,x|2:stall 30|3:show_count"
+'''
+
+[[case]]
+name = "a malformed batch writes its line at the offset of the bad record, and the rest is left"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the batch of [0-9]+ is malformed at 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:send 0,0,reliable,x|2:stall 30|3:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:send cut|2:stall 30|3:show_count"
+'''
+
+[[case]]
+name = "a message that GameNetworkingSockets refuses is a failed send with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+fail = { SteamAPI_ISteamNetworkingUtils_AllocateMessage = 1 }
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: ", "r5 conn 0 connected .* failed 1"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:stall 30|3:stall 30|4:send 0,0,reliable,x|4:stall 30|5:show_conns"
+'''
+
+[[case]]
+name = "the messages of a pair cross in both directions"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["msg 1 number 1 lane 0 flags 1 len 4 \\[ping\\]", "msg 0 number 1 lane 0 flags 1 len 4 \\[pong\\]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:stall 30|3:stall 30|4:send 0,0,reliable,ping|4:stall 30|5:stall 30|6:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:stall 30|3:stall 30|4:send 0,0,reliable,ping;1,0,reliable,pong|4:stall 30|5:stall 30|6:show_count"
+'''
+
+[[case]]
+name = "a message of the half of a round stays good for 1 round, so a show in the next round still reads it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["r6 msg 1 number 1 lane 0 flags 1 len 4 \\[keep\\]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:stall 30|3:stall 30|4:stall 30|5:stall 30|6:show_msgs|7:show_msgs"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:stall 30|3:stall 30|4:send 0,0,reliable,keep|4:stall 30|5:stall 30|6:show_msgs|7:show_msgs"
+'''
+
+[[case]]
+name = "a message for an entity that is a session is a failed send with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: no connection"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|3:send 0,0,reliable,x|3:stall 30|4:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:identity str:me|2:sess open,str:far,0|3:send 0,0,reliable,x|3:stall 30|4:show_count"
+'''
+
+[[case]]
+name = "a message after the close of its connection is a failed send with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the message of [0-9]+ is refused: no connection"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|3:send 0,0,reliable,x|3:stall 30|4:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:conn 0,close,1000,0|3:send 0,0,reliable,x|3:stall 30|4:show_count"
+'''

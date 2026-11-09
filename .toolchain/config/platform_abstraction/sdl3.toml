@@ -187,6 +187,11 @@ defines = ["GAME_AUDIO"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]
+name = "sdl3_game_sockets"
+defines = ["GAME_SOCKETS"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
 name = "sdl3_game_all"
 defines = ["GAME_GPU", "GAME_FRAME"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
