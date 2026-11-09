@@ -66,6 +66,7 @@ typedef struct {
 typedef struct {
     uint64_t entity;
     uint32_t status;
+    bool keep;
 } files_early_t;
 
 typedef struct {
@@ -121,7 +122,8 @@ void add_runs(const bridge_api_t *api);
 bool start_files(const bridge_api_t *api);
 
 files_job_t *free_job(void);
-void put_early(const bridge_api_t *api, uint64_t entity, uint32_t status);
+void put_early(const bridge_api_t *api, uint64_t entity, uint32_t status,
+    bool keep);
 void cancel_job(uint64_t entity);
 
 void work_loop(void *arg);
@@ -136,7 +138,7 @@ void turn_results(const bridge_api_t *api);
 bridge_text_t put_bytes(const bridge_api_t *api, const char *bytes,
     uint32_t len);
 void publish(const bridge_api_t *api, uint64_t entity,
-    ideatek_file_result_t result);
+    ideatek_file_result_t result, bool keep);
 
 uint32_t start_watch(uint64_t entity, const char *path);
 void stop_watch(uint64_t entity);

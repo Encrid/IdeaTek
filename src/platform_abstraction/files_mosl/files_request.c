@@ -73,7 +73,8 @@ static void queue_job(const bridge_api_t *api, uint64_t entity)
         job->entity = entity;
         fill_job(api, job, r, path);
     } else
-        put_early(api, entity, status);
+        put_early(api, entity, status, watch
+            && status == IDEATEK_FILE_STATUS_OK);
 }
 
 BRIDGE_NATIVE(request)
