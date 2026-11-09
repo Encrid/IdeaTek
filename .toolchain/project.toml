@@ -51,3 +51,13 @@ why = "frame_module holds the state of the native module between 2 calls, which 
 rule = "G4"
 path = "src/kernel/frame_sdl3/frame_inside.h"
 why = "The declaration of frame_module, the state of the native module between 2 calls."
+
+[[style.exception]]
+rule = "G4"
+path = "src/platform_abstraction/files_mosl/files_main.c"
+why = "files_module holds the state of the native module between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/platform_abstraction/files_mosl/files_inside.h"
+why = "The declaration of files_module, the state of the native module between 2 calls."

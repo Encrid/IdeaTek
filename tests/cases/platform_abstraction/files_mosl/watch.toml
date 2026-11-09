@@ -2,17 +2,17 @@
 name = "a watch of a folder of the content storage gives a change for a new file"
 run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
 env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
-claims = { status = 0, has = ["r2 result 0 ok size 0 []"], matches = ["r[3-8] change 0 \\[w/new.txt"] }
+claims = { status = 0, has = ["r2 result 0 ok size 0 []"], matches = ["r[4-6] change 0 \\[w/new.txt"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
-rounds = 8
+rounds = 6
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq content,watch,sub,0|2:show_results|3:show_changes|4:show_changes|5:show_changes|6:show_changes|7:show_changes|8:show_changes"
+script = "1:filereq content,watch,sub,0|2:show_results|3:stall 1500|4:show_changes|5:stall 1500|6:show_changes"
 ''' } }
 script = [{ wait = "r2 result 0", put = { "{case}/host/content/w/new.txt" = "{case}/new.txt" } }]
 
@@ -33,14 +33,14 @@ k'''
 n'''
 "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
-rounds = 8
+rounds = 6
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq content,watch,w,0|2:show_results|3:show_changes|4:show_changes|5:show_changes|6:show_changes|7:show_changes|8:show_changes"
+script = "1:filereq content,watch,w,0|2:show_results|3:stall 1500|4:show_changes|5:stall 1500|6:show_changes"
 '''
 
 [[case]]
@@ -57,7 +57,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq content,watch,w,0|2:show_results|3:rmpath {case}/host/content/sub|4:show_results|5:show_results|6:show_results"
+script = "1:filereq content,watch,w,0|2:show_results|3:rmpath {case}/host/content/sub|3:stall 1500|4:show_results|5:stall 500|6:show_results"
 ''' } }
 
 [case.folders]
@@ -81,7 +81,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq content,watch,w,0|2:show_results|3:rmpath {case}/host/content/w|4:show_results|5:show_results|6:show_results"
+script = "1:filereq content,watch,w,0|2:show_results|3:rmpath {case}/host/content/w|3:stall 1500|4:show_results|5:stall 500|6:show_results"
 '''
 
 [[case]]
@@ -124,4 +124,119 @@ ignore = ["m/SDL3{library}"]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
 script = "1:filereq user,watch,w,0|2:show_results"
+'''
+
+[[case]]
+name = "a watch whose half has no room for a line keeps its changes for a later round"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["r2 result 0 ok size 0 []"], matches_not = ["change 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+read_bytes = 4194304
+[module."test:game@1.0.0".config]
+script = "1:filereq content,watch,w,0|2:show_results|3:stall 1500|4:show_changes|5:stall 1500|6:show_changes"
+''' } }
+script = [{ wait = "r2 result 0", put = { "{case}/host/content/w/new.txt" = "{case}/new.txt" } }]
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/new.txt" = '''
+n'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 6
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+read_bytes = 16
+[module."test:game@1.0.0".config]
+script = "1:filereq content,watch,w,0|2:show_results|3:stall 1500|4:show_changes|5:stall 1500|6:show_changes"
+'''
+
+[[case]]
+name = "a watch that the system refuses gives the status failed"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+fail = { os_watch_start = 1 }
+claims = { status = 0, has = ["r2 result 0 failed size 0 []"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,watch,w,0|2:show_results"
+'''
+
+[[case]]
+name = "a watch whose take fails stops, with the line of the stop"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+fail = { os_watch_take = 1 }
+claims = { status = 0, has = ["the watch of w stopped"], matches = ["r[23] result 0 not_found"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,watch,w,0|2:show_results|3:show_results"
 '''

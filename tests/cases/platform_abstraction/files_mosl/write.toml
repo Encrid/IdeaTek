@@ -2,17 +2,17 @@
 name = "a write in the user storage makes the folders of the path, and a read gives the bytes back"
 run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
 env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
-claims = { status = 0, has = ["r2 result 0 ok size 0 []", "r3 result 1 ok size 4 [data]"] }
+claims = { status = 0, has = ["r3 result 0 ok size 0 []", "r5 result 1 ok size 4 [data]"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
-rounds = 3
+rounds = 5
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq user,write,s/t/save.txt,0,data|2:filereq user,read,s/t/other.txt,0|2:show_results|3:show_results"
+script = "1:filereq user,write,s/t/save.txt,0,data|2:stall 500|3:filereq user,read,s/t/other.txt,0|3:show_results|4:stall 500|5:show_results"
 ''' } }
 
 [case.folders]
@@ -30,31 +30,31 @@ inner'''
 k'''
 "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
-rounds = 3
+rounds = 5
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq user,write,s/t/save.txt,0,data|2:filereq user,read,s/t/save.txt,0|2:show_results|3:show_results"
+script = "1:filereq user,write,s/t/save.txt,0,data|2:stall 500|3:filereq user,read,s/t/save.txt,0|3:show_results|4:stall 500|5:show_results"
 '''
 
 [[case]]
 name = "a second write replaces the whole file"
 run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
 env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
-claims = { status = 0, has = ["r4 result 2 ok size 3 [2nd]"] }
+claims = { status = 0, has = ["r7 result 2 ok size 3 [2nd]"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
-rounds = 4
+rounds = 7
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq user,write,f.txt,0,first|2:filereq user,write,g.txt,0,2nd|3:filereq user,read,f.txt,0|4:show_results"
+script = "1:filereq user,write,f.txt,0,first|2:stall 500|1:filereq user,write,g.txt,0,2nd|4:stall 500|5:filereq user,read,f.txt,0|6:stall 500|7:show_results"
 ''' } }
 
 [case.folders]
@@ -72,14 +72,14 @@ inner'''
 k'''
 "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
-rounds = 4
+rounds = 7
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq user,write,f.txt,0,first|2:filereq user,write,f.txt,0,2nd|3:filereq user,read,f.txt,0|4:show_results"
+script = "1:filereq user,write,f.txt,0,first|2:stall 500|1:filereq user,write,f.txt,0,2nd|4:stall 500|5:filereq user,read,f.txt,0|6:stall 500|7:show_results"
 '''
 
 [[case]]
@@ -122,4 +122,103 @@ ignore = ["m/SDL3{library}"]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
 script = "1:filereq content,write,a.txt,0,data|2:show_results"
+'''
+
+[[case]]
+name = "a write whose folders cannot be made gives the status failed"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+fail = { os_folder_make = 2 }
+claims = { status = 0, has = ["r3 result 0 failed size 0 []"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq user,write,q/f.txt,0,data|2:stall 500|3:show_results"
+'''
+
+[[case]]
+name = "a write whose file write fails gives the status failed, and the old file stays"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+fail = { os_file_write = 1 }
+claims = { status = 0, has = ["r3 result 0 failed size 0 []", "r5 result 1 not_found size 0 []"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq user,write,f.txt,0,data|2:stall 500|3:filereq user,read,f.txt,0|3:show_results|4:stall 500|5:show_results"
+'''
+
+[[case]]
+name = "a write whose move fails gives the status failed"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+fail = { os_path_move = 1 }
+claims = { status = 0, has = ["r3 result 0 failed size 0 []"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq user,write,f.txt,0,data|2:stall 500|3:show_results"
 '''

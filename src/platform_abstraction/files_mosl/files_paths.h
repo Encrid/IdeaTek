@@ -13,5 +13,6 @@ constexpr size_t FILES_PATH = 4096;
 bool path_is_allowed(const char *path);
 bool path_join(char *out, size_t size, const char *storage, const char *path);
 void path_split(const char *path, char *folder, char *name);
+void path_parent(char *path);
 
 #endif
