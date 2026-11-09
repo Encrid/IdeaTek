@@ -15,7 +15,8 @@ Each table of the module is an array of records in the persistent arena, sized b
 | `res_variable_t` | `variables`, `max_variables` | 1 variable: its entity. The texts stay in the component. |
 | `res_read_t` | `reads`, `max_reads` | 1 read that runs: its request entity, its resource, its kind (meta, file, range), its offset and length, and its result when it came. |
 
-The texts of a resource are in 1 slot of `path_bytes` + `settings_bytes` bytes, next to the records. The slot holds the full path, a zero, the type, a zero, and the settings.
+The texts of a resource are in 1 slot of `path_bytes` + `settings_bytes` bytes, next to the records. The slot holds the texts in this order: the full path, the type, the settings, with a zero after the path and after the type.
+`res_load_t` is a load as `place_load` reads it: its texts and its split path. `res_arrival_t` is the result of a read as the round reads it: the bytes, the size and the error.
 3 hash maps of `docs/intern/kernel/resources_files/resources_hash.c.md` find the records. The keys are the hash of the path and the type of a resource, the entity of a resource, and the entity of a use.
 
 ## The steps of a resource
@@ -42,6 +43,10 @@ The texts of a resource are in 1 slot of `path_bytes` + `settings_bytes` bytes, 
 | `texts` | Where the text slots of the resources begin. |
 | `by_key`, `by_entity`, `use_by_entity` | The 3 hash maps. |
 | `blocks` | The block list of the `load_bytes` arena: `docs/intern/kernel/resources_files/resources_arena.c.md`. |
+| `views` | The views of the loaders for the pick, 1 for each record. |
+| `deps`, `recs` | The folds of each resource, for the passes of the fold. |
+| `default_watch` | The watch entity of the default source, or 0. |
+| `paths_at` | Where the path slots of the reads begin: `RES_PATH` bytes for each read. |
 | `now` | The seconds since the first round, from `real_delta` of `ideatek:Frame`. |
 | `no_clock` | The deployment has no `ideatek:Frame`, and the line of the log was written. |
 | `dirty` | A round changed a state or a use: the fold of the states runs. |

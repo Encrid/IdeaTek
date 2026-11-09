@@ -8,9 +8,7 @@ This file reloads the resources: on a change of a watched file, on `ideatek:Reso
 
 ## The changes
 
-The observer `changes` hears `ideatek:FileChange` on a watch entity of the module. Each line of `paths` is a changed path of the content storage.
-A path that ends with `.meta` loses that end. The observer marks each resource of the source of the watch whose path is the changed path, or is under a changed folder. Its `reload_at` becomes `now` plus `reload_delay_ms`.
-A second change before `reload_at` moves it: the events of 1 save join into 1 reload, and the writer can end the file.
+The changes of the watched folders are in `docs/intern/kernel/resources_files/resources_changes.c.md`. A second change before `reload_at` moves it: the events of 1 save join into 1 reload, and the writer can end the file.
 
 ## The reloads
 
@@ -28,7 +26,6 @@ A reload while a read runs waits for the read: the resource is marked, and start
 | Function | Result |
 | --- | --- |
 | `tick_time` | Moves `now` with the clock. |
-| `changes` | The observer of `ideatek:FileChange`. |
 | `reloads` | The observer of `ideatek:ResourceReload`. |
 | `begin_reload` | Starts the reload of a resource. |
 | `start_reloads` | Starts the reloads that are due. |

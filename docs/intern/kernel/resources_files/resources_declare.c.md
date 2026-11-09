@@ -12,12 +12,13 @@ The module declares, in this order:
 4. The 21 types of the resources contract, each type after the types of its fields. The order is the one of `docs/extern/kernel/ideatek_resources.h.md`, *The declarations*.
 5. `ideatek_resources_files:Settings`, the singleton of the settings, as `res_settings_t`.
 
-The 3 functions each declare 1 group, because 1 function of 28 declarations would pass 20 lines.
+The 4 functions each declare 1 group, because 1 function of 29 declarations would pass 20 lines.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
 | `declare_files` | Declares the entity type, the types of the files part and `ideatek:Frame`. |
-| `declare_contract` | Declares the 21 types of the resources contract. |
-| `declare_types` | Calls the 2 others, then declares the settings. |
+| `declare_loads` | Declares the first 9 types of the resources contract. |
+| `declare_rest` | Declares the 12 other types of the resources contract. |
+| `declare_types` | Calls the 3 others, then declares the settings. |

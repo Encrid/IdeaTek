@@ -11,14 +11,14 @@ This file picks the loader of a load, with the rules of `docs/extern/kernel/idea
 3. Else, among the loaders of the type, the loaders whose lines hold the extension. An empty type allows each loader. 0 gives `IDEATEK_RESOURCE_ERROR_NO_LOADER`. 1 is the pick.
 4. With 2 or more, and no bytes yet, the pick needs the bytes. With the bytes, the loader whose magic starts the bytes is the pick. 0 or 2 such loaders give `IDEATEK_RESOURCE_ERROR_TWO_LOADERS`.
 
-`has_extension` walks the lines of a loader; each line ends with `\n`. `starts_with` compares the magic with the start of the bytes.
+`docs/intern/kernel/resources_files/resources_fits.c.md` tells whether a loader fits the extension and the magic.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `same_text` | `true` when 2 texts are equal. |
-| `has_extension` | `true` when the lines of a loader hold the extension. |
 | `pick_named` | The pick by the name of the meta file. |
 | `pick_typed` | The pick by the type, when 1 loader has it. |
+| `tally_result` | The pick from the counts of the fits. |
+| `pick_by_extension` | Counts the loaders that fit the extension and the magic. |
 | `pick_loader` | The pick by the rules, or its error. |

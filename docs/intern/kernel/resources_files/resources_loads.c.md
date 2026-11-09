@@ -1,6 +1,6 @@
 # src/kernel/resources_files/resources_loads.c
 
-This file holds the observers `loads` and `adds`, and the table of the uses.
+This file holds the observer `loads` and the records of the uses. The observer `adds` is in `docs/intern/kernel/resources_files/resources_adds.c.md`.
 
 ## The uses
 
@@ -15,8 +15,8 @@ A count of 0 frees the resource in the round: `docs/intern/kernel/resources_file
 
 | Function | Result |
 | --- | --- |
-| `take_use` | A new record of a use, or `RES_NONE` with the line. |
+| `fill_use` | Fills the record of a use from its component. |
+| `take_use` | Takes a record for a use, or writes the line. |
 | `drop_use` | Frees the record of a use, and counts it off its resource. |
 | `record_uses` | Walks the list of an observer: takes the uses that enter, drops the uses that leave. |
 | `loads` | The observer of `ideatek:ResourceLoad`. |
-| `adds` | The observer of `ideatek:ResourceAdd`. |

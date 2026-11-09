@@ -16,7 +16,7 @@ The priority of a resource follows its uses that wait: the highest `priority` am
 
 ## An addition
 
-For a use with `ideatek:ResourceAdd`: `resource_of` looks for the entity. A new entity gets a record with an empty path, the type of the addition, `STEP_DONE` and `IDEATEK_LOAD_STATE_LOADED`, and `ideatek:Resource` is attached to it. The use gets its handle at once.
+A use with `ideatek:ResourceAdd` goes through `docs/intern/kernel/resources_files/resources_adds.c.md`.
 
 ## Functions
 
@@ -24,6 +24,6 @@ For a use with `ideatek:ResourceAdd`: `resource_of` looks for the entity. A new 
 | --- | --- |
 | `source_of` | The source of a split path: a constant, a record, or `RES_NONE`. |
 | `new_resource` | Takes the record and the entity of a new resource. |
-| `place_load` | Gives a load its resource and its handle. |
-| `place_add` | Gives an addition its resource and its handle. |
-| `place_uses` | Walks the uses without a resource. |
+| `read_load` | Reads the texts of a load and splits its path. |
+| `place_load` | Gives a load its resource, and its handle when it has no label. |
+| `place_uses` | Walks the uses without a handle. |

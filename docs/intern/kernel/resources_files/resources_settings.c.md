@@ -29,4 +29,5 @@ A wrong setting breaks the module, with the line of `readme.md`, *The contracts*
 | `check_count` | `true` when a count is in its range, else the line. |
 | `pick_choice` | The index of the word of a text among 3 words, or -1 with the line. |
 | `check_text` | `true` when a text is inside the arena and short enough, else the line. |
+| `check_counts` | `true` when each count is in its range. |
 | `read_settings` | Fills `settings` of the module. `false` for a setting outside its range. |
