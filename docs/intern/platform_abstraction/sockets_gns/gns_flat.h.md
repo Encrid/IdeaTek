@@ -16,16 +16,16 @@ No source includes a header of GameNetworkingSockets. Only this header names its
 | --- | --- | --- |
 | `gns_ip_t` | `SteamNetworkingIPAddr` | 1 |
 | `gns_identity_t` | `SteamNetworkingIdentity` | 1 |
-| `gns_config_t` | `SteamNetworkingConfigValue_t` | The pack of the system. |
+| `gns_config_t` | `SteamNetworkingConfigValue_t` | The pack of the compiler. |
 | `gns_info_t` | `SteamNetConnectionInfo_t` | The pack of the system. |
 | `gns_status_t` | `SteamNetConnectionRealTimeStatus_t` | The pack of the system. |
 | `gns_lane_t` | `SteamNetConnectionRealTimeLaneStatus_t` | The pack of the system. |
-| `gns_message_t` | `SteamNetworkingMessage_t` | The pack of the system. |
+| `gns_message_t` | `SteamNetworkingMessage_t` | The pack of the compiler. |
 | `gns_changed_t` | `SteamNetConnectionStatusChangedCallback_t` | The pack of the system. |
 | `gns_session_request_t` | `SteamNetworkingMessagesSessionRequest_t` | 1 |
 | `gns_session_failed_t` | `SteamNetworkingMessagesSessionFailed_t` | 1 |
 
-The pack of the system is 8 on Windows and 4 on Linux and macOS. `steamnetworkingtypes.h` packs its structs with `VALVE_CALLBACK_PACK_LARGE` or `VALVE_CALLBACK_PACK_SMALL` by the system, as the Steamworks SDK does. So a struct with a field of 8 bytes after a field of 4 bytes has a different size and different offsets on Windows.
+The pack of the system is 8 on Windows and 4 on Linux and macOS. `steamnetworkingtypes.h` packs its structs with `VALVE_CALLBACK_PACK_LARGE` or `VALVE_CALLBACK_PACK_SMALL` by the system, as the Steamworks SDK does. So a struct with a field of 8 bytes after a field of 4 bytes has a different size and different offsets on Windows. `SteamNetworkingMessage_t` and `SteamNetworkingConfigValue_t` sit outside this pack, with the pack of the compiler.
 
 The fields keep the names of GameNetworkingSockets without `m_`, in snake case. `gns_layout` proves the size, the alignment and each offset on each of the 6 targets.
 `gns_identity_t` holds `type`, `size` and a union of 128 bytes: the text of a generic string, the bytes of a generic identity, or `gns_ip_t`.
