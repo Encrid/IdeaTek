@@ -1,0 +1,7 @@
+[leaks.kinds.gns_listen_socket]
+takes = { SteamAPI_ISteamNetworkingSockets_CreateListenSocketIP = "result", SteamAPI_ISteamNetworkingSockets_CreateListenSocketP2P = "result" }
+gives = { SteamAPI_ISteamNetworkingSockets_CloseListenSocket = "2" }
+
+[leaks.kinds.os_addresses]
+takes = { getaddrinfo = "*4" }
+gives = { freeaddrinfo = "1" }
