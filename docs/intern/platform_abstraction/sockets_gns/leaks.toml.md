@@ -1,7 +1,7 @@
 # src/platform_abstraction/sockets_gns/leaks.toml
 
 This file names the resources of GameNetworkingSockets and of the OS that `test --leaks` counts for the sockets module.
-`.toolchain/config/leaks.toml` names it in `[leaks] with`. The release of the part holds it as `leaks.toml`.
+`.toolchain/config/leaks.toml` names it in `[leaks] with`. The deliverable of the part carries it under the name `leaks.toml`.
 
 ## The listen sockets
 

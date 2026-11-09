@@ -13,7 +13,7 @@ A level of bug, error, important or warning is a warning of the log. Each other 
 
 ## The requests
 
-`say_request` writes `the request of <id>: <field> is outside <range>` for a request with a wrong field, or a request on the wrong entity.
+`say_request` writes the line of a wrong request: the entity, the field with its value, and the range. A request on the wrong entity gets the same line.
 `say_bound` writes `more than <max> <what>: the request of <id> fails` for a request above a bound of the settings.
 
 ## The branches
