@@ -82,6 +82,7 @@ Each part has a readme, which its release holds.
 | `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `docs/extern/platform_abstraction/gpu_vulkan_module/readme.md` |
 | `frame_sdl3` | `BM-IdeaTek-Frame-SDL3` | `docs/extern/kernel/frame_sdl3/readme.md` |
 | `files_mosl` | `BM-IdeaTek-Files-Mosl` | `docs/extern/platform_abstraction/files_mosl/readme.md` |
+| `audio_sdl3` | `BM-IdeaTek-Audio-SDL3` | `docs/extern/platform_abstraction/audio_sdl3/readme.md` |
 
 ### The implementations
 
@@ -97,6 +98,7 @@ Each implementation is a part with its own release. A module part fills the role
 | `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `ideatek_gpu_vulkan:gpu@0.1.0` | The GPU module | The Vulkan loader. On macOS, the bundled loader with KosmicKrisp and MoltenVK |
 | `frame_sdl3` | `BM-IdeaTek-Frame-SDL3` | `ideatek_frame_sdl3:clock@0.1.0` | The clock module | The SDL3 library |
 | `files_mosl` | `BM-IdeaTek-Files-Mosl` | `ideatek_files_mosl:files@0.1.0` | The files module | Nothing: mosl is inside it |
+| `audio_sdl3` | `BM-IdeaTek-Audio-SDL3` | `ideatek_audio_sdl3:audio@0.1.0` | The audio module | The SDL3 library of IdeaTek |
 
 - The behavior and the settings of each role are in the document of its contract, under the name of the role.
 - The namespace of each identity is the key of its part, so no module has the namespace `ideatek`.

@@ -1,0 +1,32 @@
+[parts.audio_sdl3]
+name = "BM-IdeaTek-Audio-SDL3"
+folder = "platform_abstraction/audio_sdl3"
+uses = ["world", "audio", "sdl3", "sdl3_start"]
+third_party = []
+
+[variables]
+audio_sdl3_words = [
+    "abi=1", "config=ideatek_audio_sdl3:Settings", "pinned=true", "reloadable=false",
+    "settings=device_frames stream_name", "config.device_frames=0", "config.stream_name=IdeaTek",
+    "scratch=16384", "log_ring=2048", "spans=16384", "spawns=32", "changes=16384",
+    "persistent=4202496", "hot_reload=false",
+]
+
+[[artifact]]
+name = "audio_sdl3"
+kind = "native_module"
+part = "audio_sdl3"
+sources = ["src/platform_abstraction/audio_sdl3/*.c"]
+include = ["include/platform_abstraction", "src/platform_abstraction/sdl3_start"]
+link = ["{out}/sdl3_start.a", "{out}/SDL3{library}"]
+flags = ["-isystem", "{sdl_root}/include", "{rpath}"]
+manifest = ["ideatek_audio_sdl3:audio@0.1.0", "{audio_sdl3_words}"]
+
+[[artifact]]
+name = "audio_sdl3_reload"
+kind = "program"
+part = "audio_sdl3"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/audio_sdl3{library}"]
+flags = ["{rpath}"]

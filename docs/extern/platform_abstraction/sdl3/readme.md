@@ -23,4 +23,14 @@ A module in C includes the headers of SDL3 from `include/SDL3`, and links the li
 - On macOS, a window that names no graphics API and no external context asks for GL.
 - `SDL_Metal_CreateView` gives a view with a CAMetalLayer on macOS, and no view on the other systems.
 
+### The additions of IdeaTek
+
+The patch `third_party/sdl3/build_config.patch` adds 1 call to the library, which SDL3 3.4.20 has not:
+
+| Call | Result |
+| --- | --- |
+| `SDL_AudioDeviceID SDL_GetDefaultAudioDeviceID(bool recording)` | The id of the physical device that is the default of the direction, or 0 with no audio driver or no device. |
+
+The audio module of IdeaTek needs it. A module that links another SDL3 cannot call it. The hunk goes when a release of SDL3 gives the call.
+
 `BL-IdeaTek-SDL3` names no other part in `uses`.
