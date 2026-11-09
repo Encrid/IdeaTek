@@ -3,6 +3,8 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
+#include <stdio.h>
+
 #include "sockets_inside.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -54,12 +56,20 @@ BRIDGE_NATIVE(shutdown)
     os_mutex_unlock(sockets_module.lock);
     os_event_set(sockets_module.wake);
     os_thread_join(sockets_module.thread);
+    fprintf(stderr, "diag: thread joined
+");
     if (sockets_module.sockets) {
         close_listens();
+        fprintf(stderr, "diag: listens closed
+");
         GameNetworkingSockets_Kill();
+        fprintf(stderr, "diag: gns killed
+");
     }
     sockets_module.sockets = nullptr;
     free_thread();
+    fprintf(stderr, "diag: shutdown done
+");
     return (0);
 }
 

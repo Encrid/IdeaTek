@@ -1,0 +1,21 @@
+[[case]]
+name = "diag: a pair case under gdb"
+run = ["gdb", "-batch", "-ex", "run", "-ex", "bt", "-ex", "info sharedlibrary", "--args", "{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r4 conn 0 connected flags 12"] }
+false = { run = ["gdb", "-batch", "-ex", "run", "--args", "{bridge_host}/bridge-host{exe}", "{case}/e.toml"] }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:stall 30|3:stall 30|4:show_conns|4:show_inbound"
+'''
