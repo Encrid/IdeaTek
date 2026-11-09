@@ -71,3 +71,41 @@ why = "audio_module holds the state of the native module between 2 calls, which 
 rule = "G4"
 path = "src/platform_abstraction/audio_sdl3/audio_inside.h"
 why = "The declaration of audio_module, the state of the native module between 2 calls."
+path = "src/platform_abstraction/sockets_gns/sockets_main.c"
+why = "sockets_module holds the state of the native module between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/platform_abstraction/sockets_gns/sockets_inside.h"
+why = "The declaration of sockets_module, the state of the native module between 2 calls."
+
+[[style.exception]]
+rule = "F5"
+path = "src/platform_abstraction/sockets_gns/gns_flat.h"
+why = "The prototypes of the flat calls of GameNetworkingSockets keep the arguments of the library, and gns_layout checks them."
+
+[[style.exception]]
+rule = "F5"
+path = "src/platform_abstraction/sockets_gns/sockets_signals.c"
+why = "send_signal has the 5 arguments that GameNetworkingSockets gives to a signaling callback."
+
+[[branches.exception]]
+path = "src/platform_abstraction/sockets_gns/sockets_receive.c"
+line = 28
+col = 9
+side = "true"
+why = "GameNetworkingSockets gives the messages of a session only after the accept, and the slot of the peer exists from the request to the close of the game."
+
+[[branches.exception]]
+path = "src/platform_abstraction/sockets_gns/sockets_session_peer.c"
+line = 33
+col = 9
+side = "true"
+why = "The failure callback comes from the connection of a live session, whose peer has an open slot; a close of the game deletes the session at once."
+
+[[branches.exception]]
+path = "src/platform_abstraction/sockets_gns/sockets_signals.c"
+line = 17
+col = 9
+side = "true"
+why = "A rendezvous message of GameNetworkingSockets holds a certificate, the keys and the ICE candidates: a few hundred bytes, far below 4096."

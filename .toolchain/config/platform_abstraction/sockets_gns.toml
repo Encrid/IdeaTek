@@ -1,7 +1,7 @@
 [parts.sockets_gns]
 name = "BM-IdeaTek-Sockets-GNS"
 folder = "platform_abstraction/sockets_gns"
-uses = ["world", "sockets", "gns"]
+uses = ["world", "sockets", "gns", "sdl3"]
 third_party = ["gns", "protobuf", "libsodium", "mosl"]
 
 [variables]
@@ -31,7 +31,7 @@ sockets_gns_words = [
     "config.fake_jitter_recv_max=100", "config.fake_jitter_send_pct=75", "config.fake_jitter_recv_pct=75",
     "config.fake_rate_send=0", "config.fake_rate_recv=0", "config.fake_burst_send=16384", "config.fake_burst_recv=16384",
     "config.max_connections=64", "config.max_listen_sockets=8", "config.max_addresses=16", "config.session_channels=16", "config.debug_output=warning",
-    "scratch=16384", "log_ring=4096", "spans=16384", "spawns=65", "changes=65536", "persistent=2234112",
+    "scratch=16384", "log_ring=4096", "spans=65536", "spawns=65", "changes=65536", "persistent=2234112",
     "hot_reload=false",
 ]
 
@@ -41,9 +41,15 @@ kind = "native_module"
 part = "sockets_gns"
 sources = ["src/platform_abstraction/sockets_gns/*.c"]
 include = ["include/platform_abstraction", "src/platform_abstraction/sockets_gns", "{mosl_root}/include"]
-link = ["{out}/gns.a", "{out}/gns_c.a", "{out}/protobuf.a", "{out}/sodium.a", "{mosl_root}/os.a", "-lc++"]
-flags = ["{gns_system}"]
+link = ["{out}/gns.a", "{out}/gns_c.a", "{out}/protobuf.a", "{out}/sodium.a", "{mosl_root}/os.a"]
+flags = ["{gns_system}", "-lc++"]
 manifest = ["ideatek_sockets_gns:sockets@0.1.0", "{sockets_gns_words}"]
+
+[[artifact]]
+name = "leaks.toml"
+kind = "file"
+part = "sockets_gns"
+sources = ["src/platform_abstraction/sockets_gns/leaks.toml"]
 
 [[artifact]]
 name = "sockets_gns_reload"
@@ -65,9 +71,17 @@ link = ["{out}/gns.a", "{out}/gns_c.a", "{out}/protobuf.a", "{out}/sodium.a"]
 flags = ["{gns_system}"]
 
 [[artifact]]
+name = "sockets_ring"
+kind = "program"
+part = "sockets_gns"
+test = true
+sources = ["tests/platform_abstraction/sockets_gns/ring.c", "src/platform_abstraction/sockets_gns/sockets_ring.c"]
+include = ["include/platform_abstraction", "src/platform_abstraction/sockets_gns", "{bridge}/include"]
+
+[[artifact]]
 name = "sockets_values"
 kind = "program"
 part = "sockets_gns"
 test = true
-sources = ["tests/platform_abstraction/sockets_gns/values.c", "src/platform_abstraction/sockets_gns/sockets_values.c", "src/platform_abstraction/sockets_gns/sockets_records.c"]
+sources = ["tests/platform_abstraction/sockets_gns/values.c", "src/platform_abstraction/sockets_gns/sockets_values.c", "src/platform_abstraction/sockets_gns/sockets_flags.c", "src/platform_abstraction/sockets_gns/sockets_records.c"]
 include = ["include/platform_abstraction", "src/platform_abstraction/sockets_gns", "{bridge}/include"]
