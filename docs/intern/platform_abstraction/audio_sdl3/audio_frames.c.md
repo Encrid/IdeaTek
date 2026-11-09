@@ -19,7 +19,7 @@ The stream of SDL3 keeps the bytes and converts them on its thread, so the obser
 
 1. With no open recording stream, nothing.
 2. `SDL_GetAudioStreamAvailable` gives the bytes that the stream recorded. The frames over `ahead` are the oldest. `drop_oldest` reads them into the half and forgets them, and `dropped` grows by their number.
-3. The frames left, at most `ahead`, go into the half of the round with `SDL_GetAudioStreamData`.
+3. `attach_recorded` reads the frames left, at most `ahead`, into the half of the round with `SDL_GetAudioStreamData`.
 4. With 1 frame or more, `ideatek:AudioRecorded` goes to the entity. `at` is the count, `frames` their number, and `data` their bytes in the half. The count grows by the dropped and the kept frames.
 
 A half holds 65536 frames of 8 channels, so the frames left always fit. `drop_oldest` reads the half at most each `AUDIO_HALF_FRAMES` frames, so a long pause of the game costs rounds of reads, not memory.
@@ -43,4 +43,5 @@ A half holds 65536 frames of 8 channels, so the frames left always fit. `drop_ol
 | `put_frames` | Puts a batch in the playback stream, or drops it. |
 | `bridge_frames` | Reads each trigger. |
 | `drop_oldest` | Reads and forgets the frames over `ahead`. |
-| `take_recorded` | Takes the recorded frames into the half, and attaches the batch. |
+| `attach_recorded` | Reads the frames left into the half, and attaches the batch when it has a frame. |
+| `take_recorded` | Counts the recorded frames, drops the oldest, and keeps the rest. |
