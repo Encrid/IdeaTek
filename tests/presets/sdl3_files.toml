@@ -6,6 +6,7 @@ again = {}
 systems = 64
 terms = 128
 tables = 128
+persistent = 8388608
 
 [module."ideatek_files_mosl:files@0.1.0"]
 write = ["ideatek:FileResult", "ideatek:FileChange"]

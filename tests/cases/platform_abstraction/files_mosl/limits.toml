@@ -2,7 +2,7 @@
 name = "a 257th request at a time gives the status failed"
 run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
 env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
-claims = { status = 0, has = ["r2 result 256 failed size 0 []", "r3 result 255 ok size 5 [hello]"] }
+claims = { status = 0, has = ["seen 256 failed size 0 []", "seen 255 ok size 5 [hello]"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
 rounds = 3
@@ -23,7 +23,7 @@ script = "1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|1:filere
 "{case}/host/content/a.txt" = '''
 hello'''
 "{case}/host/content/b.bin" = '''
-xyz'''
+xyz123456789'''
 "{case}/host/content/sub/e.txt" = '''
 inner'''
 "{case}/host/content/w/keep.txt" = '''
@@ -44,7 +44,7 @@ script = "1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|1:filere
 name = "a 17th watch gives the status failed"
 run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
 env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
-claims = { status = 0, has = ["r2 result 16 failed size 0 []", "r2 result 15 ok size 0 []"] }
+claims = { status = 0, has = ["seen 16 failed size 0 []", "seen 15 ok size 0 []"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
 rounds = 2
@@ -65,7 +65,7 @@ script = "1:filereq content,watch,w,0|1:filereq content,watch,w,0|1:filereq cont
 "{case}/host/content/a.txt" = '''
 hello'''
 "{case}/host/content/b.bin" = '''
-xyz'''
+xyz123456789'''
 "{case}/host/content/sub/e.txt" = '''
 inner'''
 "{case}/host/content/w/keep.txt" = '''
@@ -86,7 +86,7 @@ script = "1:filereq content,watch,w,0|1:filereq content,watch,w,0|1:filereq cont
 name = "a 257th refusal in a round gets no result, with its line"
 run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
 env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
-claims = { status = 0, has = ["results wait for the next round", "r2 result 255 denied size 0 []"] }
+claims = { status = 0, has = ["results wait for the next round", "seen 255 denied size 0 []"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
 rounds = 2
@@ -107,7 +107,7 @@ script = "1:filereq content,read,../a.txt,0|1:filereq content,read,../a.txt,0|1:
 "{case}/host/content/a.txt" = '''
 hello'''
 "{case}/host/content/b.bin" = '''
-xyz'''
+xyz123456789'''
 "{case}/host/content/sub/e.txt" = '''
 inner'''
 "{case}/host/content/w/keep.txt" = '''
@@ -128,7 +128,7 @@ script = "1:filereq content,read,../a.txt,0|1:filereq content,read,../a.txt,0|1:
 name = "the results that do not fit in the changes of a round wait for the next round"
 run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
 env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
-claims = { status = 0, has = ["r3 result 0 ok", "r3 result 1 ok", "r4 result 2 ok"], matches_not = ["r3 result 2 "] }
+claims = { status = 0, matches = ["r([0-9]+) seen 0 ok.*r\\1 seen 1 ok.*r(?!\\1)[0-9]+ seen 2 ok"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
 rounds = 5
@@ -151,7 +151,7 @@ script = "1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|2:stall 
 "{case}/host/content/a.txt" = '''
 hello'''
 "{case}/host/content/b.bin" = '''
-xyz'''
+xyz123456789'''
 "{case}/host/content/sub/e.txt" = '''
 inner'''
 "{case}/host/content/w/keep.txt" = '''
@@ -197,7 +197,7 @@ script = "1:filereq content,read,../a.txt,0|1:filereq content,read,../a.txt,0|2:
 "{case}/host/content/a.txt" = '''
 hello'''
 "{case}/host/content/b.bin" = '''
-xyz'''
+xyz123456789'''
 "{case}/host/content/sub/e.txt" = '''
 inner'''
 "{case}/host/content/w/keep.txt" = '''

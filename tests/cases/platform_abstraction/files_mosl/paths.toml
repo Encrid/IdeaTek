@@ -80,7 +80,19 @@ false = { run = ["{out}/files_paths{exe}", "parent", "a/b"] }
 name = "a parent cuts the last name and its backslash"
 run = ["{out}/files_paths{exe}", "parent", "a\\b"]
 claims = { status = 0, has = ["parent [a]"] }
-false = { run = ["{out}/files_paths{exe}", "parent", "a/c"] }
+false = { run = ["{out}/files_paths{exe}", "parent", "ab"] }
+
+[[case]]
+name = "a name of 2 characters that is not .. is allowed"
+run = ["{out}/files_paths{exe}", "allowed", "ab/c"]
+claims = { status = 0, has = ["allowed 1"] }
+false = { run = ["{out}/files_paths{exe}", "allowed", "../c"] }
+
+[[case]]
+name = "a hidden name that starts with a dot is allowed"
+run = ["{out}/files_paths{exe}", "allowed", ".a"]
+claims = { status = 0, has = ["allowed 1"] }
+false = { run = ["{out}/files_paths{exe}", "allowed", ".."] }
 
 [[case]]
 name = "a parent of a name alone is empty"

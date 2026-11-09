@@ -21,7 +21,7 @@ static const char *const ACTIONS[] = { "read", "write", "list", "remove",
 static const char *const STATUSES[] = { "ok", "not_found", "too_big",
     "denied", "failed", "unsupported" };
 
-static uint64_t entities[256];
+static uint64_t entities[512];
 static uint32_t entity_count;
 
 static uint8_t index_of(const char *word, const char *const *words,
@@ -93,6 +93,14 @@ static void show_text(char *out, size_t size, const bridge_api_t *api,
             out[i] = '|';
 }
 
+static void put_file(char *args)
+{
+    char *comma = strchr(args, ',');
+
+    *comma = '\0';
+    SDL_SaveFile(args, comma + 1, strlen(comma + 1));
+}
+
 static void show_results(const bridge_api_t *api)
 {
     const ideatek_file_result_t *r;
@@ -136,12 +144,17 @@ bool game_files_step(const bridge_api_t *api, const char *verb, char *args)
         ask_file(api, args);
     else if (!strcmp(verb, "filedrop"))
         done = true;
+    else if (!strcmp(verb, "filekill"))
+        api->destroy(api, entities[atoi(args)]);
     else if (!strcmp(verb, "show_results"))
         show_results(api);
     else if (!strcmp(verb, "show_changes"))
         show_changes(api);
     else if (!strcmp(verb, "rmpath"))
-        SDL_RemovePath(args);
+        bridge_native_say(api, BRIDGE_LOG_INFO, "rmpath %d %s",
+            SDL_RemovePath(args), SDL_GetError());
+    else if (!strcmp(verb, "putfile"))
+        put_file(args);
     else
         done = false;
     return (done);
@@ -173,10 +186,12 @@ static void drop_early(const bridge_api_t *api, uint32_t round)
     for (step = strtok_r(script, "|", &left); step;
         step = strtok_r(nullptr, "|", &left)) {
         colon = strchr(step, ':');
-        if (!colon || (uint32_t)atoi(step) != round
-            || strncmp(colon + 1, "filedrop ", 9))
+        if (!colon || (uint32_t)atoi(step) != round)
             continue;
-        api->destroy(api, entities[atoi(colon + 10)]);
+        if (!strncmp(colon + 1, "earlywait ", 10))
+            SDL_Delay((Uint32)atoi(colon + 11));
+        if (!strncmp(colon + 1, "filedrop ", 9))
+            api->destroy(api, entities[atoi(colon + 10)]);
     }
 }
 
@@ -188,6 +203,19 @@ BRIDGE_NATIVE(early)
 
 static uint32_t seen_list;
 
+static void say_result(const bridge_api_t *api, uint32_t k)
+{
+    uint32_t at = bridge_native_find_value(api, entities[k],
+        game_files_slots.result);
+    const ideatek_file_result_t *r = (const void *)(api->shared_base + at);
+    char data[512];
+
+    show_text(data, sizeof(data), api, r->data);
+    bridge_native_say(api, BRIDGE_LOG_INFO, "r%u seen %u %s size %llu [%s]",
+        game.round + 1, k, STATUSES[r->status % 6], (unsigned long long)r->size,
+        data);
+}
+
 BRIDGE_NATIVE(seen_result)
 {
     const bridge_list_t *list = bridge_native_get_list(api, seen_list);
@@ -196,8 +224,7 @@ BRIDGE_NATIVE(seen_result)
     for (uint32_t i = 0; i < list->count; i++)
         for (uint32_t k = 0; k < entity_count; k++)
             if (entities[k] == t[i].id)
-                bridge_native_say(api, BRIDGE_LOG_INFO, "r%u seen %u",
-                    game.round + 1, k);
+                say_result(api, k);
     return (0);
 }
 
