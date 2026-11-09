@@ -145,9 +145,9 @@ kind = "sdl_test"
 part = "sdl3"
 test = true
 folder = "sdl3_test"
-sources = ["{sdl_common}", "{sdl_libm}", "{sdl_sources}", "tests/platform_abstraction/sdl3/test_video/test_video.c"]
+sources = ["{sdl_common}", "{sdl_libm}", "{sdl_sources}", "tests/platform_abstraction/sdl3/test_video/test_video.c", "tests/platform_abstraction/sdl3/test_audio/test_audio.c"]
 include = ["{sdl_root}/include/build_config", "{sdl_root}/include", "{sdl_root}/src"]
-defines = ["{sdl_defines}", "SDL_VIDEO_DRIVER_IDEATEK_TEST=1"]
+defines = ["{sdl_defines}", "SDL_VIDEO_DRIVER_IDEATEK_TEST=1", "SDL_AUDIO_DRIVER_IDEATEK_TEST=1"]
 flags = ["{sdl_flags}", "{sdl_system}"]
 
 [[artifact]]
@@ -179,6 +179,11 @@ manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 [[artifact.variants]]
 name = "sdl3_game_files"
 defines = ["GAME_FILES"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
+name = "sdl3_game_audio"
+defines = ["GAME_AUDIO"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]

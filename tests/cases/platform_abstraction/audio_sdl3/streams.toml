@@ -1,0 +1,697 @@
+[[case]]
+name = "a playback request on the default opens a stream in the format of the device"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state device [Speakers] rate 48000 ch 2 queued 0 wanted 4800 sum 4800 dropped 0 running"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,44100,4000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,44100,4800,2"
+'''
+
+[[case]]
+name = "a request on a chosen device opens the stream on it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state device [Headset] rate 44100 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 running"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,chosen,Headset,48000,1000,2"
+'''
+
+[[case]]
+name = "a chosen device that is not there gives the default, the status fell back and its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["the device of ", "r3 playback state device [Speakers] rate 48000 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 fell_back"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,chosen,Nothing,48000,1000,2"
+'''
+
+[[case]]
+name = "a chosen device of the other direction gives the default and the status fell back"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state device [Speakers] rate 48000 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 fell_back"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,chosen,Microphone,48000,1000,2"
+'''
+
+[[case]]
+name = "a second request of a direction gets no stream, with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["asks for a second playback stream, and gets none"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audiosecond p,default,-,48000,1000,2"
+'''
+
+[[case]]
+name = "a request with a field outside its range opens no stream, with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = [": rate 100 is outside 8000 to 384000"], matches_not = ["playback state"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,100,1000,2"
+'''
+
+[[case]]
+name = "a recording request opens a stream, and the recorded frames come in batches"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1" }
+claims = { status = 0, has = ["recording state device [Microphone] rate 48000 ch 1 queued 0 wanted 0 sum 0"], matches = ["r[345] recorded at 0 frames [1-9][0-9]* first 0.00"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq r,chosen,Webcam Mic,48000,65536,1|3:stall 300|4:stall 300"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq r,default,-,48000,65536,1|3:stall 300|4:stall 300"
+'''
+
+[[case]]
+name = "the recorded frames over ahead drop the oldest"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1" }
+claims = { status = 0, matches = ["recorded at [1-9][0-9]* frames 10", "recording state .* dropped [1-9][0-9]* running"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq r,default,-,48000,65536,1|3:stall 1500"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq r,default,-,48000,10,1|3:stall 1500"
+'''
+
+[[case]]
+name = "a recording stream with no new frame attaches no batch"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 recording state device [Microphone] rate 48000 ch 1 queued 0 wanted 0 sum 0 dropped 0 running"], matches_not = ["recorded at"] }
+false = { env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1" }, files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq r,default,-,48000,100,1|3:stall 300"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq r,default,-,48000,100,1"
+'''
+
+[[case]]
+name = "a device that goes leaves a stream on another device as it is"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r4 playback state device [Speakers] rate 48000 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 running"], matches_not = ["r4 device \\[Headset"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audiodevices a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audiodevices a,Speakers,p,1,48000,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+'''
+
+[[case]]
+name = "a new direction moves the entity to the other stream"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state device [Speakers] rate 48000 ch 2", "r4 playback state device [Microphone] rate 48000 ch 1 queued 0 wanted 0 sum 0 dropped 0 running"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq r,default,-,48000,100,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq r,default,-,48000,100,1,onp"
+'''
+
+[[case]]
+name = "a new chosen device moves the stream to it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state device [Headset] rate 44100", "r4 playback state device [Speakers] rate 48000 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 running"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,chosen,Headset,48000,1000,2|3:audioreq p,chosen,Headset,48000,1000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,chosen,Headset,48000,1000,2|3:audioreq p,chosen,Speakers,48000,1000,2"
+'''
+
+[[case]]
+name = "new channels alone set the format of the stream"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r5 playback state device [Speakers] rate 48000 ch 2 queued 100 wanted 900 sum 1000 dropped 0 running"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq p,default,-,48000,1000,2|4:audioframes 100,,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq p,default,-,48000,1000,1|4:audioframes 100,,1"
+'''
+
+[[case]]
+name = "a recording device that does not open gives the status denied, with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;c,Microphone,r,1,48000,1,denied", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["no recording stream: ", "r3 recording state device [none] rate 0 ch 0 queued 0 wanted 0 sum 0 dropped 0 denied"] }
+false = { env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq r,default,-,48000,100,1"
+'''
+
+[[case]]
+name = "a playback device that does not open gives the status no device, with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+fail = { SDL_OpenAudioDeviceStream = 1 }
+claims = { status = 0, has = ["no playback stream: ", "r3 playback state device [none] rate 0 ch 0 queued 0 wanted 0 sum 0 dropped 0 no_device"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2"
+'''
+
+[[case]]
+name = "the stream of a device that goes opens again on the default, with the status fell back"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state device [Headset] rate 44100 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 running", "r4 playback state device [Speakers] rate 48000 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 fell_back"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,chosen,Headset,48000,1000,2|3:audiodevices a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,chosen,Headset,48000,1000,2|3:audiodevices a,Speakers,p,1,48000,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+'''
+
+[[case]]
+name = "a new rate or new channels set the format of the stream"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r5 playback state device [Speakers] rate 48000 ch 2 queued 100 wanted 900 sum 1000 dropped 0 running"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq p,default,-,22050,1000,2|4:audioframes 100,,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq p,default,-,22050,1000,1|4:audioframes 100,,1"
+'''
+
+[[case]]
+name = "a new ahead changes wanted alone"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state device [Speakers] rate 48000 ch 2 queued 0 wanted 1000 sum 1000", "r4 playback state device [Speakers] rate 48000 ch 2 queued 0 wanted 2000 sum 2000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq p,default,-,48000,1000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq p,default,-,48000,2000,2"
+'''
+
+[[case]]
+name = "a new target closes the stream and opens it on the chosen device"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state device [Speakers] rate 48000", "r4 playback state device [Headset] rate 44100 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 running"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq p,default,-,48000,1000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audioreq p,chosen,Headset,48000,1000,2"
+'''
+
+[[case]]
+name = "the entity of a stream that leaves closes the stream, and a new request opens one"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state", "r5 playback state device [Speakers] rate 48000 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 running"], matches_not = ["r4 playback state"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|4:audioreq p,default,-,48000,1000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audiodrop p|4:audioreq p,default,-,48000,1000,2"
+'''
+
+[[case]]
+name = "a stream on the default follows a new default device"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 playback state device [Speakers] rate 48000", "r4 playback state device [Headset] rate 44100 ch 2 queued 0 wanted 1000 sum 1000 dropped 0 running"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audiodevices a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2|3:audiodevices a,Speakers,p,0,48000,2;b,Headset,p,1,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+'''
+
+[[case]]
+name = "a device whose format SDL3 does not give leaves the rate and the channels at 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+fail = { SDL_GetAudioDeviceFormat = 1 }
+claims = { status = 0, has = ["r3 playback state device [Speakers] rate 0 ch 0 queued 0 wanted 1000 sum 1000 dropped 0 running"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audioreq p,default,-,48000,1000,2"
+'''

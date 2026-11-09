@@ -22,3 +22,27 @@ diff --git a/src/video/SDL_video.c b/src/video/SDL_video.c
  #ifdef SDL_VIDEO_DRIVER_DUMMY
      &DUMMY_bootstrap,
  #ifdef SDL_INPUT_LINUXEV
+diff --git a/src/audio/SDL_audio.c b/src/audio/SDL_audio.c
+--- a/src/audio/SDL_audio.c
++++ b/src/audio/SDL_audio.c
+@@ -92,6 +92,9 @@
+ #ifdef SDL_AUDIO_DRIVER_QNX
+     &QSAAUDIO_bootstrap,
+ #endif
++#ifdef SDL_AUDIO_DRIVER_IDEATEK_TEST
++    &IDEATEK_TEST_AUDIO_bootstrap,
++#endif
+ #ifdef SDL_AUDIO_DRIVER_DISK
+     &DISKAUDIO_bootstrap,
+ #endif
+diff --git a/src/audio/SDL_sysaudio.h b/src/audio/SDL_sysaudio.h
+--- a/src/audio/SDL_sysaudio.h
++++ b/src/audio/SDL_sysaudio.h
+@@ -367,6 +367,7 @@
+ 
+ // Not all of these are available in a given build. Use #ifdefs, etc.
+ extern AudioBootStrap PRIVATEAUDIO_bootstrap;
++extern AudioBootStrap IDEATEK_TEST_AUDIO_bootstrap;
+ extern AudioBootStrap PIPEWIRE_PREFERRED_bootstrap;
+ extern AudioBootStrap PIPEWIRE_bootstrap;
+ extern AudioBootStrap PULSEAUDIO_bootstrap;

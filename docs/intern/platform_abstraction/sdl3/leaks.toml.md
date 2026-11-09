@@ -13,13 +13,14 @@ The release of the part `sdl3` holds it as `leaks.toml`, so a module of a differ
 | `SDL_CreateSystemCursor` | `SDL_DestroyCursor` |
 | `SDL_LoadPNG` | `SDL_DestroySurface` |
 | `SDL_OpenGamepad` | `SDL_CloseGamepad` |
+| `SDL_OpenAudioDeviceStream` | `SDL_DestroyAudioStream` |
 
 ## The memory of SDL3
 
 The kind `sdl3_memory` counts the memory that a call of SDL3 gives, and that `SDL_free` gives back.
-`SDL_GetWindows`, `SDL_GetDisplays`, `SDL_GetFullscreenDisplayModes` and `SDL_GetClipboardText` take one at their result.
+`SDL_GetWindows`, `SDL_GetDisplays`, `SDL_GetFullscreenDisplayModes`, `SDL_GetClipboardText`, `SDL_GetAudioPlaybackDevices` and `SDL_GetAudioRecordingDevices` take one at their result.
 `SDL_free` gives one back at its first argument.
-The memory is a kind and not a pair, because a pair has 1 function that gives back, and `SDL_free` gives back for 4 functions.
+The memory is a kind and not a pair, because a pair has 1 function that gives back, and `SDL_free` gives back for 6 functions.
 
 ## The windows
 
