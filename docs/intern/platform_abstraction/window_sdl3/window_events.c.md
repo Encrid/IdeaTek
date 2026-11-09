@@ -1,7 +1,7 @@
 # src/platform_abstraction/window_sdl3/window_events.c
 
 This file holds the system `events`, which runs in the first phase, and takes the events of SDL3 for the window module.
-It is the only code of the modules of SDL3 that pumps the queue of SDL3.
+It pumps the queue of SDL3, as the audio module does in its own round.
 
 ## A round
 
