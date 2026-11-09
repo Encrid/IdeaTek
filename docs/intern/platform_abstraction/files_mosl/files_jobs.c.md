@@ -36,6 +36,6 @@ Then the early result of the entity goes, and its watch stops: `docs/intern/plat
 | Function | Result |
 | --- | --- |
 | `free_job` | Gives a free job, or `nullptr`. |
-| `put_early` | Keeps an early result, or writes the line of a lost one. |
+| `put_early` | Keeps an early result, with the flag of a kept entity, or writes the line of a lost one. |
 | `drop_early` | Forgets the early result of an entity. |
 | `cancel_job` | Cancels the job, the early result and the watch of an entity. |

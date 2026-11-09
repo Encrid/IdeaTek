@@ -13,9 +13,11 @@ files_job_t *free_job(void)
     return (nullptr);
 }
 
-void put_early(const bridge_api_t *api, uint64_t entity, uint32_t status)
+void put_early(const bridge_api_t *api, uint64_t entity, uint32_t status,
+    bool keep)
 {
-    files_early_t early = { .entity = entity, .status = status };
+    files_early_t early = { .entity = entity, .status = status,
+        .keep = keep };
 
     if (files_module.early_count == FILES_EARLY) {
         bridge_native_say(api, BRIDGE_LOG_WARN,

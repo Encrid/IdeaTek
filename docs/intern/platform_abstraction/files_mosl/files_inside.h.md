@@ -41,7 +41,7 @@ The worker thread and the thread of the phases share `jobs`, `done`, `early`, `w
 
 A job is `FILES_FREE` before a request and after its result. A cancel turns a waiting job into a free one, and a running or done job into a canceled one: `docs/intern/platform_abstraction/files_mosl/files_jobs.c.md`.
 
-`files_early_t` is 1 result that the thread of the phases decides: its entity and its status.
+`files_early_t` is 1 result that the thread of the phases decides: its entity, its status, and `keep`. `keep` is `true` for the start of a watch, whose entity stays.
 `files_watch_t` is 1 watch: its entity, its `os_watch_t`, its path in the content storage, and whether the round before attached a change.
 `files_half_t` is the 2 halves of a block of bytes: its place, its size, the bytes used and the side of the round. The window module keeps its drops the same way.
 `files_action_t` is the function of 1 action of the worker thread: `docs/intern/platform_abstraction/files_mosl/files_work.c.md`.

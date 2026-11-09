@@ -9,10 +9,11 @@
 #include "files_inside.h"
 
 void publish(const bridge_api_t *api, uint64_t entity,
-    ideatek_file_result_t result)
+    ideatek_file_result_t result, bool keep)
 {
     BRIDGE_NATIVE_ATTACH(api, entity, RESULT, result);
-    files_module.gone[files_module.gone_count++] = entity;
+    files_module.gone[files_module.gone_count] = entity;
+    files_module.gone_count += !keep;
 }
 
 static void publish_job(const bridge_api_t *api, files_job_t *job)
@@ -27,7 +28,7 @@ static void publish_job(const bridge_api_t *api, files_job_t *job)
     result.data = put_bytes(api, job->data ? job->data : "",
         (fits & !canceled) * job->data_len);
     if (!canceled)
-        publish(api, job->entity, result);
+        publish(api, job->entity, result, false);
     free(job->data);
     job->data = nullptr;
     job->state = FILES_FREE;
@@ -45,7 +46,7 @@ static void take_results(const bridge_api_t *api)
     os_mutex_lock(files_module.lock);
     for (; i < files_module.early_count && has_room(api, bytes); i++) {
         result.status = (ideatek_file_status_t)early[i].status;
-        publish(api, early[i].entity, result);
+        publish(api, early[i].entity, result, early[i].keep);
     }
     memmove(early, early + i, (files_module.early_count - i) * sizeof(*early));
     files_module.early_count -= i;

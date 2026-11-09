@@ -28,10 +28,12 @@ static bool copy_setting(const bridge_api_t *api, const char *name,
     bool inside = (text.at >= h->arena_lo) & (text.at <= h->arena_hi)
         & (text.len <= h->arena_hi - text.at) & (text.len < FILES_PATH);
     uint32_t len = inside * text.len;
+    bool ok;
 
     memcpy(out, api->shared_base + text.at, len);
     out[len] = '\0';
-    if (inside && path_is_allowed(out))
+    ok = inside & path_is_allowed(out);
+    if (ok)
         return (true);
     bridge_native_say(api, BRIDGE_LOG_ERR, "%s: %.*s is outside the path rule",
         name, (int)len, out);
