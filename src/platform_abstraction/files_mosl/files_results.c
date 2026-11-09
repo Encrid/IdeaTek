@@ -22,11 +22,12 @@ static void publish_job(const bridge_api_t *api, files_job_t *job)
     bool canceled = job->state == FILES_CANCELED;
     bool fits = job->data_len <= half->size - half->used;
     uint32_t status = fits ? job->status : IDEATEK_FILE_STATUS_TOO_BIG;
+    bool ok = status == IDEATEK_FILE_STATUS_OK;
     ideatek_file_result_t result = { .size = job->size,
         .status = (ideatek_file_status_t)status };
 
     result.data = put_bytes(api, job->data ? job->data : "",
-        (fits & !canceled) * job->data_len);
+        (fits & !canceled & ok) * job->data_len);
     if (!canceled)
         publish(api, job->entity, result, false);
     free(job->data);

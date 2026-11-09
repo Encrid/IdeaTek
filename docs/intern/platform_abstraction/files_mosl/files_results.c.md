@@ -12,6 +12,7 @@ This file runs the system `results` in the first phase: it publishes the results
 4. The watches give their changes: `docs/intern/platform_abstraction/files_mosl/files_watch.c.md`.
 
 When the bytes of a result are more than the room left in the half, the status is `IDEATEK_FILE_STATUS_TOO_BIG`, and no bytes come.
+A result whose status is not `IDEATEK_FILE_STATUS_OK` carries no bytes, also when its job wrote some, for example the lines of a list that stopped.
 A result that has no room in `changes` waits for the next round, as the window module leaves a drop.
 
 ## The branches

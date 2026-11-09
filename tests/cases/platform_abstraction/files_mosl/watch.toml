@@ -127,7 +127,7 @@ script = "1:filereq content,watch,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 name = "a watch whose half has room for 1 line takes 1 change in a round"
 run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
 env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
-claims = { status = 0, matches = ["change 0 \\[w/new.txt"], matches_not = ["new.txt\\|w/new.txt"] }
+claims = { status = 0, matches = ["change 0 \\[w/[a-z]+.txt"], matches_not = ["w/[a-z]+.txt\\|w/[a-z]+.txt"] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
 rounds = 6
@@ -139,7 +139,7 @@ library = "{bb_native}/bridge_native"
 [module."ideatek_files_mosl:files@0.1.0".config]
 read_bytes = 4194304
 [module."test:game@1.0.0".config]
-script = "1:filereq content,watch,w,0|2:show_results|3:putfile {case}/host/content/w/new.txt,n|3:stall 1500|4:show_changes|5:stall 1500|6:show_changes"
+script = "1:filereq content,watch,w,0|2:show_results|3:putfile {case}/host/content/w/new.txt,n|3:putfile {case}/host/content/w/old.txt,o|3:stall 1500|4:show_changes|5:stall 1500|6:show_changes"
 ''' } }
 
 [case.folders]
@@ -166,7 +166,7 @@ library = "{bb_native}/bridge_native"
 [module."ideatek_files_mosl:files@0.1.0".config]
 read_bytes = 8200
 [module."test:game@1.0.0".config]
-script = "1:filereq content,watch,w,0|2:show_results|3:putfile {case}/host/content/w/new.txt,n|3:stall 1500|4:show_changes|5:stall 1500|6:show_changes"
+script = "1:filereq content,watch,w,0|2:show_results|3:putfile {case}/host/content/w/new.txt,n|3:putfile {case}/host/content/w/old.txt,o|3:stall 1500|4:show_changes|5:stall 1500|6:show_changes"
 '''
 
 [[case]]
