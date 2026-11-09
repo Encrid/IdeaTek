@@ -83,6 +83,16 @@ path = "src/platform_abstraction/sockets_gns/sockets_inside.h"
 why = "The declaration of sockets_module, the state of the native module between 2 calls."
 
 [[style.exception]]
+rule = "G4"
+path = "src/kernel/states_bridge/states_main.c"
+why = "states_module holds the slots of the systems of the native module between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/kernel/states_bridge/states_inside.h"
+why = "The declaration of states_module, the slots of the systems of the native module between 2 calls."
+
+[[style.exception]]
 rule = "F5"
 path = "src/platform_abstraction/sockets_gns/gns_flat.h"
 why = "The prototypes of the flat calls of GameNetworkingSockets keep the arguments of the library, and gns_layout checks them."

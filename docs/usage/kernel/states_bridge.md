@@ -38,7 +38,7 @@ An entity with `ideatek:StateScoped` leaves when 1 of these is true of the chain
 - Its state machine is itself a scoped entity that leaves. So the entities of a sub state go at the same barrier as the sub state.
 - Its state machine is destroyed, or carries no `ideatek:State`. Such an entity leaves in the first phase of the round after the one in which its state machine went.
 
-`clear` follows the chain of at most 8 state machines. A longer chain gets 1 line of the log, and the entity stays.
+`clear` follows a chain of at most 8 state machines. A longer chain gets 1 line of the log, and the entity stays.
 
 ### The deployment
 
@@ -56,6 +56,7 @@ An entity with `ideatek:StateScoped` leaves when 1 of these is true of the chain
 - `first` of the module is the phase that starts the round, in the map of the deployment.
 - A pair puts `ideatek_states_bridge:states:apply` after `ideatek_frame_sdl3:clock:round`, and before each reader of `ideatek:State` of the first phase.
 - The module takes the grants of the states module: `docs/extern/kernel/ideatek_states.h.md`, *The grants*.
+- The grants of `ideatek:StateRequest` and `ideatek:StateScoped` serve the detaches and the destroys: the module attaches neither.
 
 ### The messages
 
@@ -64,4 +65,4 @@ The module writes these lines:
 | Line | Cause |
 | --- | --- |
 | `no state machine for <entity>` | An entity with `ideatek:StateRequest` carries no `ideatek:State`. The module detaches the request. |
-| `the scoped chain of <entity> is deeper than 8` | The chain of the state machines of a scoped entity has more than 8 steps. The entity stays. |
+| `the scoped chain of <entity> is deeper than <depth>` | The chain of the state machines of a scoped entity has more than 8 steps. The entity stays. |
