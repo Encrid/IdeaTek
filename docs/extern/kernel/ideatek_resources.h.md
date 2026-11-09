@@ -171,7 +171,7 @@ The wait joins the events of 1 save into 1 reload, and it lets the writer end th
 `ideatek:ResourceReload` reloads the resource at once.
 
 A reload keeps the entity. `state` becomes `IDEATEK_LOAD_STATE_LOADING`, and the loader attaches its component again.
-The loader puts the new values on the labels that stay, and spawns an entity for each new label. A label that is gone gets `IDEATEK_RESOURCE_ERROR_NO_LABEL`.
+The loader puts the new values on the labels that stay, and attaches `ideatek:ResourceLabel` to each of them again. It spawns an entity for each new label. A label that is gone gets `IDEATEK_RESOURCE_ERROR_NO_LABEL`.
 
 ## The settings
 

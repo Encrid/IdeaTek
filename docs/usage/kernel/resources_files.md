@@ -27,11 +27,11 @@ The component of its settings is `ideatek_resources_files:Settings`. It holds th
 | `max_variables` | `uint32_t` | 64 | 1 to 4096 | The variables of the paths. |
 | `max_reads` | `uint32_t` | 64 | 1 to 65536 | The reads of files that run at one time. |
 | `max_labels` | `uint32_t` | 4096 | 1 to 1048576 | The sub-resources at one time. |
-| `path_bytes` | `uint32_t` | 256 | 16 to 4096 | The bytes of the path of a resource, with its source and its label. |
+| `path_bytes` | `uint32_t` | 256 | 16 to 4096 | The bytes of the path of a resource, with its source, its label and its type. |
 | `settings_bytes` | `uint32_t` | 256 | 0 to 65536 | The bytes of the `settings` of a resource, from its first load or its meta file. |
 
-A load above `max_resources`, `max_uses` or `max_labels`, or with a path or settings above their bytes, gets `IDEATEK_RESOURCE_ERROR_NO_ROOM`.
-A loader, a source or a variable above its bound is not taken, and the log gets 1 line.
+A load above `max_resources`, or with a path or settings above their bytes, gets `IDEATEK_RESOURCE_ERROR_NO_ROOM`.
+A use entity, a loader, a source, a variable or a label above its bound is not taken, and the log gets 1 line.
 
 ### The reads
 
@@ -70,9 +70,9 @@ A use entity whose `owner` is dead is destroyed in that round, with the effects 
 | --- | --- | --- |
 | `pinned` | `false` | The module calls no library: any thread of Bridge can run it. |
 | `reloadable` | `false` | The tables of the module are in its persistent arena, but its reload is not tested. |
-| `spawns` | 80 | 1 entity for each read that runs, up to `max_reads`, and 1 for the watch of each source, up to `max_sources`. A larger bound needs a larger `spawns`. |
+| `spawns` | 4176 | 1 entity for each resource and each read that runs, and 1 for the watch of each source: `max_resources` + `max_reads` + `max_sources`. A larger bound needs a larger `spawns`. |
 | `changes` | 65536 | The handles, the states, the bytes and the tags that a round attaches, plus its destroys of the resources that go. |
-| `persistent` | 7077888 | `load_bytes` of the contract, plus 2883584 for the 7 tables at their defaults. A larger bound needs a larger `persistent`. |
+| `persistent` | 7602176 | `load_bytes` of the contract, plus 3407872 for the 6 tables, the text slots and the 3 hash maps at their defaults. A larger bound needs a larger `persistent`. |
 | `scratch` | 16384 | What `init` declares, and the lines of the log. |
 | `log_ring` | 2048 | Each line of the log takes 32 bytes of the ring. |
 | `spans` | 16384 | The spans of its queries, the columns of its types and the lists of its observers. |
@@ -88,10 +88,14 @@ The module writes these lines:
 | Line | Cause |
 | --- | --- |
 | `the meta file of <path> is refused at line <n>` | A line of the meta file is outside the subset of *The meta files*. |
+| `no room for the use <entity>` | A use entity above `max_uses`. The use gets no handle. |
+| `no room for the resource <path>` | A load above `max_resources`, when no record is free for its failure. The use gets no handle. |
 | `no room for the loader <name>` | A loader above `max_loaders`. The loader is not taken. |
+| `no room for the label <label>` | A sub-resource above `max_labels`. The sub-resource gets no `ideatek:Resource`. |
 | `no room for the source <name>` | A source above `max_sources`. The source is not taken. |
 | `no room for the variable <name>` | A variable above `max_variables`. The variable is not taken. |
 | `2 sources have the name <name>` | The module keeps the first, as the contract says. |
+| `the source name <name> is refused` | The name of a source module has a character outside `a` to `z`, `0` to `9` and `_`. The source is not taken. |
 | `2 variables have the name <name>` | The module keeps the first, as the contract says. |
 | `no clock: a change reloads in the round after` | `hot_reload` is `true` and the deployment has no `ideatek:Frame`. |
 | `no watch of <folder>: <status>` | The files module refused the watch of a source folder. The files of that source do not reload. |
