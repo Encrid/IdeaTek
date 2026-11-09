@@ -34,7 +34,11 @@ typedef struct {
 
     #pragma pack(pop)
 
-    #pragma pack(push, 8)
+    #if defined(_WIN32)
+        #pragma pack(push, 8)
+    #else
+        #pragma pack(push, 4)
+    #endif
 
 typedef struct {
     int32_t value;

@@ -12,20 +12,22 @@ No source includes a header of GameNetworkingSockets. Only this header names its
 
 ## The structs
 
-| Struct | Of GameNetworkingSockets | Bytes | Packing |
-| --- | --- | --- | --- |
-| `gns_ip_t` | `SteamNetworkingIPAddr` | 18 | 1 |
-| `gns_identity_t` | `SteamNetworkingIdentity` | 136 | 8 |
-| `gns_config_t` | `SteamNetworkingConfigValue_t` | 16 | 8 |
-| `gns_info_t` | `SteamNetConnectionInfo_t` | 696 | 8 |
-| `gns_status_t` | `SteamNetConnectionRealTimeStatus_t` | 120 | 8 |
-| `gns_lane_t` | `SteamNetConnectionRealTimeLaneStatus_t` | 64 | 8 |
-| `gns_message_t` | `SteamNetworkingMessage_t` | 232 | 8 |
-| `gns_changed_t` | `SteamNetConnectionStatusChangedCallback_t` | 704 | 8 |
-| `gns_session_request_t` | `SteamNetworkingMessagesSessionRequest_t` | 136 | 8 |
-| `gns_session_failed_t` | `SteamNetworkingMessagesSessionFailed_t` | 696 | 8 |
+| Struct | Of GameNetworkingSockets | Packing |
+| --- | --- | --- |
+| `gns_ip_t` | `SteamNetworkingIPAddr` | 1 |
+| `gns_identity_t` | `SteamNetworkingIdentity` | 1 |
+| `gns_config_t` | `SteamNetworkingConfigValue_t` | The pack of the system. |
+| `gns_info_t` | `SteamNetConnectionInfo_t` | The pack of the system. |
+| `gns_status_t` | `SteamNetConnectionRealTimeStatus_t` | The pack of the system. |
+| `gns_lane_t` | `SteamNetConnectionRealTimeLaneStatus_t` | The pack of the system. |
+| `gns_message_t` | `SteamNetworkingMessage_t` | The pack of the system. |
+| `gns_changed_t` | `SteamNetConnectionStatusChangedCallback_t` | The pack of the system. |
+| `gns_session_request_t` | `SteamNetworkingMessagesSessionRequest_t` | 1 |
+| `gns_session_failed_t` | `SteamNetworkingMessagesSessionFailed_t` | 1 |
 
-The fields keep the names of GameNetworkingSockets without `m_`, in snake case. The bytes are the ones of the 6 targets, which `gns_layout` proves.
+The pack of the system is 8 on Windows and 4 on Linux and macOS. `steamnetworkingtypes.h` packs its structs with `VALVE_CALLBACK_PACK_LARGE` or `VALVE_CALLBACK_PACK_SMALL` by the system, as the Steamworks SDK does. So a struct with a field of 8 bytes after a field of 4 bytes has a different size and different offsets on Windows.
+
+The fields keep the names of GameNetworkingSockets without `m_`, in snake case. `gns_layout` proves the size, the alignment and each offset on each of the 6 targets.
 `gns_identity_t` holds `type`, `size` and a union of 128 bytes: the text of a generic string, the bytes of a generic identity, or `gns_ip_t`.
 
 ## The constants
