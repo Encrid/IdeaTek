@@ -41,18 +41,6 @@ typedef struct {
     #endif
 
 typedef struct {
-    int32_t value;
-    int32_t type;
-    union {
-        int32_t i32;
-        int64_t i64;
-        float f;
-        const char *text;
-        void *pointer;
-    } u;
-} gns_config_t;
-
-typedef struct {
     gns_identity_t identity_remote;
     int64_t user_data;
     uint32_t listen_socket;
@@ -95,6 +83,26 @@ typedef struct {
     uint32_t reserved[10];
 } gns_lane_t;
 
+typedef struct {
+    uint32_t connection;
+    gns_info_t info;
+    int32_t old_state;
+} gns_changed_t;
+
+    #pragma pack(pop)
+
+typedef struct {
+    int32_t value;
+    int32_t type;
+    union {
+        int32_t i32;
+        int64_t i64;
+        float f;
+        const char *text;
+        void *pointer;
+    } u;
+} gns_config_t;
+
 typedef struct gns_message_t gns_message_t;
 
 struct gns_message_t {
@@ -113,14 +121,6 @@ struct gns_message_t {
     uint16_t lane;
     uint16_t pad1;
 };
-
-typedef struct {
-    uint32_t connection;
-    gns_info_t info;
-    int32_t old_state;
-} gns_changed_t;
-
-    #pragma pack(pop)
 
     #pragma pack(push, 1)
 
