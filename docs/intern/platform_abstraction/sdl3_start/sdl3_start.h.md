@@ -5,7 +5,7 @@ It includes `SDL3/SDL_init.h` for `SDL_InitFlags`, and `stddef.h` for `size_t`.
 
 ## The part
 
-The package of the part is `BL-IdeaTek-SDL3-Start`: `docs/extern/platform_abstraction/sdl3_start/readme.md`.
+The package of the part is `BL-IdeaTek-SDL3-Start`: `docs/usage/platform_abstraction/sdl3_start.md`.
 Each module that starts a subsystem of SDL3 links the archive, for example the window module and the input module.
 Thus each module holds its own copy of the code, and the shared library of the part `sdl3` holds the one state of SDL3.
 
@@ -17,7 +17,7 @@ Thus the functions stay out of the exports of each module, and 2 modules never c
 
 ## The rules of a caller
 
-`docs/extern/platform_abstraction/sdl3_start/readme.md`, *Usage*, gives the rules of a caller.
+`docs/usage/platform_abstraction/sdl3_start.md`, *Usage*, gives the rules of a caller.
 
 ## Functions
 

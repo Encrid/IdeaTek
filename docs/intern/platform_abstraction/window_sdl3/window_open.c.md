@@ -19,7 +19,7 @@ The window stays hidden until step 6. Thus the user does not see the window move
 `SDL_WINDOW_HIGH_PIXEL_DENSITY` asks for all the pixels of the display, so `pixel_width` can be more than `width`.
 
 The row of the driver of macOS has `SDL_WINDOW_METAL` in `flags`, and each other row has 0.
-Thus the window names a graphics API on macOS, and SDL3 loads no GL: `docs/extern/platform_abstraction/sdl3/readme.md`, *Usage*.
+Thus the window names a graphics API on macOS, and SDL3 loads no GL: `docs/usage/platform_abstraction/sdl3.md`, *Usage*.
 On the other systems, a window with no graphics flag loads no library of a graphics API.
 The module makes no surface and no context: the GPU module makes the surface from the handles.
 

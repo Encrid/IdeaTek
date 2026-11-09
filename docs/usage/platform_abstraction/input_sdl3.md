@@ -10,7 +10,7 @@ In `BM-IdeaTek-Input-SDL3`, each folder holds the module `input_sdl3.dll`, `inpu
 Each folder of `BM-IdeaTek-Input-SDL3.zip` also holds this readme and the licence.
 
 The module loads the shared library of `BL-IdeaTek-SDL3` from the folder of the module.
-Thus a deployment puts the module, the window module and that library in 1 folder: `docs/extern/platform_abstraction/sdl3/readme.md`.
+Thus a deployment puts the module, the window module and that library in 1 folder: `docs/usage/platform_abstraction/sdl3.md`.
 A project names the zip of `BM-IdeaTek-Input-SDL3` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
 ## Usage

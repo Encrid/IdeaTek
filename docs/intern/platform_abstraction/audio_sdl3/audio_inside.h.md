@@ -6,7 +6,7 @@ It holds the slots, the limits and the types of the module, with the functions s
 
 ## The module
 
-The part fills the role of the audio module: `docs/extern/platform_abstraction/audio_sdl3/readme.md`.
+The part fills the role of the audio module: `docs/usage/platform_abstraction/audio_sdl3.md`.
 Its identity is `ideatek_audio_sdl3:audio@0.1.0`, and its package is `BM-IdeaTek-Audio-SDL3`.
 It is pinned: the pump of the events of SDL3 runs on the thread of the phases, while SDL3 owns its audio thread.
 It is not reloadable: the devices and the streams live in SDL3, outside the storage of Bridge.

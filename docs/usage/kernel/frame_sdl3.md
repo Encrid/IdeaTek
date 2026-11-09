@@ -10,7 +10,7 @@ In `BM-IdeaTek-Frame-SDL3`, each folder holds the module `frame_sdl3.dll`, `fram
 Each folder of `BM-IdeaTek-Frame-SDL3.zip` also holds this readme and the licence.
 
 Like the window module, it links `BL-IdeaTek-SDL3` by its name, and expects that shared library in its own folder.
-So the deployment puts the module in the folder of that library: `docs/extern/platform_abstraction/sdl3/readme.md`.
+So the deployment puts the module in the folder of that library: `docs/usage/platform_abstraction/sdl3.md`.
 The module starts no subsystem of SDL3, because the timer of SDL3 needs none.
 A project names the zip of `BM-IdeaTek-Frame-SDL3` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 

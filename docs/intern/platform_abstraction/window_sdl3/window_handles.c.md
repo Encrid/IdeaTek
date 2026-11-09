@@ -34,7 +34,7 @@ Thus a reader never gets a kind of surface with a handle of 0.
 
 The GPU module makes its surface from the handles, and the surface must go before the window.
 Bridge calls the `shutdown` of each module in the order of the loads: https://github.com/Encrid/Bridge/blob/v0.5.0/docs/extern/bridge.h.md#bridge_destroy.
-Thus the GPU module loads first: `docs/extern/platform_abstraction/window_sdl3/readme.md`, *The deployment*.
+Thus the GPU module loads first: `docs/usage/platform_abstraction/window_sdl3.md`, *The deployment*.
 
 ## The branches
 

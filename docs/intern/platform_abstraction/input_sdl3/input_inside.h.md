@@ -6,7 +6,7 @@ It holds the slots, the limits, the types, and the functions that the sources sh
 
 ## The module
 
-The part fills the role of the input module: `docs/extern/platform_abstraction/input_sdl3/readme.md`.
+The part fills the role of the input module: `docs/usage/platform_abstraction/input_sdl3.md`.
 Its identity is `ideatek_input_sdl3:input@0.1.0`, and its package is `BM-IdeaTek-Input-SDL3`.
 It is pinned, because SDL3 runs its loop of events on the main thread of macOS.
 Bridge cannot reload it: the gamepads and the cursors of SDL3 live outside the storage of Bridge.

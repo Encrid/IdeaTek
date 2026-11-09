@@ -6,7 +6,7 @@ It gives the slots, the limits, the types of the module, and the functions that 
 
 ## The module
 
-The part fills the role of the window module, with the clipboard: `docs/extern/platform_abstraction/window_sdl3/readme.md`.
+The part fills the role of the window module, with the clipboard: `docs/usage/platform_abstraction/window_sdl3.md`.
 Its identity is `ideatek_window_sdl3:window@0.1.0`, and its package is `BM-IdeaTek-Window-SDL3`.
 It is pinned, because SDL3 drives the windows and the events on 1 thread, and macOS needs the main thread.
 It is not reloadable, because SDL3 keeps the window outside of the storage of Bridge.
@@ -112,7 +112,7 @@ The exports of a module get only the API of Bridge, so the state of SDL3 between
 
 Each source writes its messages with `bridge_native_say` of BB-Native.
 Thus `bridge_native_say` is the writer of the messages of the code: `docs/contributing/tests.md`, *The messages of the code*.
-The readme of the part quotes each message: `docs/extern/platform_abstraction/window_sdl3/readme.md`, *The messages*.
+The readme of the part quotes each message: `docs/usage/platform_abstraction/window_sdl3.md`, *The messages*.
 
 ## Functions
 
