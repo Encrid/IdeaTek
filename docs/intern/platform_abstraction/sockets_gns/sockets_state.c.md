@@ -15,7 +15,7 @@ This file fills `ideatek:ConnectionState` from GameNetworkingSockets, and attach
 | `ping`, `quality_local`, `quality_remote`, `in_bytes`, `out_bytes`, `in_packets`, `out_packets`, `send_rate`, `max_jitter`, `queue_time`, `pending_reliable`, `pending_unreliable`, `sent_unacked_reliable` | The real time status, field by field. |
 | `failed_sends` | The count of the slot, which the round empties after the attach. |
 
-For a session, the info and the status come from `gns_session_info` with the identity of the peer, and the handle is not used.
+For a session, the info and the status come from `GetSessionConnectionInfo` with the identity of the peer, and the handle is not used.
 A connection whose handle GameNetworkingSockets forgot, after a close or an identity change, keeps its last state. Only `failed_sends` can change.
 
 `attach_state` compares the state with `last` of the slot, byte by byte. A state that changed goes to the entity, and into `last`.

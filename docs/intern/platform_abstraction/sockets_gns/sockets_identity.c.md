@@ -11,7 +11,7 @@ The first round calls it with `ip:::1`: `docs/intern/platform_abstraction/socket
 
 The observer `identity` gets each write of `ideatek:IdentityRequest` on the sockets entity:
 
-1. `gns_identity_parse` reads `identity.text`. A text that GameNetworkingSockets refuses writes `the identity <text> is refused`, and nothing changes.
+1. `SteamAPI_SteamNetworkingIdentity_ParseString` reads `identity.text`. A text that GameNetworkingSockets refuses writes `the identity <text> is refused`, and nothing changes.
 2. `stop_all` gives each connection its problem and each listen socket its failure: `docs/intern/platform_abstraction/sockets_gns/sockets_close.c.md`.
 3. GameNetworkingSockets stops, and `start_gns` starts it again with the identity. When it refuses, the module writes `no sockets: <reason>` and is broken.
 4. `apply_settings` gives the settings again, because the stop forgot them: `docs/intern/platform_abstraction/sockets_gns/sockets_config.c.md`.
