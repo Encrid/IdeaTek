@@ -25,3 +25,77 @@ diff --git a/include/build_config/SDL_build_config.h b/include/build_config/SDL_
 -#endif /* platform config */
 -
  #ifdef USING_GENERATED_CONFIG_H
+diff --git a/src/audio/SDL_audio.c b/src/audio/SDL_audio.c
+--- a/src/audio/SDL_audio.c
++++ b/src/audio/SDL_audio.c
+@@ -1631,6 +1631,19 @@
+     return result;
+ }
+ 
++// IdeaTek: the physical device that is the default of a direction, or 0.
++SDL_AudioDeviceID SDL_GetDefaultAudioDeviceID(bool recording)
++{
++    SDL_AudioDeviceID devid = 0;
++
++    if (SDL_GetCurrentAudioDriver()) {
++        SDL_LockRWLockForReading(current_audio.subsystem_rwlock);
++        devid = recording ? current_audio.default_recording_device_id : current_audio.default_playback_device_id;
++        SDL_UnlockRWLock(current_audio.subsystem_rwlock);
++    }
++    return devid;
++}
++
+ bool SDL_GetAudioDeviceFormat(SDL_AudioDeviceID devid, SDL_AudioSpec *spec, int *sample_frames)
+ {
+     CHECK_PARAM(!spec) {
+diff --git a/include/SDL3/SDL_audio.h b/include/SDL3/SDL_audio.h
+--- a/include/SDL3/SDL_audio.h
++++ b/include/SDL3/SDL_audio.h
+@@ -603,6 +603,18 @@
+ extern SDL_DECLSPEC const char * SDLCALL SDL_GetAudioDeviceName(SDL_AudioDeviceID devid);
+ 
+ /**
++ * Get the physical audio device that is the default of a direction.
++ *
++ * IdeaTek adds this call to SDL3. The result is 0 before the audio starts,
++ * and when the direction has no device.
++ *
++ * \param recording true for the default recording device, false for the
++ *                  default playback device.
++ * \returns the device ID of the default physical device, or 0.
++ */
++extern SDL_DECLSPEC SDL_AudioDeviceID SDLCALL SDL_GetDefaultAudioDeviceID(bool recording);
++
++/**
+  * Get the current audio format of a specific audio device.
+  *
+  * For an opened device, this will report the format the device is currently
+diff --git a/src/dynapi/SDL_dynapi_procs.h b/src/dynapi/SDL_dynapi_procs.h
+--- a/src/dynapi/SDL_dynapi_procs.h
++++ b/src/dynapi/SDL_dynapi_procs.h
+@@ -1305,4 +1305,5 @@
+ SDL_DYNAPI_PROC(SDL_Surface*,SDL_LoadSurface_IO,(SDL_IOStream *a,bool b),(a,b),return)
+ SDL_DYNAPI_PROC(SDL_Surface*,SDL_LoadSurface,(const char *a),(a),return)
+ SDL_DYNAPI_PROC(bool,SDL_SetWindowFillDocument,(SDL_Window *a,bool b),(a,b),return)
++SDL_DYNAPI_PROC(SDL_AudioDeviceID,SDL_GetDefaultAudioDeviceID,(bool a),(a),return)
+ 
+diff --git a/src/dynapi/SDL_dynapi_overrides.h b/src/dynapi/SDL_dynapi_overrides.h
+--- a/src/dynapi/SDL_dynapi_overrides.h
++++ b/src/dynapi/SDL_dynapi_overrides.h
+@@ -1297,4 +1297,5 @@
+ #define SDL_LoadSurface_IO SDL_LoadSurface_IO_REAL
+ #define SDL_LoadSurface SDL_LoadSurface_REAL
+ #define SDL_SetWindowFillDocument SDL_SetWindowFillDocument_REAL
++#define SDL_GetDefaultAudioDeviceID SDL_GetDefaultAudioDeviceID_REAL
+ 
+diff --git a/src/dynapi/SDL_dynapi.sym b/src/dynapi/SDL_dynapi.sym
+--- a/src/dynapi/SDL_dynapi.sym
++++ b/src/dynapi/SDL_dynapi.sym
+@@ -1271,6 +1271,7 @@
+     SDL_LoadSurface_IO;
+     SDL_LoadSurface;
+     SDL_SetWindowFillDocument;
++    SDL_GetDefaultAudioDeviceID;
+     # extra symbols go here (don't modify this line)
+   local: *;
+ };

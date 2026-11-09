@@ -30,5 +30,6 @@ The hints come before the first open of a device, so each device of the module g
 | Function | Result |
 | --- | --- |
 | `copy_name` | Copies `stream_name` into `name`, or writes its line. |
+| `set_hints` | Sets the hints of the frames and of the name of the streams. |
 | `list_direction` | Gives an entity to each device of a direction, or writes the line of the list. |
 | `start_audio` | Runs the steps of the first round. Gives `false` when the module is broken. |

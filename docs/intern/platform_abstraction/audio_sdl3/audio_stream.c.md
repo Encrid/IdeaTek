@@ -48,8 +48,8 @@ When the entity leaves, the count, the dropped frames and the last state go to 0
 `apply_stream` runs in each round for each stream:
 
 1. A stream that is not `pending` and not `lost` changes nothing.
-2. A pending request is read with `bridge_native_find_value`, and checked with `check_request`. A fault writes the line of the request, and the stream stays as it was.
-3. A new `direction`, `target` or `device`, or a lost device, closes the stream and opens it again with `open_stream`.
+2. A pending request is read and checked by `read_request` of `docs/intern/platform_abstraction/audio_sdl3/audio_request.c.md`. A fault leaves the stream as it was.
+3. A new `target` or `device`, or a lost device, closes the stream and opens it again with `open_stream`. A new `direction` left the old stream in the observer: `docs/intern/platform_abstraction/audio_sdl3/audio_request.c.md`.
 4. A new `rate` or new `channels` on an open stream set the format of the stream with `SDL_SetAudioStreamFormat`.
 5. A new `ahead` changes `wanted` alone, in the state of the round.
 
@@ -66,7 +66,8 @@ A lost stream opens again on the default, with `IDEATEK_AUDIO_STATUS_FELL_BACK`.
 | SDL3 refuses the open of a recording. | The line of the stream, and the status denied. |
 | A field outside its range. | The line of the request, and no change. |
 | A new rate or new channels. | The format of the stream changes. |
-| A new target, device or direction. | The stream closes and opens again. |
+| A new target or device. | The stream closes and opens again. |
+| A new direction. | The entity leaves its stream, and the other stream opens for it. |
 | The device of the stream goes. | The stream opens again on the default, and the status is fell back. |
 | The entity of the stream leaves. | The stream closes. |
 
@@ -77,5 +78,5 @@ A lost stream opens again on the default, with `IDEATEK_AUDIO_STATUS_FELL_BACK`.
 | `pick_device` | Gives the id that a stream opens, and sets its status. |
 | `open_stream` | Opens the stream of SDL3 for a request. Gives `false` when SDL3 refuses. |
 | `close_stream` | Destroys the stream of SDL3, and its logical device. |
-| `read_request` | Reads and checks the pending request of a stream. Gives `false` with a fault. |
+| `needs_open` | Gives `true` when a request or a lost device needs a new stream. |
 | `apply_stream` | Applies a pending request, or opens a lost stream again. |

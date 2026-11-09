@@ -81,6 +81,7 @@ The module writes these lines:
 | `the entity <id> asks for a second <direction> stream, and gets none` | A second entity gets `ideatek:AudioRequest` of a direction that has a stream. |
 | `the request of <id>: <field> <value> is outside <range>` | A field of the request is outside its range. No stream opens. |
 | `no <direction> stream: <reason>` | SDL3 does not open the stream. The status is `IDEATEK_AUDIO_STATUS_NO_DEVICE` for a playback, and `IDEATEK_AUDIO_STATUS_DENIED` for a recording. |
+| `<setting>: a text of <count> bytes is outside <range>` | `stream_name` is empty, or too long, or outside the arena of the module. The system fails in each round. |
 | `the device of <id> is not there, so the stream uses the default` | The chosen device went, or is not a device of the direction. The status is `IDEATEK_AUDIO_STATUS_FELL_BACK`. |
 
 A setting outside its range writes the line that `readme.md`, *The contracts*, states.
