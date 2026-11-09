@@ -1,0 +1,186 @@
+[parts.gns]
+name = "BL-IdeaTek-GameNetworkingSockets"
+folder = "platform_abstraction/gns"
+uses = []
+third_party = ["gns", "protobuf", "libsodium"]
+
+[compose.gns]
+part = "gns"
+from = "{gns_root}/include"
+headers = ["steam/*.h"]
+into = "include"
+
+[[source]]
+name = "gns"
+url = "https://github.com/ValveSoftware/GameNetworkingSockets/archive/refs/tags/v1.6.1.zip"
+sha256 = "3f8bee4b8e7bad6dfc111db1967bc1727c97e94e795d786bccf3a21e0c89f5bc"
+into = "build/third_party/gns"
+top = "GameNetworkingSockets-1.6.1"
+
+[[source]]
+name = "protobuf"
+url = "https://github.com/protocolbuffers/protobuf/releases/download/v21.12/protobuf-cpp-3.21.12.tar.gz"
+sha256 = "4eab9b524aa5913c6fffb20b2a8abf5ef7f95a80bc0701f3a6dbb4c607f73460"
+into = "build/third_party/protobuf"
+top = "protobuf-3.21.12"
+
+[[source]]
+name = "libsodium"
+url = "https://github.com/jedisct1/libsodium/releases/download/1.0.20-RELEASE/libsodium-1.0.20.tar.gz"
+sha256 = "ebb65ef6ca439333c2bb41a0c1990587288da07f6c7fd07cb3a18cc18d30ce19"
+into = "build/third_party/libsodium"
+top = "libsodium-1.0.20"
+patches = ["third_party/libsodium/xgetbv.patch"]
+
+[kinds.gns_c]
+output = "{name}.a"
+each = { run = ["{zig}", "cc", "-c", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "-std=gnu11", "-w", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "{source}", "-MD", "-MF", "{deps}", "-o", "{object}"] }
+steps = [
+    { run = ["{zig}", "build-lib", "-static", "-target", "{triple}", "-mcpu={cpu}", "{strip}", "-femit-bin={output}", "{objects}"] },
+]
+
+[kinds.gns_cxx]
+output = "{name}.a"
+each = { run = ["{zig}", "c++", "-c", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "-std=c++17", "-w", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "{source}", "-MD", "-MF", "{deps}", "-o", "{object}"] }
+steps = [
+    { run = ["{zig}", "build-lib", "-static", "-target", "{triple}", "-mcpu={cpu}", "{strip}", "-femit-bin={output}", "{objects}"] },
+]
+
+[kinds.gns_program]
+output = "{name}{exe}"
+each = { run = ["{zig}", "c++", "-c", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "-std=c++17", "-Wall", "-Wextra", "-Werror", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "{source}", "-MD", "-MF", "{deps}", "-o", "{object}"] }
+steps = [
+    { run = ["{zig}", "c++", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "-Wno-unused-command-line-argument", "{objects}", "{link}", "{flags}", "-o", "{output}"] },
+]
+
+[variables]
+gns_root = "build/third_party/gns/GameNetworkingSockets-1.6.1"
+protobuf_root = "build/third_party/protobuf/protobuf-3.21.12"
+libsodium_root = "build/third_party/libsodium/libsodium-1.0.20"
+gns_defines = [
+    "STEAMNETWORKINGSOCKETS_STATIC_LINK", "STEAMNETWORKINGSOCKETS_FOREXPORT", "VALVE_CRYPTO_LIBSODIUM",
+    "VALVE_CRYPTO_25519_LIBSODIUM", "VALVE_CRYPTO_SHA1_WPA", "VALVE_CRYPTO_ENABLE_25519",
+    "STEAMNETWORKINGSOCKETS_ENABLE_ICE", "ENABLE_OPENSSLCONNECTION", "GOOGLE_PROTOBUF_NO_RTTI", "{gns_platform}",
+]
+gns_includes = [
+    "{gns_root}/include", "{gns_root}/src/common", "{gns_root}/src/public", "{gns_root}/src", "third_party/gns/generated",
+    "{protobuf_root}/src", "third_party/libsodium/include", "{libsodium_root}/src/libsodium/include",
+]
+gns_flags = ["-fvisibility=hidden", "-fno-strict-aliasing"]
+gns_cxx_flags = ["{gns_flags}", "-fvisibility-inlines-hidden", "-fno-exceptions", "-fno-rtti"]
+sodium_flags = ["-fvisibility=hidden", "-fno-strict-aliasing", "-fno-strict-overflow", "-fwrapv", "-flax-vector-conversions"]
+sodium_common = [
+    "_GNU_SOURCE=1", "CONFIGURED=1", "DEV_MODE=1", "HAVE_ATOMIC_OPS=1", "HAVE_C11_MEMORY_FENCES=1", "HAVE_CET_H=1",
+    "HAVE_GCC_MEMORY_FENCES=1", "HAVE_INLINE_ASM=1", "HAVE_INTTYPES_H=1", "HAVE_STDINT_H=1", "HAVE_TI_MODE=1",
+    "NATIVE_LITTLE_ENDIAN=1",
+]
+sodium_x86 = [
+    "HAVE_CPUID=1", "HAVE_MMINTRIN_H=1", "HAVE_EMMINTRIN_H=1", "HAVE_PMMINTRIN_H=1", "HAVE_TMMINTRIN_H=1",
+    "HAVE_SMMINTRIN_H=1", "HAVE_AVXINTRIN_H=1", "HAVE_AVX2INTRIN_H=1", "HAVE_WMMINTRIN_H=1", "HAVE_RDRAND=1",
+]
+sodium_x86_asm = ["HAVE_AMD64_ASM=1", "HAVE_AVX_ASM=1"]
+sodium_arm = ["HAVE_ARMCRYPTO=1"]
+sodium_windows = ["HAVE_RAISE=1", "HAVE_SYS_PARAM_H=1", "SODIUM_STATIC=1"]
+sodium_linux = [
+    "ASM_HIDE_SYMBOL=.hidden", "TLS=_Thread_local", "HAVE_CATCHABLE_ABRT=1", "HAVE_CATCHABLE_SEGV=1",
+    "HAVE_CLOCK_GETTIME=1", "HAVE_GETPID=1", "HAVE_MADVISE=1", "HAVE_MLOCK=1", "HAVE_MMAP=1", "HAVE_MPROTECT=1",
+    "HAVE_NANOSLEEP=1", "HAVE_POSIX_MEMALIGN=1", "HAVE_PTHREAD_PRIO_INHERIT=1", "HAVE_PTHREAD=1", "HAVE_RAISE=1",
+    "HAVE_SYSCONF=1", "HAVE_SYS_AUXV_H=1", "HAVE_SYS_MMAN_H=1", "HAVE_SYS_PARAM_H=1", "HAVE_SYS_RANDOM_H=1",
+    "HAVE_WEAK_SYMBOLS=1",
+]
+sodium_macos = [
+    "ASM_HIDE_SYMBOL=.private_extern", "TLS=_Thread_local", "HAVE_ARC4RANDOM=1", "HAVE_ARC4RANDOM_BUF=1",
+    "HAVE_CATCHABLE_ABRT=1", "HAVE_CATCHABLE_SEGV=1", "HAVE_CLOCK_GETTIME=1", "HAVE_GETENTROPY=1", "HAVE_GETPID=1",
+    "HAVE_MADVISE=1", "HAVE_MEMSET_S=1", "HAVE_MLOCK=1", "HAVE_MMAP=1", "HAVE_MPROTECT=1", "HAVE_NANOSLEEP=1",
+    "HAVE_POSIX_MEMALIGN=1", "HAVE_PTHREAD=1", "HAVE_PTHREAD_PRIO_INHERIT=1", "HAVE_RAISE=1", "HAVE_SYSCONF=1",
+    "HAVE_SYS_MMAN_H=1", "HAVE_SYS_PARAM_H=1", "HAVE_SYS_RANDOM_H=1", "HAVE_WEAK_SYMBOLS=1",
+]
+protobuf_pthread = ["HAVE_PTHREAD=1"]
+
+[[artifact]]
+name = "sodium"
+kind = "gns_c"
+part = "gns"
+sources = ["{libsodium_c_sources}", "{sodium_asm}"]
+include = ["third_party/libsodium/include/sodium", "third_party/libsodium/include", "{libsodium_root}/src/libsodium/include/sodium", "{libsodium_root}/src/libsodium/include"]
+defines = ["{sodium_defines}"]
+flags = ["{sodium_flags}"]
+
+[[artifact]]
+name = "protobuf"
+kind = "gns_cxx"
+part = "gns"
+sources = ["{protobuf_sources}"]
+include = ["{protobuf_root}/src"]
+defines = ["{protobuf_defines}"]
+
+[[artifact]]
+name = "gns"
+kind = "gns_cxx"
+part = "gns"
+sources = ["{gns_cxx_sources}", "third_party/gns/generated/*.pb.cc"]
+include = ["{gns_includes}"]
+defines = ["{gns_defines}"]
+flags = ["{gns_cxx_flags}"]
+
+[[artifact]]
+name = "gns_c"
+kind = "gns_c"
+part = "gns"
+sources = ["{gns_c_sources}"]
+include = ["{gns_includes}"]
+defines = ["{gns_defines}"]
+flags = ["{gns_flags}"]
+
+[[artifact]]
+name = "gns_smoke"
+kind = "gns_program"
+part = "gns"
+test = true
+sources = ["tests/platform_abstraction/gns/smoke.cpp"]
+include = ["{gns_root}/include"]
+defines = ["STEAMNETWORKINGSOCKETS_STATIC_LINK"]
+link = ["{out}/gns.a", "{out}/gns_c.a", "{out}/protobuf.a", "{out}/sodium.a"]
+flags = ["{gns_system}"]
+
+[targets.x86_64-windows-gnu]
+gns_platform = "_WINDOWS"
+sodium_defines = ["{sodium_common}", "{sodium_windows}", "{sodium_x86}"]
+sodium_asm = []
+protobuf_defines = []
+gns_system = ["-lws2_32", "-lcrypt32", "-lwinmm", "-liphlpapi"]
+
+[targets.aarch64-windows-gnu]
+gns_platform = "_WINDOWS"
+sodium_defines = ["{sodium_common}", "{sodium_windows}", "{sodium_arm}"]
+sodium_asm = []
+protobuf_defines = []
+gns_system = ["-lws2_32", "-lcrypt32", "-lwinmm", "-liphlpapi"]
+
+[targets.x86_64-linux-gnu]
+gns_platform = "LINUX"
+sodium_defines = ["{sodium_common}", "{sodium_linux}", "{sodium_x86}", "{sodium_x86_asm}"]
+sodium_asm = ["{libsodium_asm_sources}"]
+protobuf_defines = ["{protobuf_pthread}"]
+gns_system = []
+
+[targets.aarch64-linux-gnu]
+gns_platform = "LINUX"
+sodium_defines = ["{sodium_common}", "{sodium_linux}", "{sodium_arm}"]
+sodium_asm = []
+protobuf_defines = ["{protobuf_pthread}"]
+gns_system = []
+
+[targets.x86_64-macos]
+gns_platform = "OSX"
+sodium_defines = ["{sodium_common}", "{sodium_macos}", "{sodium_x86}", "{sodium_x86_asm}"]
+sodium_asm = ["{libsodium_asm_sources}"]
+protobuf_defines = ["{protobuf_pthread}"]
+gns_system = []
+
+[targets.aarch64-macos]
+gns_platform = "OSX"
+sodium_defines = ["{sodium_common}", "{sodium_macos}", "{sodium_arm}"]
+sodium_asm = []
+protobuf_defines = ["{protobuf_pthread}"]
+gns_system = []

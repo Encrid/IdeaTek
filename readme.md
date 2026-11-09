@@ -77,6 +77,7 @@ Each part has a readme, which its release holds.
 | `sdl3` | `BL-IdeaTek-SDL3` | `docs/usage/platform_abstraction/sdl3.md` |
 | `sdl3_start` | `BL-IdeaTek-SDL3-Start` | `docs/usage/platform_abstraction/sdl3_start.md` |
 | `vulkan` | `BL-IdeaTek-Vulkan` | `docs/usage/platform_abstraction/vulkan.md` |
+| `gns` | `BL-IdeaTek-GameNetworkingSockets` | `docs/usage/platform_abstraction/gns.md` |
 | `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `docs/usage/platform_abstraction/window_sdl3.md` |
 | `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `docs/usage/platform_abstraction/input_sdl3.md` |
 | `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `docs/usage/platform_abstraction/gpu_vulkan_module.md` |
@@ -93,6 +94,7 @@ Each implementation is a part with its own release. A module part fills the role
 | `sdl3` | `BL-IdeaTek-SDL3` | A library: no identity | | |
 | `sdl3_start` | `BL-IdeaTek-SDL3-Start` | A library: no identity | | |
 | `vulkan` | `BL-IdeaTek-Vulkan` | A library: no identity | | |
+| `gns` | `BL-IdeaTek-GameNetworkingSockets` | A library: no identity | | |
 | `window_sdl3` | `BM-IdeaTek-Window-SDL3` | `ideatek_window_sdl3:window@0.1.0` | The window module, with the clipboard | The SDL3 library |
 | `input_sdl3` | `BM-IdeaTek-Input-SDL3` | `ideatek_input_sdl3:input@0.1.0` | The input module | The SDL3 library |
 | `gpu_vulkan_module` | `BM-IdeaTek-Gpu-Vulkan` | `ideatek_gpu_vulkan:gpu@0.1.0` | The GPU module | The Vulkan loader. On macOS, the bundled loader with KosmicKrisp and MoltenVK |
@@ -130,3 +132,4 @@ SDL3 is under the zlib licence: `third_party/sdl3/license`. Its Linux build hold
 
 volk is under the MIT licence: `third_party/volk/license`. The headers of Vulkan are under Apache-2.0 or MIT: `third_party/vulkan_headers/license`.
 mosl is under the GNU Affero General Public License, version 3 only: `third_party/mosl/license`.
+GameNetworkingSockets is under the BSD 3-Clause licence: `third_party/gns/license`. protobuf is under the BSD 3-Clause licence: `third_party/protobuf/license`. libsodium is under the ISC licence: `third_party/libsodium/license`.
