@@ -11,6 +11,7 @@ Each folder of `BM-IdeaTek-Sockets-GNS.zip` also holds this readme and the licen
 
 The module holds the 4 archives of `BL-IdeaTek-GameNetworkingSockets`, the C++ runtime of zig and mosl for its thread, so nothing stands beside it: `docs/usage/platform_abstraction/gns.md`.
 On Windows, the module links `ws2_32`, `crypt32`, `winmm` and `iphlpapi` of the system.
+On Linux, the module links with `-z nodelete`: the C++ runtime of GameNetworkingSockets registers handlers for the end of the process, so the module stays in memory after its unload, and the handlers find their code.
 The processor must have the AES instructions: `docs/usage/platform_abstraction/gns.md`, *The processor*.
 A project names the zip of `BM-IdeaTek-Sockets-GNS` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
