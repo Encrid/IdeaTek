@@ -140,7 +140,7 @@ library = "{bb_native}/bridge_native"
 [module."ideatek_files_mosl:files@0.1.0"]
 changes = 100
 [module."test:game@1.0.0".config]
-script = "1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|2:stall 500|3:show_results|4:show_results|5:show_results"
+script = "1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|2:earlywait 300|3:show_results|4:show_results|5:show_results"
 ''' } }
 
 [case.folders]
@@ -167,7 +167,7 @@ library = "{bb_native}/bridge_native"
 [module."ideatek_files_mosl:files@0.1.0"]
 changes = 100
 [module."test:game@1.0.0".config]
-script = "1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|2:stall 500|3:show_results|4:show_results|5:show_results"
+script = "1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|2:earlywait 300|3:show_results|4:show_results|5:show_results"
 '''
 
 [[case]]
