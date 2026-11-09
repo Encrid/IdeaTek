@@ -8,6 +8,7 @@
 
 #include "game.h"
 
+#include "game_audio.h"
 #include "game_files.h"
 #include "game_frame.h"
 #include "game_gpu.h"
@@ -298,6 +299,10 @@ static void run_step(const bridge_api_t *api, const char *verb, char *args)
 #endif
 #if defined(GAME_FILES)
     if (game_files_step(api, verb, args))
+        return;
+#endif
+#if defined(GAME_AUDIO)
+    if (game_audio_step(api, verb, args))
         return;
 #endif
     if (!strcmp(verb, "request"))

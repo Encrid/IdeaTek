@@ -30,3 +30,11 @@ test = true
 sources = ["tests/platform_abstraction/sdl3/reload.c"]
 link = ["{out}/audio_sdl3{library}"]
 flags = ["{rpath}"]
+
+[[artifact]]
+name = "audio_values"
+kind = "program"
+part = "audio_sdl3"
+test = true
+sources = ["tests/platform_abstraction/audio_sdl3/values.c", "src/platform_abstraction/audio_sdl3/audio_values.c"]
+include = ["include/platform_abstraction", "src/platform_abstraction/audio_sdl3", "{bridge}/include"]

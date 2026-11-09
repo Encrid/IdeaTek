@@ -1,0 +1,95 @@
+[[case]]
+name = "a request inside the ranges passes the check"
+run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "1000", "2"]
+claims = { status = 0, has = ["request 1 none 0 [none]"] }
+false = { run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "0", "2"] }
+
+[[case]]
+name = "a direction outside its range names the field"
+run = ["{out}/audio_values{exe}", "request", "2", "0", "48000", "1000", "2"]
+claims = { status = 0, has = ["request 0 direction 2 [0 to 1]"] }
+false = { run = ["{out}/audio_values{exe}", "request", "1", "0", "48000", "1000", "2"] }
+
+[[case]]
+name = "a target outside its range names the field"
+run = ["{out}/audio_values{exe}", "request", "0", "2", "48000", "1000", "2"]
+claims = { status = 0, has = ["request 0 target 2 [0 to 1]"] }
+false = { run = ["{out}/audio_values{exe}", "request", "0", "1", "48000", "1000", "2"] }
+
+[[case]]
+name = "a rate under 8000 names the field"
+run = ["{out}/audio_values{exe}", "request", "0", "0", "7999", "1000", "2"]
+claims = { status = 0, has = ["request 0 rate 7999 [8000 to 384000]"] }
+false = { run = ["{out}/audio_values{exe}", "request", "0", "0", "8000", "1000", "2"] }
+
+[[case]]
+name = "a rate over 384000 names the field"
+run = ["{out}/audio_values{exe}", "request", "0", "0", "384001", "1000", "2"]
+claims = { status = 0, has = ["request 0 rate 384001 [8000 to 384000]"] }
+false = { run = ["{out}/audio_values{exe}", "request", "0", "0", "384000", "1000", "2"] }
+
+[[case]]
+name = "an ahead of 0 names the field"
+run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "0", "2"]
+claims = { status = 0, has = ["request 0 ahead 0 [1 to 65536]"] }
+false = { run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "1", "2"] }
+
+[[case]]
+name = "an ahead over 65536 names the field"
+run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "65537", "2"]
+claims = { status = 0, has = ["request 0 ahead 65537 [1 to 65536]"] }
+false = { run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "65536", "2"] }
+
+[[case]]
+name = "0 channels name the field"
+run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "1000", "0"]
+claims = { status = 0, has = ["request 0 channels 0 [1 to 8]"] }
+false = { run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "1000", "1"] }
+
+[[case]]
+name = "9 channels name the field"
+run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "1000", "9"]
+claims = { status = 0, has = ["request 0 channels 9 [1 to 8]"] }
+false = { run = ["{out}/audio_values{exe}", "request", "0", "0", "48000", "1000", "8"] }
+
+[[case]]
+name = "a device_frames of 0 passes"
+run = ["{out}/audio_values{exe}", "frames", "0"]
+claims = { status = 0, has = ["frames 1"] }
+false = { run = ["{out}/audio_values{exe}", "frames", "1"] }
+
+[[case]]
+name = "a device_frames of 64 passes, and 63 does not"
+run = ["{out}/audio_values{exe}", "frames", "64"]
+claims = { status = 0, has = ["frames 1"] }
+false = { run = ["{out}/audio_values{exe}", "frames", "63"] }
+
+[[case]]
+name = "a device_frames of 65536 passes, and 65537 does not"
+run = ["{out}/audio_values{exe}", "frames", "65536"]
+claims = { status = 0, has = ["frames 1"] }
+false = { run = ["{out}/audio_values{exe}", "frames", "65537"] }
+
+[[case]]
+name = "the wanted frames bring the queue to ahead"
+run = ["{out}/audio_values{exe}", "wanted", "1000", "300"]
+claims = { status = 0, has = ["wanted 700"] }
+false = { run = ["{out}/audio_values{exe}", "wanted", "1000", "400"] }
+
+[[case]]
+name = "a queue at ahead or more wants 0"
+run = ["{out}/audio_values{exe}", "wanted", "1000", "1000"]
+claims = { status = 0, has = ["wanted 0"] }
+false = { run = ["{out}/audio_values{exe}", "wanted", "1000", "999"] }
+
+[[case]]
+name = "the frames over ahead are the difference"
+run = ["{out}/audio_values{exe}", "over", "1200", "1000"]
+claims = { status = 0, has = ["over 200"] }
+false = { run = ["{out}/audio_values{exe}", "over", "1000", "1000"] }
+
+[[case]]
+name = "frames at ahead or fewer are not over"
+run = ["{out}/audio_values{exe}", "over", "999", "1000"]
+claims = { status = 0, has = ["over 0"] }
+false = { run = ["{out}/audio_values{exe}", "over", "1001", "1000"] }

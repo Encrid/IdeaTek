@@ -1,0 +1,51 @@
+[[case]]
+name = "the audio module loads with the game, and lists the devices"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["loaded: ideatek_audio_sdl3:audio@0.1.0", "r1 device [Speakers] playback default 1"] }
+false = { env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,0,48000,2;b,Headset,p,1,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "none"
+'''
+
+[[case]]
+name = "a reload gives 0, because the module is not reloadable"
+run = ["{out}/audio_sdl3_reload{exe}", "reload"]
+claims = { status = 0, line = ["reload 0"] }
+false = { run = ["{out}/audio_sdl3_reload{exe}", "shutdown"] }
+
+[[case]]
+name = "a system that refuses the audio fails the load with the line of the audio"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "nothing", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 1, has = ["no audio: "], lacks = ["loaded: ideatek_audio_sdl3:audio@0.1.0"] }
+false = { env = { SDL_AUDIO_DRIVER = "ideatek_test" } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "none"
+'''

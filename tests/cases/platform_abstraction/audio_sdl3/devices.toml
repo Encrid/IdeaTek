@@ -1,0 +1,282 @@
+[[case]]
+name = "the module spawns an entity for each device, with its name, its direction and its default"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r1 device [Speakers] playback default 1", "r1 device [Headset] playback default 0", "r1 device [Microphone] recording default 1", "r1 device [Webcam Mic] recording default 0"] }
+false = { env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "none"
+'''
+
+[[case]]
+name = "a device that comes gets an entity in the round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 device [Dock] playback default 0"], matches_not = ["r2 device \\[Dock"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1;e,Dock,p,0,48000,2"
+'''
+
+[[case]]
+name = "a device that goes loses its entity"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r1 device [Headset] playback default 0"], matches_not = ["r3 device \\[Headset"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices a,Speakers,p,1,48000,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+'''
+
+[[case]]
+name = "a new default device gets is_default, and the old default loses it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r3 device [Headset] playback default 1", "r3 device [Speakers] playback default 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices a,Speakers,p,0,48000,2;b,Headset,p,1,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1"
+'''
+
+[[case]]
+name = "a 33rd device gets no entity, with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "p0,Device 0,p,1,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["more than 32 devices: the device", "r3 device [Device 31] playback default 0"], matches_not = ["device \\[Device 32\\]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices p0,Device 0,p,1,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices p0,Device 0,p,1,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2;p32,Device 32,p,0,48000,2"
+'''
+
+[[case]]
+name = "a default change to a device without an entity changes the old default alone"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "p0,Device 0,p,1,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["r1 device [Device 0] playback default 1", "r4 device [Device 0] playback default 0", "r5 device [Device 0] playback default 1"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices p0,Device 0,p,1,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2;p32,Device 32,p,0,48000,2|3:audiodevices p0,Device 0,p,1,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2;p32,Device 32,p,0,48000,2|4:audiodevices p0,Device 0,p,1,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2"
+''' } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 5
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:audiodevices p0,Device 0,p,1,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2;p32,Device 32,p,0,48000,2|3:audiodevices p0,Device 0,p,0,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2;p32,Device 32,p,1,48000,2|4:audiodevices p0,Device 0,p,1,48000,2;p1,Device 1,p,0,48000,2;p2,Device 2,p,0,48000,2;p3,Device 3,p,0,48000,2;p4,Device 4,p,0,48000,2;p5,Device 5,p,0,48000,2;p6,Device 6,p,0,48000,2;p7,Device 7,p,0,48000,2;p8,Device 8,p,0,48000,2;p9,Device 9,p,0,48000,2;p10,Device 10,p,0,48000,2;p11,Device 11,p,0,48000,2;p12,Device 12,p,0,48000,2;p13,Device 13,p,0,48000,2;p14,Device 14,p,0,48000,2;p15,Device 15,p,0,48000,2;p16,Device 16,p,0,48000,2;p17,Device 17,p,0,48000,2;p18,Device 18,p,0,48000,2;p19,Device 19,p,0,48000,2;p20,Device 20,p,0,48000,2;p21,Device 21,p,0,48000,2;p22,Device 22,p,0,48000,2;p23,Device 23,p,0,48000,2;p24,Device 24,p,0,48000,2;p25,Device 25,p,0,48000,2;p26,Device 26,p,0,48000,2;p27,Device 27,p,0,48000,2;p28,Device 28,p,0,48000,2;p29,Device 29,p,0,48000,2;p30,Device 30,p,0,48000,2;p31,Device 31,p,0,48000,2"
+'''
+
+[[case]]
+name = "a name longer than 127 bytes is cut, with its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn,p,1,48000,2", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+claims = { status = 0, has = ["is longer than 127 bytes", "r1 device [nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn] playback default 1"] }
+false = { env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" } }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "none"
+'''
+
+[[case]]
+name = "a device whose name SDL3 does not give gets an empty name"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+fail = { SDL_GetAudioDeviceName = 1 }
+claims = { status = 0, has = ["r1 device [] playback default 1"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "none"
+'''
+
+[[case]]
+name = "a list of the playback devices that SDL3 refuses writes the line of the list"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+fail = { SDL_GetAudioPlaybackDevices = 1 }
+claims = { status = 0, has = ["no device list: "] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "none"
+'''
+
+[[case]]
+name = "a list of the recording devices that SDL3 refuses writes the line of the list"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2;b,Headset,p,0,44100,2;c,Microphone,r,1,48000,1;d,Webcam Mic,r,0,16000,1", IDEATEK_TEST_AUDIO_TIMESCALE = "1000" }
+fail = { SDL_GetAudioRecordingDevices = 1 }
+claims = { status = 0, has = ["no device list: "] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["audio_sdl3", "sdl3_game_audio", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_audio.toml"]
+rounds = 2
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "none"
+'''

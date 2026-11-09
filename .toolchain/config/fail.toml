@@ -2,6 +2,7 @@
 with = ["build/third_party/mosl/{target}/fail.toml"]
 
 [fail.calls]
+os_folder_entry_size = "-1"
 SDL_InitSubSystem = "false"
 SDL_CreateWindow = "nullptr"
 SDL_LoadPNG = "nullptr"
@@ -27,6 +28,14 @@ SDL_HideCursor = "false"
 SDL_CreateSystemCursor = "nullptr"
 SDL_StartTextInput = "false"
 SDL_SetCursor = "false"
+SDL_GetAudioPlaybackDevices = "nullptr"
+SDL_GetAudioRecordingDevices = "nullptr"
+SDL_GetAudioDeviceName = "nullptr"
+SDL_OpenAudioDeviceStream = "nullptr"
+SDL_PutAudioStreamData = "false"
+SDL_SetAudioStreamFormat = "false"
+SDL_GetAudioDeviceFormat = "false"
+SDL_ResumeAudioStreamDevice = "false"
 volkInitialize = "VK_ERROR_INITIALIZATION_FAILED"
 vkCreateInstance = "VK_ERROR_INITIALIZATION_FAILED"
 vkEnumeratePhysicalDevices = "VK_ERROR_INITIALIZATION_FAILED"
