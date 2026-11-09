@@ -1,0 +1,167 @@
+[[case]]
+name = "the C face of GameNetworkingSockets has the layout of its headers on this target"
+run = ["{out}/gns_layout{exe}"]
+claims = { status = 0, line = ["layout ok"] }
+false = { run = ["{out}/gns_layout{exe}", "fail"] }
+
+[[case]]
+name = "a word of a table gives its index"
+run = ["{out}/sockets_values{exe}", "word", "allow", "warn"]
+claims = { status = 0, line = ["1"] }
+false = { run = ["{out}/sockets_values{exe}", "word", "allow", "allow"] }
+
+[[case]]
+name = "a word outside its table gives the count"
+run = ["{out}/sockets_values{exe}", "word", "unencrypted", "maybe"]
+claims = { status = 0, line = ["4"] }
+false = { run = ["{out}/sockets_values{exe}", "word", "unencrypted", "never"] }
+
+[[case]]
+name = "the ice transports give their mask"
+run = ["{out}/sockets_values{exe}", "ice", "relay,public"]
+claims = { status = 0, line = ["5"] }
+false = { run = ["{out}/sockets_values{exe}", "ice", "private"] }
+
+[[case]]
+name = "an empty ice_transports gives 0"
+run = ["{out}/sockets_values{exe}", "ice", ""]
+claims = { status = 0, line = ["0"] }
+false = { run = ["{out}/sockets_values{exe}", "ice", "relay"] }
+
+[[case]]
+name = "a wrong word of ice_transports gives -1"
+run = ["{out}/sockets_values{exe}", "ice", "relay,,public"]
+claims = { status = 0, line = ["-1"] }
+false = { run = ["{out}/sockets_values{exe}", "ice", "relay,public"] }
+
+[[case]]
+name = "the connected state gives the connected status"
+run = ["{out}/sockets_values{exe}", "status", "3"]
+claims = { status = 0, line = ["2"] }
+false = { run = ["{out}/sockets_values{exe}", "status", "1"] }
+
+[[case]]
+name = "a dead state gives the problem"
+run = ["{out}/sockets_values{exe}", "status", "-2"]
+claims = { status = 0, line = ["4"] }
+false = { run = ["{out}/sockets_values{exe}", "status", "4"] }
+
+[[case]]
+name = "the flags keep their 5 bits"
+run = ["{out}/sockets_values{exe}", "flags", "255"]
+claims = { status = 0, line = ["31"] }
+false = { run = ["{out}/sockets_values{exe}", "flags", "3"] }
+
+[[case]]
+name = "a record of the messages out reads its fields"
+run = ["{out}/sockets_values{exe}", "record", "0700000000000000020000000000014142"]
+claims = { status = 0, line = ["conn 7 len 2 lane 0 flags 1 [AB]"] }
+false = { run = ["{out}/sockets_values{exe}", "record", "0700000000000000020000000000"] }
+
+[[case]]
+name = "a record whose bytes do not fit gives 0"
+run = ["{out}/sockets_values{exe}", "record", "07000000000000000500000000000141"]
+claims = { status = 0, line = ["0"] }
+false = { run = ["{out}/sockets_values{exe}", "record", "07000000000000000100000000000141"] }
+
+[[case]]
+name = "a record of the messages in writes 23 bytes and the text"
+run = ["{out}/sockets_values{exe}", "inrecord", "9", "4", "2", "1", "hey", "100"]
+claims = { status = 0, line = ["26"] }
+false = { run = ["{out}/sockets_values{exe}", "inrecord", "9", "4", "2", "1", "hey", "10"] }
+
+[[case]]
+name = "a record of the messages in with no room gives 0"
+run = ["{out}/sockets_values{exe}", "inrecord", "9", "4", "2", "1", "hey", "10"]
+claims = { status = 0, line = ["0"] }
+false = { run = ["{out}/sockets_values{exe}", "inrecord", "9", "4", "2", "1", "hey", "26"] }
+
+[[case]]
+name = "a session record reads its channel"
+run = ["{out}/sockets_values{exe}", "session", "0700000000000000050000000300000001414243"]
+claims = { status = 0, line = ["sess 7 channel 5 len 3 flags 1 [ABC]"] }
+false = { run = ["{out}/sockets_values{exe}", "session", "070000000000000005000000030000"] }
+
+[[case]]
+name = "a session record of the messages in writes 17 bytes and the text"
+run = ["{out}/sockets_values{exe}", "insession", "9", "2", "1", "hey", "100"]
+claims = { status = 0, line = ["20"] }
+false = { run = ["{out}/sockets_values{exe}", "insession", "9", "2", "1", "hey", "19"] }
+
+[[case]]
+name = "a signal record reads its bytes"
+run = ["{out}/sockets_values{exe}", "signal", "020000004142"]
+claims = { status = 0, line = ["signal 2 [AB]"] }
+false = { run = ["{out}/sockets_values{exe}", "signal", "0300000041"] }
+
+[[case]]
+name = "a ring gives back its records in their order, then 0"
+run = ["{out}/sockets_ring{exe}", "16", "p4", "p4", "t", "t", "t"]
+claims = { status = 0, line = ["ok ok 4 4 0"] }
+false = { run = ["{out}/sockets_ring{exe}", "16", "p4", "t", "t", "t"] }
+
+[[case]]
+name = "a record larger than the ring is refused"
+run = ["{out}/sockets_ring{exe}", "16", "p20"]
+claims = { status = 0, line = ["full"] }
+false = { run = ["{out}/sockets_ring{exe}", "16", "p12"] }
+
+[[case]]
+name = "a record that does not fit at the end of the ring starts at the place of the ring"
+run = ["{out}/sockets_ring{exe}", "16", "p6", "t", "p5", "t"]
+claims = { status = 0, line = ["ok 6 ok 5"] }
+false = { run = ["{out}/sockets_ring{exe}", "16", "p6", "t", "p6", "t"] }
+
+[[case]]
+name = "a ring whose head is before its tail refuses a record that reaches the tail"
+run = ["{out}/sockets_ring{exe}", "24", "p4", "p4", "t", "p4", "t", "p4", "p4", "p3"]
+claims = { status = 0, line = ["ok ok 4 ok 4 ok full ok"] }
+false = { run = ["{out}/sockets_ring{exe}", "24", "p4", "p4", "t", "p4", "t", "p4", "p3", "p3"] }
+
+[[case]]
+name = "a take at the end of the ring goes to the place of the ring"
+run = ["{out}/sockets_ring{exe}", "16", "p4", "p4", "t", "t", "p4", "t", "t"]
+claims = { status = 0, line = ["ok ok 4 4 ok 4 0"] }
+false = { run = ["{out}/sockets_ring{exe}", "16", "p4", "p4", "t", "t", "p4", "t"] }
+
+[[case]]
+name = "a word of the length of a route that is not the route gives -1"
+run = ["{out}/sockets_values{exe}", "ice", "relax"]
+claims = { status = 0, line = ["-1"] }
+false = { run = ["{out}/sockets_values{exe}", "ice", "relay"] }
+
+[[case]]
+name = "a session record whose head does not fit gives 0"
+run = ["{out}/sockets_values{exe}", "session", "07000000000000000500"]
+claims = { status = 0, line = ["0"] }
+false = { run = ["{out}/sockets_values{exe}", "session", "0700000000000000050000000100000001414243"] }
+
+[[case]]
+name = "a session record whose bytes do not fit gives 0"
+run = ["{out}/sockets_values{exe}", "session", "0700000000000000050000000500000001414243"]
+claims = { status = 0, line = ["0"] }
+false = { run = ["{out}/sockets_values{exe}", "session", "0700000000000000050000000300000001414243"] }
+
+[[case]]
+name = "a signal record whose bytes do not fit gives 0"
+run = ["{out}/sockets_values{exe}", "signal", "0300000041"]
+claims = { status = 0, line = ["0"] }
+false = { run = ["{out}/sockets_values{exe}", "signal", "0100000041"] }
+
+[[case]]
+name = "a record of the messages in whose bytes do not fit in the room gives 0"
+run = ["{out}/sockets_values{exe}", "inrecord", "9", "4", "2", "1", "hey", "25"]
+claims = { status = 0, line = ["0"] }
+false = { run = ["{out}/sockets_values{exe}", "inrecord", "9", "4", "2", "1", "hey", "26"] }
+
+[[case]]
+name = "a session record of the messages in with no room for its head gives 0"
+run = ["{out}/sockets_values{exe}", "insession", "9", "2", "1", "hey", "10"]
+claims = { status = 0, line = ["0"] }
+false = { run = ["{out}/sockets_values{exe}", "insession", "9", "2", "1", "hey", "20"] }
+
+[[case]]
+name = "a session record of the messages in whose bytes do not fit in the room gives 0"
+run = ["{out}/sockets_values{exe}", "insession", "9", "2", "1", "hey", "19"]
+claims = { status = 0, line = ["0"] }
+false = { run = ["{out}/sockets_values{exe}", "insession", "9", "2", "1", "hey", "20"] }

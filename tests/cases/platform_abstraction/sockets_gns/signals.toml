@@ -1,0 +1,63 @@
+[[case]]
+name = "a signal that GameNetworkingSockets refuses writes its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["a signal of 4 bytes is refused"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:stall 30|3:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:rawsignal junk|2:stall 30|3:show_count"
+'''
+
+[[case]]
+name = "a malformed batch of signals writes its line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, matches = ["the batch of [0-9]+ is malformed at 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:pair|2:stall 30|3:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:badsignal junk|2:stall 30|3:show_count"
+'''

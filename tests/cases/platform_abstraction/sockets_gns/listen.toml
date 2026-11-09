@@ -1,0 +1,258 @@
+[[case]]
+name = "a listen request over IP opens a listen socket on the port, and its state says listening"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["listen 0 listening"], matches = ["r3 listen 0 kind 0 port [0-9]+ vport 0 listening"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|2:stall 30|3:show_count"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|2:stall 30|3:show_listens"
+'''
+
+[[case]]
+name = "a listen request for P2P opens a listen socket on the virtual port"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r3 listen 0 kind 1 port 0 vport 7 listening"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen p2p,0,8|2:stall 30|3:show_listens"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen p2p,0,7|2:stall 30|3:show_listens"
+'''
+
+[[case]]
+name = "a second request on the same entity replaces the listen socket"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r4 listen 0 kind 1 port 0 vport 8 listening"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen p2p,0,7|3:stall 30|4:show_listens"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen p2p,0,7|2:relisten 0,p2p,0,8|3:stall 30|4:show_listens"
+'''
+
+[[case]]
+name = "a destroyed listen entity closes the listen socket, and a connect to its port gets the problem"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["conn 1 problem"], matches_not = ["inbound"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 21
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 300
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|3:connect local,{port},,,0|3:stall 50|4:stall 50|5:stall 50|6:stall 50|7:stall 50|8:stall 50|9:stall 50|10:stall 50|11:stall 50|12:stall 50|13:stall 50|14:stall 50|15:stall 50|16:stall 50|17:stall 50|18:stall 50|19:stall 50|20:stall 50|21:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 21
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 300
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|2:sockkill 0|3:connect local,{port},,,0|3:stall 50|4:stall 50|5:stall 50|6:stall 50|7:stall 50|8:stall 50|9:stall 50|10:stall 50|11:stall 50|12:stall 50|13:stall 50|14:stall 50|15:stall 50|16:stall 50|17:stall 50|18:stall 50|19:stall 50|20:stall 50|21:show_conns"
+'''
+
+[[case]]
+name = "a listen request above max_listen_sockets fails with the line of the bound"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["listen 1 failed"], matches = ["more than 1 listen sockets: the request of [0-9]+ fails"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+max_listen_sockets = 2
+[module."test:game@1.0.0".config]
+script = "1:listen p2p,0,7|1:listen p2p,0,8|2:stall 30|3:show_listens"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+max_listen_sockets = 1
+[module."test:game@1.0.0".config]
+script = "1:listen p2p,0,7|1:listen p2p,0,8|2:stall 30|3:show_listens"
+'''
+
+[[case]]
+name = "a kind outside its enum writes its line, and the listen socket fails"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["listen 0 failed"], matches = ["the request of [0-9]+: kind 5 is outside 0 to 1"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,0,0|2:stall 30|3:show_listens"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen 5,0,0|2:stall 30|3:show_listens"
+'''
+
+[[case]]
+name = "a listen socket that GameNetworkingSockets refuses fails"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+fail = { SteamAPI_ISteamNetworkingSockets_CreateListenSocketIP = 1 }
+claims = { status = 0, has = ["listen 0 failed"] }
+false = { fail = {  } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|2:stall 30|3:show_listens"
+'''
+
+[[case]]
+name = "a detach of an entity with no listen socket does nothing"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, has = ["r3 socks 1"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 100
+[module."test:game@1.0.0".config]
+script = "1:listen ip,{port},0|2:sockkill 0|3:show_listens"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+timeout_initial = 100
+[module."test:game@1.0.0".config]
+script = "1:connect local,1,,,0|2:sockkill 0|3:show_count"
+'''

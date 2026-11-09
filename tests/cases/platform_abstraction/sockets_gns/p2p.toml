@@ -1,0 +1,105 @@
+[[case]]
+name = "a P2P connect through the signals of 2 programs connects both ends, and a message crosses"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+helper = { run = ["{bridge_host}/bridge-host{exe}", "{case}/s.toml"], wait = "listen 0 listening", stdin = "", claims = { has = ["inbound 1 listen 0", "conn 1 connected", "[over the signals]"] } }
+claims = { status = 0, has = ["signal out 0 to [str:server]", "signal in", "conn 0 connected"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:p2p str:server,9,0|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/s.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 46
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:server|1:signals {case}/sig|2:listen p2p,0,7|3:stall 200|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:conn 1,accept|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:stall 200|37:stall 200|38:stall 200|39:stall 200|40:stall 200|41:stall 200|42:stall 200|43:stall 200|44:stall 200|45:show_conns"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 36
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:p2p str:server,7,0|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:send 0,0,reliable,over the signals|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:show_conns"
+'''
+
+[[case]]
+name = "a signal for a virtual port with no listen socket gets a rejection, and the connect ends with the problem"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+helper = { run = ["{bridge_host}/bridge-host{exe}", "{case}/s.toml"], wait = "listen 0 listening", stdin = "", claims = { has = ["signal out 256 to [str:client]"] } }
+claims = { status = 0, has = ["conn 0 problem"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 56
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:p2p str:server,7,0|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:stall 200|37:stall 200|38:stall 200|39:stall 200|40:stall 200|41:stall 200|42:stall 200|43:stall 200|44:stall 200|45:stall 200|46:stall 200|47:stall 200|48:stall 200|49:stall 200|50:stall 200|51:stall 200|52:stall 200|53:stall 200|54:stall 200|55:stall 200|56:show_conns"
+''' } }
+
+[case.folders]
+"{case}/m" = ["sockets_gns", "sdl3_game_sockets", "SDL3_test"]
+
+[case.files]
+"{case}/s.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 61
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:server|1:signals {case}/sig|2:listen p2p,0,7|3:stall 200|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:conn 1,accept|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:stall 200|37:stall 200|38:stall 200|39:stall 200|40:stall 200|41:stall 200|42:stall 200|43:stall 200|44:stall 200|45:stall 200|46:stall 200|47:stall 200|48:stall 200|49:stall 200|50:stall 200|51:stall 200|52:stall 200|53:stall 200|54:stall 200|55:stall 200|56:stall 200|57:stall 200|58:stall 200|59:stall 200|60:show_conns"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_sockets.toml"]
+rounds = 56
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_sockets_gns:sockets@0.1.0".config]
+ice_transports = "private,public"
+timeout_initial = 8000
+[module."test:game@1.0.0".config]
+script = "1:identity str:client|1:signals {case}/sig|2:stall 200|3:p2p str:server,9,0|4:stall 200|5:stall 200|6:stall 200|7:stall 200|8:stall 200|9:stall 200|10:stall 200|11:stall 200|12:stall 200|13:stall 200|14:stall 200|15:stall 200|16:stall 200|17:stall 200|18:stall 200|19:stall 200|20:stall 200|21:stall 200|22:stall 200|23:stall 200|24:stall 200|25:stall 200|26:stall 200|27:stall 200|28:stall 200|29:stall 200|30:stall 200|31:stall 200|32:stall 200|33:stall 200|34:stall 200|35:stall 200|36:stall 200|37:stall 200|38:stall 200|39:stall 200|40:stall 200|41:stall 200|42:stall 200|43:stall 200|44:stall 200|45:stall 200|46:stall 200|47:stall 200|48:stall 200|49:stall 200|50:stall 200|51:stall 200|52:stall 200|53:stall 200|54:stall 200|55:stall 200|56:show_conns"
+'''
