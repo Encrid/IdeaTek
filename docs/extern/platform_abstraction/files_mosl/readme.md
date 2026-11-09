@@ -9,7 +9,7 @@ Its 2 files are `BM-IdeaTek-Files-Mosl.zip` and `sha256.txt`. `BM-IdeaTek-Files-
 In `BM-IdeaTek-Files-Mosl`, each folder holds the module `files_mosl.dll`, `files_mosl.so` or `files_mosl.dylib`, and the notice of mosl.
 Each folder of `BM-IdeaTek-Files-Mosl.zip` also holds this readme and the licence.
 
-The module holds the static archive of mosl v0.4.0 inside it, so it needs no library beside it: https://github.com/Encrid/mosl/releases/tag/v0.4.0.
+The module holds the static archive of mosl v0.5.0 inside it, so it needs no library beside it: https://github.com/Encrid/mosl/releases/tag/v0.5.0.
 A project names the zip of `BM-IdeaTek-Files-Mosl` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
 ## Usage
