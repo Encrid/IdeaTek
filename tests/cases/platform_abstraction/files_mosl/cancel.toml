@@ -23,7 +23,7 @@ script = "1:filereq content,read,a.txt,0|2:stall 500|3:show_results|4:show_resul
 "{case}/host/content/a.txt" = '''
 hello'''
 "{case}/host/content/b.bin" = '''
-xyz'''
+xyz123456789'''
 "{case}/host/content/sub/e.txt" = '''
 inner'''
 "{case}/host/content/w/keep.txt" = '''
@@ -65,7 +65,7 @@ script = "1:filereq content,read,../a.txt,0|2:show_results|3:show_results"
 "{case}/host/content/a.txt" = '''
 hello'''
 "{case}/host/content/b.bin" = '''
-xyz'''
+xyz123456789'''
 "{case}/host/content/sub/e.txt" = '''
 inner'''
 "{case}/host/content/w/keep.txt" = '''
@@ -80,6 +80,94 @@ ignore = ["m/SDL3{library}"]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
 script = "1:filereq content,read,../a.txt,0|2:filedrop 0|2:show_results|3:show_results"
+'''
+
+[[case]]
+name = "an entity that the game destroys in the step of another refusal leaves that refusal"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["seen 0 denied size 0 []", "seen 1 denied size 0 []"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,read,../a.txt,0|2:filereq content,read,../b.txt,0|2:filekill 1|3:show_results"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz123456789'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 3
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:filereq content,read,../a.txt,0|2:filereq content,read,../b.txt,0|2:filekill 0|3:show_results"
+'''
+
+[[case]]
+name = "a done job that the game destroys before its result is freed with no result"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["seen 0 ok size 5 [hello]", "seen 1 ok size 5 [hello]"], matches_not = ["seen 2 "] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0"]
+changes = 100
+[module."test:game@1.0.0".config]
+script = "1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|2:stall 500|3:show_results|4:show_results"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "sdl3_game_files", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.bin" = '''
+xyz123456789'''
+"{case}/host/content/sub/e.txt" = '''
+inner'''
+"{case}/host/content/w/keep.txt" = '''
+k'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_files.toml"]
+rounds = 4
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0"]
+changes = 100
+[module."test:game@1.0.0".config]
+script = "1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|1:filereq content,read,a.txt,0|2:stall 500|2:filekill 2|3:show_results|4:show_results"
 '''
 
 [[case]]
@@ -107,7 +195,7 @@ script = "1:filereq content,watch,w,0|2:show_results|3:show_results"
 "{case}/host/content/a.txt" = '''
 hello'''
 "{case}/host/content/b.bin" = '''
-xyz'''
+xyz123456789'''
 "{case}/host/content/sub/e.txt" = '''
 inner'''
 "{case}/host/content/w/keep.txt" = '''

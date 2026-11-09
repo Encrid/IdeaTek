@@ -23,7 +23,7 @@ script = "1:filereq content,read,a.txt,9|1:filereq content,read,b.bin,5|1:filere
 "{case}/host/content/a.txt" = '''
 hello'''
 "{case}/host/content/b.bin" = '''
-xyz'''
+xyz123456789'''
 "{case}/host/content/sub/e.txt" = '''
 inner'''
 "{case}/host/content/w/keep.txt" = '''
