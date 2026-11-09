@@ -6,10 +6,10 @@ The sockets module of IdeaTek on GameNetworkingSockets. It connects peers over I
 
 The release of `BM-IdeaTek-Sockets-GNS` has the tag `sockets_gns-v<version>`: https://github.com/Encrid/IdeaTek/releases.
 Its 2 files are `BM-IdeaTek-Sockets-GNS.zip` and `sha256.txt`. `BM-IdeaTek-Sockets-GNS.zip` has a folder for each target.
-In `BM-IdeaTek-Sockets-GNS`, each folder holds the module `sockets_gns.dll`, `sockets_gns.so` or `sockets_gns.dylib`, and the 3 notices of GameNetworkingSockets, protobuf and libsodium.
+In `BM-IdeaTek-Sockets-GNS`, each folder holds the module `sockets_gns.dll`, `sockets_gns.so` or `sockets_gns.dylib`, and the 4 notices of GameNetworkingSockets, protobuf, libsodium and mosl.
 Each folder of `BM-IdeaTek-Sockets-GNS.zip` also holds this readme and the licence.
 
-The module holds the 4 archives of `BL-IdeaTek-GameNetworkingSockets` and the C++ runtime of zig, so nothing stands beside it: `docs/extern/platform_abstraction/gns/readme.md`.
+The module holds the 4 archives of `BL-IdeaTek-GameNetworkingSockets`, the C++ runtime of zig and mosl for its thread, so nothing stands beside it: `docs/extern/platform_abstraction/gns/readme.md`.
 On Windows, the module links `ws2_32`, `crypt32`, `winmm` and `iphlpapi` of the system.
 The processor must have the AES instructions: `docs/extern/platform_abstraction/gns/readme.md`, *The processor*.
 A project names the zip of `BM-IdeaTek-Sockets-GNS` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
@@ -18,13 +18,14 @@ A project names the zip of `BM-IdeaTek-Sockets-GNS` in a `[[source]]`: `.toolcha
 
 The identity of the module is `ideatek_sockets_gns:sockets@0.1.0`.
 Its role is the sockets module: `docs/extern/platform_abstraction/ideatek_sockets.h.md`, *The roles*.
-The component of its settings is `ideatek_sockets_gns:Settings`. It holds the settings of `docs/extern/platform_abstraction/ideatek_sockets.h.md`, *The settings*, and the 4 settings of the module:
+The component of its settings is `ideatek_sockets_gns:Settings`. It holds the settings of `docs/extern/platform_abstraction/ideatek_sockets.h.md`, *The settings*, and the 5 settings of the module:
 
 | Setting | Type | Default | Range | Meaning |
 | --- | --- | --- | --- | --- |
 | `max_connections` | `uint32_t` | 64 | 1 to 4096 | The connections and sessions with an entity at one time. A connection that comes above it is closed with the reason 5001 of GameNetworkingSockets and the text `too many connections`. A request above it gets `IDEATEK_CONNECTION_STATUS_PROBLEM`. |
 | `max_listen_sockets` | `uint32_t` | 8 | 1 to 256 | The listen sockets at one time. A request above it gets `IDEATEK_LISTEN_STATUS_FAILED`. |
 | `max_addresses` | `uint32_t` | 16 | 1 to 1024 | The names that wait for their addresses at one time. A request above it gets `IDEATEK_ADDRESS_STATUS_FAILED`. |
+| `session_channels` | `uint32_t` | 16 | 1 to 1024 | The channels of the sessions that the module reads, 0 to `session_channels` less 1. A message on another channel is a failed send. |
 | `debug_output` | text | `warning` | `none`, `bug`, `error`, `important`, `warning`, `msg`, `verbose`, `debug` or `everything` | The lines of GameNetworkingSockets that go to the log of the module, from the least to the most. |
 
 The module reads the settings in its first round. It gives each setting of the contract to GameNetworkingSockets as the global value of the same meaning, before it starts.
@@ -61,14 +62,16 @@ A name with no address gives `IDEATEK_ADDRESS_STATUS_NOT_FOUND`. A name that the
 
 In each round, the system of the module:
 
-1. Takes what the worker thread found, and attaches `ideatek:AddressResult`. It destroys the entities that got a result in the round before.
-2. Applies each request that changed: `ideatek:IdentityRequest`, `ideatek:ListenRequest`, `ideatek:ConnectionRequest`, `ideatek:LanesRequest` and `ideatek:SessionRequest`.
-3. Sends the records of `ideatek:MessagesOut` and of `ideatek:SessionMessagesOut`, and gives the records of `ideatek:SignalsIn` to GameNetworkingSockets.
-4. Runs the callbacks of GameNetworkingSockets: the connections that came, the states that changed, the sessions that a peer opened.
-5. Takes the messages that came into the half of the round, and attaches `ideatek:MessagesIn` and `ideatek:SessionMessagesIn`. It attaches `ideatek:SignalsOut` and the `ideatek:LaneStates`.
-6. Attaches `ideatek:ConnectionState` to each connection whose state changed by a byte. It destroys the entities of the connections that closed in the round before.
+1. Destroys the entities of the connections that closed, and of the names that got a result, in the round before.
+2. Writes the lines of GameNetworkingSockets into the log.
+3. Runs the callbacks of GameNetworkingSockets: the connections that came, the states that changed, the sessions that a peer opened.
+4. Takes the messages that came into the half of the round, and attaches `ideatek:MessagesIn` and `ideatek:SessionMessagesIn`.
+5. Attaches `ideatek:SignalsOut` with the signals of GameNetworkingSockets, and `ideatek:LaneStates` for each connection with more than 1 lane.
+6. Attaches `ideatek:AddressResult` for each name that the worker thread found.
+7. Attaches `ideatek:ConnectionState` to each connection whose state changed by a byte.
 
-GameNetworkingSockets does the network on its own thread. The system calls it on the thread of the phases.
+The requests and the batches out do not wait for the round. An observer of the module takes each one at the barrier of the phase that attached it, and gives it to GameNetworkingSockets at once.
+GameNetworkingSockets does the network on its own thread. The module calls it on the thread of the phases.
 
 ### The deployment
 
@@ -78,13 +81,13 @@ GameNetworkingSockets does the network on its own thread. The system calls it on
 | `reloadable` | `false` | Bridge does not store the connections of GameNetworkingSockets. |
 | `spawns` | 65 | 1 for the sockets entity. 1 for each connection that comes, and for the second end of a pair, up to `max_connections`. A larger `max_connections` needs a larger `spawns`. |
 | `changes` | 65536 | The states of the connections, the batches in and the signals of a round. |
-| `persistent` | 2148352 | `message_bytes` of the contract, plus 512 for `certificate_request`, plus 50688. The 50688 hold the tables of the connections, the listen sockets and the names, and the texts of the settings. |
+| `persistent` | 2234112 | `message_bytes` of the contract, plus 512 for `certificate_request`, plus 136448. The 136448 hold the 3 tables, the texts of the settings, and the 2 rings of the signals and the lines. A larger bound needs a larger `persistent`. |
 | `scratch` | 16384 | The room of the declarations and of the log lines. |
 | `log_ring` | 4096 | 128 lines of the log of 32 bytes. GameNetworkingSockets writes many lines above `warning`. |
 | `spans` | 16384 | The lists of the observers of the requests and of the batches out. |
 
 - The system `round` of the module is in its phase `first`. The deployment maps this phase to the start of the round.
-- A pair puts the game before `ideatek_sockets_gns:sockets:round` when the game wants its messages sent in the same round. Else they go in the next round.
+- No pair is needed for the sends: the observers of the module send at the barrier of the phase of the game. The messages that came in a round are in `ideatek:MessagesIn` in the next round.
 - The module takes the grants of the sockets module: `docs/extern/platform_abstraction/ideatek_sockets.h.md`, *The grants*.
 
 ### The messages
@@ -102,7 +105,11 @@ The module writes these lines:
 | `more than <max> connections: the connection of <peer> is closed` | A connection comes above `max_connections`. |
 | `more than <max> listen sockets: the request of <id> fails` | A listen request comes above `max_listen_sockets`. |
 | `more than <max> names: the request of <id> fails` | An address request comes above `max_addresses`. |
-| `the message of <id> is refused: <reason>` | GameNetworkingSockets refuses a message. `failed_sends` of the connection grows by 1. |
+| `the message of <id> is refused: <reason>` | GameNetworkingSockets refuses a message, or its connection, lane or channel is wrong. `failed_sends` of the connection grows by 1. |
+| `the batch of <id> is malformed at <offset>` | A record of a batch out does not fit in its batch. The rest of the batch is left. |
+| `a signal of <count> bytes is refused` | GameNetworkingSockets does not take a signal of `ideatek:SignalsIn`. |
+| `a message of <peer> came before its session` | A message of a session came before the game accepted the session. The message waits. |
+| `no room in changes for the messages in` | `changes` has no room for a batch in. The batch is lost. |
 | `the connection of <id> has a problem: <detailed status>` | A connection gets `IDEATEK_CONNECTION_STATUS_PROBLEM`. The text is the detailed status of GameNetworkingSockets. |
 | `<setting>: a text of <count> bytes is outside <range>` | A text setting is too long, or outside the arena of the module. The system fails in each round. |
 
