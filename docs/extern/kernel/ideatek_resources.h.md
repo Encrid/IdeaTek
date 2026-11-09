@@ -68,7 +68,7 @@ A path of a resource is `source://path#label`. The part `source://` and the part
 The part `path` follows the path rule of the files part.
 A path with no source names the default source. The default source is the content storage, or `processed_folder` in the mode `processed`.
 
-- A named source is a line `name=folder` of `sources`. The folder is a folder of the content storage.
+- A named source is an item `name=folder` of `sources`. The folder is a folder of the content storage.
 - The source `user` is the folder of `IDEATEK_STORAGE_USER`. The resources module only reads it. Mods and the maps of the players are there.
 - A source module gives each other name: *The source modules*.
 
@@ -180,10 +180,10 @@ The loader puts the new values on the labels that stay, and spawns an entity for
 | `hot_reload` | `false` | `true` or `false` | The resources module watches the sources and reloads the changed resources. |
 | `reload_delay_ms` | 300 | 0 to 60000 | The milliseconds after the last change of a file, before its reload. |
 | `meta_check` | `always` | `always`, `never` or `paths` | The meta files that the resources module reads. |
-| `meta_paths` | `[]` | Paths that the path rule allows. | With `paths`: the paths whose meta file the resources module reads. |
+| `meta_paths` | `""` | A text of 0 to 4095 bytes: paths that the path rule allows, with a comma between 2 paths. | With `paths`: the paths whose meta file the resources module reads. |
 | `mode` | `unprocessed` | `unprocessed` or `processed` | The files of the default source. |
 | `processed_folder` | `processed` | A path that the path rule allows. | The default source in the mode `processed`. |
-| `sources` | `[]` | Lines `name=folder` | The named sources. |
+| `sources` | `""` | A text of 0 to 4095 bytes: items `name=folder`, with a comma between 2 items. | The named sources. |
 | `load_bytes` | 4194304 | 1 to 1073741824 | The bytes for the bytes of the loads. |
 | `head_bytes` | 65536 | 1 to `load_bytes` | The bytes of the first read of a file of a ranged loader. |
 
@@ -216,6 +216,7 @@ The loader puts the new values on the labels that stay, and spawns an entity for
 | 7 | `IDEATEK_RESOURCE_ERROR_WRONG_TYPE` | The loader gives another type. |
 | 8 | `IDEATEK_RESOURCE_ERROR_IGNORED` | The meta file tells `ignore`. |
 | 9 | `IDEATEK_RESOURCE_ERROR_TOO_BIG` | The file has more bytes than `load_bytes`. |
+| 10 | `IDEATEK_RESOURCE_ERROR_NO_ROOM` | A table of the resources module is full. Its readme names the bound. |
 
 ## ideatek:ResourceLoad
 
@@ -425,7 +426,7 @@ Bytes 17 to 23 hold no field.
 
 ```text
 { IDEATEK_LOAD_STATE_NOT_LOADED = 0, IDEATEK_LOAD_STATE_LOADING = 1, IDEATEK_LOAD_STATE_LOADED = 2, IDEATEK_LOAD_STATE_FAILED = 3 }
-{ IDEATEK_RESOURCE_ERROR_NONE = 0, IDEATEK_RESOURCE_ERROR_NO_LOADER = 1, IDEATEK_RESOURCE_ERROR_TWO_LOADERS = 2, IDEATEK_RESOURCE_ERROR_NOT_FOUND = 3, IDEATEK_RESOURCE_ERROR_READ_FAILED = 4, IDEATEK_RESOURCE_ERROR_LOADER_FAILED = 5, IDEATEK_RESOURCE_ERROR_NO_LABEL = 6, IDEATEK_RESOURCE_ERROR_WRONG_TYPE = 7, IDEATEK_RESOURCE_ERROR_IGNORED = 8, IDEATEK_RESOURCE_ERROR_TOO_BIG = 9 }
+{ IDEATEK_RESOURCE_ERROR_NONE = 0, IDEATEK_RESOURCE_ERROR_NO_LOADER = 1, IDEATEK_RESOURCE_ERROR_TWO_LOADERS = 2, IDEATEK_RESOURCE_ERROR_NOT_FOUND = 3, IDEATEK_RESOURCE_ERROR_READ_FAILED = 4, IDEATEK_RESOURCE_ERROR_LOADER_FAILED = 5, IDEATEK_RESOURCE_ERROR_NO_LABEL = 6, IDEATEK_RESOURCE_ERROR_WRONG_TYPE = 7, IDEATEK_RESOURCE_ERROR_IGNORED = 8, IDEATEK_RESOURCE_ERROR_TOO_BIG = 9, IDEATEK_RESOURCE_ERROR_NO_ROOM = 10 }
 { ideatek_entity_t owner; bridge_text_t path; bridge_text_t type; bridge_text_t settings; uint8_t reload_owner; uint8_t priority; }
 { ideatek_entity_t resource; bridge_text_t type; }
 { ideatek_entity_t resource; }
