@@ -136,7 +136,9 @@ A session is an entity with `ideatek:Session` and `ideatek:ConnectionState`.
 The game spawns an entity and attaches `ideatek:SessionRequest` with `IDEATEK_SESSION_ACTION_OPEN` to it.
 When a peer opens a session, the sockets module spawns an entity with `ideatek:Session`. The game answers with `IDEATEK_SESSION_ACTION_ACCEPT` or `IDEATEK_SESSION_ACTION_CLOSE`.
 
-`IDEATEK_SESSION_ACTION_CLOSE_CHANNEL` closes 1 channel. The last channel closes the session.
+When the game opened a session to that peer before, the sockets module accepts the session at once. The entity of the game keeps it.
+
+`IDEATEK_SESSION_ACTION_CLOSE_CHANNEL` closes 1 channel, and drops its messages. The session stays until `IDEATEK_SESSION_ACTION_CLOSE`.
 A session with no messages for 3 minutes closes. The sockets module then destroys its entity in the next round.
 
 The records of `ideatek:SessionMessagesOut` and `ideatek:SessionMessagesIn`:

@@ -1,34 +1,30 @@
 # src/platform_abstraction/sockets_gns/sockets_half.c
 
-This file holds the half of the round, the 2 rings, and the room of `changes`.
+This file holds the half of the round and the entities that go.
 
-## The round
+## The half
 
-`turn_half` destroys the entities of `gone`. Then it switches the side of the half, and empties the new side.
-A destroy always fits in `changes`, because it costs less than the attach that put the entity in `gone`.
-`put_bytes` copies bytes into the current side, and gives their text. `room_left` gives the bytes left in the current side.
-`has_room` tells whether `changes` can take a change of the given bytes.
+`sockets_half_t` holds 2 sides of `message_bytes` divided by 2, in the arena. A round writes its batches in into 1 side, and the game reads them in the next round while the module writes the other side.
+`turn_half` switches the side, and empties the new side. `put_bytes` copies bytes into the current side, and gives their text. `room_left` gives the bytes left in the current side.
 
-## The rings
+## The entities that go
 
-A ring of `sockets_ring_t` holds records: a length of 4 bytes, then the bytes. A record does not wrap: a writer that reaches the end starts at the place of the ring when the head is far enough.
-`ring_put` writes a record under no lock of its own: the caller holds `lock`. It gives `false` when the record does not fit.
-`ring_take` gives the next record and moves the tail, or gives a length of 0 when the ring is empty.
+A closed connection, and a name with its result, keep their entity until the game read its last state. `drop_later` puts an entity in `later`.
+`turn_half` destroys the entities of `gone`, then moves `later` into `gone`. So an entity marked in a round goes 2 rounds later. An observer marks an entity at a barrier, and the first phase of the next round cannot destroy it yet.
+A destroy always fits in `changes`, because it costs less than the attach that marked the entity.
 
 ## The branches
 
 | Case | Result |
 | --- | --- |
-| A record does not fit at the end of the ring. | It goes to the place of the ring, if the tail left room there. |
-| The ring is full. | `ring_put` gives `false`. |
-| The ring is empty. | `ring_take` gives 0. |
+| An entity in `later`. | It goes in the round after the next one. |
+| An entity in `gone`. | It goes in this round. |
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `has_room` | Tells whether `changes` can take the bytes. |
-| `turn_half` | Destroys the entities of `gone`, and switches the side of the half. |
+| `turn_half` | Destroys the entities of `gone`, moves `later` into `gone`, and switches the side of the half. |
+| `drop_later` | Marks an entity that goes in a later round. |
 | `put_bytes` | Copies bytes into the current side, and gives their text. |
-| `ring_put` | Writes a record into a ring, or gives `false`. |
-| `ring_take` | Takes the next record of a ring, or gives 0. |
+| `room_left` | Gives the bytes left in the current side. |
