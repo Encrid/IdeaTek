@@ -1,6 +1,6 @@
 # src/platform_abstraction/sockets_gns/sockets_values.c
 
-This file turns the words of the settings into the numbers of GameNetworkingSockets, and its states and flags into the ones of the contract.
+This file turns the words of the settings into the numbers of GameNetworkingSockets, and its states into the statuses of the contract.
 
 ## The words
 
@@ -12,7 +12,7 @@ The index of each word is the value of GameNetworkingSockets for it. `IP_AllowWi
 
 `ice_mask` reads `ice_transports`, the words `relay`, `private` and `public` separated by commas, and gives the mask of GameNetworkingSockets: 1, 2 and 4. An empty text gives 0. A wrong word gives -1.
 
-## The states and the flags
+## The states
 
 `status_of` turns a state of GameNetworkingSockets into `ideatek_connection_status_t`:
 
@@ -24,7 +24,7 @@ The index of each word is the value of GameNetworkingSockets for it. `IP_AllowWi
 | Closed by peer | `IDEATEK_CONNECTION_STATUS_CLOSED_BY_PEER` |
 | Problem detected locally, none, and the 2 ends | `IDEATEK_CONNECTION_STATUS_PROBLEM` |
 
-`flags_of` turns the flags of a connection of GameNetworkingSockets into `ideatek_connection_flag_t`. The 5 bits have the same places in both, so this is a mask of the 5 bits.
+The flags are in `docs/intern/platform_abstraction/sockets_gns/sockets_flags.c.md`.
 
 ## The branches
 
@@ -32,7 +32,7 @@ The index of each word is the value of GameNetworkingSockets for it. `IP_AllowWi
 | --- | --- |
 | A text that matches no word. | The count of the words. |
 | `ice_transports` with a wrong word, or a comma with no word. | -1. |
-| A state of GameNetworkingSockets outside its 5 live states. | `IDEATEK_CONNECTION_STATUS_PROBLEM`. |
+| A state of GameNetworkingSockets outside its 4 live states. | `IDEATEK_CONNECTION_STATUS_PROBLEM`. |
 
 ## Functions
 
@@ -41,4 +41,3 @@ The index of each word is the value of GameNetworkingSockets for it. `IP_AllowWi
 | `word_number` | Gives the index of a text in a table of words, or the count. |
 | `ice_mask` | Gives the mask of the routes of `ice_transports`, or -1. |
 | `status_of` | Gives the status of the contract for a state of GameNetworkingSockets. |
-| `flags_of` | Gives the flags of the contract for the flags of GameNetworkingSockets. |

@@ -52,7 +52,7 @@ The callback of the status of the connections is set the same way: `Callback_Con
 | Case | Result |
 | --- | --- |
 | A setting of the table with no config value. | `apply_numbers` skips it. |
-| A setting that GameNetworkingSockets refuses. | The line `<setting>: refused by GameNetworkingSockets`. This has no path with a value in its range. |
+| A setting that GameNetworkingSockets refuses. | The line `<setting>: refused by GameNetworkingSockets`. Only a failed call of the tests reaches it: a value in its range is never refused. |
 
 ## Functions
 

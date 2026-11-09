@@ -1,35 +1,26 @@
 # src/platform_abstraction/sockets_gns/sockets_declare.c
 
-This file declares the types, the system and the observers of the sockets module to Bridge.
+This file declares the types of the sockets module to Bridge.
 
 ## The declarations
 
-The module declares the 11 scalar types of the contract, then its 19 components, then its settings: `docs/extern/platform_abstraction/ideatek_sockets.h.md`, *The declarations*.
+The module declares the 12 scalar types of the contract, then its 19 components, then its settings: `docs/extern/platform_abstraction/ideatek_sockets.h.md`, *The declarations*.
+`SOCKETS_TYPE` of the header declares a type of the contract as a table, stripped, removed at the destroy of its entity. The settings are a singleton.
 
-| Call | Kind | Name |
-| --- | --- | --- |
-| System | `first` | `round` |
-| Observer | write | `identity` on `ideatek:IdentityRequest` |
-| Observer | write and detach | `listen` on `ideatek:ListenRequest` |
-| Observer | write | `connection` on `ideatek:ConnectionRequest` |
-| Observer | write | `lanes` on `ideatek:LanesRequest` |
-| Observer | write | `session` on `ideatek:SessionRequest` |
-| Observer | write | `address` on `ideatek:AddressRequest` |
-| Observer | write | `messages_out` on `ideatek:MessagesOut` |
-| Observer | write | `session_messages_out` on `ideatek:SessionMessagesOut` |
-| Observer | write | `signals_in` on `ideatek:SignalsIn` |
+| Function | Types |
+| --- | --- |
+| `declare_scalars` | `ideatek_entity_t`, `ideatek_address_t`, `ideatek_identity_t`, and the 2 bitmasks `ideatek_send_t` and `ideatek_connection_flag_t`. |
+| `declare_enums` | The 7 enums, from `ideatek_listen_kind_t` to `ideatek_address_status_t`. |
+| `declare_types` | The 7 components of the identity, the listen sockets and the connections, after the scalars and the enums. Then the batches, then `ideatek_sockets_gns:Settings`. |
+| `declare_batches` | The 12 components of the batches, the sessions and the addresses. |
 
-`round` states as its changes the 10 components that the sockets module writes: `docs/extern/platform_abstraction/ideatek_sockets.h.md`, *The grants*.
-The observers `identity`, `listen`, `connection` and `session` state `ideatek:ListenState`, `ideatek:Inbound`, `ideatek:ConnectionState` and `ideatek:Session` as their changes. A request gets its state in the barrier that applies it.
-The 4 other observers state no change.
-
-`lists` keeps the list of each observer, in the order of the table.
+The order of the declarations is the order of the slots of the header: `docs/intern/platform_abstraction/sockets_gns/sockets_inside.h.md`, *The slots*. The system and the observers are in `docs/intern/platform_abstraction/sockets_gns/sockets_runs.c.md`.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `declare_scalars` | Declares the 11 scalar types. |
-| `declare_components` | Declares the 19 components and the settings. |
-| `add_observer` | Declares 1 observer on 1 component, with its events and its changes, and keeps its list. |
-| `add_runs` | Declares the system and the 9 observers. |
+| `declare_scalars` | Declares the 3 structs and the 2 bitmasks. |
+| `declare_enums` | Declares the 7 enums. |
+| `declare_batches` | Declares the 12 components of the batches, the sessions and the addresses. |
+| `declare_types` | Declares every type, in the order of the slots. |
