@@ -151,4 +151,6 @@ A module declares `ideatek:ideatek_entity_t` before `ideatek:StateScoped`.
 | --- | --- | --- |
 | The game | `ideatek:State`, `ideatek:StateRequest` and `ideatek:StateScoped` | `ideatek:ideatek_entity_t` and `ideatek:StateChange` |
 | Another module | `ideatek:StateRequest` and `ideatek:StateScoped` | `ideatek:ideatek_entity_t`, `ideatek:State` and `ideatek:StateChange` |
-| The states module | `ideatek:State` and `ideatek:StateChange` | `ideatek:ideatek_entity_t`, `ideatek:StateRequest` and `ideatek:StateScoped` |
+| The states module | `ideatek:State`, `ideatek:StateChange`, `ideatek:StateRequest` and `ideatek:StateScoped` | `ideatek:ideatek_entity_t` |
+
+The states module writes no `ideatek:StateRequest` and no `ideatek:StateScoped`. The 2 grants let it detach the requests and destroy the scoped entities. Bridge asks the grant of a component for its detach, and for the destroy of an entity that carries it.
