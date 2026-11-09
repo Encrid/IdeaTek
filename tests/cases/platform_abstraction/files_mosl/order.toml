@@ -12,7 +12,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq content,read,a.txt,9|1:filereq content,read,b.bin,5|1:filereq content,read,sub/e.txt,1|2:show_results"
+script = "1:filereq content,read,a.txt,9|1:filereq content,read,b.bin,5|1:filereq content,read,sub/e.txt,1|2:stall 500|3:show_results"
 ''' } }
 
 [case.folders]
@@ -37,5 +37,5 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq content,read,a.txt,1|1:filereq content,read,b.bin,9|1:filereq content,read,sub/e.txt,5|2:show_results"
+script = "1:filereq content,read,a.txt,1|1:filereq content,read,b.bin,9|1:filereq content,read,sub/e.txt,5|2:stall 500|3:show_results"
 '''

@@ -58,3 +58,13 @@ void path_split(const char *path, char *folder, char *name)
     folder[folder_len] = '\0';
     memcpy(name, last, strlen(last) + 1);
 }
+
+void path_parent(char *path)
+{
+    size_t len = strlen(path);
+
+    while (len > 0 && path[len - 1] != '/' && path[len - 1] != '\\')
+        len--;
+    len -= len > 0;
+    path[len] = '\0';
+}

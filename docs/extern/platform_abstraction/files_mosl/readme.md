@@ -37,6 +37,8 @@ A system with no such variable gives no user storage: each request of `IDEATEK_S
 A worker thread of the module does the requests, in the order of `docs/extern/platform_abstraction/ideatek_files.h.md`, *The order of the requests*.
 The system of the module takes the results of the thread in each round, and attaches them.
 A read takes the whole file, then keeps the bytes from `offset` for `length`. So a read of a part of a large file costs the whole file.
+
+A refusal, and the start of a watch, need no work of the thread: their results come in the next round.
 A list gives the size of each file with 1 call of the system for each entry. A removal of a folder that is not empty gets `IDEATEK_FILE_STATUS_DENIED`.
 
 A watch sees the changes that the system reports, down to every folder below the watched folder.
@@ -70,5 +72,6 @@ The module writes these lines:
 | `no content folder: <path>` | `content_folder` is not a folder beside the program. Each request of `IDEATEK_STORAGE_CONTENT` gets `IDEATEK_FILE_STATUS_NOT_FOUND`. |
 | `no user folder: <reason>` | The system has no variable for the data of programs, or refuses to make `user_folder`. Each request of `IDEATEK_STORAGE_USER` gets `IDEATEK_FILE_STATUS_UNSUPPORTED`. |
 | `the watch of <path> stopped` | The watched folder went. The watch gets `IDEATEK_FILE_STATUS_NOT_FOUND`. |
+| `no result for <entity>: <count> results wait for the next round` | 256 refusals or starts of watches wait for the next round already. The request gets no result. |
 
 A setting outside its range gets the line that `readme.md`, *The contracts*, gives.

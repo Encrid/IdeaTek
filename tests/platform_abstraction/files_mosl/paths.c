@@ -25,5 +25,9 @@ int main(int argc, char **argv)
         path_split(argv[2], folder, name);
         printf("split [%s] [%s]\n", folder, name);
     }
+    if (!strcmp(argv[1], "parent")) {
+        path_parent(argv[2]);
+        printf("parent [%s]\n", argv[2]);
+    }
     return (0);
 }

@@ -42,27 +42,40 @@ static bridge_text_t put_bytes(const bridge_api_t *api, const char *text)
     return ((bridge_text_t){ .at = at, .len = len });
 }
 
+static const char *field(char **left)
+{
+    char *start = *left;
+    char *comma = strchr(start, ',');
+
+    if (comma) {
+        *comma = '\0';
+        *left = comma + 1;
+    } else
+        *left = start + strlen(start);
+    return (start);
+}
+
 static void ask_file(const bridge_api_t *api, char *args)
 {
     ideatek_file_request_t r = {};
-    char *left = nullptr;
-    const char *storage = strtok_r(args, ",", &left);
-    const char *action = strtok_r(nullptr, ",", &left);
-    const char *path = strtok_r(nullptr, ",", &left);
-    const char *priority = strtok_r(nullptr, ",", &left);
-    const char *third = strtok_r(nullptr, ",", &left);
-    const char *fourth = strtok_r(nullptr, ",", &left);
+    char *left = args;
+    const char *storage = field(&left);
+    const char *action = field(&left);
+    const char *path = field(&left);
+    const char *priority = field(&left);
+    const char *third = field(&left);
+    const char *fourth = field(&left);
     uint64_t id = api->spawn(api);
 
     r.storage = index_of(storage, STORAGES, 2);
     r.action = index_of(action, ACTIONS, 5);
-    r.path = put_bytes(api, path ? path : "");
-    r.priority = (uint8_t)atoi(priority ? priority : "0");
+    r.path = put_bytes(api, path);
+    r.priority = (uint8_t)atoi(priority);
     if (r.action == IDEATEK_FILE_ACTION_WRITE)
-        r.data = put_bytes(api, third ? third : "");
-    if (r.action == IDEATEK_FILE_ACTION_READ && third) {
+        r.data = put_bytes(api, third);
+    if (r.action == IDEATEK_FILE_ACTION_READ) {
         r.offset = strtoull(third, nullptr, 0);
-        r.length = strtoull(fourth ? fourth : "0", nullptr, 0);
+        r.length = strtoull(fourth, nullptr, 0);
     }
     entities[entity_count++] = id;
     BRIDGE_NATIVE_ATTACH(api, id, game_files_slots.request, r);
