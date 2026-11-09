@@ -43,7 +43,7 @@ A playback device that does not open gives `IDEATEK_AUDIO_STATUS_NO_DEVICE`. A r
 In each round, the system of the module:
 
 1. Takes the devices that SDL3 added or removed, and the new default.
-2. Applies each `ideatek:AudioRequest` that changed. A new device or target binds the stream to another device. A new rate or new channels set the format of the stream. A new `ahead` sets `wanted`. A new direction closes the stream and opens a new one.
+2. Applies each `ideatek:AudioRequest` that changed. A new device, target or direction closes the stream and opens a new one. A new rate or new channels set the format of the stream. A new `ahead` sets `wanted`.
 3. Puts the batch of `ideatek:AudioFrames` of the round before in the playback stream, if its `at` is the count.
 4. Takes the recorded frames of the recording stream into the half of the round, and attaches `ideatek:AudioRecorded`.
 5. Attaches `ideatek:AudioState` to each stream whose state changed by a byte.
@@ -64,6 +64,7 @@ So the frames that the game writes in a round play in the next round. `ahead` co
 | `spans` | 16384 | The lists of the 2 observers: the requests, and the frames. |
 
 - The system `round` of the module is in its phase `first`. The deployment maps this phase to the start of the round.
+- The module pumps the event queue of SDL3 in its round. With the window module, a pair puts `ideatek_window_sdl3:window:events` before `round`, so the wait of the window comes first.
 - A pair puts the game before `ideatek_audio_sdl3:audio:round` when the game wants its frames played in the same round. Else they play in the next round.
 - The module takes the grants of the audio module: `docs/extern/platform_abstraction/ideatek_audio.h.md`, *The grants*.
 
