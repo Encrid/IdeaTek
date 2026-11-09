@@ -83,6 +83,6 @@ The slots keep the order of the declarations of the contract. The 12 scalar type
 The components are `IDENTITY_REQUEST`, `IDENTITY_STATE`, `LISTEN_REQUEST`, `LISTEN_STATE`, `CONNECTION_REQUEST`, `INBOUND`, `CONNECTION_STATE`, `LANES_REQUEST`, `LANE_STATES`, `SESSION` and `SESSION_REQUEST`.
 Then come `MESSAGES_OUT`, `MESSAGES_IN`, `SESSION_MESSAGES_OUT`, `SESSION_MESSAGES_IN`, `SIGNALS_OUT`, `SIGNALS_IN`, `ADDRESS_REQUEST` and `ADDRESS_RESULT`, then `SETTINGS`.
 `SOCKETS_TYPE` declares a type of the contract, and `SOCKETS_OBSERVER` declares an observer on 1 component: `docs/intern/platform_abstraction/sockets_gns/sockets_declare.c.md` and `docs/intern/platform_abstraction/sockets_gns/sockets_runs.c.md`.
-`sockets_settings_t` holds the settings of the contract in the order of its table, then the 5 settings of the module: `docs/extern/platform_abstraction/sockets_gns/readme.md`.
+`sockets_settings_t` holds the settings of the contract in the order of its table, then the 5 settings of the module: `docs/usage/platform_abstraction/sockets_gns.md`.
 
 The header includes `gns_flat.h`, `sockets_values.h` and `ideatek_sockets.h`, and `os.h` of mosl for the thread, the mutex and the event.
