@@ -1,0 +1,65 @@
+[parts.sockets_gns]
+name = "BM-IdeaTek-Sockets-GNS"
+folder = "platform_abstraction/sockets_gns"
+uses = ["world", "sockets", "gns"]
+third_party = ["gns", "protobuf", "libsodium"]
+
+[variables]
+sockets_gns_settings = [
+    "message_bytes", "timeout_initial", "timeout_connected", "send_buffer", "recv_buffer", "recv_buffer_messages",
+    "recv_max_message", "nagle_time", "mtu", "allow_without_auth", "allow_localhost_without_auth", "unencrypted",
+    "stun_servers", "turn_servers", "turn_users", "turn_passwords", "ice_transports", "ice_penalty", "ice_implementation",
+    "fake_loss_send", "fake_loss_recv", "fake_lag_send", "fake_lag_recv", "fake_reorder_send", "fake_reorder_recv",
+    "fake_reorder_time", "fake_duplicate_send", "fake_duplicate_recv", "fake_duplicate_time_max", "fake_jitter_send_avg",
+    "fake_jitter_recv_avg", "fake_jitter_send_max", "fake_jitter_recv_max", "fake_jitter_send_pct", "fake_jitter_recv_pct",
+    "fake_rate_send", "fake_rate_recv", "fake_burst_send", "fake_burst_recv",
+    "max_connections", "max_listen_sockets", "max_addresses", "debug_output",
+]
+sockets_gns_words = [
+    "abi=1", "config=ideatek_sockets_gns:Settings", "pinned=true", "reloadable=false",
+    "settings={sockets_gns_settings: }",
+    "config.message_bytes=2097152", "config.timeout_initial=10000", "config.timeout_connected=10000",
+    "config.send_buffer=524288", "config.recv_buffer=1048576", "config.recv_buffer_messages=1000",
+    "config.recv_max_message=524288", "config.nagle_time=5000", "config.mtu=1300", "config.allow_without_auth=allow",
+    "config.allow_localhost_without_auth=allow", "config.unencrypted=never", "config.stun_servers=",
+    "config.turn_servers=", "config.turn_users=", "config.turn_passwords=", "config.ice_transports=relay,private,public",
+    "config.ice_penalty=0", "config.ice_implementation=auto",
+    "config.fake_loss_send=0", "config.fake_loss_recv=0", "config.fake_lag_send=0", "config.fake_lag_recv=0",
+    "config.fake_reorder_send=0", "config.fake_reorder_recv=0", "config.fake_reorder_time=15",
+    "config.fake_duplicate_send=0", "config.fake_duplicate_recv=0", "config.fake_duplicate_time_max=10",
+    "config.fake_jitter_send_avg=0", "config.fake_jitter_recv_avg=0", "config.fake_jitter_send_max=100",
+    "config.fake_jitter_recv_max=100", "config.fake_jitter_send_pct=75", "config.fake_jitter_recv_pct=75",
+    "config.fake_rate_send=0", "config.fake_rate_recv=0", "config.fake_burst_send=16384", "config.fake_burst_recv=16384",
+    "config.max_connections=64", "config.max_listen_sockets=8", "config.max_addresses=16", "config.debug_output=warning",
+    "scratch=16384", "log_ring=4096", "spans=16384", "spawns=65", "changes=65536", "persistent=2148352",
+    "hot_reload=false",
+]
+
+[[artifact]]
+name = "sockets_gns"
+kind = "native_module"
+part = "sockets_gns"
+sources = ["src/platform_abstraction/sockets_gns/*.c"]
+include = ["include/platform_abstraction", "src/platform_abstraction/sockets_gns"]
+link = ["{out}/gns.a", "{out}/gns_c.a", "{out}/protobuf.a", "{out}/sodium.a", "-lc++"]
+flags = ["{gns_system}"]
+manifest = ["ideatek_sockets_gns:sockets@0.1.0", "{sockets_gns_words}"]
+
+[[artifact]]
+name = "sockets_gns_reload"
+kind = "program"
+part = "sockets_gns"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/sockets_gns{library}"]
+
+[[artifact]]
+name = "gns_layout"
+kind = "gns_program"
+part = "sockets_gns"
+test = true
+sources = ["tests/platform_abstraction/sockets_gns/layout.cpp"]
+include = ["{gns_root}/include", "src/platform_abstraction/sockets_gns"]
+defines = ["STEAMNETWORKINGSOCKETS_STATIC_LINK"]
+link = ["{out}/gns.a", "{out}/gns_c.a", "{out}/protobuf.a", "{out}/sodium.a"]
+flags = ["{gns_system}"]
