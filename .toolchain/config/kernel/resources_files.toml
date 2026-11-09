@@ -1,0 +1,35 @@
+[parts.resources_files]
+name = "BM-IdeaTek-Resources-Files"
+folder = "kernel/resources_files"
+uses = ["resources", "files", "frame", "world", "sdl3"]
+third_party = []
+
+[variables]
+resources_files_words = [
+    "abi=1", "config=ideatek_resources_files:Settings", "pinned=false", "reloadable=false",
+    "settings=hot_reload reload_delay_ms meta_check meta_paths mode processed_folder sources load_bytes head_bytes max_resources max_uses max_loaders max_sources max_variables max_reads max_labels path_bytes settings_bytes",
+    "config.hot_reload=false", "config.reload_delay_ms=300", "config.meta_check=always",
+    "config.meta_paths=", "config.mode=unprocessed", "config.processed_folder=processed",
+    "config.sources=", "config.load_bytes=4194304", "config.head_bytes=65536",
+    "config.max_resources=4096", "config.max_uses=8192", "config.max_loaders=64",
+    "config.max_sources=16", "config.max_variables=64", "config.max_reads=64",
+    "config.max_labels=4096", "config.path_bytes=256", "config.settings_bytes=256",
+    "scratch=16384", "log_ring=2048", "spans=16384", "spawns=80", "changes=65536",
+    "persistent=7077888", "hot_reload=false",
+]
+
+[[artifact]]
+name = "resources_files"
+kind = "native_module"
+part = "resources_files"
+sources = ["src/kernel/resources_files/*.c"]
+include = ["include/kernel", "include/platform_abstraction", "src/kernel/resources_files"]
+manifest = ["ideatek_resources_files:resources@0.1.0", "{resources_files_words}"]
+
+[[artifact]]
+name = "resources_files_reload"
+kind = "program"
+part = "resources_files"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/resources_files{library}"]
