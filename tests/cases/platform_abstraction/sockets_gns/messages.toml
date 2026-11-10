@@ -52,14 +52,14 @@ script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|
 [case.files]
 "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_sockets.toml"]
-rounds = 12
+rounds = 16
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,0,reliable,one;1,0,reliable,two|10:stall 100|11:stall 100|12:show_count"
+script = "1:listen ip,{port},0|1:connect local,{port},,,0|2:stall 30|3:stall 30|4:stall 30|5:conn 2,accept|5:stall 30|6:stall 30|7:stall 30|8:stall 30|9:stall 30|10:send 1,0,reliable,one;1,0,reliable,two|10:stall 100|11:stall 100|12:stall 100|13:stall 100|14:stall 100|15:stall 100|16:show_count"
 '''
 
 [[case]]
