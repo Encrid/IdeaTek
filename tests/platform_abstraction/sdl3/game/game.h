@@ -79,6 +79,7 @@ typedef struct {
     uint32_t mode_count;
     uint32_t round;
     uint64_t last;
+    uint64_t mark;
     uint64_t second;
     uint32_t first_drop;
     uint32_t first_paste;
