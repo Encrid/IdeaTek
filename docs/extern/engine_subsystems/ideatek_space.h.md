@@ -202,6 +202,9 @@ Its C type `ideatek_sibling_t` has 24 bytes, and an alignment of 8.
 
 When `ideatek:Parent` of a child changes, the space module reads `parent` to take the child out of the list of its old parent. Bridge gives an observer no old value.
 
+Each module declares `ideatek:Sibling` with `BRIDGE_ON_DESTROY_KEEP`, as `ideatek:Children`. So the husk of a destroyed child keeps its links.
+The space module takes the husk out of the list of its parent, then detaches `ideatek:Sibling`, and the husk goes.
+
 ## ideatek:Interpolated
 
 `ideatek:Interpolated` is a tag. A mover attaches it to an entity that a reader draws between 2 steps.
@@ -278,7 +281,7 @@ A part of a model that other entities follow, for example a hand, is an entity w
 | `ideatek:Parent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:WorldTransform` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Children` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_KEEP` |
-| `ideatek:Sibling` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:Sibling` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_KEEP` |
 | `ideatek:PreviousWorldTransform` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Interpolated` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Teleported` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
