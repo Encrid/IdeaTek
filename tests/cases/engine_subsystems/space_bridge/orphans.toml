@@ -1,0 +1,258 @@
+[[case]]
+name = "a destroyed parent destroys its child with IDEATEK_ORPHAN_DESTROY"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r7 world 1 none and no transform"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,1,0,0,0,0,0,0|7:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,1,0,0,0,0,0,0|4:kill 0|7:show_space"
+'''
+
+[[case]]
+name = "a destroyed parent leaves its child with IDEATEK_ORPHAN_KEEP_WORLD as a root at its place"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r7 world 1 at 6.000 0.000 0.000"], lacks = ["r7 sibling 1"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 5,0,0|2:child 0,1,0,0,0,0,0,0|4:kill 0|7:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 5,0,0|2:child 0,1,0,0,0,0,1,0|4:kill 0|7:show_space"
+'''
+
+[[case]]
+name = "a chain of orphans goes 1 level at each barrier"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r7 world 2 none and no transform"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,1,0,0,0,0,0,0|3:child 1,1,0,0,0,0,0,0|7:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,1,0,0,0,0,0,0|3:child 1,1,0,0,0,0,0,0|4:kill 0|7:show_space"
+'''
+
+[[case]]
+name = "a destroyed child leaves the list of its parent, and the links close over it"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r7 children 0 first 1 last 3 count 2", "r7 sibling 1 prev -1 next 3 parent 0", "r7 sibling 3 prev 1 next -1 parent 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,1,0,0,0,0,0,0|2:child 0,2,0,0,0,0,0,0|2:child 0,3,0,0,0,0,0,0|7:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,1,0,0,0,0,0,0|2:child 0,2,0,0,0,0,0,0|2:child 0,3,0,0,0,0,0,0|4:kill 2|7:show_space"
+'''
+
+[[case]]
+name = "an orphan with IDEATEK_ORPHAN_KEEP_WORLD and no place stays, with no parent"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r8 world 1 none"], lacks = ["r8 world 1 none and no transform", "r8 sibling 1"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 9
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,1,0,0,0,0,0,0|3:badmove 1|5:kill 0|8:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 9
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,1,0,0,0,0,1,0|3:badmove 1|5:kill 0|8:show_space"
+'''
+
+[[case]]
+name = "a child that moves to another parent in the round of the destroy of its parent stays"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r7 sibling 2 prev -1 next -1 parent 1", "r7 world 2 at 8.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|1:node 7,0,0|2:child 0,1,0,0,0,0,0,0|4:kill 0|7:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|1:node 7,0,0|2:child 0,1,0,0,0,0,0,0|4:reparent 2,1,0,0,0,0|4:kill 0|7:show_space"
+'''
+
+[[case]]
+name = "a child that loses its parent in the round of the destroy of its parent stays as a root"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r7 world 1 at 1.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 5,0,0|2:child 0,1,0,0,0,0,0,0|4:kill 0|7:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 5,0,0|2:child 0,1,0,0,0,0,0,0|4:reparent 1,-1|4:kill 0|7:show_space"
+'''

@@ -1,0 +1,254 @@
+[[case]]
+name = "an interpolated entity gets its place before at the place of now"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, matches = ["r3 previous 0 at 1\\.000 0\\.000 0\\.000 tick [0-9]+"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|3:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|1:interp 0|3:show_space"
+'''
+
+[[case]]
+name = "an entity that becomes interpolated after its place gets its place before"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, matches = ["r5 previous 0 at 1\\.000 0\\.000 0\\.000 tick [0-9]+"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|5:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|3:interp 0|5:show_space"
+'''
+
+[[case]]
+name = "each step copies the place into the place before, with the tick before"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r4 previous 0 at 1.000 0.000 0.000", "r6 previous 0 at 2.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|1:interp 0|4:show_space|6:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|1:interp 0|4:move 0,2,0,0|4:show_space|6:show_space"
+'''
+
+[[case]]
+name = "a teleport sets the place before to the new place"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r6 previous 0 at 9.000 0.000 0.000", "r6 world 0 at 9.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|1:interp 0|4:move 0,9,0,0|6:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|1:interp 0|4:teleport 0,9,0,0|6:show_space"
+'''
+
+[[case]]
+name = "a teleport also sets the place before of an interpolated child"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r6 previous 1 at 10.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|2:child 0,1,0,0,0,0,0,0|2:interp 1|4:move 0,9,0,0|6:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|2:child 0,1,0,0,0,0,0,0|2:interp 1|4:teleport 0,9,0,0|6:show_space"
+'''
+
+[[case]]
+name = "an entity that stops being interpolated loses its place before"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, lacks = ["r5 previous 0"], has = ["r5 world 0 at 1.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|1:interp 0|5:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:timereq 1,64,0,1|1:node 1,0,0|1:interp 0|3:uninterp 0|5:show_space"
+'''
+
+[[case]]
+name = "with no clock, the place before has the tick 0, and no step runs"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r3 previous 0 at 1.000 0.000 0.000 tick 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space_alone.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|3:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space_alone.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|1:interp 0|3:show_space"
+'''

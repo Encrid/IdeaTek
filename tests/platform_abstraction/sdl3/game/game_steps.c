@@ -14,6 +14,7 @@
 #include "game_gpu.h"
 #include "game_sockets.h"
 #include "game_states.h"
+#include "game_space.h"
 #include "game_resources.h"
 
 static const char HINT[] = "IDEATEK_TEST_DISPLAYS";
@@ -318,6 +319,10 @@ static void run_step(const bridge_api_t *api, const char *verb, char *args)
 #endif
 #if defined(GAME_RESOURCES)
     if (game_resources_step(api, verb, args))
+        return;
+#endif
+#if defined(GAME_SPACE)
+    if (game_space_step(api, verb, args))
         return;
 #endif
     if (!strcmp(verb, "request"))

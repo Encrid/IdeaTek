@@ -156,7 +156,7 @@ kind = "native_module"
 part = "sdl3"
 test = true
 sources = ["tests/platform_abstraction/sdl3/game/*.c"]
-include = ["include/platform_abstraction", "include/kernel"]
+include = ["include/platform_abstraction", "include/kernel", "include/engine_subsystems"]
 link = ["{out}/SDL3{library}"]
 flags = ["-isystem", "{sdl_root}/include", "{rpath}"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
@@ -194,6 +194,11 @@ manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 [[artifact.variants]]
 name = "sdl3_game_states"
 defines = ["GAME_STATES"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
+name = "sdl3_game_space"
+defines = ["GAME_FRAME", "GAME_SPACE"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]

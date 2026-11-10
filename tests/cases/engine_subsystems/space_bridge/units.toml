@@ -1,0 +1,125 @@
+[[case]]
+name = "a finite transform with a rotation is valid"
+run = ["{out}/space_check{exe}", "ok", "1", "1", "1"]
+claims = { status = 0, line = ["ok 1"] }
+false = { run = ["{out}/space_check{exe}", "ok", "nan", "1", "1"] }
+
+[[case]]
+name = "an infinity in the scale is refused"
+run = ["{out}/space_check{exe}", "ok", "1", "inf", "1"]
+claims = { status = 0, line = ["ok 0"] }
+false = { run = ["{out}/space_check{exe}", "ok", "1", "1", "1"] }
+
+[[case]]
+name = "a rotation of length 0 is refused"
+run = ["{out}/space_check{exe}", "ok", "1", "1", "0"]
+claims = { status = 0, line = ["ok 0"] }
+false = { run = ["{out}/space_check{exe}", "ok", "1", "1", "1"] }
+
+[[case]]
+name = "2 places with the same bytes are the same"
+run = ["{out}/space_check{exe}", "same", "1", "1"]
+claims = { status = 0, line = ["same 1"] }
+false = { run = ["{out}/space_check{exe}", "same", "1", "2"] }
+
+[[case]]
+name = "0 and -0 have different bytes, so their places differ"
+run = ["{out}/space_check{exe}", "same", "0", "-0"]
+claims = { status = 0, line = ["same 0"] }
+false = { run = ["{out}/space_check{exe}", "same", "0", "0"] }
+
+[[case]]
+name = "the place of a transform has its position as origin and the scaled rotation as basis"
+run = ["{out}/space_math{exe}", "matrix", "1", "2", "3", "0", "2", "3", "4"]
+claims = { status = 0, line = ["matrix 1.000 2.000 3.000 basis 2.000 0.000 0.000 0.000 3.000 0.000 0.000 0.000 4.000"] }
+false = { run = ["{out}/space_math{exe}", "matrix", "1", "2", "3", "0", "2", "3", "5"] }
+
+[[case]]
+name = "a child of a turned parent goes along the turned axes"
+run = ["{out}/space_math{exe}", "compose", "1", "0", "0", "90", "1", "1", "1", "1", "0", "0", "0", "1", "1", "1", "0"]
+claims = { status = 0, line = ["compose 1.000 0.000 -1.000 basis 0.000 0.000 -1.000 0.000 1.000 0.000 1.000 0.000 0.000"] }
+false = { run = ["{out}/space_math{exe}", "compose", "1", "0", "0", "180", "1", "1", "1", "1", "0", "0", "0", "1", "1", "1", "0"] }
+
+[[case]]
+name = "the bit of the position gives the local origin"
+run = ["{out}/space_math{exe}", "compose", "5", "0", "0", "0", "1", "1", "1", "1", "0", "0", "0", "1", "1", "1", "1"]
+claims = { status = 0, line = ["compose 1.000 0.000 0.000 basis 1.000 0.000 0.000 0.000 1.000 0.000 0.000 0.000 1.000"] }
+false = { run = ["{out}/space_math{exe}", "compose", "5", "0", "0", "0", "1", "1", "1", "1", "0", "0", "0", "1", "1", "1", "0"] }
+
+[[case]]
+name = "the bit of the rotation keeps the scale of the parent and drops its turn"
+run = ["{out}/space_math{exe}", "compose", "0", "0", "0", "90", "2", "2", "2", "1", "0", "0", "0", "1", "1", "1", "2"]
+claims = { status = 0, line = ["compose 2.000 0.000 0.000 basis 2.000 0.000 0.000 0.000 2.000 0.000 0.000 0.000 2.000"] }
+false = { run = ["{out}/space_math{exe}", "compose", "0", "0", "0", "90", "2", "2", "2", "1", "0", "0", "0", "1", "1", "1", "0"] }
+
+[[case]]
+name = "the bit of the scale keeps the turn of the parent and drops its scale"
+run = ["{out}/space_math{exe}", "compose", "0", "0", "0", "0", "2", "2", "2", "1", "0", "0", "0", "1", "1", "1", "4"]
+claims = { status = 0, line = ["compose 1.000 0.000 0.000 basis 1.000 0.000 0.000 0.000 1.000 0.000 0.000 0.000 1.000"] }
+false = { run = ["{out}/space_math{exe}", "compose", "0", "0", "0", "0", "2", "2", "2", "1", "0", "0", "0", "1", "1", "1", "0"] }
+
+[[case]]
+name = "the local transform under a parent gives back the place in the world"
+run = ["{out}/space_math{exe}", "local", "5", "0", "0", "0", "1", "1", "1", "6", "0", "0", "0", "1", "1", "1"]
+claims = { status = 0, line = ["local 1.000 0.000 0.000 rotation 0.000 0.000 0.000 1.000 scale 1.000 1.000 1.000"] }
+false = { run = ["{out}/space_math{exe}", "local", "5", "0", "0", "0", "1", "1", "1", "7", "0", "0", "0", "1", "1", "1"] }
+
+[[case]]
+name = "a parent with a basis of determinant 0 gives no local transform"
+run = ["{out}/space_math{exe}", "local", "5", "0", "0", "0", "0", "1", "1", "6", "0", "0", "0", "1", "1", "1"]
+claims = { status = 0, line = ["local none"] }
+false = { run = ["{out}/space_math{exe}", "local", "5", "0", "0", "0", "1", "1", "1", "6", "0", "0", "0", "1", "1", "1"] }
+
+[[case]]
+name = "the split of a scaled basis gives its scale and no turn"
+run = ["{out}/space_math{exe}", "split", "2", "0", "0", "0", "3", "0", "0", "0", "4"]
+claims = { status = 0, line = ["local 0.000 0.000 0.000 rotation 0.000 0.000 0.000 1.000 scale 2.000 3.000 4.000"] }
+false = { run = ["{out}/space_math{exe}", "split", "2", "0", "0", "0", "3", "0", "0", "0", "5"] }
+
+[[case]]
+name = "a basis with a negative determinant gives a negative scale of Z"
+run = ["{out}/space_math{exe}", "split", "1", "0", "0", "0", "1", "0", "0", "0", "-1"]
+claims = { status = 0, line = ["local 0.000 0.000 0.000 rotation 0.000 0.000 0.000 1.000 scale 1.000 1.000 -1.000"] }
+false = { run = ["{out}/space_math{exe}", "split", "1", "0", "0", "0", "1", "0", "0", "0", "1"] }
+
+[[case]]
+name = "a column of length 0 has a scale of 0, and the rotation takes the cross of the 2 others"
+run = ["{out}/space_math{exe}", "split", "0", "0", "0", "0", "1", "0", "0", "0", "1"]
+claims = { status = 0, line = ["local 0.000 0.000 0.000 rotation 0.000 0.000 0.000 1.000 scale 0.000 1.000 1.000"] }
+false = { run = ["{out}/space_math{exe}", "split", "1", "0", "0", "0", "1", "0", "0", "0", "1"] }
+
+[[case]]
+name = "a split of a turned basis gives back its turn"
+run = ["{out}/space_math{exe}", "split", "0", "0", "-1", "0", "1", "0", "1", "0", "0"]
+claims = { status = 0, line = ["local 0.000 0.000 0.000 rotation 0.000 0.707 0.000 0.707 scale 1.000 1.000 1.000"] }
+false = { run = ["{out}/space_math{exe}", "split", "1", "0", "0", "0", "1", "0", "0", "0", "1"] }
+
+[[case]]
+name = "a set holds what it was given, and only that"
+run = ["{out}/space_set{exe}", "4", "put", "5", "has", "5", "has", "7"]
+claims = { status = 0, line = ["has 7 0"] }
+false = { run = ["{out}/space_set{exe}", "4", "put", "5", "put", "7", "has", "7"] }
+
+[[case]]
+name = "a full set refuses a new id"
+run = ["{out}/space_set{exe}", "2", "put", "5", "put", "6", "put", "7"]
+claims = { status = 0, line = ["put 7 full"] }
+false = { run = ["{out}/space_set{exe}", "3", "put", "5", "put", "6", "put", "7"] }
+
+[[case]]
+name = "a set of no room holds nothing"
+run = ["{out}/space_set{exe}", "0", "has", "5"]
+claims = { status = 0, line = ["has 5 0"] }
+false = { run = ["{out}/space_set{exe}", "1", "put", "5", "has", "5"] }
+
+[[case]]
+name = "the id 0 is in no set"
+run = ["{out}/space_set{exe}", "4", "has", "0"]
+claims = { status = 0, line = ["has 0 0"] }
+false = { run = ["{out}/space_set{exe}", "4", "put", "3", "has", "3"] }
+
+[[case]]
+name = "an id put 2 times counts 1 time"
+run = ["{out}/space_set{exe}", "4", "put", "5", "put", "5"]
+claims = { status = 0, line = ["count 1"] }
+false = { run = ["{out}/space_set{exe}", "4", "put", "5", "put", "6"] }
