@@ -128,6 +128,13 @@ static void add_loader(const bridge_api_t *api, char *args)
     loaders[loader_count++] = id;
 }
 
+void game_init_loader(const bridge_api_t *api)
+{
+    char args[] = "early,test:Text,txt,,0";
+
+    add_loader(api, args);
+}
+
 static void add_source(const bridge_api_t *api, const char *name)
 {
     ideatek_resource_source_t s = { .name = put_bytes(api, name) };
@@ -456,6 +463,14 @@ static void spawn_label(const bridge_api_t *api, uint64_t resource,
     BRIDGE_NATIVE_ATTACH(api, sub->entity, game_resources_slots.label, l);
 }
 
+static bool is_own_loader(uint64_t loader)
+{
+    for (uint32_t i = 0; i < loader_count; i++)
+        if (loaders[i] == loader)
+            return (true);
+    return (false);
+}
+
 static void answer_bytes(const bridge_api_t *api, uint64_t resource,
     const ideatek_resource_bytes_t *b, const char *path)
 {
@@ -497,7 +512,8 @@ BRIDGE_NATIVE(seen_bytes)
             "size %llu len %u [%s] settings [%s] error %u", game.round + 1,
             path, (unsigned long long)b->offset, (unsigned long long)b->size,
             b->data.len, data, settings, b->error);
-        answer_bytes(api, t[i].id, b, path);
+        if (is_own_loader(b->loader.id))
+            answer_bytes(api, t[i].id, b, path);
     }
     return (0);
 }

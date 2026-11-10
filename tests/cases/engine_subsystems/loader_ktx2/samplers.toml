@@ -1,0 +1,652 @@
+[[case]]
+name = "the settings of the meta file give each field of ideatek:Sampler"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["sampler [t.ktx2] min 0 mag 0 mip 0 wrap 2 1 0 aniso 4.00"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "nearest"
+mag_filter = "nearest"
+mip_filter = "nearest"
+wrap_u = "clamp_to_edge"
+wrap_v = "mirrored_repeat"
+wrap_w = "repeat"
+max_anisotropy = 4
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a comment and an empty line of the settings are skipped"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["sampler [t.ktx2] min 0 mag 1 mip 1 wrap 0 0 0 aniso 1.00"], matches_not = ["is not known"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+# the look
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+# the look
+
+   
+	min_filter = "nearest"'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "an unknown key writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the key colour of the settings is not known", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+colour = "red"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a line with no equal sign writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the key nearest of the settings is not known", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+nearest
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a filter that is not a word of the list writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of min_filter is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "cubic"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a filter with no quotes writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of mag_filter is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+mag_filter = nearest
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a filter with no value writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of mip_filter is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+mip_filter =
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a filter with an open quote writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of min_filter is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "nearest
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a wrap that is not a word of the list writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of wrap_u is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+wrap_u = "spiral"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "an anisotropy above 16 writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of max_anisotropy is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+max_anisotropy = 32
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "an anisotropy below 1 writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of max_anisotropy is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+max_anisotropy = 0.5
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "an anisotropy that is not a number writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of max_anisotropy is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+max_anisotropy = 4x
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "an anisotropy with no value writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of max_anisotropy is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+max_anisotropy =
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "an anisotropy of 40 characters writes its line, the key takes its default, and the load goes on"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2: the value of max_anisotropy is not allowed", "use 0 path [t.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+min_filter = "linear"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+max_anisotropy = 4.000000000000000000000000000000000000
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "the module writes the lines of the first 8 faults of the settings"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["the key k7 of the settings is not known"], matches_not = ["the key k8 of"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''', "{case}/host/content/t.ktx2.meta" = '''
+[settings]
+k0 = 1
+k1 = 1
+k2 = 1
+k3 = 1
+k4 = 1
+k5 = 1
+k6 = 1
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/t.ktx2.meta" = '''
+[settings]
+k0 = 1
+k1 = 1
+k2 = 1
+k3 = 1
+k4 = 1
+k5 = 1
+k6 = 1
+k7 = 1
+k8 = 1
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''

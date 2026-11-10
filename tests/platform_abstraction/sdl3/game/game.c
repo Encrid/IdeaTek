@@ -12,6 +12,7 @@
 #include "game_sockets.h"
 #include "game_states.h"
 #include "game_resources.h"
+#include "game_ktx2.h"
 #include "game_frame.h"
 #include "game_gpu.h"
 
@@ -266,6 +267,9 @@ static void declare_types(const bridge_api_t *api)
 #if defined(GAME_RESOURCES)
     game_declare_resources(api);
 #endif
+#if defined(GAME_KTX2)
+    game_declare_ktx2(api);
+#endif
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -334,6 +338,9 @@ BRIDGE_NATIVE(init)
     changes[count++] = game_resources_slots.label;
     changes[count++] = game_resources_slots.source_result;
 #endif
+#if defined(GAME_KTX2)
+    changes[count++] = game_ktx2_slots.texture;
+#endif
     BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, count,
         nullptr, 0);
     queries[0] = ADD_SHOW(api, "show_state", game.slots.state);
@@ -359,6 +366,9 @@ BRIDGE_NATIVE(init)
 #if defined(GAME_RESOURCES)
     game_watch_resources(api);
 #endif
+#if defined(GAME_KTX2)
+    game_watch_ktx2(api);
+#endif
 #if defined(GAME_AUDIO)
     game_watch_audio(api);
 #endif
@@ -367,6 +377,9 @@ BRIDGE_NATIVE(init)
 #endif
 #if defined(GAME_EARLY)
     game_start(api);
+#endif
+#if defined(GAME_INIT_LOADER)
+    game_init_loader(api);
 #endif
     return (0);
 }
