@@ -17,6 +17,7 @@
 #include "game_space.h"
 #include "game_resources.h"
 #include "game_ktx2.h"
+#include "game_gltf.h"
 
 static const char HINT[] = "IDEATEK_TEST_DISPLAYS";
 static const uint64_t DEAD = (7ULL << 32) | 9ULL;
@@ -336,6 +337,10 @@ static void run_step(const bridge_api_t *api, const char *verb, char *args)
 #endif
 #if defined(GAME_SPACE)
     if (game_space_step(api, verb, args))
+        return;
+#endif
+#if defined(GAME_GLTF)
+    if (game_gltf_step(api, verb, args))
         return;
 #endif
     if (!strcmp(verb, "request"))

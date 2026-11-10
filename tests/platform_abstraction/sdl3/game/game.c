@@ -14,6 +14,7 @@
 #include "game_resources.h"
 #include "game_ktx2.h"
 #include "game_space.h"
+#include "game_gltf.h"
 #include "game_frame.h"
 #include "game_gpu.h"
 
@@ -274,6 +275,9 @@ static void declare_types(const bridge_api_t *api)
 #if defined(GAME_SPACE)
     game_declare_space(api);
 #endif
+#if defined(GAME_GLTF)
+    game_declare_gltf(api);
+#endif
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -381,6 +385,9 @@ BRIDGE_NATIVE(init)
 #endif
 #if defined(GAME_SPACE)
     game_watch_space(api);
+#endif
+#if defined(GAME_GLTF)
+    game_watch_gltf(api);
 #endif
 #if defined(GAME_AUDIO)
     game_watch_audio(api);
