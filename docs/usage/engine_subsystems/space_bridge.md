@@ -21,13 +21,14 @@ The contract of the space part names no setting, and the module has none. Its ma
 ### The observers and the system
 
 The module keeps nothing of its own between 2 calls: the components of the space part hold its state.
-Its 4 observers run at the barriers, in this order:
+Its 5 observers run at the barriers, in this order:
 
 1. `link` hears `ideatek:Parent` enter, change and leave. It moves the child from the list of the old parent to the list of the new one.
    `parent` of `ideatek:Sibling` names the old parent, and `order` gives the place in the new list.
-2. `place` hears `ideatek:Transform` and `ideatek:Sibling` enter and change. It places each entity of its list that has no ancestor in the list, then walks the children: `docs/extern/engine_subsystems/ideatek_space.h.md`, *ideatek:WorldTransform*.
-3. `previous` hears `ideatek:Interpolated` enter and leave. It attaches `ideatek:PreviousWorldTransform` at the place of now, and detaches it.
-4. `gone` hears `ideatek:Transform` leave. It detaches `ideatek:WorldTransform`. On the husk of a destroyed parent, it walks the children and applies `orphan`, then detaches `ideatek:Children`.
+2. `place` hears `ideatek:Transform` enter and change. It places each entity of its list that has no ancestor in the list, then walks the children: `docs/extern/engine_subsystems/ideatek_space.h.md`, *ideatek:WorldTransform*.
+3. `relink` hears `ideatek:Sibling` enter, change and leave, and places the entity as `place` does. So a child takes its place under its new parent.
+4. `previous` hears `ideatek:Interpolated` enter and leave. It attaches `ideatek:PreviousWorldTransform` at the place of now, and detaches it.
+5. `gone` hears `ideatek:Transform` leave. It detaches `ideatek:WorldTransform`. On the husk of a destroyed parent, it walks the children and applies `orphan`, then detaches `ideatek:Children`.
 
 `place` also applies `ideatek:Teleported`, as `docs/extern/engine_subsystems/ideatek_space.h.md`, *ideatek:Teleported*, tells. Then it detaches the tag.
 
@@ -65,3 +66,6 @@ The module writes these lines:
 | `a transform of <entity> is refused` | The space contract refuses that `ideatek:Transform`: `docs/extern/engine_subsystems/ideatek_space.h.md`, *ideatek:Transform*. The entity gets no `ideatek:WorldTransform`. |
 | `<entity> is in a cycle of parents` | The entity is its own ancestor. It gets no `ideatek:WorldTransform`. |
 | `<count> entities placed without the test of the ancestors` | A call of `place` had more entities than `scratch` holds. |
+| `the walk of <entity> stops: no room for its stack` | The tree under the entity is deeper or wider than `scratch` holds. The rest waits for its next change. |
+| `the list of <entity> stays: no room for its children` | The children of 1 parent are more than `scratch` holds. Their list keeps its old links. |
+| `<entity> keeps its transform: its new parent has no inverse` | The basis of the new parent has a determinant of 0, so no transform keeps the place in the world. |
