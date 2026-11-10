@@ -101,6 +101,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_children_t, IDEATEK_CHILDREN_FIELDS);
     #define IDEATEK_SIBLING_FIELDS { \
         ideatek_entity_t prev; \
         ideatek_entity_t next; \
+        ideatek_entity_t parent; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sibling_t, IDEATEK_SIBLING_FIELDS);

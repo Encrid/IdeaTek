@@ -61,7 +61,7 @@ false = { run = ["{out}/space_layout{exe}", "position"] }
 [[case]]
 name = "ideatek_sibling_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/space_layout{exe}", "sibling"]
-claims = { status = 0, order = ["size 16", "alignment 8", "prev 0", "next 8"] }
+claims = { status = 0, order = ["size 24", "alignment 8", "prev 0", "next 8", "parent 16"] }
 false = { run = ["{out}/space_layout{exe}", "parent"] }
 
 [[case]]
@@ -83,7 +83,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t entity; int32_t order; ideatek_keep_t keep; ideatek_orphan_t orphan; uint8_t absolute; }",
     "{ ideatek_position_t origin; float basis[9]; }",
     "{ ideatek_entity_t first; ideatek_entity_t last; uint32_t count; }",
-    "{ ideatek_entity_t prev; ideatek_entity_t next; }",
+    "{ ideatek_entity_t prev; ideatek_entity_t next; ideatek_entity_t parent; }",
     "{ ideatek_world_transform_t world; uint64_t tick; }",
 ] }
 false = { run = ["{out}/space_layout{exe}", "texts"] }
@@ -101,7 +101,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t entity; int32_t order; ideatek_keep_t keep; ideatek_orphan_t orphan; uint8_t absolute; }",
     "{ ideatek_position_t origin; float basis[9]; }",
     "{ ideatek_entity_t first; ideatek_entity_t last; uint32_t count; }",
-    "{ ideatek_entity_t prev; ideatek_entity_t next; }",
+    "{ ideatek_entity_t prev; ideatek_entity_t next; ideatek_entity_t parent; }",
     "{ ideatek_world_transform_t world; uint64_t tick; }",
 ] }
 false = { run = ["{out}/space_layout{exe}", "descriptors"] }

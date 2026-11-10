@@ -98,6 +98,7 @@ static void show_sibling(void)
     SIZE(ideatek_sibling_t);
     AT(ideatek_sibling_t, prev);
     AT(ideatek_sibling_t, next);
+    AT(ideatek_sibling_t, parent);
 }
 
 static void show_previous(void)
