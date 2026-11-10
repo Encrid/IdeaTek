@@ -1,0 +1,51 @@
+[parts.space_bridge]
+name = "BM-IdeaTek-Space-Bridge"
+folder = "engine_subsystems/space_bridge"
+uses = ["space", "world", "frame", "frame_sdl3", "window_sdl3", "sdl3"]
+third_party = []
+
+[variables]
+space_bridge_words = [
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=1048576", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=262144", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "space_bridge"
+kind = "native_module"
+part = "space_bridge"
+sources = ["src/engine_subsystems/space_bridge/*.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel", "src/engine_subsystems/space_bridge"]
+manifest = ["ideatek_space_bridge:space@0.1.0", "{space_bridge_words}"]
+
+[[artifact]]
+name = "space_bridge_reload"
+kind = "program"
+part = "space_bridge"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/space_bridge{library}"]
+
+[[artifact]]
+name = "space_check"
+kind = "program"
+part = "space_bridge"
+test = true
+sources = ["tests/engine_subsystems/space_bridge/check.c", "src/engine_subsystems/space_bridge/space_check.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include", "src/engine_subsystems/space_bridge"]
+
+[[artifact]]
+name = "space_math"
+kind = "program"
+part = "space_bridge"
+test = true
+sources = ["tests/engine_subsystems/space_bridge/math.c", "src/engine_subsystems/space_bridge/space_math.c", "src/engine_subsystems/space_bridge/space_local.c", "src/engine_subsystems/space_bridge/space_split.c", "src/engine_subsystems/space_bridge/space_rotation.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include", "src/engine_subsystems/space_bridge"]
+
+[[artifact]]
+name = "space_set"
+kind = "program"
+part = "space_bridge"
+test = true
+sources = ["tests/engine_subsystems/space_bridge/set.c", "src/engine_subsystems/space_bridge/space_set.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include", "src/engine_subsystems/space_bridge"]
