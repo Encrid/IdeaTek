@@ -1,0 +1,63 @@
+[parts.scene]
+name = "BC-IdeaTek-Scene"
+folder = "engine_subsystems/scene"
+uses = ["world", "space", "rendering"]
+third_party = []
+
+[parts.scene.package]
+proof = "tests/engine_subsystems/scene_proof.c"
+include = ["{bridge}/include", "{root}/include/engine_subsystems", "{root}/include/platform_abstraction"]
+
+[compose.scene]
+part = "scene"
+from = "include/engine_subsystems"
+headers = ["ideatek_scene.h"]
+into = "include"
+
+[variables]
+scene_probe_words = [
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
+    "spans=4096", "spawns=none", "changes=1024", "persistent=none", "hot_reload=false",
+]
+
+scene_spawn_words = [
+    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=4096", "log_ring=512",
+    "spans=4096", "spawns=1", "changes=1024", "persistent=none", "hot_reload=false",
+]
+
+[[artifact]]
+name = "scene_layout"
+kind = "program"
+part = "scene"
+test = true
+sources = ["tests/engine_subsystems/scene_layout.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include"]
+
+[[artifact]]
+name = "scene_probe"
+kind = "native_module"
+part = "scene"
+test = true
+sources = ["tests/engine_subsystems/scene_probe.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction"]
+defines = ["ROLE_ALL"]
+manifest = ["test:probe@1.0.0", "{scene_probe_words}"]
+
+[[artifact.variants]]
+name = "scene_late"
+defines = ["ROLE_LATE"]
+
+[[artifact.variants]]
+name = "scene_author"
+defines = ["ROLE_AUTHOR"]
+manifest = ["test:author@1.0.0", "{scene_spawn_words}"]
+
+[[artifact.variants]]
+name = "scene_game"
+defines = ["ROLE_GAME"]
+manifest = ["test:game@1.0.0", "{scene_spawn_words}"]
+
+[[artifact.variants]]
+name = "scene_spawner"
+defines = ["ROLE_SCENE"]
+manifest = ["test:scene@1.0.0", "{scene_spawn_words}"]
