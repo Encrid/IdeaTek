@@ -1,0 +1,245 @@
+[[case]]
+name = "a use whose owner is a resource is a dependency, and the owner folds its state"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 2 deps 2 rec 2 error 0", "use 1 path [b.txt] type [test:Text] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 16
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|6:load r0,none.txt,test:Text,,0,0|16:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.txt" = '''
+world'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 16
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|6:load r0,b.txt,test:Text,,0,0|16:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300"
+'''
+
+[[case]]
+name = "a failed dependency fails the recursive state of the owner, and the owner keeps the first error"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 2 deps 3 rec 3 error 3"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 16
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|6:load r0,b.txt,test:Text,,0,0|16:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.txt" = '''
+world'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 16
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|6:load r0,none.txt,test:Text,,0,0|16:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300"
+'''
+
+[[case]]
+name = "a reload of a dependency with reload_owner reloads the owner"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["modified [b.txt]", "modified [a.txt]"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 30
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|6:load r0,b.txt,test:Text,,0,0|14:reload 1|30:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300|25:stall 300|27:stall 300|29:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.txt" = '''
+world'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 30
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|6:load r0,b.txt,test:Text,,1,0|14:reload 1|30:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300|25:stall 300|27:stall 300|29:stall 300"
+'''
+
+[[case]]
+name = "when the owner of a use is destroyed, the module destroys the use"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 no handle"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:other|2:load o0,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:other|2:load o0,a.txt,test:Text,,0,0|8:otherkill 0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "when a failed dependency goes, the owner keeps the first error it saw"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 2 deps 3 rec 3 error 3", "use 1 no handle"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 18
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+load_bytes = 16
+head_bytes = 8
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|4:load r0,c.txt,test:Text,,0,0|4:load r0,b.txt,test:Text,,0,0|12:usekill 1|18:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/c.txt" = '''
+this file is too big to load'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 18
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+load_bytes = 16
+head_bytes = 8
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|4:load r0,b.txt,test:Text,,0,0|4:load r0,c.txt,test:Text,,0,0|12:usekill 1|18:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300"
+'''
+
+[[case]]
+name = "a chain of 9 dependencies folds over 2 rounds"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 2 deps 2 rec 2 error 0", "use 8 path [i.txt] type [test:Text] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 30
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|4:load r0,b.txt,test:Text,,0,0|6:load r1,c.txt,test:Text,,0,0|8:load r2,d.txt,test:Text,,0,0|10:load r3,e.txt,test:Text,,0,0|12:load r4,f.txt,test:Text,,0,0|14:load r5,g.txt,test:Text,,0,0|16:load r6,h.txt,test:Text,,0,0|18:load r7,none.txt,test:Text,,0,0|30:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300|25:stall 300|27:stall 300|29:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+a'''
+"{case}/host/content/b.txt" = '''
+b'''
+"{case}/host/content/c.txt" = '''
+c'''
+"{case}/host/content/d.txt" = '''
+d'''
+"{case}/host/content/e.txt" = '''
+e'''
+"{case}/host/content/f.txt" = '''
+f'''
+"{case}/host/content/g.txt" = '''
+g'''
+"{case}/host/content/h.txt" = '''
+h'''
+"{case}/host/content/i.txt" = '''
+i'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 30
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|4:load r0,b.txt,test:Text,,0,0|6:load r1,c.txt,test:Text,,0,0|8:load r2,d.txt,test:Text,,0,0|10:load r3,e.txt,test:Text,,0,0|12:load r4,f.txt,test:Text,,0,0|14:load r5,g.txt,test:Text,,0,0|16:load r6,h.txt,test:Text,,0,0|18:load r7,i.txt,test:Text,,0,0|30:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300|25:stall 300|27:stall 300|29:stall 300"
+'''

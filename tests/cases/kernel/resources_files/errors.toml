@@ -1,0 +1,813 @@
+[[case]]
+name = "a load whose type and extension no loader has gets no loader"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.bin] type [] state 3 deps 2 rec 3 error 1"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/a.bin" = '''
+xyz'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.bin,,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "2 loaders that hold the extension and whose magic both fit get 2 loaders"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 3 deps 2 rec 3 error 2"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader one,test:Text,txt,,0|1:loader two,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a path that names no file gets not found"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [none.txt] type [test:Text] state 3 deps 2 rec 3 error 3"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,none.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a meta file outside the subset gets a failed read, and the log names its line"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["the meta file of a.txt is refused at line 2", "use 0 path [a.txt] type [test:Text] state 3 deps 2 rec 3 error 4"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''', "{case}/host/content/a.txt.meta" = '''
+action = "load"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/a.txt.meta" = '''
+action = "load"
+what = 3
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a loader that did not read the bytes gets a failed loader"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:answer a.txt,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:answer a.txt,5|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a label that the file does not hold gets no label"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt#zz] type [test:Text] state 3 deps 2 rec 3 error 6"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:labels a.txt,zz|2:load -,a.txt#zz,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:labels a.txt,m1|2:load -,a.txt#zz,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a loader of the meta file with another type than the load gets a wrong type"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 3 deps 2 rec 3 error 7"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:loader img,test:Image,png,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''', "{case}/host/content/a.txt.meta" = '''
+loader = "text"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/a.txt.meta" = '''
+loader = "img"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:loader img,test:Image,png,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a meta file with the action ignore gets ignored"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 3 deps 2 rec 3 error 8"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''', "{case}/host/content/a.txt.meta" = '''
+action = "process"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/a.txt.meta" = '''
+action = "ignore"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a file with more bytes than load_bytes gets too big"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 3 deps 2 rec 3 error 9"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+load_bytes = 8
+head_bytes = 4
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+load_bytes = 4
+head_bytes = 4
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a path above path_bytes gets no room"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [] type [] state 3 deps 2 rec 3 error 10"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+path_bytes = 24
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+path_bytes = 24
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,averyveryverylongname.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a load above max_resources gets no handle, and the log says so"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["no room for the resource b.txt", "r12 use 1 no handle", "r12 use 0 path [a.txt] type [test:Text] state 2"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+max_resources = 2
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|2:load -,b.txt,test:Text,,0,0|12:show_resources|12:usekill 1|12:usekill 0|14:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.txt" = '''
+world'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+max_resources = 1
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|2:load -,b.txt,test:Text,,0,0|12:show_resources|12:usekill 1|12:usekill 0|14:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300"
+'''
+
+[[case]]
+name = "a refused meta file keeps nothing of its good lines"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["the meta file of a.txt is refused at line 2", "use 0 path [a.txt] type [test:Text] state 3 deps 2 rec 3 error 4"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''', "{case}/host/content/a.txt.meta" = '''
+loader = "text"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/a.txt.meta" = '''
+loader = "text"
+what = 3
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "the first error of a meta file stays: an unknown loader before ignore and settings that do not fit"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 3 deps 2 rec 3 error 1"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+settings_bytes = 8
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''', "{case}/host/content/a.txt.meta" = '''
+action = "ignore"
+[settings]
+k = 1234567890
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/a.txt.meta" = '''
+action = "ignore"
+loader = "nobody"
+[settings]
+k = 1234567890
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+settings_bytes = 8
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a meta path that is a folder counts as no meta file"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,b.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''', "{case}/host/content/b.txt" = '''
+world''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/a.txt.meta/x" = '''
+y'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a path above path_bytes gets no room, and its record goes with its last use"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 no handle"], lacks = ["state 3"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+path_bytes = 24
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,averyveryverylongname.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+path_bytes = 24
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,averyveryverylongname.txt,test:Text,,0,0|8:usekill 0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a component of the contract on an entity that is no resource is ignored"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["stray answer", "use 0 path [a.txt] type [test:Text] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:stray outcome|2:load -,none.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|1:stray outcome|1:stray read|1:stray label|1:stray reload|1:stray answer|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a resource whose entity Bridge refuses gets no handle, and the log says so"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { has = ["no room for the resource b.txt", "use 1 no handle"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0"]
+spawns = 4
+[module."ideatek_resources_files:resources@0.1.0".config]
+meta_check = "never"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|2:load -,b.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/b.txt" = '''
+world'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0"]
+spawns = 1
+[module."ideatek_resources_files:resources@0.1.0".config]
+meta_check = "never"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|2:load -,b.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a read whose entity Bridge refuses waits for the next round, and the system fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { has = ["spawn: its spawns of 1 between two barriers are used up", "use 0 path [a.txt] type [test:Text] state 2"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 8
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0"]
+spawns = 4
+[module."ideatek_resources_files:resources@0.1.0".config]
+meta_check = "never"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|8:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 8
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0"]
+spawns = 1
+[module."ideatek_resources_files:resources@0.1.0".config]
+meta_check = "never"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|8:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a label whose entity Bridge refuses gets 1 line of the log, and the system fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { has = ["no room for the label yy"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0"]
+spawns = 4
+[module."ideatek_resources_files:resources@0.1.0".config]
+meta_check = "never"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt#zz,test:Text,,0,0|2:load -,a.txt#yy,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0"]
+spawns = 1
+[module."ideatek_resources_files:resources@0.1.0".config]
+meta_check = "never"
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt#zz,test:Text,,0,0|2:load -,a.txt#yy,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "a meta file that the files module cannot read fails the resource with the error of the read"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 0 path [a.txt] type [test:Text] state 3 deps 2 rec 3 error 9"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+read_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/host/content/a.txt.meta" = '''
+action = "load"
+'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_files_mosl:files@0.1.0".config]
+read_bytes = 8
+[module."test:game@1.0.0".config]
+script = "1:loader text,test:Text,txt,,0|2:load -,a.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''

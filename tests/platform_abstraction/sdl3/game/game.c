@@ -11,6 +11,7 @@
 #include "game_files.h"
 #include "game_sockets.h"
 #include "game_states.h"
+#include "game_resources.h"
 #include "game_frame.h"
 #include "game_gpu.h"
 
@@ -262,6 +263,9 @@ static void declare_types(const bridge_api_t *api)
 #if defined(GAME_STATES)
     game_declare_states(api);
 #endif
+#if defined(GAME_RESOURCES)
+    game_declare_resources(api);
+#endif
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -272,7 +276,7 @@ static void declare_types(const bridge_api_t *api)
 
 BRIDGE_NATIVE(init)
 {
-    uint32_t changes[32];
+    uint32_t changes[48];
     uint32_t count = 6;
 
     declare_types(api);
@@ -317,6 +321,19 @@ BRIDGE_NATIVE(init)
     changes[count++] = game_states_slots.request;
     changes[count++] = game_states_slots.scoped;
 #endif
+#if defined(GAME_RESOURCES)
+    changes[count++] = game_resources_slots.load;
+    changes[count++] = game_resources_slots.add;
+    changes[count++] = game_resources_slots.loader;
+    changes[count++] = game_resources_slots.source;
+    changes[count++] = game_resources_slots.variable;
+    changes[count++] = game_resources_slots.read;
+    changes[count++] = game_resources_slots.reload;
+    changes[count++] = game_resources_slots.text;
+    changes[count++] = game_resources_slots.outcome;
+    changes[count++] = game_resources_slots.label;
+    changes[count++] = game_resources_slots.source_result;
+#endif
     BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, count,
         nullptr, 0);
     queries[0] = ADD_SHOW(api, "show_state", game.slots.state);
@@ -338,6 +355,9 @@ BRIDGE_NATIVE(init)
 #endif
 #if defined(GAME_STATES)
     game_watch_states(api);
+#endif
+#if defined(GAME_RESOURCES)
+    game_watch_resources(api);
 #endif
 #if defined(GAME_AUDIO)
     game_watch_audio(api);

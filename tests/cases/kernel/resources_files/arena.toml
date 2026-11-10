@@ -1,0 +1,41 @@
+[[case]]
+name = "a block is taken at the start of an empty arena"
+run = ["{out}/resources_arena{exe}", "take", "10", "1"]
+claims = { status = 0, line = ["take 1 ok at 0"] }
+false = { run = ["{out}/resources_arena{exe}", "take", "200", "1"] }
+
+[[case]]
+name = "a second block comes after the first"
+run = ["{out}/resources_arena{exe}", "take", "10", "1", "take", "10", "2"]
+claims = { status = 0, line = ["take 2 ok at 10"] }
+false = { run = ["{out}/resources_arena{exe}", "take", "10", "1", "take", "100", "2"] }
+
+[[case]]
+name = "a freed block leaves a gap that the next block takes"
+run = ["{out}/resources_arena{exe}", "take", "10", "1", "take", "10", "2", "free", "1", "0", "take", "5", "3"]
+claims = { status = 0, line = ["take 3 ok at 0"] }
+false = { run = ["{out}/resources_arena{exe}", "take", "10", "1", "take", "10", "2", "free", "2", "0", "take", "5", "3"] }
+
+[[case]]
+name = "a size that no gap holds is refused"
+run = ["{out}/resources_arena{exe}", "take", "60", "1", "take", "60", "2"]
+claims = { status = 0, line = ["take 2 refused at 0"] }
+false = { run = ["{out}/resources_arena{exe}", "take", "60", "1", "take", "40", "2"] }
+
+[[case]]
+name = "the room is the largest gap, also before the first block"
+run = ["{out}/resources_arena{exe}", "take", "10", "1", "take", "80", "2", "free", "1", "0", "room", "0", "0"]
+claims = { status = 0, line = ["room 10"] }
+false = { run = ["{out}/resources_arena{exe}", "take", "10", "1", "take", "80", "2", "free", "2", "0", "room", "0", "0"] }
+
+[[case]]
+name = "a full list refuses a block"
+run = ["{out}/resources_arena{exe}", "take", "1", "1", "take", "1", "2", "take", "1", "3", "take", "1", "4", "take", "1", "5"]
+claims = { status = 0, line = ["take 5 refused at 0"] }
+false = { run = ["{out}/resources_arena{exe}", "take", "1", "1", "take", "1", "5"] }
+
+[[case]]
+name = "the room is the largest gap among 3 gaps"
+run = ["{out}/resources_arena{exe}", "take", "10", "1", "take", "10", "2", "take", "10", "3", "take", "50", "4", "free", "1", "0", "free", "3", "0", "room", "0", "0"]
+claims = { status = 0, line = ["room 20"] }
+false = { run = ["{out}/resources_arena{exe}", "take", "10", "1", "take", "10", "2", "take", "10", "3", "take", "50", "4", "free", "1", "0", "free", "4", "0", "room", "0", "0"] }

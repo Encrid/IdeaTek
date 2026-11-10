@@ -8,6 +8,14 @@
 
 #include "resources_meta.h"
 
+static void show(const char *what, const res_text_t *text)
+{
+    printf("%s [", what);
+    for (uint32_t i = 0; i < text->len; i++)
+        putchar(text->at[i] == '\n' ? '|' : text->at[i]);
+    printf("]");
+}
+
 int main(int argc, char **argv)
 {
     char text[4096] = "";
@@ -24,8 +32,9 @@ int main(int argc, char **argv)
         printf("meta refused line %u\n", meta.line);
         return (0);
     }
-    printf("meta ok action %d loader [%.*s] settings [%.*s]\n",
-        (int)meta.action, (int)meta.loader.len, meta.loader.at,
-        (int)meta.settings.len, meta.settings.at);
+    printf("meta ok action %d", (int)meta.action);
+    show(" loader", &meta.loader);
+    show(" settings", &meta.settings);
+    printf("\n");
     return (0);
 }

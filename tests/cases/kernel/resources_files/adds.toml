@@ -1,0 +1,75 @@
+[[case]]
+name = "2 additions of 1 resource share it, and both uses get a handle"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["r12 use 0 path [] type [test:Text] state 2", "r12 use 1 path [] type [test:Text] state 2"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:add test:Text|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "2:add test:Text|6:addagain 0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
+
+[[case]]
+name = "an addition above max_resources gets no handle, and the log says so"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["no room for the resource test:Text", "use 1 no handle"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+max_resources = 2
+[module."test:game@1.0.0".config]
+script = "2:add test:Text|2:add test:Text|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_resources.toml"]
+rounds = 12
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0".config]
+max_resources = 1
+[module."test:game@1.0.0".config]
+script = "2:add test:Text|2:add test:Text|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+'''
