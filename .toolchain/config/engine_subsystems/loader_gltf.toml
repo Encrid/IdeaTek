@@ -1,0 +1,48 @@
+[parts.loader_gltf]
+name = "BM-IdeaTek-Loader-Gltf"
+folder = "engine_subsystems/loader_gltf"
+uses = ["scene", "animation", "rendering", "resources", "resources_files", "loader_ktx2", "files", "files_mosl", "space", "world", "frame", "frame_sdl3", "sdl3"]
+third_party = ["cgltf"]
+
+[[source]]
+name = "cgltf"
+url = "https://github.com/jkuhlmann/cgltf/archive/refs/tags/v1.15.tar.gz"
+sha256 = "84e352092e5cd6aab7f66de62ddb66beb5e6f18d412ca9d12950d7a55bfef25a"
+into = "build/third_party/cgltf"
+top = "cgltf-1.15"
+
+[variables]
+cgltf_root = "build/third_party/cgltf/cgltf-1.15"
+loader_gltf_words = [
+    "abi=1", "config=ideatek_loader_gltf:Settings", "pinned=false", "reloadable=false",
+    "settings=parse_bytes output_bytes max_files max_parts", "config.parse_bytes=16777216",
+    "config.output_bytes=67108864", "config.max_files=256", "config.max_parts=4096",
+    "scratch=1048576", "log_ring=2048", "spans=65536", "spawns=4097", "changes=262144",
+    "persistent=92274688", "hot_reload=false",
+]
+
+[[artifact]]
+name = "cgltf"
+kind = "archive"
+part = "loader_gltf"
+sources = ["third_party/cgltf/cgltf.c"]
+include = ["{cgltf_root}"]
+defines = ["CGLTF_IMPLEMENTATION"]
+flags = ["-fvisibility=hidden"]
+
+[[artifact]]
+name = "loader_gltf"
+kind = "native_module"
+part = "loader_gltf"
+sources = ["src/engine_subsystems/loader_gltf/*.c", "src/kernel/resources_files/resources_arena.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel", "src/engine_subsystems/loader_gltf", "src/kernel/resources_files", "{cgltf_root}"]
+link = ["{out}/cgltf.a"]
+manifest = ["ideatek_loader_gltf:loader@0.1.0", "{loader_gltf_words}"]
+
+[[artifact]]
+name = "loader_gltf_reload"
+kind = "program"
+part = "loader_gltf"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/loader_gltf{library}"]
