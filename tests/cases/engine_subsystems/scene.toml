@@ -1,0 +1,202 @@
+[[case]]
+name = "ideatek_model_node_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/scene_layout{exe}", "node"]
+claims = { status = 0, order = ["size 112", "alignment 8", "position 0", "rotation 24", "scale 40", "mesh 56", "binds 64", "parent 72", "name_offset 76", "name_length 80", "material_first 84", "material_count 88", "weight_first 92", "weight_count 96", "light 100", "camera 104", "joint 108"] }
+false = { run = ["{out}/scene_layout{exe}", "model"] }
+
+[[case]]
+name = "ideatek_model_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/scene_layout{exe}", "model"]
+claims = { status = 0, order = ["size 36", "alignment 4", "bytes 0", "node_count 8", "light_count 12", "material_count 16", "weight_count 20", "camera_count 24", "joint_count 28", "revision 32"] }
+false = { run = ["{out}/scene_layout{exe}", "node"] }
+
+[[case]]
+name = "ideatek_model_instance_t has the size, the alignment and the offset of its Usage"
+run = ["{out}/scene_layout{exe}", "instance"]
+claims = { status = 0, order = ["size 8", "alignment 8", "model 0"] }
+false = { run = ["{out}/scene_layout{exe}", "node_ref"] }
+
+[[case]]
+name = "ideatek_model_node_ref_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/scene_layout{exe}", "node_ref"]
+claims = { status = 0, order = ["size 16", "alignment 8", "instance 0", "node 8"] }
+false = { run = ["{out}/scene_layout{exe}", "instance"] }
+
+[[case]]
+name = "IDEATEK_MODEL_NONE is 0xFFFFFFFF"
+run = ["{out}/scene_layout{exe}", "none"]
+claims = { status = 0, line = ["none 4294967295"] }
+false = { run = ["{out}/scene_layout{exe}", "instance"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/scene_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "{ ideatek_position_t position; ideatek_quat_t rotation; ideatek_vec3_t scale; ideatek_entity_t mesh; ideatek_entity_t binds; uint32_t parent; uint32_t name_offset; uint32_t name_length; uint32_t material_first; uint32_t material_count; uint32_t weight_first; uint32_t weight_count; uint32_t light; uint32_t camera; uint32_t joint; }",
+    "{ bridge_text_t bytes; uint32_t node_count; uint32_t light_count; uint32_t material_count; uint32_t weight_count; uint32_t camera_count; uint32_t joint_count; uint32_t revision; }",
+    "{ ideatek_entity_t model; }",
+    "{ ideatek_entity_t instance; uint32_t node; }",
+] }
+false = { run = ["{out}/scene_layout{exe}", "node"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/scene_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ ideatek_position_t position; ideatek_quat_t rotation; ideatek_vec3_t scale; ideatek_entity_t mesh; ideatek_entity_t binds; uint32_t parent; uint32_t name_offset; uint32_t name_length; uint32_t material_first; uint32_t material_count; uint32_t weight_first; uint32_t weight_count; uint32_t light; uint32_t camera; uint32_t joint; }",
+    "{ bridge_text_t bytes; uint32_t node_count; uint32_t light_count; uint32_t material_count; uint32_t weight_count; uint32_t camera_count; uint32_t joint_count; uint32_t revision; }",
+    "{ ideatek_entity_t model; }",
+    "{ ideatek_entity_t instance; uint32_t node; }",
+] }
+false = { run = ["{out}/scene_layout{exe}", "model"] }
+
+[[case]]
+name = "the header compiles with the headers of the world, space and rendering parts and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/scene_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/scene_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the 4 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/scene_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["scene_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_model_node_t", "ideatek:Model", "ideatek:ModelInstance", "ideatek:ModelNode",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["scene_late"]
+
+[[case]]
+name = "an author loads with write on ideatek:Model"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:author@1.0.0, native, m/scene_author{library}"] }
+
+[case.folders]
+"{case}/m" = ["scene_author"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = ["ideatek:Model"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_model_node_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_model_node_t", "ideatek:Model",
+]
+'''
+
+[[case]]
+name = "the game loads with write on ideatek:ModelInstance and read on ideatek:Model and ideatek:ModelNode"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:game@1.0.0, native, m/scene_game{library}"] }
+
+[case.folders]
+"{case}/m" = ["scene_game"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+write = ["ideatek:ModelInstance"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_model_node_t", "ideatek:Model", "ideatek:ModelNode",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_model_node_t", "ideatek:Model", "ideatek:ModelInstance", "ideatek:ModelNode",
+]
+'''
+
+[[case]]
+name = "the scene module loads with write on ideatek:ModelNode and read on ideatek:Model and ideatek:ModelInstance"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:scene@1.0.0, native, m/scene_spawner{library}"] }
+
+[case.folders]
+"{case}/m" = ["scene_spawner"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:scene@1.0.0"]
+write = ["ideatek:ModelNode"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_model_node_t", "ideatek:Model", "ideatek:ModelInstance",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:scene@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_model_node_t", "ideatek:Model", "ideatek:ModelInstance", "ideatek:ModelNode",
+]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "scene", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Scene-{target}.zip", "include/ideatek_scene.h", "license",
+    "package proof: BC-IdeaTek-Scene ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "scene"] }
