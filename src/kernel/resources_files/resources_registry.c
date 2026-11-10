@@ -48,7 +48,7 @@ uint32_t slot_with(const uint64_t *entities, uint32_t count, uint32_t stride,
     return (RES_NONE);
 }
 
-static void add_loader(const bridge_api_t *api, uint64_t id)
+void add_loader(const bridge_api_t *api, uint64_t id)
 {
     uint32_t at = bridge_native_find_value(api, id, LOADER);
     const ideatek_resource_loader_t *c = (const void *)(api->shared_base + at);
@@ -72,6 +72,8 @@ BRIDGE_NATIVE(loaders)
     uint32_t k;
     bool leave;
 
+    if (!res_module.started)
+        return (0);
     for (uint32_t i = 0; i < l->count; i++) {
         k = slot_with(&res_module.loaders[0].entity, res_module.s.max_loaders,
             sizeof(res_loader_t), t[i].id);

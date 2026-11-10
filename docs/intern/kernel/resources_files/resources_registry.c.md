@@ -6,6 +6,7 @@ This file holds the observer of the loaders, and finds the sources and the varia
 
 A loader enters with `ideatek:ResourceLoader`: the observer takes a record with its entity and `ranged`. The texts stay in the component, which lives with the entity of the loader module.
 A loader above `max_loaders` gets the line `no room for the loader <name>`. A loader that leaves frees its record.
+Before the first round, the tables do not exist, so the observer records nothing. Then `found` takes the loaders that exist: `docs/intern/kernel/resources_files/resources_found.c.md`.
 
 ## The names
 
@@ -19,5 +20,5 @@ A loader above `max_loaders` gets the line `no room for the loader <name>`. A lo
 | `find_source` | The record of a source by its name, or `RES_NONE`. |
 | `find_variable` | The record of a variable by its name, or `RES_NONE`. |
 | `slot_with` | The index of the record with an entity, in a table of records, or `RES_NONE`. |
-| `add_loader` | Takes the record of a loader, or writes the line. |
+| `add_loader` | Takes the record of a loader, or writes the line. `found` also calls it. |
 | `loaders` | The observer of the loaders. |

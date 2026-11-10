@@ -77,7 +77,9 @@ A use entity whose `owner` is dead is destroyed in that round, with the effects 
 | `log_ring` | 2048 | Each line of the log takes 32 bytes of the ring. |
 | `spans` | 16384 | The spans of its queries, the columns of its types and the lists of its observers. |
 
-- The module has 1 system, `round`, in its phase `first`, mapped by the deployment to the phase that starts the round.
+- The module has 2 systems in its phase `first`, mapped by the deployment to the phase that starts the round: `round`, then `found`.
+  In its first call, `found` takes each loader that exists.
+  So the module also takes a loader that another module spawned at `init`, before the start of the resources module.
 - A pair puts `ideatek_resources_files:resources:round` after `ideatek_files_mosl:files:results`, and before each reader of `ideatek:Resource` and `ideatek:ResourceHandle` of the first phase.
 - The module takes the grants of the resources module: `docs/extern/kernel/ideatek_resources.h.md`, *The grants*. It also reads `ideatek:Frame` of `docs/extern/kernel/ideatek_frame.h.md`, for the delay of the reloads.
 

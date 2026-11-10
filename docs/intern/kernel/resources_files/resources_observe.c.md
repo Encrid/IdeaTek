@@ -1,11 +1,12 @@
 # src/kernel/resources_files/resources_observe.c
 
-This file adds the system `round` and the observers of the module.
+This file adds the systems `round` and `found`, and the observers of the module.
 
 ## The system and the observers
 
 `round` runs in the phase `first`. Its changes are each type that the module attaches or detaches: `ideatek:FileRequest`, the 12 types of its `write` grants, and `ideatek:ResourceOutcome` for its detach.
 Each observer records what it hears in the tables, and `round` acts on the tables. An observer spawns nothing and attaches nothing.
+`found` runs in the phase `first` after `round`, with the term `ideatek:ResourceLoader` and no change: `docs/intern/kernel/resources_files/resources_found.c.md`.
 
 | Observer | Events | Term | What it records |
 | --- | --- | --- | --- |
@@ -32,4 +33,4 @@ The 12 observers need 12 functions. This file adds them in 3 groups of 4, with 1
 | `add_use_observers` | Adds `loads`, `adds`, `loaders` and `sources`. |
 | `add_work_observers` | Adds `variables`, `outcomes`, `labels` and `ranges`. |
 | `add_file_observers` | Adds `reloads`, `results`, `changes` and `answers`. |
-| `add_runs` | Adds `round` and the 3 groups. |
+| `add_runs` | Adds `round`, `found` after it, and the 3 groups. |
