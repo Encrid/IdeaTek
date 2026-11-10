@@ -91,6 +91,7 @@ Each part has a readme, which its release holds.
 | `resources_files` | `BM-IdeaTek-Resources-Files` | `docs/usage/kernel/resources_files.md` |
 | `loader_ktx2` | `BM-IdeaTek-Loader-KTX2` | `docs/usage/engine_subsystems/loader_ktx2.md` |
 | `space_bridge` | `BM-IdeaTek-Space-Bridge` | `docs/usage/engine_subsystems/space_bridge.md` |
+| `loader_gltf` | `BM-IdeaTek-Loader-Gltf` | `docs/usage/engine_subsystems/loader_gltf.md` |
 
 ### The implementations
 
@@ -114,6 +115,7 @@ Each implementation is a part with its own release. A module part fills the role
 | `resources_files` | `BM-IdeaTek-Resources-Files` | `ideatek_resources_files:resources@0.1.0` | The resources module | The files module of the deployment |
 | `loader_ktx2` | `BM-IdeaTek-Loader-KTX2` | `ideatek_loader_ktx2:loader@0.1.0` | A loader module of the resources part | The resources module of the deployment |
 | `space_bridge` | `BM-IdeaTek-Space-Bridge` | `ideatek_space_bridge:space@0.1.0` | The space module | Nothing: it stands on Bridge alone |
+| `loader_gltf` | `BM-IdeaTek-Loader-Gltf` | `ideatek_loader_gltf:loader@0.1.0` | A loader module of the resources part | The resources module and the KTX2 loader of the deployment |
 
 - The behavior and the settings of each role are in the document of its contract, under the name of the role.
 - The namespace of each identity is the key of its part, so no module has the namespace `ideatek`.
@@ -148,3 +150,4 @@ mosl is under the GNU Affero General Public License, version 3 only: `third_part
 
 GameNetworkingSockets is under the BSD 3-Clause licence: `third_party/gns/license`. protobuf is under the BSD 3-Clause licence: `third_party/protobuf/license`. libsodium is under the ISC licence: `third_party/libsodium/license`.
 glslang is under the BSD 3-Clause, BSD 2-Clause, MIT and Apache-2.0 licences, and the GPL-3.0 with the exception of Bison: `third_party/glslang/license`.
+cgltf is under the MIT licence: `third_party/cgltf/license`.
