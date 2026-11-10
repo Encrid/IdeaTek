@@ -1,0 +1,45 @@
+[[case]]
+name = "the 9 modules of layers 2 and 3 run together: a text file loads into a resource and reloads on a change, a state machine changes on a request and drops its scoped entity, with the window, the audio device and a pair of the sockets"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}", SDL_AUDIO_DRIVER = "ideatek_test", IDEATEK_TEST_AUDIO = "a,Speakers,p,1,48000,2", IDEATEK_TEST_AUDIO_TIMESCALE = "1000", APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["loaded: ideatek_states_bridge:states@0.1.0", "loaded: ideatek_resources_files:resources@0.1.0", "bytes [a.txt] offset 0 size 5 len 5 [hello]", "ready [a.txt]", "bytes [a.txt] offset 0 size 5 len 5 [again]", "modified [a.txt]", "r7 state 0 value 2", "r7 change 0 from 1 to 2", "r7 scoped 0 gone", "[hello step 3]", "playback state device [Speakers] rate 48000 ch 2 queued 1000", "down 1 repeat 0"], matches = ["r22 swap [0-9]+ frame [0-9]+ [0-9]+x[0-9]+ slot [0-9] bgra8 srgb vsync ready"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_step3.toml"]
+rounds = 22
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."ideatek_resources_files:resources@0.1.0".config]
+hot_reload = true
+reload_delay_ms = 50
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|1:loader text,test:Text,txt,,0|1:machine 1|1:scoped 0,1|1:pair|2:swapreq vsync|2:audioreq p,default,-,48000,1000,2|2:load -,a.txt,test:Text,,0,0|2:send 0,0,reliable,hello step 3|2:stall 300|3:audioframes 1000|4:stall 300|6:keyevent 4 61 0 1 0|7:show_states|7:show_scoped|8:stall 300|10:putfile {case}/host/content/a.txt,again|11:stall 500|13:stall 500|15:stall 300|17:stall 300|19:stall 300|21:stall 300|22:show_swap|22:show_resources"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "input_sdl3", "gpu_vulkan_module", "files_mosl", "audio_sdl3", "sockets_gns", "states_bridge", "resources_files", "sdl3_game_step3", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/a.txt" = '''
+hello'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_step3.toml"]
+rounds = 22
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."ideatek_resources_files:resources@0.1.0".config]
+hot_reload = true
+reload_delay_ms = 50
+[module."test:game@1.0.0".config]
+script = "1:request Game,640,480,windowed,default,-,-|1:gpureq none|1:loader text,test:Text,txt,,0|1:machine 1|1:scoped 0,1|1:pair|2:swapreq vsync|2:audioreq p,default,-,48000,1000,2|2:load -,a.txt,test:Text,,0,0|2:send 0,0,reliable,hello step 3|2:stall 300|3:audioframes 1000|4:stall 300|6:keyevent 4 61 0 1 0|6:statereq 0,2|7:show_states|7:show_scoped|8:stall 300|10:putfile {case}/host/content/a.txt,again|11:stall 500|13:stall 500|15:stall 300|17:stall 300|19:stall 300|21:stall 300|22:show_swap|22:show_resources"
+'''
