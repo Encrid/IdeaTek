@@ -127,7 +127,7 @@ The bytes 60 to 63 hold no field, because the size is a multiple of 8.
 
 The space module attaches `ideatek:WorldTransform` to each entity that has `ideatek:Transform`, and detaches it when `ideatek:Transform` goes.
 An observer of the space module attaches the value at the barrier that applies the change of `ideatek:Transform` or `ideatek:Parent`.
-The deployment gives the space module `observer_passes` of 3 or more: a new parent needs 1 barrier for the lists of children, and 1 for the place.
+The deployment gives the space module `observer_passes` of 3 or more. A new parent needs 1 barrier for the lists of children, and 1 for the place.
 The space module attaches a value only when its bytes differ from the bytes of the old value. Then it goes on to the children.
 
 In 1 call, the observer places only the changed entities that have no changed ancestor in that call. The walk of the ancestor places the others, so each entity is placed once.
