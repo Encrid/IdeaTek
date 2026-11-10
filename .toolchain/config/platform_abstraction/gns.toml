@@ -39,13 +39,6 @@ steps = [
     { run = ["{zig}", "build-lib", "-static", "-target", "{triple}", "-mcpu={cpu}", "{strip}", "-femit-bin={output}", "{objects}"] },
 ]
 
-[kinds.gns_cxx]
-output = "{name}.a"
-each = { run = ["{zig}", "c++", "-c", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "-std=c++17", "-w", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "{source}", "-MD", "-MF", "{deps}", "-o", "{object}"] }
-steps = [
-    { run = ["{zig}", "build-lib", "-static", "-target", "{triple}", "-mcpu={cpu}", "{strip}", "-femit-bin={output}", "{objects}"] },
-]
-
 [kinds.gns_program]
 output = "{name}{exe}"
 each = { run = ["{zig}", "c++", "-c", "-target", "{triple}", "-mcpu={cpu}", "{optimize}", "{float}", "{errno}", "-std=c++17", "-Wall", "-Wextra", "-Werror", "-Wno-unused-command-line-argument", "{define}", "{defines}", "{include}", "{flags}", "{source}", "-MD", "-MF", "{deps}", "-o", "{object}"] }
@@ -109,7 +102,7 @@ flags = ["{sodium_flags}"]
 
 [[artifact]]
 name = "protobuf"
-kind = "gns_cxx"
+kind = "cxx_archive"
 part = "gns"
 sources = ["{protobuf_sources}"]
 include = ["{protobuf_root}/src"]
@@ -117,7 +110,7 @@ defines = ["{protobuf_defines}"]
 
 [[artifact]]
 name = "gns"
-kind = "gns_cxx"
+kind = "cxx_archive"
 part = "gns"
 sources = ["{gns_cxx_sources}", "third_party/gns/generated/*.pb.cc"]
 include = ["{gns_includes}"]
