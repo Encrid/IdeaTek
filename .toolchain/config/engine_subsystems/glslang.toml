@@ -1,0 +1,118 @@
+[parts.glslang]
+name = "BL-IdeaTek-Glslang"
+folder = "engine_subsystems/glslang"
+uses = []
+third_party = ["glslang"]
+
+[compose.glslang]
+part = "glslang"
+from = "{glslang_root}"
+headers = [
+    "glslang/Include/glslang_c_interface.h", "glslang/Include/glslang_c_shader_types.h",
+    "glslang/Include/visibility.h", "glslang/Public/resource_limits_c.h",
+]
+into = "include"
+
+[compose.glslang_build_info]
+part = "glslang"
+from = "third_party/glslang/generated"
+headers = ["glslang/build_info.h"]
+into = "include"
+
+[[source]]
+name = "glslang"
+url = "https://github.com/KhronosGroup/glslang/archive/refs/tags/16.6.0.tar.gz"
+sha256 = "9c09b901149c729df745057dafa815278aaa101b84d2b6e14f16a42de52f97f2"
+into = "build/third_party/glslang"
+top = "glslang-16.6.0"
+
+[variables]
+glslang_root = "build/third_party/glslang/glslang-16.6.0"
+glslang_sources = [
+    "{glslang_root}/SPIRV/CInterface/spirv_c_interface.cpp",
+    "{glslang_root}/SPIRV/GlslangToSpv.cpp",
+    "{glslang_root}/SPIRV/InReadableOrder.cpp",
+    "{glslang_root}/SPIRV/Logger.cpp",
+    "{glslang_root}/SPIRV/SpvBuilder.cpp",
+    "{glslang_root}/SPIRV/SpvPostProcess.cpp",
+    "{glslang_root}/SPIRV/SpvTools.cpp",
+    "{glslang_root}/SPIRV/disassemble.cpp",
+    "{glslang_root}/SPIRV/doc.cpp",
+    "{glslang_root}/glslang/CInterface/glslang_c_interface.cpp",
+    "{glslang_root}/glslang/GenericCodeGen/CodeGen.cpp",
+    "{glslang_root}/glslang/GenericCodeGen/Link.cpp",
+    "{glslang_root}/glslang/MachineIndependent/Constant.cpp",
+    "{glslang_root}/glslang/MachineIndependent/InfoSink.cpp",
+    "{glslang_root}/glslang/MachineIndependent/Initialize.cpp",
+    "{glslang_root}/glslang/MachineIndependent/IntermTraverse.cpp",
+    "{glslang_root}/glslang/MachineIndependent/Intermediate.cpp",
+    "{glslang_root}/glslang/MachineIndependent/ParseContextBase.cpp",
+    "{glslang_root}/glslang/MachineIndependent/ParseHelper.cpp",
+    "{glslang_root}/glslang/MachineIndependent/PoolAlloc.cpp",
+    "{glslang_root}/glslang/MachineIndependent/RemoveTree.cpp",
+    "{glslang_root}/glslang/MachineIndependent/Scan.cpp",
+    "{glslang_root}/glslang/MachineIndependent/ShaderLang.cpp",
+    "{glslang_root}/glslang/MachineIndependent/SpirvIntrinsics.cpp",
+    "{glslang_root}/glslang/MachineIndependent/SymbolTable.cpp",
+    "{glslang_root}/glslang/MachineIndependent/Versions.cpp",
+    "{glslang_root}/glslang/MachineIndependent/attribute.cpp",
+    "{glslang_root}/glslang/MachineIndependent/glslang_tab.cpp",
+    "{glslang_root}/glslang/MachineIndependent/intermOut.cpp",
+    "{glslang_root}/glslang/MachineIndependent/iomapper.cpp",
+    "{glslang_root}/glslang/MachineIndependent/limits.cpp",
+    "{glslang_root}/glslang/MachineIndependent/linkValidate.cpp",
+    "{glslang_root}/glslang/MachineIndependent/parseConst.cpp",
+    "{glslang_root}/glslang/MachineIndependent/preprocessor/Pp.cpp",
+    "{glslang_root}/glslang/MachineIndependent/preprocessor/PpAtom.cpp",
+    "{glslang_root}/glslang/MachineIndependent/preprocessor/PpContext.cpp",
+    "{glslang_root}/glslang/MachineIndependent/preprocessor/PpScanner.cpp",
+    "{glslang_root}/glslang/MachineIndependent/preprocessor/PpTokens.cpp",
+    "{glslang_root}/glslang/MachineIndependent/propagateNoContraction.cpp",
+    "{glslang_root}/glslang/MachineIndependent/reflection.cpp",
+    "{glslang_root}/glslang/OSDependent/{glslang_os}/ossource.cpp",
+    "{glslang_root}/glslang/ResourceLimits/ResourceLimits.cpp",
+    "{glslang_root}/glslang/ResourceLimits/resource_limits_c.cpp",
+]
+
+[[artifact]]
+name = "glslang"
+kind = "cxx_archive"
+part = "glslang"
+sources = ["{glslang_sources}"]
+include = ["{glslang_root}", "third_party/glslang/generated"]
+defines = ["ENABLE_SPIRV", "{glslang_include}"]
+flags = ["-fvisibility=hidden", "-fvisibility-inlines-hidden"]
+
+[[artifact]]
+name = "glslang_smoke"
+kind = "program"
+part = "glslang"
+test = true
+sources = ["tests/engine_subsystems/glslang/smoke.c"]
+include = ["{glslang_root}"]
+link = ["{out}/glslang.a"]
+flags = ["-lc++"]
+
+[targets.x86_64-windows-gnu]
+glslang_os = "Windows"
+glslang_include = "GLSLANG_OSINCLUDE_WIN32"
+
+[targets.aarch64-windows-gnu]
+glslang_os = "Windows"
+glslang_include = "GLSLANG_OSINCLUDE_WIN32"
+
+[targets.x86_64-linux-gnu]
+glslang_os = "Unix"
+glslang_include = "GLSLANG_OSINCLUDE_UNIX"
+
+[targets.aarch64-linux-gnu]
+glslang_os = "Unix"
+glslang_include = "GLSLANG_OSINCLUDE_UNIX"
+
+[targets.x86_64-macos]
+glslang_os = "Unix"
+glslang_include = "GLSLANG_OSINCLUDE_UNIX"
+
+[targets.aarch64-macos]
+glslang_os = "Unix"
+glslang_include = "GLSLANG_OSINCLUDE_UNIX"
