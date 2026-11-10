@@ -133,6 +133,16 @@ rule = "G4"
 path = "src/kernel/resources_files/resources_inside.h"
 why = "The declaration of res_module, the tables of the native module between 2 calls."
 
+[[style.exception]]
+rule = "G4"
+path = "src/engine_subsystems/loader_ktx2/ktx2_main.c"
+why = "ktx2_module holds the table of the textures and the block list between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/engine_subsystems/loader_ktx2/ktx2_inside.h"
+why = "The declaration of ktx2_module, the state of the native module between 2 calls."
+
 [[branches.exception]]
 path = "src/kernel/resources_files/resources_changes.c"
 line = 57
@@ -174,3 +184,24 @@ line = 58
 col = 9
 side = "true"
 why = "read_key trims each line before read_word, so a key with spaces only after it is a key with nothing after it, which find_key refuses first."
+
+[[branches.exception]]
+path = "src/engine_subsystems/loader_ktx2/ktx2_hear.c"
+line = 28
+col = 13
+side = "false"
+why = "The observer bytes hears ideatek:ResourceBytes enter or attach, so each item of its list carries the component at the barrier. The test of its value is a guard."
+
+[[branches.exception]]
+path = "src/engine_subsystems/loader_ktx2/ktx2_say.c"
+line = 12
+col = 24
+side = "false"
+why = "The resources module attaches ideatek:Resource before ideatek:ResourceBytes, so a resource of a load always has its path. The empty path is a guard."
+
+[[branches.exception]]
+path = "src/engine_subsystems/loader_ktx2/ktx2_say.c"
+line = 13
+col = 20
+side = "false"
+why = "The resources module attaches ideatek:Resource before ideatek:ResourceBytes, so a resource of a load always has its path. The length 0 is a guard."

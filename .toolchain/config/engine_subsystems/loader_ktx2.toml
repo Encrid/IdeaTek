@@ -1,0 +1,30 @@
+[parts.loader_ktx2]
+name = "BM-IdeaTek-Loader-KTX2"
+folder = "engine_subsystems/loader_ktx2"
+uses = ["rendering", "resources", "resources_files", "files", "files_mosl", "space", "world", "frame", "frame_sdl3", "sdl3"]
+third_party = []
+
+[variables]
+loader_ktx2_words = [
+    "abi=1", "config=ideatek_loader_ktx2:Settings", "pinned=false", "reloadable=false",
+    "settings=texture_bytes max_textures", "config.texture_bytes=33554432", "config.max_textures=1024",
+    "scratch=65536", "log_ring=512", "spans=16384", "spawns=1", "changes=65536",
+    "persistent=33685504", "hot_reload=false",
+]
+loader_ktx2_include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel", "src/engine_subsystems/loader_ktx2", "src/kernel/resources_files"]
+
+[[artifact]]
+name = "loader_ktx2"
+kind = "native_module"
+part = "loader_ktx2"
+sources = ["src/engine_subsystems/loader_ktx2/*.c", "src/kernel/resources_files/resources_arena.c"]
+include = ["{loader_ktx2_include}"]
+manifest = ["ideatek_loader_ktx2:loader@0.1.0", "{loader_ktx2_words}"]
+
+[[artifact]]
+name = "loader_ktx2_reload"
+kind = "program"
+part = "loader_ktx2"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/loader_ktx2{library}"]
