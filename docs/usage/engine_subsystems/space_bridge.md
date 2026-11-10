@@ -9,7 +9,7 @@ Its 2 files are `BM-IdeaTek-Space-Bridge.zip` and `sha256.txt`. `BM-IdeaTek-Spac
 In `BM-IdeaTek-Space-Bridge`, each folder holds the module `space_bridge.dll`, `space_bridge.so` or `space_bridge.dylib`.
 Each folder of `BM-IdeaTek-Space-Bridge.zip` also holds this readme and the licence.
 
-A deployment puts no library beside the module, which needs only Bridge.
+The module needs only Bridge, so no library goes beside it in a deployment.
 A project names the zip of `BM-IdeaTek-Space-Bridge` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
 ## Usage
@@ -41,13 +41,13 @@ So a moved entity gets its `ideatek:WorldTransform` within 2 barriers. A child w
 
 | Key | Default of the manifest | Rule |
 | --- | --- | --- |
-| `pinned` | `false` | No call of the module needs a given thread. |
-| `reloadable` | `false` | No case tests a reload of the module. |
+| `pinned` | `false` | The module asks no thread of its own. |
+| `reloadable` | `false` | A reload of the module has no case yet. |
 | `spawns` | `"none"` | The module makes no entity. It only destroys orphans. |
 | `changes` | 262144 | The attaches of `ideatek:WorldTransform` and the links of a round: about 2 for each moved entity. |
 | `persistent` | `"none"` | The module keeps nothing between the rounds. |
 | `scratch` | 1048576 | The set of the entities of 1 call of `place`, 16 bytes for each, and the stack of the walk. |
-| `log_ring` | 512 | The room of 16 lines of the log, at 32 bytes each. |
+| `log_ring` | 512 | 16 log lines fit, with 32 bytes for each line. |
 | `spans` | 65536 | The spans of its query, and the columns of its 8 types. |
 
 - The deployment sets `observer_passes` to 3 or more, as the document of `bridge.h` of Bridge tells.
