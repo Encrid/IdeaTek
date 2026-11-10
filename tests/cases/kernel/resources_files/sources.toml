@@ -96,7 +96,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:loader text,test:Text,txt,,0|2:load -,user://t.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+script = "1:loader text,test:Text,txt,,0|1:filereq user,write,s.txt,0,save|3:load -,user://t.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
 ''' } }
 
 [case.folders]
@@ -104,8 +104,8 @@ script = "1:loader text,test:Text,txt,,0|2:load -,user://t.txt,test:Text,,0,0|12
 "{case}/m" = ["files_mosl", "resources_files", "sdl3_game_resources", "SDL3_test"]
 
 [case.files]
-"{case}/data/IdeaTek/s.txt" = '''
-save'''
+"{case}/host/content/a.txt" = '''
+hello'''
 "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_resources.toml"]
 rounds = 12
@@ -115,7 +115,7 @@ ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:loader text,test:Text,txt,,0|2:load -,user://s.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
+script = "1:loader text,test:Text,txt,,0|1:filereq user,write,s.txt,0,save|3:load -,user://s.txt,test:Text,,0,0|12:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300"
 '''
 
 [[case]]
