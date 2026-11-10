@@ -1,0 +1,59 @@
+[[case]]
+name = "a path with a source and a label is split in its 3 parts"
+run = ["{out}/resources_paths{exe}", "pak://dir/a.txt#m1", ""]
+claims = { status = 0, line = ["split [pak] [dir/a.txt] [m1]"] }
+false = { run = ["{out}/resources_paths{exe}", "dir/a.txt#m1", ""] }
+
+[[case]]
+name = "a path without a source and without a label has empty parts"
+run = ["{out}/resources_paths{exe}", "dir/a.txt", ""]
+claims = { status = 0, line = ["split [] [dir/a.txt] []"] }
+false = { run = ["{out}/resources_paths{exe}", "pak://dir/a.txt", ""] }
+
+[[case]]
+name = "a variable of a path is found and resolved with a value"
+run = ["{out}/resources_paths{exe}", "<lang>/a.txt", "en"]
+claims = { status = 0, line = ["resolve 1 [en/a.txt]"] }
+false = { run = ["{out}/resources_paths{exe}", "<lang>/a.txt", "fr"] }
+
+[[case]]
+name = "a path without a variable has none"
+run = ["{out}/resources_paths{exe}", "dir/a.txt", "en"]
+claims = { status = 0, line = ["variable 0 []"] }
+false = { run = ["{out}/resources_paths{exe}", "<lang>/a.txt", "en"] }
+
+[[case]]
+name = "a brace with no end is refused"
+run = ["{out}/resources_paths{exe}", "{lang/a.txt", "en"]
+claims = { status = 0, line = ["resolve 0 []"] }
+false = { run = ["{out}/resources_paths{exe}", "<lang>/a.txt", "en"] }
+
+[[case]]
+name = "the extension is the text after the last dot of the last name"
+run = ["{out}/resources_paths{exe}", "dir.x/a.tar.gz", ""]
+claims = { status = 0, line = ["extension 1 [gz]"] }
+false = { run = ["{out}/resources_paths{exe}", "dir.x/a", ""] }
+
+[[case]]
+name = "a folder and a path join with a slash between them"
+run = ["{out}/resources_paths{exe}", "a.txt", "textures"]
+claims = { status = 0, line = ["join 1 [textures/a.txt]"] }
+false = { run = ["{out}/resources_paths{exe}", "a.txt", ""] }
+
+[[case]]
+name = "a path is under its folder, and not under another folder"
+run = ["{out}/resources_paths{exe}", "textures/a.txt", "textures"]
+claims = { status = 0, line = ["under 1"] }
+false = { run = ["{out}/resources_paths{exe}", "textures/a.txt", "tex"] }
+
+[[case]]
+name = "a name of a source holds only lower-case letters, digits and underscores"
+run = ["{out}/resources_paths{exe}", "tex_2", ""]
+claims = { status = 0, line = ["name 1"] }
+false = { run = ["{out}/resources_paths{exe}", "Tex-2", ""] }
+
+[[case]]
+name = "a value that does not fit in the slot refuses the resolve"
+run = ["{out}/resources_paths{exe}", "<lang>/a.txt", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]
+claims = { status = 0, line = ["resolve 0 []"] }
+false = { run = ["{out}/resources_paths{exe}", "<lang>/a.txt", "en"] }

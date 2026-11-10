@@ -78,8 +78,11 @@ static void show_text(char *out, size_t size, const bridge_api_t *api,
 
     memcpy(out, api->shared_base + text.at, len);
     out[len] = '\0';
-    for (size_t i = 0; i < len; i++)
+    for (size_t i = 0; i < len; i++) {
         out[i] = out[i] == '\n' ? '|' : out[i];
+        out[i] = out[i] == '{' ? '<' : out[i];
+        out[i] = out[i] == '}' ? '>' : out[i];
+    }
 }
 
 static uint64_t resource_of_use(const bridge_api_t *api, uint32_t k)
@@ -142,6 +145,10 @@ static void ask_load(const bridge_api_t *api, char *args)
     const char *owner = field(&left);
 
     l.owner.id = strcmp(owner, "-") ? entity_of(api, owner) : 0;
+    for (char *c = left; *c; c++) {
+        *c = *c == '<' ? '{' : *c;
+        *c = *c == '>' ? '}' : *c;
+    }
     l.path = put_bytes(api, field(&left));
     l.type = put_bytes(api, field(&left));
     l.settings = put_bytes(api, field(&left));
@@ -162,6 +169,40 @@ static void ask_add(const bridge_api_t *api, const char *type)
     BRIDGE_NATIVE_ATTACH(api, resource, game_resources_slots.text, text);
     uses[use_count++] = id;
     BRIDGE_NATIVE_ATTACH(api, id, game_resources_slots.add, a);
+}
+
+static void ask_again(const bridge_api_t *api, const char *args)
+{
+    uint64_t id = api->spawn(api);
+    ideatek_resource_add_t a = { .resource = { resource_of_use(api,
+        (uint32_t)atoi(args)) }, .type = put_bytes(api, "test:Text") };
+
+    uses[use_count++] = id;
+    BRIDGE_NATIVE_ATTACH(api, id, game_resources_slots.add, a);
+}
+
+static void stray(const bridge_api_t *api, const char *kind)
+{
+    const game_resources_slots_t *s = &game_resources_slots;
+    uint64_t id = api->spawn(api);
+    ideatek_resource_outcome_t o = {};
+    ideatek_resource_read_t r = { .length = 1 };
+    ideatek_resource_label_t l = { .label = put_bytes(api, "x") };
+    ideatek_resource_source_result_t a = {};
+    game_text_t text = { .bytes = 1 };
+
+    BRIDGE_NATIVE_ATTACH(api, id, s->text, text);
+    if (!strcmp(kind, "outcome"))
+        BRIDGE_NATIVE_ATTACH(api, id, s->outcome, o);
+    if (!strcmp(kind, "read"))
+        BRIDGE_NATIVE_ATTACH(api, id, s->read, r);
+    if (!strcmp(kind, "label"))
+        BRIDGE_NATIVE_ATTACH(api, id, s->label, l);
+    if (!strcmp(kind, "reload"))
+        api->attach(api, id, s->reload, BRIDGE_ZEROED);
+    if (!strcmp(kind, "answer"))
+        BRIDGE_NATIVE_ATTACH(api, id, s->source_result, a);
+    bridge_native_say(api, BRIDGE_LOG_INFO, "r%u stray %s", game.round, kind);
 }
 
 static void ask_range(const bridge_api_t *api, char *args)
@@ -324,8 +365,14 @@ bool game_resources_step(const bridge_api_t *api, const char *verb, char *args)
         api->destroy(api, others[atoi(args)]);
     else if (!strcmp(verb, "usekill"))
         api->destroy(api, uses[atoi(args)]);
+    else if (!strcmp(verb, "loaderkill"))
+        api->destroy(api, loaders[atoi(args)]);
     else if (!strcmp(verb, "rangereq"))
         ask_range(api, args);
+    else if (!strcmp(verb, "addagain"))
+        ask_again(api, args);
+    else if (!strcmp(verb, "stray"))
+        stray(api, args);
     else
         done = step_more(api, verb, args);
     return (done);
@@ -575,6 +622,10 @@ void game_watch_resources(const bridge_api_t *api)
     const uint32_t events[7] = { BRIDGE_ON_ENTER | BRIDGE_ON_ATTACH,
         BRIDGE_ON_ENTER, BRIDGE_ON_ENTER, BRIDGE_ON_ENTER, BRIDGE_ON_ENTER,
         BRIDGE_ON_ENTER | BRIDGE_ON_ATTACH, BRIDGE_ON_ENTER };
+    const uint32_t changes[7][3] = {{ s->text, s->outcome, s->label },
+        { s->source_result, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 },
+        { 0, 0, 0 }, { 0, 0, 0 } };
+    const uint32_t counts[7] = { 3, 1, 0, 0, 0, 0, 0 };
     bridge_term_t term[1];
     bridge_observer_statement_t statement;
 
@@ -585,7 +636,9 @@ void game_watch_resources(const bridge_api_t *api)
                 (uint32_t)strlen(names[i])),
             .name_len = (uint32_t)strlen(names[i]), .events = events[i],
             .terms = bridge_native_put(api, term, sizeof(term)),
-            .term_count = 1 };
+            .term_count = 1,
+            .changes = bridge_native_put_slots(api, changes[i], counts[i]),
+            .change_count = counts[i] };
         lists[i] = api->observe(api, bridge_native_put(api, &statement,
             sizeof(statement)));
     }

@@ -1,0 +1,107 @@
+[[case]]
+name = "a meta file with the 3 keys gives its action, its loader and its settings"
+run = ["{out}/resources_meta{exe}", "action = \"process\"|loader = \"img\"|[settings]|k = 1|"]
+claims = { status = 0, line = ["meta ok action 1 loader [img] settings [k = 1|]"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\"|loader = \"img\"|[settings]|k = 1|"] }
+
+[[case]]
+name = "an empty meta file gives the defaults"
+run = ["{out}/resources_meta{exe}", ""]
+claims = { status = 0, line = ["meta ok action 0 loader [] settings []"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"ignore\""] }
+
+[[case]]
+name = "a comment line and an empty line are allowed"
+run = ["{out}/resources_meta{exe}", "# a comment||action = \"ignore\""]
+claims = { status = 0, line = ["meta ok action 2 loader [] settings []"] }
+false = { run = ["{out}/resources_meta{exe}", "a comment||action = \"ignore\""] }
+
+[[case]]
+name = "a line outside the subset is refused with its number"
+run = ["{out}/resources_meta{exe}", "action = \"load\"|what = 3"]
+claims = { status = 0, line = ["meta refused line 2"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\"|loader = \"x\""] }
+
+[[case]]
+name = "a key 2 times is refused"
+run = ["{out}/resources_meta{exe}", "action = \"load\"|action = \"load\""]
+claims = { status = 0, line = ["meta refused line 2"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\""] }
+
+[[case]]
+name = "a word outside the 3 actions is refused"
+run = ["{out}/resources_meta{exe}", "action = \"maybe\""]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\""] }
+
+[[case]]
+name = "a word without its end quote is refused"
+run = ["{out}/resources_meta{exe}", "loader = \"img"]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "loader = \"img\""] }
+
+[[case]]
+name = "the header on the last line without an end gives empty settings"
+run = ["{out}/resources_meta{exe}", "action = \"load\"|[settings]"]
+claims = { status = 0, line = ["meta ok action 0 loader [] settings []"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\"|[settings]|k = 1"] }
+
+[[case]]
+name = "a line of 10 characters that is not the header is refused"
+run = ["{out}/resources_meta{exe}", "action = 1"]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\""] }
+
+[[case]]
+name = "spaces at the end of a line are allowed"
+run = ["{out}/resources_meta{exe}", "action = \"load\"   "]
+claims = { status = 0, line = ["meta ok action 0 loader [] settings []"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\" x"] }
+
+[[case]]
+name = "a short line is refused"
+run = ["{out}/resources_meta{exe}", "act"]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "loader = \"a\""] }
+
+[[case]]
+name = "a key with more letters is refused"
+run = ["{out}/resources_meta{exe}", "actionx = 1"]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\""] }
+
+[[case]]
+name = "a key with no word is refused"
+run = ["{out}/resources_meta{exe}", "action = "]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\""] }
+
+[[case]]
+name = "a word without quotes is refused"
+run = ["{out}/resources_meta{exe}", "action = load"]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\""] }
+
+[[case]]
+name = "a word with text after its end quote is refused"
+run = ["{out}/resources_meta{exe}", "action = \"load\" x"]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\""] }
+
+[[case]]
+name = "a key alone is refused"
+run = ["{out}/resources_meta{exe}", "action |"]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\"|"] }
+
+[[case]]
+name = "a key without its equal sign is refused"
+run = ["{out}/resources_meta{exe}", "action x"]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\""] }
+
+[[case]]
+name = "a word of the length of an action that is not an action is refused"
+run = ["{out}/resources_meta{exe}", "action = \"loaf\""]
+claims = { status = 0, line = ["meta refused line 1"] }
+false = { run = ["{out}/resources_meta{exe}", "action = \"load\""] }

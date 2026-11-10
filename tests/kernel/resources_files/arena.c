@@ -15,13 +15,15 @@ static res_blocks_t list = { blocks, 4, 0, 100 };
 int main(int argc, char **argv)
 {
     uint32_t start = 0;
+    int n = 0;
     bool ok;
 
     for (int i = 1; i + 2 < argc; i += 3) {
         if (!strcmp(argv[i], "take")) {
             ok = blocks_take(&list, (uint32_t)atoi(argv[i + 1]),
                 (uint32_t)atoi(argv[i + 2]), &start);
-            printf("take %s at %u\n", ok ? "ok" : "refused", ok * start);
+            printf("take %d %s at %u\n", ++n, ok ? "ok" : "refused",
+                ok * start);
         }
         if (!strcmp(argv[i], "free"))
             blocks_free(&list, (uint32_t)atoi(argv[i + 1]));

@@ -1,0 +1,28 @@
+presets = ["test.toml"]
+phases = ["first", "fixed", "check"]
+again = { fixed = 100 }
+
+[budget]
+systems = 64
+terms = 128
+tables = 128
+persistent = 16777216
+
+[module."ideatek_frame_sdl3:clock@0.1.0"]
+write = ["ideatek:Frame", "ideatek:Tick", "ideatek:TimeRequest", "ideatek:EventWait"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:WindowState"]
+
+[module."ideatek_files_mosl:files@0.1.0"]
+write = ["ideatek:FileResult", "ideatek:FileChange"]
+read = ["ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileRequest"]
+
+[module."ideatek_resources_files:resources@0.1.0"]
+write = ["ideatek:FileRequest", "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceBytes", "ideatek:ResourceOutcome", "ideatek:ResourceRead", "ideatek:RawBytes", "ideatek:ResourceSourceRead", "ideatek:ResourceReload", "ideatek:ResourceModified", "ideatek:ResourceReady", "ideatek:ResourceFailed"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileResult", "ideatek:FileChange", "ideatek:Frame", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t", "ideatek:ResourceVariable", "ideatek:ResourceLoad", "ideatek:ResourceAdd", "ideatek:ResourceLoader", "ideatek:ResourceLabel", "ideatek:ResourceSource", "ideatek:ResourceSourceResult"]
+
+[module."test:game@1.0.0"]
+write = ["ideatek:WindowRequest", "ideatek:EventWait", "ideatek:ClipboardRequest", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:FileRequest", "ideatek:ResourceLoad", "ideatek:ResourceAdd", "ideatek:ResourceReload", "ideatek:ResourceVariable", "ideatek:ResourceLoader", "ideatek:ResourceRead", "ideatek:ResourceOutcome", "ideatek:ResourceLabel", "ideatek:ResourceSource", "ideatek:ResourceSourceResult"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:Paste", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:FingerEvent", "ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileResult", "ideatek:FileChange", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t", "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceBytes", "ideatek:RawBytes", "ideatek:ResourceSourceRead", "ideatek:ResourceModified", "ideatek:ResourceReady", "ideatek:ResourceFailed"]
+
+[order]
+before = [["ideatek_frame_sdl3:clock:round", "ideatek_resources_files:resources:round"], ["test:game:early", "ideatek_files_mosl:files:results"], ["ideatek_files_mosl:files:results", "ideatek_resources_files:resources:round"]]

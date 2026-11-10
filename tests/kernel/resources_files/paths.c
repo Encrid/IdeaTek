@@ -46,6 +46,10 @@ int main(int argc, char **argv)
     res_text_t a = { argc > 1 ? argv[1] : "", 0 };
     res_text_t b = { argc > 2 ? argv[2] : "", 0 };
 
+    for (char *c = argv[1]; argc > 1 && *c; c++) {
+        *c = *c == '<' ? '{' : *c;
+        *c = *c == '>' ? '}' : *c;
+    }
     a.len = (uint32_t)strlen(a.at);
     b.len = (uint32_t)strlen(b.at);
     show_split(&a);

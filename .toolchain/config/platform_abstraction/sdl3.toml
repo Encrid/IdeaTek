@@ -197,8 +197,18 @@ defines = ["GAME_STATES"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]
+name = "sdl3_game_resources"
+defines = ["GAME_FILES", "GAME_RESOURCES"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
 name = "sdl3_game_all"
 defines = ["GAME_GPU", "GAME_FRAME"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
+name = "sdl3_game_step3"
+defines = ["GAME_GPU", "GAME_FRAME", "GAME_FILES", "GAME_AUDIO", "GAME_SOCKETS", "GAME_STATES", "GAME_RESOURCES"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]

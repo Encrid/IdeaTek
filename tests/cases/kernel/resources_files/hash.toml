@@ -1,0 +1,83 @@
+[[case]]
+name = "a key that was put is found with its value"
+run = ["{out}/resources_hash{exe}", "put", "5", "1", "find", "5", "0"]
+claims = { status = 0, line = ["find 5 1"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "5", "2", "find", "5", "0"] }
+
+[[case]]
+name = "a key that was not put is not found"
+run = ["{out}/resources_hash{exe}", "put", "5", "1", "find", "7", "0"]
+claims = { status = 0, line = ["find 7 none"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "7", "1", "find", "7", "0"] }
+
+[[case]]
+name = "a dropped key is not found, and the key after it in the walk stays found"
+run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "9", "2", "drop", "1", "0", "find", "1", "0", "find", "9", "0"]
+claims = { status = 0, line = ["find 9 2"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "9", "2", "drop", "9", "0", "find", "1", "0", "find", "9", "0"] }
+
+[[case]]
+name = "a full map refuses a new key"
+run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "2", "1", "put", "3", "1", "put", "4", "1", "put", "5", "1", "put", "6", "1", "put", "7", "1", "put", "8", "1", "put", "9", "1"]
+claims = { status = 0, line = ["put 9 refused"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "9", "1"] }
+
+[[case]]
+name = "a put of a known key writes its value"
+run = ["{out}/resources_hash{exe}", "put", "5", "1", "put", "5", "3", "find", "5", "0"]
+claims = { status = 0, line = ["find 5 3"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "5", "1", "find", "5", "0"] }
+
+[[case]]
+name = "a clear frees each slot"
+run = ["{out}/resources_hash{exe}", "put", "5", "1", "clear", "0", "0", "find", "5", "0"]
+claims = { status = 0, line = ["find 5 none"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "5", "1", "find", "5", "0"] }
+
+[[case]]
+name = "the key of a path and a type is never 0, and differs by the type"
+run = ["{out}/resources_hash{exe}", "key", "a.txt", "test:Text"]
+claims = { status = 0, line = ["key 4913467da2b73353"] }
+false = { run = ["{out}/resources_hash{exe}", "key", "a.txt", "test:Other"] }
+
+[[case]]
+name = "the key 0 is in no map"
+run = ["{out}/resources_hash{exe}", "put", "5", "1", "find", "0", "0"]
+claims = { status = 0, line = ["find 0 none"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "5", "1", "find", "5", "0"] }
+
+[[case]]
+name = "a drop of the key 0 and of a missing key changes nothing"
+run = ["{out}/resources_hash{exe}", "put", "5", "1", "drop", "0", "0", "drop", "7", "0", "find", "5", "0"]
+claims = { status = 0, line = ["find 5 1"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "5", "1", "drop", "5", "0", "find", "5", "0"] }
+
+[[case]]
+name = "a drop on a full map of a missing key changes nothing"
+run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "2", "1", "put", "3", "1", "put", "4", "1", "put", "5", "1", "put", "6", "1", "put", "7", "1", "put", "8", "1", "drop", "9", "0", "find", "8", "0"]
+claims = { status = 0, line = ["find 8 1"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "2", "1", "put", "3", "1", "put", "4", "1", "put", "5", "1", "put", "6", "1", "put", "7", "1", "put", "8", "1", "drop", "8", "0", "find", "8", "0"] }
+
+[[case]]
+name = "a drop moves down a key whose walk wrapped around the end of the map"
+run = ["{out}/resources_hash{exe}", "put", "7", "1", "put", "15", "2", "put", "23", "3", "drop", "7", "0", "find", "15", "0", "find", "23", "0"]
+claims = { status = 0, line = ["find 23 3"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "7", "1", "put", "15", "2", "put", "23", "3", "drop", "23", "0", "find", "15", "0", "find", "23", "0"] }
+
+[[case]]
+name = "a put of the key 0 is refused"
+run = ["{out}/resources_hash{exe}", "put", "0", "1"]
+claims = { status = 0, line = ["put 0 refused"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "5", "1"] }
+
+[[case]]
+name = "a drop on a full map ends after the count of the map"
+run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "2", "1", "put", "3", "1", "put", "4", "1", "put", "5", "1", "put", "6", "1", "put", "7", "1", "put", "8", "1", "drop", "8", "0", "find", "8", "0"]
+claims = { status = 0, line = ["find 8 none"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "2", "1", "put", "3", "1", "put", "4", "1", "put", "5", "1", "put", "6", "1", "put", "7", "1", "put", "8", "1", "drop", "7", "0", "find", "8", "0"] }
+
+[[case]]
+name = "a put of a new key on a full map is refused"
+run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "2", "1", "put", "3", "1", "put", "4", "1", "put", "5", "1", "put", "6", "1", "put", "7", "1", "put", "8", "1", "put", "9", "1"]
+claims = { status = 0, line = ["put 9 refused"] }
+false = { run = ["{out}/resources_hash{exe}", "put", "1", "1", "put", "2", "1", "put", "3", "1", "put", "4", "1", "put", "5", "1", "put", "6", "1", "put", "7", "1", "put", "9", "1"] }
