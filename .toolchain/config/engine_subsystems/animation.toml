@@ -1,7 +1,7 @@
 [parts.animation]
 name = "BC-IdeaTek-Animation"
 folder = "engine_subsystems/animation"
-uses = ["world", "space", "frame", "states"]
+uses = ["world", "space", "frame", "states", "physics"]
 third_party = []
 
 [parts.animation.package]

@@ -79,6 +79,7 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_body_flags_t,
         float max_angular_speed; \
         float sleep_threshold; \
         float inertia_scale; \
+        float drag; \
         ideatek_body_kind_t kind; \
         ideatek_mass_mode_t mass_mode; \
         ideatek_locked_t locked; \
@@ -114,6 +115,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_wake_event_t, IDEATEK_WAKE_EVENT_FIELDS);
         ideatek_vec3_t linear; \
         ideatek_vec3_t angular; \
         bool sleeping; \
+        float rate; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_motion_t, IDEATEK_MOTION_FIELDS);
@@ -257,7 +259,9 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_hit_event_t, IDEATEK_HIT_EVENT_FIELDS);
         IDEATEK_QUERY_KIND_RAY = 0, \
         IDEATEK_QUERY_KIND_SHAPE_CAST = 1, \
         IDEATEK_QUERY_KIND_OVERLAP = 2, \
-        IDEATEK_QUERY_KIND_WATER = 3 \
+        IDEATEK_QUERY_KIND_WATER = 3, \
+        IDEATEK_QUERY_KIND_GAS = 4, \
+        IDEATEK_QUERY_KIND_SIGHT = 5 \
     }
 
 BRIDGE_SCHEMA_ENUM_TYPE(ideatek_query_kind_t,
@@ -689,6 +693,7 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_character_collision_t,
         float predictive_distance; \
         float mass; \
         float max_strength; \
+        float drag; \
         ideatek_non_walkable_t non_walkable; \
         ideatek_character_flags_t flags; \
     }
@@ -712,6 +717,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_character_move_t,
         ideatek_vec3_t ground_velocity; \
         ideatek_ground_state_t ground_state; \
         ideatek_character_collision_t collision; \
+        float rate; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_character_state_t,
@@ -1234,55 +1240,79 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_liquid_particles_t,
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_liquid_foam_t, IDEATEK_LIQUID_FOAM_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_liquid_foam_t, IDEATEK_LIQUID_FOAM_FIELDS);
 
-    #define IDEATEK_SMOKE_FLAGS_VALUES { \
-        IDEATEK_SMOKE_FLAGS_COLLIDE = 0x01 \
+    #define IDEATEK_GAS_FLAGS_VALUES { \
+        IDEATEK_GAS_FLAGS_COLLIDE = 0x01, \
+        IDEATEK_GAS_FLAGS_PUSH_BODIES = 0x02, \
+        IDEATEK_GAS_FLAGS_PRESSURE = 0x04 \
     }
 
-BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_smoke_flags_t,
-    uint8_t, IDEATEK_SMOKE_FLAGS_VALUES);
-BRIDGE_SCHEMA_BITMASK_DESC(ideatek_smoke_flags_t,
-    uint8_t, IDEATEK_SMOKE_FLAGS_VALUES);
+BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_gas_flags_t,
+    uint8_t, IDEATEK_GAS_FLAGS_VALUES);
+BRIDGE_SCHEMA_BITMASK_DESC(ideatek_gas_flags_t,
+    uint8_t, IDEATEK_GAS_FLAGS_VALUES);
 
-    #define IDEATEK_SMOKE_VOLUME_FIELDS { \
+    #define IDEATEK_GAS_VOLUME_FIELDS { \
+        bridge_text_t species; \
+        bridge_text_t reactions; \
         float cell_size; \
         float steps_per_second; \
-        float buoyancy_per_temp; \
-        float buoyancy_per_smoke; \
+        float ambient_temperature; \
+        float ambient_pressure; \
         float cooling; \
         float vorticity; \
-        float ignition_temp; \
-        float burn_per_temp; \
-        float fuel_per_burn; \
-        float temp_per_burn; \
-        float smoke_per_burn; \
-        ideatek_smoke_flags_t flags; \
+        uint32_t species_count; \
+        uint32_t reaction_count; \
+        ideatek_gas_flags_t flags; \
     }
 
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_smoke_volume_t, IDEATEK_SMOKE_VOLUME_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_smoke_volume_t, IDEATEK_SMOKE_VOLUME_FIELDS);
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gas_volume_t, IDEATEK_GAS_VOLUME_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gas_volume_t, IDEATEK_GAS_VOLUME_FIELDS);
 
-    #define IDEATEK_SMOKE_EMITTER_FIELDS { \
+    #define IDEATEK_GAS_EMITTER_FIELDS { \
         ideatek_entity_t volume; \
         ideatek_vec3_t velocity; \
         ideatek_vec3_t size; \
+        float rate; \
         float temperature; \
-        float fuel; \
-        float smoke; \
+        float heat; \
         float couple_rate; \
+        uint32_t species; \
         ideatek_emitter_shape_t shape; \
     }
 
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_smoke_emitter_t,
-    IDEATEK_SMOKE_EMITTER_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_smoke_emitter_t,
-    IDEATEK_SMOKE_EMITTER_FIELDS);
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gas_emitter_t, IDEATEK_GAS_EMITTER_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gas_emitter_t, IDEATEK_GAS_EMITTER_FIELDS);
 
-    #define IDEATEK_SMOKE_GRID_FIELDS { \
-        ideatek_entity_t texture; \
+    #define IDEATEK_GAS_GRID_FIELDS { \
+        ideatek_entity_t temperature; \
+        bridge_text_t amounts; \
+        uint32_t count; \
     }
 
-BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_smoke_grid_t, IDEATEK_SMOKE_GRID_FIELDS);
-BRIDGE_SCHEMA_STRUCT_DESC(ideatek_smoke_grid_t, IDEATEK_SMOKE_GRID_FIELDS);
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gas_grid_t, IDEATEK_GAS_GRID_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gas_grid_t, IDEATEK_GAS_GRID_FIELDS);
+
+    #define IDEATEK_GAS_SAMPLE_FIELDS { \
+        ideatek_entity_t query; \
+        ideatek_entity_t volume; \
+        bridge_text_t amounts; \
+        ideatek_vec3_t velocity; \
+        float temperature; \
+        float pressure; \
+        uint32_t order; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gas_sample_t, IDEATEK_GAS_SAMPLE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gas_sample_t, IDEATEK_GAS_SAMPLE_FIELDS);
+
+    #define IDEATEK_SIGHT_SAMPLE_FIELDS { \
+        ideatek_entity_t query; \
+        float transmittance; \
+        uint32_t order; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_sight_sample_t, IDEATEK_SIGHT_SAMPLE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_sight_sample_t, IDEATEK_SIGHT_SAMPLE_FIELDS);
 
     #define IDEATEK_LAG_HISTORY_FIELDS { \
         float seconds; \
@@ -1382,5 +1412,28 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_force_field_t, IDEATEK_FORCE_FIELD_FIELDS);
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gravity_area_t, IDEATEK_GRAVITY_AREA_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gravity_area_t, IDEATEK_GRAVITY_AREA_FIELDS);
+
+    #define IDEATEK_TIME_MODE_VALUES { \
+        IDEATEK_TIME_MODE_REPLACE = 0, \
+        IDEATEK_TIME_MODE_MULTIPLY = 1 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_time_mode_t,
+    uint8_t, IDEATEK_TIME_MODE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_time_mode_t,
+    uint8_t, IDEATEK_TIME_MODE_VALUES);
+
+    #define IDEATEK_TIME_AREA_FIELDS { \
+        ideatek_vec3_t size; \
+        float rate; \
+        float inner; \
+        float falloff; \
+        int32_t priority; \
+        ideatek_time_mode_t mode; \
+        ideatek_field_shape_t shape; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_time_area_t, IDEATEK_TIME_AREA_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_time_area_t, IDEATEK_TIME_AREA_FIELDS);
 
 #endif
