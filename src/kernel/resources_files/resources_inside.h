@@ -199,6 +199,7 @@ typedef struct {
     bool dirty;
     bool variables_changed;
     bool processed;
+    bool found_done;
     uint32_t meta_check;
     res_settings_t s;
     res_resource_t *resources;
@@ -222,6 +223,7 @@ typedef struct {
     uint32_t paths_at;
     double now;
     uint32_t round;
+    uint32_t found;
     uint32_t lists[RES_LISTS];
 } res_module_t;
 
@@ -283,6 +285,7 @@ void cancel_read(const bridge_api_t *api, uint32_t i);
 
 uint32_t find_source(const res_text_t *name);
 uint32_t find_variable(const bridge_api_t *api, const res_text_t *name);
+void add_loader(const bridge_api_t *api, uint64_t id);
 uint32_t slot_with(const uint64_t *entities, uint32_t count, uint32_t stride,
     uint64_t entity);
 

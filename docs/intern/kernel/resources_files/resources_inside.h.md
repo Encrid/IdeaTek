@@ -51,6 +51,7 @@ The texts of a resource are in 1 slot of `path_bytes` + `settings_bytes` bytes, 
 | `no_clock` | The deployment has no `ideatek:Frame`, and the line of the log was written. |
 | `dirty` | A round changed a state or a use: the fold of the states runs. |
 | `round` | The count of the rounds. |
+| `found`, `found_done` | The slot of the system `found`, and whether it took the loaders that existed at the start. |
 | `lists` | The indexes of the lists of the observers. |
 
 ## The names

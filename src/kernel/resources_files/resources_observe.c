@@ -61,8 +61,12 @@ static void add_file_observers(const bridge_api_t *api)
 
 void add_runs(const bridge_api_t *api)
 {
-    BRIDGE_NATIVE_ADD_SYSTEM(api, "round", "first", nullptr, 0, CHANGES,
-        sizeof(CHANGES) / sizeof(CHANGES[0]), nullptr, 0);
+    uint32_t first = BRIDGE_NATIVE_ADD_SYSTEM(api, "round", "first", nullptr,
+        0, CHANGES, sizeof(CHANGES) / sizeof(CHANGES[0]), nullptr, 0);
+    bridge_term_t term[1] = {{ LOADER, BRIDGE_READ, BRIDGE_AND, 0 }};
+
+    res_module.found = BRIDGE_NATIVE_ADD_SYSTEM(api, "found", "first", term,
+        1, nullptr, 0, &first, 1);
     add_use_observers(api);
     add_work_observers(api);
     add_file_observers(api);
