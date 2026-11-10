@@ -60,6 +60,8 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:Mesh", ideatek_mesh_t);
     STRUCT(api, "ideatek:MeshInstance", ideatek_mesh_instance_t);
     STRUCT(api, "ideatek:MeshInstances", ideatek_mesh_instances_t);
+    STRUCT(api, "ideatek:MeshInstanceValues",
+        ideatek_mesh_instance_values_t);
     STRUCT(api, "ideatek:MeshMaterials", ideatek_mesh_materials_t);
     STRUCT(api, "ideatek:Visibility", ideatek_visibility_t);
     STRUCT(api, "ideatek:Affects", ideatek_affects_t);
@@ -132,6 +134,8 @@ static const char WHO[] = MANIFEST;
         ideatek_mesh_instance_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:MeshInstances",
         ideatek_mesh_instances_t), BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:MeshInstanceValues",
+        ideatek_mesh_instance_values_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:MeshMaterials",
         ideatek_mesh_materials_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:Visibility",
@@ -227,6 +231,8 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:Mesh", ideatek_mesh_t);
     STRUCT(api, "ideatek:MeshInstance", ideatek_mesh_instance_t);
     STRUCT(api, "ideatek:MeshInstances", ideatek_mesh_instances_t);
+    STRUCT(api, "ideatek:MeshInstanceValues",
+        ideatek_mesh_instance_values_t);
     STRUCT(api, "ideatek:MeshMaterials", ideatek_mesh_materials_t);
     STRUCT(api, "ideatek:Visibility", ideatek_visibility_t);
     STRUCT(api, "ideatek:Affects", ideatek_affects_t);

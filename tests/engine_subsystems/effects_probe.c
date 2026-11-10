@@ -152,6 +152,9 @@ static const char WHO[] = MANIFEST;
         BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:ForceField", ideatek_force_field_t,
         BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    ENUM(api, "ideatek:ideatek_time_mode_t", ideatek_time_mode_t);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:TimeArea", ideatek_time_area_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
     api->attach(api, id, STRUCT(api, "ideatek:ParticleEmitterState",
         ideatek_particle_emitter_state_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:ParticleEnded",
