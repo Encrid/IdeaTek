@@ -1,6 +1,6 @@
 # BM-IdeaTek-Space-Bridge
 
-The space module of IdeaTek on the observers of Bridge: the places in the world, the lists of children, and the places before a step.
+The space module of IdeaTek on the observers of Bridge: the places, the lists of children and the places before a step.
 
 ## Install
 
