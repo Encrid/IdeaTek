@@ -26,7 +26,7 @@ BRIDGE_NATIVE(outcomes)
     return (0);
 }
 
-static void reload_owners(const bridge_api_t *api, uint32_t i)
+void reload_owners(const bridge_api_t *api, uint32_t i)
 {
     const res_use_t *u;
     uint32_t owner;

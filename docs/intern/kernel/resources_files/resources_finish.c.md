@@ -16,6 +16,6 @@ The fold of the states and the views are in `docs/intern/kernel/resources_files/
 | Function | Result |
 | --- | --- |
 | `outcomes` | The observer of the outcomes. |
-| `reload_owners` | Reloads each owner that asked `reload_owner` of a reloaded resource. |
+| `reload_owners` | Reloads each owner that asked `reload_owner` of a reloaded resource. `give_raw` also calls it. |
 | `end_load` | Ends 1 load: the state, the tags, the owners and the labels. |
 | `finish_loads` | Ends the resources whose loader answered. |

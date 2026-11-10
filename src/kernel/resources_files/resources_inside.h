@@ -286,6 +286,7 @@ void cancel_read(const bridge_api_t *api, uint32_t i);
 uint32_t find_source(const res_text_t *name);
 uint32_t find_variable(const bridge_api_t *api, const res_text_t *name);
 void add_loader(const bridge_api_t *api, uint64_t id);
+void reload_owners(const bridge_api_t *api, uint32_t i);
 uint32_t slot_with(const uint64_t *entities, uint32_t count, uint32_t stride,
     uint64_t entity);
 

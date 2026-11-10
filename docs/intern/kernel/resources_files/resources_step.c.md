@@ -24,6 +24,9 @@ The meta file goes through `docs/intern/kernel/resources_files/resources_apply.c
 `give_bytes` attaches `ideatek:ResourceBytes` with the entity of the loader, the offset, the size of the file and the block. The settings of the slot come with it, and no error. The step is `STEP_LOADER`.
 With the loader `raw` of the module itself, `give_bytes` attaches `ideatek:RawBytes` in place of `ideatek:ResourceBytes`, and the resource is loaded at once. The tag goes in the next round, and the block with it.
 
+The end of a reload of a raw resource reloads each owner that asked `reload_owner`.
+The end of a load by a loader does the same: `docs/intern/kernel/resources_files/resources_finish.c.md`.
+
 ## Functions
 
 | Function | Result |

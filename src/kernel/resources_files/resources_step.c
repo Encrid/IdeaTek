@@ -66,6 +66,8 @@ static void give_raw(const bridge_api_t *api, uint32_t i)
     r->view.state = IDEATEK_LOAD_STATE_LOADED;
     r->step = STEP_DONE;
     r->pending |= TAG_RAW | (r->reloading ? TAG_MODIFIED : 0);
+    if (r->reloading)
+        reload_owners(api, i);
     r->reloading = false;
     mark_labels(api, i);
     touch(i);
