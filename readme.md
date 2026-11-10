@@ -87,6 +87,7 @@ Each part has a readme, which its release holds.
 | `sockets_gns` | `BM-IdeaTek-Sockets-GNS` | `docs/usage/platform_abstraction/sockets_gns.md` |
 | `states_bridge` | `BM-IdeaTek-States-Bridge` | `docs/usage/kernel/states_bridge.md` |
 | `resources_files` | `BM-IdeaTek-Resources-Files` | `docs/usage/kernel/resources_files.md` |
+| `space_bridge` | `BM-IdeaTek-Space-Bridge` | `docs/usage/engine_subsystems/space_bridge.md` |
 
 ### The implementations
 
@@ -107,6 +108,7 @@ Each implementation is a part with its own release. A module part fills the role
 | `sockets_gns` | `BM-IdeaTek-Sockets-GNS` | `ideatek_sockets_gns:sockets@0.1.0` | The sockets module | Nothing: GameNetworkingSockets is inside it |
 | `states_bridge` | `BM-IdeaTek-States-Bridge` | `ideatek_states_bridge:states@0.1.0` | The states module | Nothing: it stands on Bridge alone |
 | `resources_files` | `BM-IdeaTek-Resources-Files` | `ideatek_resources_files:resources@0.1.0` | The resources module | The files module of the deployment |
+| `space_bridge` | `BM-IdeaTek-Space-Bridge` | `ideatek_space_bridge:space@0.1.0` | The space module | Nothing: it stands on Bridge alone |
 
 - The behavior and the settings of each role are in the document of its contract, under the name of the role.
 - The namespace of each identity is the key of its part, so no module has the namespace `ideatek`.
