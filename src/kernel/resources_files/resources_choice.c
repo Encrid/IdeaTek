@@ -42,6 +42,6 @@ void pick_for(const bridge_api_t *api, uint32_t i)
     }
     r->loader = pick.loader;
     r->step = STEP_READ;
-    if (r->block_len && pick.loader != RES_NONE)
+    if (r->block_len)
         give_bytes(api, i);
 }

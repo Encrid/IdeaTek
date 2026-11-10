@@ -11,7 +11,7 @@ static void step_all(const bridge_api_t *api)
 
     for (uint32_t i = 0; i < res_module.s.max_resources; i++) {
         r = &res_module.resources[i];
-        if (r->entity && (r->step == STEP_NEW || r->step == STEP_PICK))
+        if (r->entity && r->step == STEP_NEW)
             step_resource(api, i);
     }
 }

@@ -12,7 +12,7 @@ This file applies a meta file to a resource.
 2. `ignore` gives `IDEATEK_RESOURCE_ERROR_IGNORED`.
 3. `take_settings` copies the settings of the meta file into the slot of the resource, when the load gave none. Settings above `settings_bytes` give `IDEATEK_RESOURCE_ERROR_NO_ROOM`.
 
-An error fails the resource. Else the step becomes `STEP_PICK`, and `step_resource` picks the loader in the same round.
+An error fails the resource. Else the step becomes `STEP_PICK`, and `pick_for` picks the loader in the same round.
 
 ## Functions
 

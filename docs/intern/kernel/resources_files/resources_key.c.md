@@ -1,6 +1,6 @@
 # src/kernel/resources_files/resources_key.c
 
-This file compares 2 texts, and hashes the key of a resource. It is pure, and the hash map and the table call it.
+This file compares 2 texts, hashes the key of a resource, and clears a map. It is pure, and the hash map and the table call it.
 
 ## The key
 
@@ -15,3 +15,4 @@ This file compares 2 texts, and hashes the key of a resource. It is pure, and th
 | `same_text` | `true` when 2 texts are equal. |
 | `res_hash_more` | The hash of a text, folded after a hash. |
 | `res_hash_key` | The key of a path and a type, never 0. |
+| `map_clear` | Frees each slot of a map. |

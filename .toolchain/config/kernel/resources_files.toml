@@ -1,7 +1,7 @@
 [parts.resources_files]
 name = "BM-IdeaTek-Resources-Files"
 folder = "kernel/resources_files"
-uses = ["resources", "files", "frame", "world", "sdl3"]
+uses = ["resources", "files", "files_mosl", "frame", "frame_sdl3", "world", "sdl3"]
 third_party = []
 
 [variables]
@@ -15,7 +15,7 @@ resources_files_words = [
     "config.max_sources=16", "config.max_variables=64", "config.max_reads=64",
     "config.max_labels=4096", "config.path_bytes=256", "config.settings_bytes=256",
     "scratch=16384", "log_ring=2048", "spans=16384", "spawns=4176", "changes=65536",
-    "persistent=7602176", "hot_reload=false",
+    "persistent=8388608", "hot_reload=false",
 ]
 
 [[artifact]]
@@ -55,7 +55,7 @@ name = "resources_meta"
 kind = "program"
 part = "resources_files"
 test = true
-sources = ["tests/kernel/resources_files/meta.c", "src/kernel/resources_files/resources_meta.c", "src/kernel/resources_files/resources_words.c"]
+sources = ["tests/kernel/resources_files/meta.c", "src/kernel/resources_files/resources_meta.c", "src/kernel/resources_files/resources_words.c", "src/kernel/resources_files/resources_lines.c"]
 include = ["src/kernel/resources_files"]
 
 [[artifact]]
@@ -71,7 +71,7 @@ name = "resources_pick"
 kind = "program"
 part = "resources_files"
 test = true
-sources = ["tests/kernel/resources_files/pick.c", "src/kernel/resources_files/resources_pick.c", "src/kernel/resources_files/resources_key.c"]
+sources = ["tests/kernel/resources_files/pick.c", "src/kernel/resources_files/resources_pick.c", "src/kernel/resources_files/resources_fits.c", "src/kernel/resources_files/resources_key.c"]
 include = ["src/kernel/resources_files", "include/kernel", "include/platform_abstraction", "{bridge}/include"]
 
 [[artifact]]

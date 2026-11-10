@@ -143,6 +143,7 @@ typedef struct {
     bool has_range;
     bool reloading;
     bool reload_asked;
+    bool reload_set;
     bool fallback_used;
     bool seen;
     bool fresh;

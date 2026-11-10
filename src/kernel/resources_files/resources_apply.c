@@ -7,6 +7,9 @@
 
 #include "resources_inside.h"
 
+static const ideatek_resource_error_t OF_GOOD[2] = {
+    IDEATEK_RESOURCE_ERROR_READ_FAILED, IDEATEK_RESOURCE_ERROR_NONE };
+
 static bool take_settings(uint32_t i, const res_meta_t *meta)
 {
     res_resource_t *r = &res_module.resources[i];
@@ -58,7 +61,7 @@ void apply_meta(const bridge_api_t *api, uint32_t i, const res_text_t *bytes,
         bridge_native_say(api, BRIDGE_LOG_WARN,
             "the meta file of %.*s is refused at line %u", (int)path.len,
             path.at, meta.line);
-    error = !good && !error ? IDEATEK_RESOURCE_ERROR_READ_FAILED : error;
+    error = error ? error : OF_GOOD[good];
     r->action = meta.action;
     error = meta_error(api, i, &meta, error);
     if (error) {
@@ -66,6 +69,6 @@ void apply_meta(const bridge_api_t *api, uint32_t i, const res_text_t *bytes,
         return;
     }
     r->step = STEP_PICK;
-    step_resource(api, i);
+    pick_for(api, i);
 }
 

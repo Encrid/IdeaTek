@@ -43,9 +43,9 @@ static bool fold_views(void)
         view.dependencies = fold_state(&res_module.deps[i]);
         view.recursive = fold_state(&res_module.recs[i]);
         view.error = r->view.error ? r->view.error : res_module.recs[i].error;
-        differs = r->entity && (view.dependencies != r->view.dependencies
-            || view.recursive != r->view.recursive
-            || view.error != r->view.error);
+        differs = r->entity && ((view.dependencies != r->view.dependencies)
+            | (view.recursive != r->view.recursive)
+            | (view.error != r->view.error));
         moved |= differs;
         r->changed |= differs;
         r->view = view;
@@ -85,5 +85,5 @@ void fold_states(const bridge_api_t *api)
     for (uint32_t i = 0; i < res_module.s.max_resources; i++)
         if (res_module.resources[i].entity && res_module.resources[i].changed)
             write_view(api, i);
-    res_module.dirty = false;
+    res_module.dirty = moved;
 }
