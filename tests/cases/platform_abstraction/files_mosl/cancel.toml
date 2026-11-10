@@ -5,14 +5,14 @@ env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/d
 claims = { status = 0, matches_not = ["result 0 "] }
 false = { files = { "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
-rounds = 4
+rounds = 8
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq content,read,a.txt,0|2:stall 500|3:show_results|4:show_results"
+script = "1:filereq content,read,a.txt,0|2:stall 200|2:show_results|3:stall 200|3:show_results|4:stall 200|4:show_results|5:stall 200|5:show_results|6:stall 200|6:show_results|7:stall 200|7:show_results|8:stall 200|8:show_results"
 ''' } }
 
 [case.folders]
@@ -30,14 +30,14 @@ inner'''
 k'''
 "{case}/d.toml" = '''
 presets = ["{root}/tests/presets/sdl3_files.toml"]
-rounds = 4
+rounds = 8
 [content]
 paths = ["m"]
 ignore = ["m/SDL3{library}"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:game@1.0.0".config]
-script = "1:filereq content,read,a.txt,0|2:filedrop 0|2:stall 500|3:show_results|4:show_results"
+script = "1:filereq content,read,a.txt,0|2:filedrop 0|2:stall 200|2:show_results|3:stall 200|3:show_results|4:stall 200|4:show_results|5:stall 200|5:show_results|6:stall 200|6:show_results|7:stall 200|7:show_results|8:stall 200|8:show_results"
 '''
 
 [[case]]
