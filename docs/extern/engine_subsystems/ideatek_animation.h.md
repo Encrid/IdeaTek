@@ -27,6 +27,11 @@ Several stages write the `ideatek:Transform` of a joint in each step, in this or
 The pairs of the deployment give this order. Each stage reads the `ideatek:Transform` of the stage before. It writes `lerp(input, result, influence)`.
 A joint that no stage writes keeps its `ideatek:Transform`. Two meshes with 1 skeleton share its joints.
 
+## The time rate
+
+The animation module advances each play at the time rate of the place of its player: `docs/extern/engine_subsystems/ideatek_physics.h.md`, *The time of an area*.
+A player with a body takes `rate` of its `ideatek:Motion`. For another player, the module reads the time areas at the place of the player.
+
 ## The names
 
 A target id and the name of a clip event are the FNV-1a hash of 64 bits of a name in UTF-8.
@@ -925,7 +930,7 @@ Before `start`, the play has a weight of 0.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | An author | Each type of the part except the 3 that the animation module writes | The types of the fields |
-| The animation module | `ideatek:Transform`, `ideatek:MorphWeights`, `ideatek:RootMotionDelta`, `ideatek:ClipEvent`, `ideatek:AnimationCurves`, `ideatek:Inertialize`, `ideatek:ClipPlay` | The plays, the clips, the blend spaces, the states, the masks, the warps, the levels of detail, `ideatek:Frame`, and the types of the fields |
+| The animation module | `ideatek:Transform`, `ideatek:MorphWeights`, `ideatek:RootMotionDelta`, `ideatek:ClipEvent`, `ideatek:AnimationCurves`, `ideatek:Inertialize`, `ideatek:ClipPlay` | The plays, the clips, the blend spaces, the states, the masks, the warps and the levels of detail. Also `ideatek:Frame`, `ideatek:TimeArea`, `ideatek:Motion` and the types of the fields. |
 | A graph module | `ideatek:BlendSpace`, `ideatek:Inertialize`, `ideatek:ClipPlay` | `ideatek:AnimationParameters`, `ideatek:Clip`, `ideatek:AnimationCurves`, `ideatek:ClipEvent`, `ideatek:Frame`, and the types of the fields |
 | A matching module | `ideatek:Inertialize`, `ideatek:ClipPlay` | `ideatek:MotionMatch`, `ideatek:Trajectory`, `ideatek:Clip`, `ideatek:Joint`, `ideatek:Frame`, and the types of the fields |
 | An IK or a spring module | `ideatek:Transform` | The modifiers, `ideatek:Joint`, `ideatek:Frame`, and the types of the fields |

@@ -70,6 +70,7 @@ With `IDEATEK_EMISSION_SHAPE_MESH` and `IDEATEK_EMISSION_SHAPE_MESH_SURFACE`, th
 ## The forces
 
 Each particle feels the wind and the force fields of the physics part, and the forces of its own emitter.
+Each particle moves at the time rate of its place: `docs/extern/engine_subsystems/ideatek_physics.h.md`, *The time of an area*.
 The noise of `ideatek:ParticleForces` acts only on the particles of its emitter. `noise_frequency` has the meaning of `frequency` of `ideatek:ForceField`.
 `radial_acceleration` pushes out from the origin of the emitter, and a negative value pulls. `tangential_acceleration` turns about the Y axis of the emitter.
 
@@ -533,4 +534,4 @@ Bytes 25 to 31 hold no field.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | An author | The curves and the emitters with their types | The types of the fields |
-| The effects module | `ideatek:ParticleEmitterState`, `ideatek:ParticleEnded`, `ideatek:ParticleHits`, `ideatek:SoundPlayer`, `ideatek:SoundSpatial`, `ideatek:Transform` | The curves, the emitters, `ideatek:WorldTransform`, `ideatek:MeshInstance`, `ideatek:Shape`, `ideatek:Wind`, `ideatek:ForceField`, and the types of the fields |
+| The effects module | `ideatek:ParticleEmitterState`, `ideatek:ParticleEnded`, `ideatek:ParticleHits`, `ideatek:SoundPlayer`, `ideatek:SoundSpatial`, `ideatek:Transform` | The curves, the emitters, `ideatek:WorldTransform`, `ideatek:MeshInstance`, `ideatek:Shape`, `ideatek:Wind`, `ideatek:ForceField`, `ideatek:TimeArea`, and the types of the fields |

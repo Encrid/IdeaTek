@@ -17,4 +17,4 @@ A project names the zip of `BC-IdeaTek-Animation` in a `[[source]]`: `.toolchain
 
 A module in C includes `ideatek_animation.h`. `docs/extern/engine_subsystems/ideatek_animation.h.md` gives its types and its rules.
 
-The parts in the `uses` of `BC-IdeaTek-Animation` are `BC-IdeaTek-World`, `BC-IdeaTek-Space`, `BC-IdeaTek-Frame` and `BC-IdeaTek-States`. Their readmes give their headers.
+The parts in the `uses` of `BC-IdeaTek-Animation` are `BC-IdeaTek-World`, `BC-IdeaTek-Space`, `BC-IdeaTek-Frame`, `BC-IdeaTek-States` and `BC-IdeaTek-Physics`. Their readmes give their headers.

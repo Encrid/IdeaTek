@@ -57,8 +57,16 @@ The threshold is a setting of the render module. `lod_bias` of `ideatek:MeshInst
 | `position` | `double[3]` | 0 | The place, in the space of the entity. |
 | `rotation` | `float[4]` | 24 | A quaternion: x, y, z and w. |
 | `scale` | `float[3]` | 40 | The scale on each axis. |
+| `color` | `float[4]` | 52 | The `color` of the values of the copy: *The values of an instance*. |
+| `values` | `float[8]` | 68 | The `values` of the values of the copy. |
 
 The records have no bytes between them. `ideatek:MeshMaterials` and `ideatek:Visibility` of the entity apply to each copy.
+
+## The values of an instance
+
+`ideatek:MeshInstanceValues` gives a drawn entity a color and 8 values of its own, so that 1 material serves many entities with a different look.
+The document of the render module gives the meaning of each value. For example, a value is a glow, a wet sheen or the sparks of a charge.
+A render module that gives no meaning to a value ignores it. An entity with no `ideatek:MeshInstanceValues` has the defaults of the type.
 
 ## The texture slots
 
@@ -452,6 +460,16 @@ Bytes 12 to 15 hold no field.
 | `transforms` | `bridge_text_t` | 8 | The records of the copies: *The copies of a mesh*. |
 | `count` | `uint32_t` | 16 | The records in `transforms`. |
 | `revision` | `uint32_t` | 20 | Raised at each change. |
+
+## ideatek:MeshInstanceValues
+
+`ideatek:MeshInstanceValues` gives the values of a drawn entity: *The values of an instance*.
+`ideatek_mesh_instance_values_t` takes 48 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `color` | `ideatek_color_t` | 0 | 1, 1, 1, 1 | A color with alpha that the material reads. |
+| `values` | `float[8]` | 16 | 0 for each value | 8 values that the material reads. |
 
 ## ideatek:MeshMaterials
 
@@ -950,6 +968,7 @@ Bytes 25 to 31 hold no field.
 | `ideatek:Mesh` | `ideatek_mesh_t` | `ideatek_mesh_t_desc` | `IDEATEK_MESH_FIELDS` |
 | `ideatek:MeshInstance` | `ideatek_mesh_instance_t` | `ideatek_mesh_instance_t_desc` | `IDEATEK_MESH_INSTANCE_FIELDS` |
 | `ideatek:MeshInstances` | `ideatek_mesh_instances_t` | `ideatek_mesh_instances_t_desc` | `IDEATEK_MESH_INSTANCES_FIELDS` |
+| `ideatek:MeshInstanceValues` | `ideatek_mesh_instance_values_t` | `ideatek_mesh_instance_values_t_desc` | `IDEATEK_MESH_INSTANCE_VALUES_FIELDS` |
 | `ideatek:MeshMaterials` | `ideatek_mesh_materials_t` | `ideatek_mesh_materials_t_desc` | `IDEATEK_MESH_MATERIALS_FIELDS` |
 | `ideatek:Visibility` | `ideatek_visibility_t` | `ideatek_visibility_t_desc` | `IDEATEK_VISIBILITY_FIELDS` |
 | `ideatek:Affects` | `ideatek_affects_t` | `ideatek_affects_t_desc` | `IDEATEK_AFFECTS_FIELDS` |
@@ -1011,6 +1030,7 @@ Bytes 25 to 31 hold no field.
 { bridge_text_t bytes; uint32_t vertex_count; uint32_t index_count; uint32_t index_offset; uint32_t stream_count; uint32_t submesh_count; uint32_t lod_count; uint32_t target_count; uint32_t revision; ideatek_topology_t topology; ideatek_index_format_t index_format; }
 { ideatek_entity_t mesh; float lod_bias; }
 { ideatek_entity_t mesh; bridge_text_t transforms; uint32_t count; uint32_t revision; }
+{ ideatek_color_t color; float values[8]; }
 { bridge_text_t materials; }
 { uint64_t groups; ideatek_cast_shadow_t cast_shadow; ideatek_gi_mode_t gi_mode; bool visible; }
 { uint64_t groups; }
@@ -1078,6 +1098,7 @@ Bytes 25 to 31 hold no field.
 | `ideatek:Mesh` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:MeshInstance` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:MeshInstances` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:MeshInstanceValues` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:MeshMaterials` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Visibility` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Affects` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
