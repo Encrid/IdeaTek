@@ -3,10 +3,14 @@
 **
 ** Under the GNU Affero General Public License, version 3 only: see license.
 */
-#include <math.h>
 #include <string.h>
 
 #include "space_pure.h"
+
+static bool is_finite(double v)
+{
+    return (v - v == 0.0);
+}
 
 bool is_transform_ok(const ideatek_transform_t *t)
 {
@@ -15,7 +19,7 @@ bool is_transform_ok(const ideatek_transform_t *t)
     double sum = t->position.x + t->position.y + t->position.z
         + t->scale.x + t->scale.y + t->scale.z + length;
 
-    return (isfinite(sum) && length > 0.0f);
+    return (is_finite(sum) && length > 0.0f);
 }
 
 bool is_same_world(const ideatek_world_transform_t *a,
