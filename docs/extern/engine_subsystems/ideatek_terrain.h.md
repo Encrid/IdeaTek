@@ -8,7 +8,7 @@ The header includes the space part: an edit has a position and a size.
 
 - The game writes the terrain, its materials, the edits, the fills, the viewers and the scatter.
 - The terrain module alone writes the chunks. It applies the commands in order, and keeps the chunks near the viewers.
-- The terrain module writes the meshes, the copies, the bodies and the shapes that the other modules read. A voxel is data: a mesh, a ray tracer and a collider are each a choice of a reader.
+- The terrain module writes the meshes, the copies, the bodies, the shapes and the events of the pieces that the other modules read. A voxel is data: a mesh, a ray tracer and a collider are each a choice of a reader.
 
 ## The kinds
 
@@ -90,7 +90,11 @@ The seams between the levels of detail are a matter of the module.
 ## The pieces
 
 A terrain on an entity with a dynamic body moves with that body, as an object of voxels.
-When an edit leaves cells that no longer touch the rest, the module moves them to a new entity with a body, and spawns `ideatek:TerrainSplit`.
+
+When an edit leaves cells that no longer touch the rest, the module moves them to a new entity with a body.
+Then it spawns `ideatek:BreakEvent` of the physics part, as the destruction of a body does: `docs/extern/engine_subsystems/ideatek_physics.h.md`, *The destruction*.
+Its `body` is the terrain, `piece` is the new entity, and `point` is the center of the cells that left. Its `excess_force` is 0, and `chunks` is empty.
+The terrain module finds its pieces in its cells, and the physics module finds its pieces in its bonds. A reader of the pieces observes 1 event for both.
 
 ## The scatter
 
@@ -298,19 +302,6 @@ Bytes 90 to 95 hold no field.
 
 Bytes 13 to 15 hold no field.
 
-## ideatek:TerrainSplit
-
-`ideatek:TerrainSplit` tells that cells broke off a terrain: *The pieces*. It is an event of 1 round.
-`ideatek_terrain_split_t` takes 24 bytes. Its alignment is 8.
-
-| Field | C type | Offset | Value |
-| --- | --- | --- | --- |
-| `source` | `ideatek_entity_t` | 0 | The terrain that lost the cells. |
-| `piece` | `ideatek_entity_t` | 8 | The new entity of the cells. |
-| `order` | `uint32_t` | 16 | The rank in the round. |
-
-Bytes 20 to 23 hold no field.
-
 ## ideatek:TerrainNeed
 
 `ideatek:TerrainNeed` asks a generator for a chunk: *The generators*. It is an event of 1 round.
@@ -360,7 +351,6 @@ Bytes 35 to 39 hold no field.
 | `ideatek:TerrainFill` | `ideatek_terrain_fill_t` | `ideatek_terrain_fill_t_desc` | `IDEATEK_TERRAIN_FILL_FIELDS` |
 | `ideatek:ideatek_viewer_flags_t` | `ideatek_viewer_flags_t` | `ideatek_viewer_flags_t_desc` | `IDEATEK_VIEWER_FLAGS_VALUES` |
 | `ideatek:TerrainViewer` | `ideatek_terrain_viewer_t` | `ideatek_terrain_viewer_t_desc` | `IDEATEK_TERRAIN_VIEWER_FIELDS` |
-| `ideatek:TerrainSplit` | `ideatek_terrain_split_t` | `ideatek_terrain_split_t_desc` | `IDEATEK_TERRAIN_SPLIT_FIELDS` |
 | `ideatek:TerrainNeed` | `ideatek_terrain_need_t` | `ideatek_terrain_need_t_desc` | `IDEATEK_TERRAIN_NEED_FIELDS` |
 | `ideatek:TerrainScatter` | `ideatek_terrain_scatter_t` | `ideatek_terrain_scatter_t_desc` | `IDEATEK_TERRAIN_SCATTER_FIELDS` |
 
@@ -379,7 +369,6 @@ Bytes 35 to 39 hold no field.
 { ideatek_entity_t terrain; bridge_text_t data; int32_t x; int32_t y; int32_t z; uint32_t order; }
 { IDEATEK_VIEWER_FLAGS_VISUALS = 0x01, IDEATEK_VIEWER_FLAGS_COLLISIONS = 0x02 }
 { float radius; float vertical_ratio; uint32_t peer; ideatek_viewer_flags_t flags; }
-{ ideatek_entity_t source; ideatek_entity_t piece; uint32_t order; }
 { ideatek_entity_t terrain; int32_t x; int32_t y; int32_t z; uint32_t order; }
 { ideatek_entity_t terrain; ideatek_entity_t mesh; float density; float min_scale; float max_scale; uint32_t seed; uint16_t material; bool align; }
 ```
@@ -405,7 +394,6 @@ Bytes 35 to 39 hold no field.
 | `ideatek:TerrainEdit` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TerrainFill` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TerrainViewer` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:TerrainSplit` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TerrainNeed` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TerrainScatter` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
@@ -414,5 +402,5 @@ Bytes 35 to 39 hold no field.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | The game | `ideatek:Terrain`, `ideatek:TerrainMaterial`, `ideatek:TerrainEdit`, `ideatek:TerrainFill`, `ideatek:TerrainViewer`, `ideatek:TerrainScatter` | The types of the fields |
-| The terrain module | `ideatek:TerrainChunk`, `ideatek:TerrainSplit`, `ideatek:TerrainNeed`, `ideatek:Mesh`, `ideatek:MeshInstance`, `ideatek:MeshInstances`, `ideatek:Body`, `ideatek:Shape` | `ideatek:Terrain`, `ideatek:TerrainMaterial`, `ideatek:TerrainEdit`, `ideatek:TerrainFill`, `ideatek:TerrainViewer`, `ideatek:TerrainScatter`, and the types of the fields |
+| The terrain module | `ideatek:TerrainChunk`, `ideatek:TerrainNeed`, `ideatek:BreakEvent`, `ideatek:Mesh`, `ideatek:MeshInstance`, `ideatek:MeshInstances`, `ideatek:Body`, `ideatek:Shape` | `ideatek:Terrain`, `ideatek:TerrainMaterial`, `ideatek:TerrainEdit`, `ideatek:TerrainFill`, `ideatek:TerrainViewer`, `ideatek:TerrainScatter`, and the types of the fields |
 | A generator | `ideatek:TerrainFill` | `ideatek:Terrain`, `ideatek:TerrainNeed`, and the types of the fields |

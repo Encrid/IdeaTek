@@ -1,6 +1,6 @@
 # include/engine_subsystems/ideatek_physics.h
 
-`include/engine_subsystems/ideatek_physics.h` gives the types of the physics: bodies, shapes, materials, characters, joints, articulations, vehicles, destruction, soft bodies, ropes, water, liquids, smoke, fire and fields.
+`include/engine_subsystems/ideatek_physics.h` gives the types of the physics: bodies, shapes, materials, characters, joints, vehicles, destruction, soft bodies, ropes, fluids, fields and time areas.
 `readme.md`, *The contracts*, tells the rules of each contract.
 The header includes the headers of the world and space parts, for the entities, the positions, the vectors and the rotations of its fields.
 
@@ -8,7 +8,7 @@ The header includes the headers of the world and space parts, for the entities, 
 
 - The game is the author. It writes the bodies, the shapes, the materials, the joints, the queries and the requests.
 - The physics module steps the world in the fixed phase. It writes `ideatek:Motion`, the `ideatek:Transform` of each dynamic body, the events, the answers of the queries and the meshes that it makes.
-- The render module reads `ideatek:Water`, `ideatek:Wave`, the particles of the liquids and the grids of the smoke.
+- The render module reads `ideatek:Water`, `ideatek:Wave`, the particles of the liquids and the grids of the gases.
 
 ## The world of the physics
 
@@ -55,7 +55,7 @@ A query is an entity that stays. After each step, the physics module answers it 
 
 A ray does not use the shape, and an overlap does not use `translation`. A sensor is a hit only if `touches` has its category.
 A hit on a triangle shape or a height field gives `face`, `uv` and the `material` of the face. An overlap gives the `depth` of the overlap.
-`IDEATEK_QUERY_KIND_WATER` answers with `ideatek:WaterSample` at `origin`.
+`IDEATEK_QUERY_KIND_WATER` answers with `ideatek:WaterSample` at `origin`. `IDEATEK_QUERY_KIND_GAS` and `IDEATEK_QUERY_KIND_SIGHT` answer with the samples of the gases: *The gases*.
 
 A query with a `tick` other than 0 tests against the poses of that tick for each body with `ideatek:LagHistory`. Each other body is at its place of now.
 
@@ -156,6 +156,9 @@ The strengths of the material tell where the body breaks. The module checks the 
 For each piece, the module spawns an entity with `ideatek:Transform`, a dynamic body, a convex shape, an `ideatek:MeshInstance` and a new mesh. Then it spawns `ideatek:BreakEvent`.
 A dent rewrites the mesh and raises its `revision`. An explosion is a push. The game owns the life of the pieces.
 
+The terrain module applies the same rule to the cells of a terrain, and spawns the same `ideatek:BreakEvent`: `docs/extern/engine_subsystems/ideatek_terrain.h.md`, *The pieces*.
+Each module finds its pieces in its own data, because 1 bond for each pair of cells gives thousands of bonds to each chunk.
+
 ## The chunks
 
 `ideatek:DestructibleAsset` holds the chunks and the bonds of a body that a tool cut. A record of `chunks`:
@@ -227,14 +230,45 @@ Liquids of 1 domain with different `phase` values do not mix, for example oil an
 An emitter is an entity with `ideatek:LiquidEmitter`. A rate of 0 fills the shape once. It emits from `start` to `end` seconds of its life, and an `end` of 0 has no end.
 After each step, the module writes `ideatek:LiquidParticles` and the surface as its own mesh. With `IDEATEK_LIQUID_FLAGS_FOAM`, it also writes `ideatek:LiquidFoam`.
 
-## The smoke
+## The gases
 
-Smoke and fire fill a grid of cells in a sensor box: the entity with `ideatek:SmokeVolume`. The grid has the size of the box.
-An emitter is an entity with `ideatek:SmokeEmitter`. It adds heat, fuel and smoke in its shape.
-Fuel above `ignition_temp` burns: it gives heat and smoke, and it is used up. Heat rises and cools.
+Gases fill a grid of cells in a sensor box: the entity with `ideatek:GasVolume`. The grid has the size of the box.
+Each record of `species` is 1 gas, and its index is its number. Each cell holds the amount of each gas in kg / m^3, a temperature in K and a velocity. The air fills the rest of each cell.
 
-After each step, the module writes a 3D texture with the smoke in R and the heat in G, and points `ideatek:SmokeGrid` at it. Render draws it.
-With `IDEATEK_SMOKE_FLAGS_COLLIDE`, the shapes push the smoke. The defaults are the defaults of NVIDIA Flow, in its units.
+A record of `species`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `density` | `float` | 0 | The density relative to the air at the same temperature. Below 1, the gas rises. Above 1, it sinks. |
+| `diffusion` | `float` | 4 | How fast the gas spreads alone, in m^2 / s. |
+| `opacity` | `float` | 8 | The part of the light that 1 kg / m^3 of the gas stops in each meter. |
+| `specific_heat` | `float` | 12 | The heat that warms 1 kg of the gas by 1 K, in J. |
+| `color` | `float[3]` | 16 | The linear color of the gas. |
+
+A record of `reactions`:
+
+| Field | C type | Offset in the record | Value |
+| --- | --- | --- | --- |
+| `reactant` | `uint32_t` | 0 | The gas that burns. |
+| `product` | `uint32_t` | 4 | The gas that the burn gives, or `UINT32_MAX` for none. |
+| `ignition` | `float` | 8 | The temperature above which the reactant burns, in K. |
+| `rate` | `float` | 12 | The part of the reactant of a cell that burns in each second. |
+| `heat` | `float` | 16 | The heat that 1 kg of the reactant gives, in J. |
+| `yield` | `float` | 20 | The kg of the product for each kg of the reactant. |
+
+The records have no bytes between them. The game writes the gases and the reactions from its materials. The module only applies them in each cell.
+
+The pressure of a cell is `ambient_pressure` plus, for each gas, the amount times 287.05 divided by `density`, times the temperature. This is the law of the ideal gas, with the air as the unit.
+A gas that heats rises in pressure, and flows toward the cells of lower pressure. Heat rises. Each cell loses the part `cooling` of its difference to `ambient_temperature` in each second.
+
+An emitter is an entity with `ideatek:GasEmitter`. It adds `rate` kg of 1 gas in each second, at `temperature`. It adds `heat` watts to the cells of its shape, and moves them toward `velocity` at `couple_rate`.
+An emitter with a `rate` of 0 adds no gas: it is a wind or a heater inside the grid.
+
+With `IDEATEK_GAS_FLAGS_COLLIDE`, the shapes push the gas. With `IDEATEK_GAS_FLAGS_PUSH_BODIES`, the gas pushes each body in it as a wind, with the velocity and the density of its cells: *The fields*.
+With `IDEATEK_GAS_FLAGS_PRESSURE`, the pressure above `ambient_pressure` pushes the shapes in the grid, and loads the bonds of a destructible body as a strain. So a heated gas breaks a closed body: *The destruction*.
+
+After each step, the module writes a 3D texture of the temperature, and 1 3D texture for each 4 gases. It points `ideatek:GasGrid` at them. Render draws them with the `color` and the `opacity` of each gas.
+A query of the kind `IDEATEK_QUERY_KIND_GAS` answers with `ideatek:GasSample` at `origin`. A query of the kind `IDEATEK_QUERY_KIND_SIGHT` answers with `ideatek:SightSample`, for the sight of a sensor through smoke or steam.
 
 ## The fields
 
@@ -252,8 +286,14 @@ A gust adds a part of `speed` between `gust_min` and `gust_max`. It changes abou
 `IDEATEK_FORCE_KIND_NOISE` gives a smooth random direction, which changes about `frequency` times in each second and in each meter.
 `IDEATEK_FORCE_KIND_VECTOR_FIELD` reads the acceleration from `texture`: a 3D texture of 3 floats that fills the box of the field.
 
-Soft bodies, ropes, liquids and smoke feel each wind and each force field. A rigid body feels a force field only with a `target` other than `IDEATEK_FIELD_TARGET_FORCE`.
+Soft bodies, ropes, liquids and gases feel each wind and each force field.
+A rigid body feels the targets FORCE, VELOCITY, SLEEP and WAKE, and a character feels FORCE and VELOCITY. STRAIN acts only on the bonds of a destructible body.
 With `IDEATEK_FIELD_TARGET_VELOCITY`, `acceleration` is a speed in m / s. With `IDEATEK_FIELD_TARGET_STRAIN`, it is a pressure in Pa on the bonds of the destruction.
+
+A force field gives the same acceleration to each mass. A wind pushes a rigid body and a character by their `drag`, along the speed of the air relative to the body.
+The force is 0.5 times `air_density`, times the square of that speed, times `drag`.
+So a light body flies in a wind, and a heavy body stays. A `drag` of 0 keeps the wind off a body.
+
 The defaults are neutral: a speed and an acceleration of 0, a shape that fills the world, no falloff and no gust. The references do not agree on a size, so the game sets it.
 
 ## The gravity areas
@@ -262,6 +302,21 @@ An entity with `ideatek:GravityArea` changes the gravity in its shape, for examp
 With `point`, the gravity pulls to the center of the area. Else it goes along -Y of the entity.
 `IDEATEK_GRAVITY_MODE_REPLACE` takes the place of the setting `gravity`, and `IDEATEK_GRAVITY_MODE_ADD` adds to it.
 Where areas overlap, the replacing area with the highest `priority` wins, and each adding area adds. `inner` and `falloff` act as for a field.
+
+## The time of an area
+
+An entity with `ideatek:TimeArea` changes the time rate in its shape. A rate of 1 is the time of the world, 0.5 is half the speed, and 0 stops the time.
+`IDEATEK_TIME_MODE_REPLACE` takes the place of the rate of the world, and `IDEATEK_TIME_MODE_MULTIPLY` multiplies it.
+Where areas overlap, the replacing area with the highest `priority` wins, and each multiplying area multiplies. Past `inner`, the rate goes toward 1 as the strength of a field: *The fields*.
+The `scale` of `ideatek:TimeRequest` also multiplies each rate: `docs/extern/kernel/ideatek_frame.h.md`, *ideatek:TimeRequest*.
+
+After each step, the physics module writes the rate at the place of each dynamic body in `rate` of `ideatek:Motion`. It writes the rate of each character in `rate` of `ideatek:CharacterState`.
+A body moves by the step times its rate. Its speed stays in m / s of the world, so a body that leaves the area goes on at its speed.
+
+A body at a rate of 0 stops, and keeps its speed. Other bodies meet it as a kinematic body that does not move. The module keeps each impulse that the body gets, and applies it when the rate rises above 0.
+
+A reader with no body reads the areas at the origin of its `ideatek:WorldTransform`, as it reads the wind. The animation module plays each entity at the rate of its place. The effects module moves each particle at the rate of its place.
+A sound follows the rate of its place through the `pitch` of its player: `docs/extern/engine_subsystems/ideatek_sound.h.md`.
 
 ## The settings
 
@@ -279,6 +334,7 @@ Where areas overlap, the replacing area with the highest `priority` wins, and ea
 | `stress_iterations` | 0 | 0 or more | The passes of the solver of the stress on the bonds. 0 lets the module choose. |
 | `snapshot_bytes` | 1048576 | 0 or more | The bytes for a snapshot. Each half holds 1 snapshot. |
 | `deterministic` | `false` | `true` or `false` | The same inputs give the same steps on each machine of a target. |
+| `air_density` | 1.204 | Above 0 | The density of the air, in kg / m^3, for the push of a wind. The default is the air at 20 degrees Celsius and at sea level. |
 
 ## ideatek:ideatek_body_kind_t
 
@@ -340,7 +396,7 @@ Where areas overlap, the replacing area with the highest `priority` wins, and ea
 ## ideatek:Body
 
 `ideatek:Body` makes an entity a body of the physics.
-`ideatek_body_t` takes 64 bytes. Its alignment is 4.
+`ideatek_body_t` takes 68 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -354,15 +410,16 @@ Where areas overlap, the replacing area with the highest `priority` wins, and ea
 | `max_angular_speed` | `float` | 44 | 0.25 * pi * 60 | The largest angular speed, in rad / s. |
 | `sleep_threshold` | `float` | 48 | 0.03 | The speed, in m / s, under which the body can sleep. |
 | `inertia_scale` | `float` | 52 | 1 | The factor of the inertia from the shapes. |
-| `kind` | `ideatek_body_kind_t` | 56 | No default | Who moves the body. |
-| `mass_mode` | `ideatek_mass_mode_t` | 57 | `IDEATEK_MASS_MODE_SHAPES` | The source of the mass. |
-| `locked` | `ideatek_locked_t` | 58 | 0 | The parts that do not move. |
-| `flags` | `ideatek_body_flags_t` | 59 | `IDEATEK_BODY_FLAGS_CAN_SLEEP` | The options. |
-| `motion_quality` | `ideatek_motion_quality_t` | 60 | `IDEATEK_MOTION_QUALITY_DISCRETE` | How the body checks its motion. |
-| `velocity_steps` | `uint8_t` | 61 | 0 | The passes on the speeds for this body. 0 takes the setting. |
-| `position_steps` | `uint8_t` | 62 | 0 | The passes on the places for this body. 0 takes the setting. |
+| `drag` | `float` | 56 | 0 | The drag area in the air, in m^2: *The fields*. |
+| `kind` | `ideatek_body_kind_t` | 60 | No default | Who moves the body. |
+| `mass_mode` | `ideatek_mass_mode_t` | 61 | `IDEATEK_MASS_MODE_SHAPES` | The source of the mass. |
+| `locked` | `ideatek_locked_t` | 62 | 0 | The parts that do not move. |
+| `flags` | `ideatek_body_flags_t` | 63 | `IDEATEK_BODY_FLAGS_CAN_SLEEP` | The options. |
+| `motion_quality` | `ideatek_motion_quality_t` | 64 | `IDEATEK_MOTION_QUALITY_DISCRETE` | How the body checks its motion. |
+| `velocity_steps` | `uint8_t` | 65 | 0 | The passes on the speeds for this body. 0 takes the setting. |
+| `position_steps` | `uint8_t` | 66 | 0 | The passes on the places for this body. 0 takes the setting. |
 
-Byte 63 holds no field.
+Byte 67 holds no field.
 
 ## ideatek:KinematicTarget
 
@@ -390,13 +447,14 @@ Bytes 13 to 15 hold no field.
 ## ideatek:Motion
 
 `ideatek:Motion` is the motion of a body. Only the physics module writes it.
-`ideatek_motion_t` takes 28 bytes. Its alignment is 4.
+`ideatek_motion_t` takes 32 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `linear` | `ideatek_vec3_t` | 0 | The linear speed, in m / s. |
 | `angular` | `ideatek_vec3_t` | 12 | The angular speed, in rad / s. |
 | `sleeping` | `bool` | 24 | `true` if the body sleeps. |
+| `rate` | `float` | 28 | The time rate at the place of the body: *The time of an area*. |
 
 Bytes 25 to 27 hold no field.
 
@@ -569,6 +627,8 @@ Bytes 60 to 63 hold no field.
 | 1 | `IDEATEK_QUERY_KIND_SHAPE_CAST` | A shape moved along `translation`. |
 | 2 | `IDEATEK_QUERY_KIND_OVERLAP` | The shapes that a shape overlaps. |
 | 3 | `IDEATEK_QUERY_KIND_WATER` | The water at `origin`. |
+| 4 | `IDEATEK_QUERY_KIND_GAS` | The gases at `origin`. |
+| 5 | `IDEATEK_QUERY_KIND_SIGHT` | The light that crosses the gases along a ray from `origin` along `translation`. |
 
 ## ideatek:ideatek_query_mode_t
 
@@ -1054,7 +1114,7 @@ Byte 47 holds no field.
 ## ideatek:Character
 
 `ideatek:Character` makes an entity a character: *The characters*.
-`ideatek_character_t` takes 48 bytes. Its alignment is 4.
+`ideatek_character_t` takes 52 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -1067,10 +1127,11 @@ Byte 47 holds no field.
 | `predictive_distance` | `float` | 32 | 0.1 | The distance at which the module looks for contacts. |
 | `mass` | `float` | 36 | 70 | The mass, for the pushes, in kg. |
 | `max_strength` | `float` | 40 | 100 | The largest force that the character pushes with, in N. |
-| `non_walkable` | `ideatek_non_walkable_t` | 44 | `IDEATEK_NON_WALKABLE_SLIDE` | What a steep slope does. |
-| `flags` | `ideatek_character_flags_t` | 45 | INNER_BODY, CAN_PUSH and CAN_BE_PUSHED | The options. |
+| `drag` | `float` | 44 | 0 | The drag area in the air, in m^2: *The fields*. |
+| `non_walkable` | `ideatek_non_walkable_t` | 48 | `IDEATEK_NON_WALKABLE_SLIDE` | What a steep slope does. |
+| `flags` | `ideatek_character_flags_t` | 49 | INNER_BODY, CAN_PUSH and CAN_BE_PUSHED | The options. |
 
-Bytes 46 to 47 hold no field.
+Bytes 50 to 51 hold no field.
 
 ## ideatek:CharacterMove
 
@@ -1094,8 +1155,9 @@ Bytes 46 to 47 hold no field.
 | `ground_velocity` | `ideatek_vec3_t` | 28 | The speed of the ground, for a lift or a ship. |
 | `ground_state` | `ideatek_ground_state_t` | 40 | What holds the character. |
 | `collision` | `ideatek_character_collision_t` | 41 | The sides that the character touched. |
+| `rate` | `float` | 44 | The time rate at the place of the character: *The time of an area*. |
 
-Bytes 42 to 47 hold no field.
+Bytes 42 to 43 hold no field.
 
 ## ideatek:ideatek_snapshot_action_t
 
@@ -1415,8 +1477,8 @@ Bytes 101 to 103 hold no field.
 | `body` | `ideatek_entity_t` | 0 | The body that broke. |
 | `piece` | `ideatek_entity_t` | 8 | The new piece. |
 | `point` | `ideatek_position_t` | 16 | The point of the break. |
-| `excess_force` | `ideatek_vec3_t` | 40 | The force on the bonds that broke, which pushes the piece. |
-| `chunks` | `bridge_text_t` | 52 | With an asset: the `uint32_t` index of each chunk of the piece. |
+| `excess_force` | `ideatek_vec3_t` | 40 | The force on the bonds that broke, which pushes the piece. 0 for a piece of a terrain. |
+| `chunks` | `bridge_text_t` | 52 | With an asset: the `uint32_t` index of each chunk of the piece. Empty for a piece of a terrain. |
 | `order` | `uint32_t` | 60 | The rank in the step. |
 
 ## ideatek:ideatek_bend_t
@@ -1607,7 +1669,7 @@ The defaults are the defaults of the Gerstner waves of Unreal, in meters.
 
 ## ideatek:ideatek_emitter_shape_t
 
-`ideatek_emitter_shape_t` tells the shape of an emitter of liquid or of smoke.
+`ideatek_emitter_shape_t` tells the shape of an emitter of liquid or of gas.
 `ideatek_emitter_shape_t` is an enum of 1 byte.
 
 | Value | Name | Meaning |
@@ -1682,63 +1744,97 @@ Bytes 49 to 55 hold no field.
 | `lifetimes` | `bridge_text_t` | 8 | 1 float for each particle: the seconds that it still lives. |
 | `count` | `uint32_t` | 16 | The number of particles. |
 
-## ideatek:ideatek_smoke_flags_t
+## ideatek:ideatek_gas_flags_t
 
-`ideatek_smoke_flags_t` names the options of a smoke volume.
-`ideatek_smoke_flags_t` is a bitmask of 1 byte.
+`ideatek_gas_flags_t` names the options of a gas volume.
+`ideatek_gas_flags_t` is a bitmask of 1 byte.
 
 | Bit | Name | Meaning |
 | --- | --- | --- |
-| 0x01 | `IDEATEK_SMOKE_FLAGS_COLLIDE` | The shapes push the smoke. |
+| 0x01 | `IDEATEK_GAS_FLAGS_COLLIDE` | The shapes push the gas. |
+| 0x02 | `IDEATEK_GAS_FLAGS_PUSH_BODIES` | The gas pushes the bodies in it. |
+| 0x04 | `IDEATEK_GAS_FLAGS_PRESSURE` | The pressure pushes the shapes and loads the bonds. |
 
-## ideatek:SmokeVolume
+## ideatek:GasVolume
 
-`ideatek:SmokeVolume` is a grid of smoke and fire in a sensor box: *The smoke*.
-`ideatek_smoke_volume_t` takes 48 bytes. Its alignment is 4.
-
-| Field | C type | Offset | Default | Value |
-| --- | --- | --- | --- | --- |
-| `cell_size` | `float` | 0 | 0.5 | The size of a cell of the grid, in m. |
-| `steps_per_second` | `float` | 4 | 60 | The steps of the grid in each second. |
-| `buoyancy_per_temp` | `float` | 8 | 2 | The lift of the heat. |
-| `buoyancy_per_smoke` | `float` | 12 | 0 | The lift of the smoke. A value below 0 makes it fall. |
-| `cooling` | `float` | 16 | 1.5 | The loss of heat for each second. |
-| `vorticity` | `float` | 20 | 0.6 | The strength that keeps the swirls. |
-| `ignition_temp` | `float` | 24 | 0.05 | The heat above which the fuel burns. |
-| `burn_per_temp` | `float` | 28 | 4 | The burn for each step of heat above `ignition_temp`. |
-| `fuel_per_burn` | `float` | 32 | 0.25 | The fuel that a burn uses. |
-| `temp_per_burn` | `float` | 36 | 5 | The heat that a burn gives. |
-| `smoke_per_burn` | `float` | 40 | 3 | The smoke that a burn gives. |
-| `flags` | `ideatek_smoke_flags_t` | 44 | 0 | The options. |
-
-Bytes 45 to 47 hold no field.
-
-## ideatek:SmokeEmitter
-
-`ideatek:SmokeEmitter` adds heat, fuel and smoke in its shape.
-`ideatek_smoke_emitter_t` takes 56 bytes. Its alignment is 8.
+`ideatek:GasVolume` is a grid of gases in a sensor box: *The gases*.
+`ideatek_gas_volume_t` takes 52 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
-| `volume` | `ideatek_entity_t` | 0 | No default | The smoke volume. |
-| `velocity` | `ideatek_vec3_t` | 8 | 0, 0, 0 | The speed of the new smoke. |
+| `species` | `bridge_text_t` | 0 | No default | The records of the gases. |
+| `reactions` | `bridge_text_t` | 8 | No default | The records of the reactions. |
+| `cell_size` | `float` | 16 | 0.5 | The size of a cell of the grid, in m. |
+| `steps_per_second` | `float` | 20 | 60 | The steps of the grid in each second. |
+| `ambient_temperature` | `float` | 24 | 293.15 | The temperature of the air, in K. |
+| `ambient_pressure` | `float` | 28 | 101325 | The pressure of the air, in Pa. |
+| `cooling` | `float` | 32 | 0 | The part of the difference to `ambient_temperature` that a cell loses in each second. |
+| `vorticity` | `float` | 36 | 0.6 | The strength that keeps the swirls. |
+| `species_count` | `uint32_t` | 40 | No default | The records in `species`. |
+| `reaction_count` | `uint32_t` | 44 | No default | The records in `reactions`. |
+| `flags` | `ideatek_gas_flags_t` | 48 | 0 | The options. |
+
+Bytes 49 to 51 hold no field.
+
+The defaults of the air are the air at 20 degrees Celsius and at sea level. The vorticity is the default of NVIDIA Flow. The references do not agree on a cooling, so the game sets it.
+
+## ideatek:GasEmitter
+
+`ideatek:GasEmitter` adds a gas, heat and a speed in its shape.
+`ideatek_gas_emitter_t` takes 56 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `volume` | `ideatek_entity_t` | 0 | No default | The gas volume. |
+| `velocity` | `ideatek_vec3_t` | 8 | 0, 0, 0 | The speed that the cells take. |
 | `size` | `ideatek_vec3_t` | 20 | No default | The size of a box or a disc. |
-| `temperature` | `float` | 32 | 0.5 | The heat that the emitter gives. |
-| `fuel` | `float` | 36 | 0.8 | The fuel that the emitter gives. |
-| `smoke` | `float` | 40 | 0 | The smoke that the emitter gives. |
-| `couple_rate` | `float` | 44 | 2 | How fast the cells take the values of the emitter. |
-| `shape` | `ideatek_emitter_shape_t` | 48 | `IDEATEK_EMITTER_SHAPE_SHAPE` | The shape. |
+| `rate` | `float` | 32 | 0 | The gas that the emitter adds, in kg / s. |
+| `temperature` | `float` | 36 | 293.15 | The temperature of the new gas, in K. |
+| `heat` | `float` | 40 | 0 | The heat that the emitter adds, in W. |
+| `couple_rate` | `float` | 44 | 2 | How fast the cells take `velocity`. |
+| `species` | `uint32_t` | 48 | No default | The gas, as an index of `species`. |
+| `shape` | `ideatek_emitter_shape_t` | 52 | `IDEATEK_EMITTER_SHAPE_SHAPE` | The shape. |
 
-Bytes 49 to 55 hold no field.
+Bytes 53 to 55 hold no field.
 
-## ideatek:SmokeGrid
+## ideatek:GasGrid
 
-`ideatek:SmokeGrid` points a smoke volume at its texture. The physics module writes it.
-`ideatek_smoke_grid_t` takes 8 bytes. Its alignment is 8.
+`ideatek:GasGrid` points a gas volume at its textures. The physics module writes it.
+`ideatek_gas_grid_t` takes 24 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `texture` | `ideatek_entity_t` | 0 | The 3D texture of the grid, with the smoke in R and the heat in G. |
+| `temperature` | `ideatek_entity_t` | 0 | The 3D texture of the temperature, in K, in R. |
+| `amounts` | `bridge_text_t` | 8 | The `ideatek_entity_t` of 1 3D texture for each 4 gases: the gas 4 n in R, then G, B and A. |
+| `count` | `uint32_t` | 16 | The textures in `amounts`. |
+
+Bytes 20 to 23 hold no field.
+
+## ideatek:GasSample
+
+`ideatek:GasSample` answers a query of the kind `IDEATEK_QUERY_KIND_GAS`.
+`ideatek_gas_sample_t` takes 48 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `query` | `ideatek_entity_t` | 0 | The query. |
+| `volume` | `ideatek_entity_t` | 8 | The gas volume. |
+| `amounts` | `bridge_text_t` | 16 | 1 float for each gas: its amount at the origin, in kg / m^3. |
+| `velocity` | `ideatek_vec3_t` | 24 | The speed of the gas. |
+| `temperature` | `float` | 36 | The temperature, in K. |
+| `pressure` | `float` | 40 | The pressure, in Pa. |
+| `order` | `uint32_t` | 44 | The rank in the step. |
+
+## ideatek:SightSample
+
+`ideatek:SightSample` answers a query of the kind `IDEATEK_QUERY_KIND_SIGHT`.
+`ideatek_sight_sample_t` takes 16 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `query` | `ideatek_entity_t` | 0 | The query. |
+| `transmittance` | `float` | 8 | The part of the light that crosses the gases along the ray, from 0 to 1. |
+| `order` | `uint32_t` | 12 | The rank in the step. |
 
 ## ideatek:LagHistory
 
@@ -1855,6 +1951,33 @@ Byte 39 holds no field.
 
 Byte 31 holds no field.
 
+## ideatek:ideatek_time_mode_t
+
+`ideatek_time_mode_t` tells how a time area applies.
+`ideatek_time_mode_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_TIME_MODE_REPLACE` | The area takes the place of the time rate of the world. |
+| 1 | `IDEATEK_TIME_MODE_MULTIPLY` | The area multiplies the time rate. |
+
+## ideatek:TimeArea
+
+`ideatek:TimeArea` changes the time rate in its shape: *The time of an area*.
+`ideatek_time_area_t` takes 32 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `size` | `ideatek_vec3_t` | 0 | 0, 0, 0 | The size of the shape. |
+| `rate` | `float` | 12 | 1 | The time rate, 0 or more. |
+| `inner` | `float` | 16 | 0 | The distance under which the rate is full. |
+| `falloff` | `float` | 20 | 0 | The exponent of the falloff. |
+| `priority` | `int32_t` | 24 | 0 | The rank among the areas that replace. |
+| `mode` | `ideatek_time_mode_t` | 28 | `IDEATEK_TIME_MODE_REPLACE` | How the area applies. |
+| `shape` | `ideatek_field_shape_t` | 29 | `IDEATEK_FIELD_SHAPE_SPHERE` | The place where it acts. |
+
+Bytes 30 to 31 hold no field.
+
 ## The C types
 
 | Type of Bridge | C type | Descriptor | Macro of the text |
@@ -1958,10 +2081,12 @@ Byte 31 holds no field.
 | `ideatek:LiquidEmitter` | `ideatek_liquid_emitter_t` | `ideatek_liquid_emitter_t_desc` | `IDEATEK_LIQUID_EMITTER_FIELDS` |
 | `ideatek:LiquidParticles` | `ideatek_liquid_particles_t` | `ideatek_liquid_particles_t_desc` | `IDEATEK_LIQUID_PARTICLES_FIELDS` |
 | `ideatek:LiquidFoam` | `ideatek_liquid_foam_t` | `ideatek_liquid_foam_t_desc` | `IDEATEK_LIQUID_FOAM_FIELDS` |
-| `ideatek:ideatek_smoke_flags_t` | `ideatek_smoke_flags_t` | `ideatek_smoke_flags_t_desc` | `IDEATEK_SMOKE_FLAGS_VALUES` |
-| `ideatek:SmokeVolume` | `ideatek_smoke_volume_t` | `ideatek_smoke_volume_t_desc` | `IDEATEK_SMOKE_VOLUME_FIELDS` |
-| `ideatek:SmokeEmitter` | `ideatek_smoke_emitter_t` | `ideatek_smoke_emitter_t_desc` | `IDEATEK_SMOKE_EMITTER_FIELDS` |
-| `ideatek:SmokeGrid` | `ideatek_smoke_grid_t` | `ideatek_smoke_grid_t_desc` | `IDEATEK_SMOKE_GRID_FIELDS` |
+| `ideatek:ideatek_gas_flags_t` | `ideatek_gas_flags_t` | `ideatek_gas_flags_t_desc` | `IDEATEK_GAS_FLAGS_VALUES` |
+| `ideatek:GasVolume` | `ideatek_gas_volume_t` | `ideatek_gas_volume_t_desc` | `IDEATEK_GAS_VOLUME_FIELDS` |
+| `ideatek:GasEmitter` | `ideatek_gas_emitter_t` | `ideatek_gas_emitter_t_desc` | `IDEATEK_GAS_EMITTER_FIELDS` |
+| `ideatek:GasGrid` | `ideatek_gas_grid_t` | `ideatek_gas_grid_t_desc` | `IDEATEK_GAS_GRID_FIELDS` |
+| `ideatek:GasSample` | `ideatek_gas_sample_t` | `ideatek_gas_sample_t_desc` | `IDEATEK_GAS_SAMPLE_FIELDS` |
+| `ideatek:SightSample` | `ideatek_sight_sample_t` | `ideatek_sight_sample_t_desc` | `IDEATEK_SIGHT_SAMPLE_FIELDS` |
 | `ideatek:LagHistory` | `ideatek_lag_history_t` | `ideatek_lag_history_t_desc` | `IDEATEK_LAG_HISTORY_FIELDS` |
 | `ideatek:ideatek_field_shape_t` | `ideatek_field_shape_t` | `ideatek_field_shape_t_desc` | `IDEATEK_FIELD_SHAPE_VALUES` |
 | `ideatek:ideatek_force_kind_t` | `ideatek_force_kind_t` | `ideatek_force_kind_t_desc` | `IDEATEK_FORCE_KIND_VALUES` |
@@ -1970,6 +2095,8 @@ Byte 31 holds no field.
 | `ideatek:Wind` | `ideatek_wind_t` | `ideatek_wind_t_desc` | `IDEATEK_WIND_FIELDS` |
 | `ideatek:ForceField` | `ideatek_force_field_t` | `ideatek_force_field_t_desc` | `IDEATEK_FORCE_FIELD_FIELDS` |
 | `ideatek:GravityArea` | `ideatek_gravity_area_t` | `ideatek_gravity_area_t_desc` | `IDEATEK_GRAVITY_AREA_FIELDS` |
+| `ideatek:ideatek_time_mode_t` | `ideatek_time_mode_t` | `ideatek_time_mode_t_desc` | `IDEATEK_TIME_MODE_VALUES` |
+| `ideatek:TimeArea` | `ideatek_time_area_t` | `ideatek_time_area_t_desc` | `IDEATEK_TIME_AREA_FIELDS` |
 
 ```text
 { IDEATEK_BODY_KIND_STATIC = 0, IDEATEK_BODY_KIND_KINEMATIC = 1, IDEATEK_BODY_KIND_DYNAMIC = 2 }
@@ -1977,10 +2104,10 @@ Byte 31 holds no field.
 { IDEATEK_MASS_MODE_SHAPES = 0, IDEATEK_MASS_MODE_CUSTOM = 1 }
 { IDEATEK_LOCKED_X = 0x01, IDEATEK_LOCKED_Y = 0x02, IDEATEK_LOCKED_Z = 0x04, IDEATEK_LOCKED_ROLL = 0x08, IDEATEK_LOCKED_PITCH = 0x10, IDEATEK_LOCKED_YAW = 0x20 }
 { IDEATEK_BODY_FLAGS_CAN_SLEEP = 0x01, IDEATEK_BODY_FLAGS_ENHANCED_EDGES = 0x02, IDEATEK_BODY_FLAGS_DESTRUCTIBLE = 0x04, IDEATEK_BODY_FLAGS_GYROSCOPIC = 0x08 }
-{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; float max_linear_speed; float max_angular_speed; float sleep_threshold; float inertia_scale; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; ideatek_motion_quality_t motion_quality; uint8_t velocity_steps; uint8_t position_steps; }
+{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; float max_linear_speed; float max_angular_speed; float sleep_threshold; float inertia_scale; float drag; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; ideatek_motion_quality_t motion_quality; uint8_t velocity_steps; uint8_t position_steps; }
 { ideatek_position_t position; ideatek_quat_t rotation; }
 { ideatek_entity_t body; uint32_t order; bool asleep; }
-{ ideatek_vec3_t linear; ideatek_vec3_t angular; bool sleeping; }
+{ ideatek_vec3_t linear; ideatek_vec3_t angular; bool sleeping; float rate; }
 { ideatek_position_t point; ideatek_vec3_t force; ideatek_vec3_t torque; ideatek_vec3_t impulse; ideatek_vec3_t angular_impulse; }
 { IDEATEK_SHAPE_KIND_SPHERE = 0, IDEATEK_SHAPE_KIND_BOX = 1, IDEATEK_SHAPE_KIND_CAPSULE = 2, IDEATEK_SHAPE_KIND_CYLINDER = 3, IDEATEK_SHAPE_KIND_CONVEX = 4, IDEATEK_SHAPE_KIND_TRIANGLES = 5, IDEATEK_SHAPE_KIND_PLANE = 6, IDEATEK_SHAPE_KIND_HEIGHT_FIELD = 7 }
 { IDEATEK_SHAPE_FLAGS_SENSOR = 0x01, IDEATEK_SHAPE_FLAGS_SENSOR_EVENTS = 0x02, IDEATEK_SHAPE_FLAGS_CONTACT_EVENTS = 0x04, IDEATEK_SHAPE_FLAGS_HIT_EVENTS = 0x08 }
@@ -1992,7 +2119,7 @@ Byte 31 holds no field.
 { ideatek_entity_t sensor; ideatek_entity_t visitor; uint32_t order; ideatek_touch_kind_t kind; }
 { ideatek_entity_t a; ideatek_entity_t b; uint32_t order; ideatek_touch_kind_t kind; }
 { ideatek_entity_t a; ideatek_entity_t b; ideatek_position_t point; ideatek_vec3_t normal; float speed; uint32_t order; }
-{ IDEATEK_QUERY_KIND_RAY = 0, IDEATEK_QUERY_KIND_SHAPE_CAST = 1, IDEATEK_QUERY_KIND_OVERLAP = 2, IDEATEK_QUERY_KIND_WATER = 3 }
+{ IDEATEK_QUERY_KIND_RAY = 0, IDEATEK_QUERY_KIND_SHAPE_CAST = 1, IDEATEK_QUERY_KIND_OVERLAP = 2, IDEATEK_QUERY_KIND_WATER = 3, IDEATEK_QUERY_KIND_GAS = 4, IDEATEK_QUERY_KIND_SIGHT = 5 }
 { IDEATEK_QUERY_MODE_TEST = 0, IDEATEK_QUERY_MODE_CLOSEST = 1, IDEATEK_QUERY_MODE_ALL = 2 }
 { ideatek_position_t origin; uint64_t categories; uint64_t touches; ideatek_quat_t rotation; ideatek_vec3_t translation; ideatek_vec3_t size; uint32_t max; uint32_t tick; ideatek_query_kind_t kind; ideatek_shape_kind_t shape; ideatek_query_mode_t mode; bool back_faces; }
 { ideatek_entity_t query; ideatek_entity_t shape; ideatek_position_t point; ideatek_vec3_t normal; float fraction; ideatek_entity_t material; float uv[2]; float depth; uint32_t face; uint32_t sub_shape; uint32_t order; }
@@ -2027,9 +2154,9 @@ Byte 31 holds no field.
 { IDEATEK_NON_WALKABLE_SLIDE = 0, IDEATEK_NON_WALKABLE_PREVENT_CLIMB = 1 }
 { IDEATEK_CHARACTER_FLAGS_INNER_BODY = 0x01, IDEATEK_CHARACTER_FLAGS_CAN_PUSH = 0x02, IDEATEK_CHARACTER_FLAGS_CAN_BE_PUSHED = 0x04 }
 { IDEATEK_CHARACTER_COLLISION_SIDES = 0x01, IDEATEK_CHARACTER_COLLISION_UP = 0x02, IDEATEK_CHARACTER_COLLISION_DOWN = 0x04 }
-{ ideatek_vec3_t up; float max_slope; float step_up; float stick_down; float min_step_forward; float padding; float predictive_distance; float mass; float max_strength; ideatek_non_walkable_t non_walkable; ideatek_character_flags_t flags; }
+{ ideatek_vec3_t up; float max_slope; float step_up; float stick_down; float min_step_forward; float padding; float predictive_distance; float mass; float max_strength; float drag; ideatek_non_walkable_t non_walkable; ideatek_character_flags_t flags; }
 { ideatek_vec3_t velocity; }
-{ ideatek_entity_t ground; ideatek_entity_t ground_material; ideatek_vec3_t ground_normal; ideatek_vec3_t ground_velocity; ideatek_ground_state_t ground_state; ideatek_character_collision_t collision; }
+{ ideatek_entity_t ground; ideatek_entity_t ground_material; ideatek_vec3_t ground_normal; ideatek_vec3_t ground_velocity; ideatek_ground_state_t ground_state; ideatek_character_collision_t collision; float rate; }
 { IDEATEK_SNAPSHOT_ACTION_SAVE = 0, IDEATEK_SNAPSHOT_ACTION_RESTORE = 1 }
 { IDEATEK_SNAPSHOT_STATUS_OK = 0, IDEATEK_SNAPSHOT_STATUS_TOO_BIG = 1, IDEATEK_SNAPSHOT_STATUS_FAILED = 2 }
 { uint64_t categories; bridge_text_t data; ideatek_snapshot_action_t action; }
@@ -2071,10 +2198,12 @@ Byte 31 holds no field.
 { ideatek_entity_t liquid; ideatek_vec3_t velocity; float rate; ideatek_vec3_t size; float start; float end; float jitter; ideatek_emitter_shape_t shape; }
 { bridge_text_t positions; bridge_text_t velocities; uint32_t count; }
 { bridge_text_t positions; bridge_text_t lifetimes; uint32_t count; }
-{ IDEATEK_SMOKE_FLAGS_COLLIDE = 0x01 }
-{ float cell_size; float steps_per_second; float buoyancy_per_temp; float buoyancy_per_smoke; float cooling; float vorticity; float ignition_temp; float burn_per_temp; float fuel_per_burn; float temp_per_burn; float smoke_per_burn; ideatek_smoke_flags_t flags; }
-{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float temperature; float fuel; float smoke; float couple_rate; ideatek_emitter_shape_t shape; }
-{ ideatek_entity_t texture; }
+{ IDEATEK_GAS_FLAGS_COLLIDE = 0x01, IDEATEK_GAS_FLAGS_PUSH_BODIES = 0x02, IDEATEK_GAS_FLAGS_PRESSURE = 0x04 }
+{ bridge_text_t species; bridge_text_t reactions; float cell_size; float steps_per_second; float ambient_temperature; float ambient_pressure; float cooling; float vorticity; uint32_t species_count; uint32_t reaction_count; ideatek_gas_flags_t flags; }
+{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float rate; float temperature; float heat; float couple_rate; uint32_t species; ideatek_emitter_shape_t shape; }
+{ ideatek_entity_t temperature; bridge_text_t amounts; uint32_t count; }
+{ ideatek_entity_t query; ideatek_entity_t volume; bridge_text_t amounts; ideatek_vec3_t velocity; float temperature; float pressure; uint32_t order; }
+{ ideatek_entity_t query; float transmittance; uint32_t order; }
 { float seconds; }
 { IDEATEK_FIELD_SHAPE_INFINITE = 0, IDEATEK_FIELD_SHAPE_SPHERE = 1, IDEATEK_FIELD_SHAPE_BOX = 2, IDEATEK_FIELD_SHAPE_CYLINDER = 3 }
 { IDEATEK_FORCE_KIND_ATTRACTOR = 0, IDEATEK_FORCE_KIND_VORTEX = 1, IDEATEK_FORCE_KIND_DIRECTIONAL = 2, IDEATEK_FORCE_KIND_NOISE = 3, IDEATEK_FORCE_KIND_DRAG = 4, IDEATEK_FORCE_KIND_VECTOR_FIELD = 5 }
@@ -2083,6 +2212,8 @@ Byte 31 holds no field.
 { ideatek_vec3_t size; float inner; float speed; float gust_min; float gust_max; float gust_frequency; float falloff; ideatek_field_shape_t shape; }
 { ideatek_entity_t texture; ideatek_vec3_t size; float inner; float acceleration; float frequency; float falloff; ideatek_force_kind_t kind; ideatek_field_shape_t shape; ideatek_field_target_t target; }
 { ideatek_vec3_t size; float gravity; float inner; float falloff; int32_t priority; ideatek_gravity_mode_t mode; ideatek_field_shape_t shape; bool point; }
+{ IDEATEK_TIME_MODE_REPLACE = 0, IDEATEK_TIME_MODE_MULTIPLY = 1 }
+{ ideatek_vec3_t size; float rate; float inner; float falloff; int32_t priority; ideatek_time_mode_t mode; ideatek_field_shape_t shape; }
 ```
 
 ## The declarations
@@ -2129,11 +2260,12 @@ Byte 31 holds no field.
 | `ideatek:ideatek_liquid_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_liquid_technique_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_emitter_shape_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:ideatek_smoke_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_gas_flags_t` | `BRIDGE_BITMASK` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_field_shape_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_force_kind_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_field_target_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_gravity_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_time_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Body` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:KinematicTarget` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:WakeEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -2200,13 +2332,16 @@ Byte 31 holds no field.
 | `ideatek:LiquidEmitter` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:LiquidParticles` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:LiquidFoam` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:SmokeVolume` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:SmokeEmitter` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:SmokeGrid` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:GasVolume` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:GasEmitter` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:GasGrid` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:GasSample` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:SightSample` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:LagHistory` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Wind` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ForceField` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:GravityArea` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:TimeArea` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
 
@@ -2214,4 +2349,4 @@ Byte 31 holds no field.
 | --- | --- | --- |
 | The game | The bodies, the shapes, the materials, the queries, the joints, the requests and their options | The types of the fields |
 | The physics module | `ideatek:Transform`, `ideatek:Motion`, the events, the states, the snapshots, the particles, the grids, `ideatek:Mesh`, `ideatek:MeshInstance` and `ideatek:Texture` | Each type that the game writes, `ideatek:Tick`, and the types of the fields |
-| The render module | No type. | `ideatek:Water`, `ideatek:Wave`, `ideatek:LiquidParticles`, `ideatek:LiquidFoam`, `ideatek:SmokeGrid`, and the types of the fields |
+| The render module | No type. | `ideatek:Water`, `ideatek:Wave`, `ideatek:LiquidParticles`, `ideatek:LiquidFoam`, `ideatek:GasVolume`, `ideatek:GasGrid`, and the types of the fields |
