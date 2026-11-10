@@ -1,0 +1,54 @@
+presets = ["test.toml"]
+phases = ["first", "fixed", "check"]
+again = { fixed = 100 }
+
+[budget]
+systems = 128
+terms = 128
+tables = 128
+modules = 16
+persistent = 33554432
+
+[module."ideatek_frame_sdl3:clock@0.1.0"]
+write = ["ideatek:Frame", "ideatek:Tick", "ideatek:TimeRequest", "ideatek:EventWait"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:WindowState"]
+
+[module."ideatek_window_sdl3:window@0.1.0"]
+write = ["ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:Paste"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:WindowRequest", "ideatek:EventWait", "ideatek:ClipboardRequest"]
+
+[module."ideatek_input_sdl3:input@0.1.0"]
+write = ["ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:FingerEvent"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:WindowState", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest"]
+
+[module."ideatek_gpu_vulkan:gpu@0.1.0"]
+phases = { last = "check" }
+write = ["ideatek:Gpu", "ideatek:DefaultGpu", "ideatek:GpuDevice", "ideatek:Swapchain", "ideatek:VulkanDevice", "ideatek:VulkanSwapchain"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_gpu_kind_t", "ideatek:ideatek_gpu_feature_t", "ideatek:ideatek_gpu_api_t", "ideatek:ideatek_gpu_status_t", "ideatek:ideatek_present_mode_t", "ideatek:ideatek_image_format_t", "ideatek:ideatek_color_space_t", "ideatek:ideatek_swapchain_status_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:GpuRequest", "ideatek:SwapchainRequest", "ideatek:WindowState"]
+
+[module."ideatek_files_mosl:files@0.1.0"]
+write = ["ideatek:FileResult", "ideatek:FileChange"]
+read = ["ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileRequest"]
+
+[module."ideatek_audio_sdl3:audio@0.1.0"]
+write = ["ideatek:AudioDevice", "ideatek:AudioRecorded", "ideatek:AudioState"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_audio_direction_t", "ideatek:ideatek_audio_target_t", "ideatek:ideatek_audio_status_t", "ideatek:AudioRequest", "ideatek:AudioFrames"]
+
+[module."ideatek_sockets_gns:sockets@0.1.0"]
+write = ["ideatek:IdentityState", "ideatek:ListenState", "ideatek:Inbound", "ideatek:ConnectionState", "ideatek:LaneStates", "ideatek:Session", "ideatek:MessagesIn", "ideatek:SessionMessagesIn", "ideatek:SignalsOut", "ideatek:AddressResult"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_address_t", "ideatek:ideatek_identity_t", "ideatek:ideatek_send_t", "ideatek:ideatek_connection_flag_t", "ideatek:ideatek_listen_kind_t", "ideatek:ideatek_listen_status_t", "ideatek:ideatek_connection_action_t", "ideatek:ideatek_connection_status_t", "ideatek:ideatek_auth_status_t", "ideatek:ideatek_session_action_t", "ideatek:ideatek_address_status_t", "ideatek:IdentityRequest", "ideatek:ListenRequest", "ideatek:ConnectionRequest", "ideatek:LanesRequest", "ideatek:SessionRequest", "ideatek:MessagesOut", "ideatek:SessionMessagesOut", "ideatek:SignalsIn", "ideatek:AddressRequest"]
+
+[module."ideatek_states_bridge:states@0.1.0"]
+write = ["ideatek:State", "ideatek:StateChange", "ideatek:StateRequest", "ideatek:StateScoped"]
+read = ["ideatek:ideatek_entity_t"]
+
+[module."ideatek_resources_files:resources@0.1.0"]
+write = ["ideatek:FileRequest", "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceBytes", "ideatek:ResourceOutcome", "ideatek:ResourceRead", "ideatek:RawBytes", "ideatek:ResourceSourceRead", "ideatek:ResourceReload", "ideatek:ResourceModified", "ideatek:ResourceReady", "ideatek:ResourceFailed"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileResult", "ideatek:FileChange", "ideatek:Frame", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t", "ideatek:ResourceVariable", "ideatek:ResourceLoad", "ideatek:ResourceAdd", "ideatek:ResourceLoader", "ideatek:ResourceLabel", "ideatek:ResourceSource", "ideatek:ResourceSourceResult"]
+
+[module."test:game@1.0.0"]
+write = ["ideatek:WindowState", "ideatek:WindowRequest", "ideatek:EventWait", "ideatek:ClipboardRequest", "ideatek:TextRequest", "ideatek:MouseRequest", "ideatek:GamepadRequest", "ideatek:GpuRequest", "ideatek:SwapchainRequest", "ideatek:TimeRequest", "ideatek:FileRequest", "ideatek:AudioRequest", "ideatek:AudioFrames", "ideatek:IdentityRequest", "ideatek:ListenRequest", "ideatek:ConnectionRequest", "ideatek:LanesRequest", "ideatek:SessionRequest", "ideatek:MessagesOut", "ideatek:SessionMessagesOut", "ideatek:SignalsIn", "ideatek:AddressRequest", "ideatek:State", "ideatek:StateRequest", "ideatek:StateScoped", "ideatek:ResourceLoad", "ideatek:ResourceAdd", "ideatek:ResourceReload", "ideatek:ResourceVariable", "ideatek:ResourceLoader", "ideatek:ResourceRead", "ideatek:ResourceOutcome", "ideatek:ResourceLabel", "ideatek:ResourceSource", "ideatek:ResourceSourceResult"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_display_target_t", "ideatek:ideatek_surface_t", "ideatek:ideatek_drop_kind_t", "ideatek:ideatek_input_event_kind_t", "ideatek:ideatek_modifier_t", "ideatek:ideatek_mouse_mode_t", "ideatek:ideatek_cursor_t", "ideatek:ideatek_gamepad_button_t", "ideatek:ideatek_finger_event_kind_t", "ideatek:ideatek_gpu_kind_t", "ideatek:ideatek_gpu_feature_t", "ideatek:ideatek_gpu_api_t", "ideatek:ideatek_gpu_status_t", "ideatek:ideatek_present_mode_t", "ideatek:ideatek_image_format_t", "ideatek:ideatek_color_space_t", "ideatek:ideatek_swapchain_status_t", "ideatek:WindowState", "ideatek:Display", "ideatek:VideoMode", "ideatek:Drop", "ideatek:Paste", "ideatek:InputEvent", "ideatek:Keyboard", "ideatek:KeyEvent", "ideatek:TextEvent", "ideatek:Mouse", "ideatek:MouseMotion", "ideatek:MouseButton", "ideatek:MouseWheel", "ideatek:Gamepad", "ideatek:GamepadState", "ideatek:GamepadEvent", "ideatek:FingerEvent", "ideatek:Gpu", "ideatek:DefaultGpu", "ideatek:GpuDevice", "ideatek:VulkanDevice", "ideatek:Swapchain", "ideatek:VulkanSwapchain", "ideatek:Frame", "ideatek:Tick", "ideatek:ideatek_storage_t", "ideatek:ideatek_file_action_t", "ideatek:ideatek_file_status_t", "ideatek:FileResult", "ideatek:FileChange", "ideatek:ideatek_audio_direction_t", "ideatek:ideatek_audio_target_t", "ideatek:ideatek_audio_status_t", "ideatek:AudioDevice", "ideatek:AudioRecorded", "ideatek:AudioState", "ideatek:ideatek_address_t", "ideatek:ideatek_identity_t", "ideatek:ideatek_send_t", "ideatek:ideatek_connection_flag_t", "ideatek:ideatek_listen_kind_t", "ideatek:ideatek_listen_status_t", "ideatek:ideatek_connection_action_t", "ideatek:ideatek_connection_status_t", "ideatek:ideatek_auth_status_t", "ideatek:ideatek_session_action_t", "ideatek:ideatek_address_status_t", "ideatek:IdentityState", "ideatek:ListenState", "ideatek:Inbound", "ideatek:ConnectionState", "ideatek:LaneStates", "ideatek:Session", "ideatek:MessagesIn", "ideatek:SessionMessagesIn", "ideatek:SignalsOut", "ideatek:AddressResult", "ideatek:StateChange", "ideatek:ideatek_load_state_t", "ideatek:ideatek_resource_error_t", "ideatek:ResourceHandle", "ideatek:Resource", "ideatek:ResourceBytes", "ideatek:RawBytes", "ideatek:ResourceSourceRead", "ideatek:ResourceModified", "ideatek:ResourceReady", "ideatek:ResourceFailed"]
+
+[order]
+before = [["ideatek_frame_sdl3:clock:round", "ideatek_window_sdl3:window:events"], ["ideatek_gpu_vulkan:gpu:begin", "ideatek_window_sdl3:window:events"], ["ideatek_window_sdl3:window:events", "ideatek_input_sdl3:input:events"], ["test:game:play", "ideatek_gpu_vulkan:gpu:present"], ["test:game:early", "ideatek_files_mosl:files:results"], ["ideatek_frame_sdl3:clock:round", "ideatek_states_bridge:states:apply"], ["ideatek_files_mosl:files:results", "ideatek_resources_files:resources:round"]]
