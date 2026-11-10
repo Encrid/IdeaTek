@@ -1,0 +1,492 @@
+[[case]]
+name = "the space module loads, and a root gets its transform as its place"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["loaded: ideatek_space_bridge:space@0.1.0", "r3 world 0 at 1.000 2.000 3.000 x 1.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,2,4|3:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,2,3|3:show_space"
+'''
+
+[[case]]
+name = "a child adds the place of its parent"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r4 world 1 at 1.000 0.000 2.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|2:child 0,0,0,3,0,0,0,0|4:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|2:child 0,0,0,2,0,0,0,0|4:show_space"
+'''
+
+[[case]]
+name = "a turned parent turns the place of its child"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, matches = ["r5 world 1 at -?0\\.000 -?0\\.000 -1\\.000 x -?0\\.000 -?0\\.000 -1\\.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:turn 0,180|3:child 0,1,0,0,0,0,0,0|5:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:turn 0,90|3:child 0,1,0,0,0,0,0,0|5:show_space"
+'''
+
+[[case]]
+name = "a scaled parent scales the place of its child"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r5 world 1 at 2.000 0.000 0.000 x 2.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:scale 0,3,3,3|3:child 0,1,0,0,0,0,0,0|5:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:scale 0,2,2,2|3:child 0,1,0,0,0,0,0,0|5:show_space"
+'''
+
+[[case]]
+name = "with the bit of the position in absolute, a child takes its position alone"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r4 world 1 at 1.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 5,0,0|2:child 0,1,0,0,0,0,0,0|4:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 5,0,0|2:child 0,1,0,0,0,0,0,1|4:show_space"
+'''
+
+[[case]]
+name = "with the bits of the rotation and the scale in absolute, a child keeps its own basis"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, matches = ["r6 world 1 at 1\\.000 -?0\\.000 -?0\\.000 x 1\\.000 -?0\\.000 -?0\\.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:turn 0,90|3:scale 0,2,2,2|4:child 0,1,0,0,0,0,0,0|6:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:turn 0,90|3:scale 0,2,2,2|4:child 0,1,0,0,0,0,0,6|6:show_space"
+'''
+
+[[case]]
+name = "a move of a parent places its child again"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r6 world 1 at 3.000 0.000 2.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|2:child 0,0,0,2,0,0,0,0|6:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|2:child 0,0,0,2,0,0,0,0|4:move 0,3,0,0|6:show_space"
+'''
+
+[[case]]
+name = "a place with the same bytes is not attached again"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r2 placed 0 at 1.000 0.000 0.000"], lacks = ["r5 placed 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|4:move 0,2,0,0|6:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|4:move 0,1,0,0|6:show_space"
+'''
+
+[[case]]
+name = "a refused transform gives no place, and the log gets 1 line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, matches = ["a transform of [0-9]+ is refused"], has = ["r5 world 0 none"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|3:move 0,2,0,0|5:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|3:badmove 0|5:show_space"
+'''
+
+[[case]]
+name = "an entity in a cycle of parents gets no place, and the log gets 1 line"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, matches = ["[0-9]+ is in a cycle of parents"], has = ["r5 world 0 none"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|1:node 2,0,0|3:reparent 0,1,0,0,0,0|5:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|1:node 2,0,0|3:reparent 0,1,0,0,0,0|3:reparent 1,0,0,0,0,0|5:show_space"
+'''
+
+[[case]]
+name = "a parent and its child that move in 1 round give the child the new place of its parent"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r6 world 1 at 5.000 0.000 2.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,0,0,1,0,0,0,0|4:move 1,0,0,2|6:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 0,0,0|2:child 0,0,0,1,0,0,0,0|4:move 0,5,0,0|4:move 1,0,0,2|6:show_space"
+'''
+
+[[case]]
+name = "a changed grandchild gets its place when its grandparent keeps its place"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r7 world 2 at 1.000 1.000 4.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|2:child 0,0,1,0,0,0,0,0|3:child 1,0,0,1,0,0,0,0|5:move 0,1,0,0|7:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 1,0,0|2:child 0,0,1,0,0,0,0,0|3:child 1,0,0,1,0,0,0,0|5:move 0,1,0,0|5:move 2,0,0,4|7:show_space"
+'''
+
+[[case]]
+name = "a child that loses its parent while the parent moves becomes a root at its transform"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["r7 world 1 at 1.000 0.000 0.000", "r7 world 0 at 9.000 0.000 0.000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 5,0,0|2:child 0,1,0,0,0,0,0,0|4:move 0,9,0,0|7:show_space"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_space", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 7
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:node 5,0,0|2:child 0,1,0,0,0,0,0,0|4:reparent 1,-1|4:move 0,9,0,0|7:show_space"
+'''
+
+[[case]]
+name = "a reload gives 1, because the manifest states the module as not reloadable"
+run = ["{out}/space_bridge_reload{exe}", "reload"]
+claims = { status = 0, line = ["reload 1"] }
+false = { run = ["{out}/space_bridge_reload{exe}", "shutdown"] }
+
+[[case]]
+name = "a shutdown gives 0, because the module holds nothing outside the world"
+run = ["{out}/space_bridge_reload{exe}", "shutdown"]
+claims = { status = 0, line = ["shutdown 0"] }
+false = { run = ["{out}/space_bridge_reload{exe}", "reload"] }

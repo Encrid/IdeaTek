@@ -197,6 +197,11 @@ defines = ["GAME_STATES"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]
+name = "sdl3_game_space"
+defines = ["GAME_FRAME", "GAME_SPACE"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
 name = "sdl3_game_resources"
 defines = ["GAME_FILES", "GAME_RESOURCES"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
