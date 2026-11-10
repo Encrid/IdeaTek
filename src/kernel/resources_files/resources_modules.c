@@ -29,8 +29,6 @@ static void add_source(const bridge_api_t *api, uint64_t id)
     res_source_t *s = free_source();
     uint32_t fault;
 
-    if (!at)
-        return;
     name = res_text(api, c->name);
     fault = source_fault(&name, s);
     if (fault) {
@@ -56,9 +54,9 @@ BRIDGE_NATIVE(sources)
         k = slot_with(&res_module.sources[0].entity, res_module.s.max_sources,
             sizeof(res_source_t), t[i].id);
         leave = (t[i].events & BRIDGE_ON_LEAVE) != 0;
-        if (!leave && k == RES_NONE)
+        if (!leave & (k == RES_NONE))
             add_source(api, t[i].id);
-        else if (leave && k != RES_NONE)
+        if (leave & (k != RES_NONE))
             memset(&res_module.sources[k], 0, sizeof(res_source_t));
     }
     return (0);
@@ -74,8 +72,6 @@ static void add_variable(const bridge_api_t *api, uint64_t id)
         res_module.s.max_variables, sizeof(res_variable_t), 0);
     uint32_t fault;
 
-    if (!at)
-        return;
     name = res_text(api, c->name);
     fault = find_variable(api, &name) != RES_NONE ? 1 : 0;
     fault = !fault && k == RES_NONE ? 2 : fault;
@@ -100,9 +96,9 @@ BRIDGE_NATIVE(variables)
         k = slot_with(&res_module.variables[0].entity,
             res_module.s.max_variables, sizeof(res_variable_t), t[i].id);
         leave = (t[i].events & BRIDGE_ON_LEAVE) != 0;
-        if (leave && k != RES_NONE)
+        if (leave & (k != RES_NONE))
             res_module.variables[k].entity = 0;
-        else if (!leave && k == RES_NONE)
+        if (!leave & (k == RES_NONE))
             add_variable(api, t[i].id);
     }
     return (0);

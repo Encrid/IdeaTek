@@ -26,7 +26,8 @@ static void mark_changed(uint32_t source, res_text_t changed)
     res_path_t p;
     bool meta = changed.len >= META.len && !memcmp(changed.at + changed.len
         - META.len, META.at, META.len);
-    double delay = res_module.s.reload_delay_ms / 1000.0;
+    double delay = res_module.no_clock ? 0.0 : res_module.s.reload_delay_ms
+        / 1000.0;
 
     changed.len -= meta * META.len;
     for (uint32_t i = 0; i < res_module.s.max_resources; i++) {
@@ -35,8 +36,10 @@ static void mark_changed(uint32_t source, res_text_t changed)
             continue;
         path = text_of(i, 0);
         path_split(&path, &p);
-        if (path_is_under(&p.path, &changed))
+        if (path_is_under(&p.path, &changed)) {
             r->reload_at = res_module.now + delay;
+            r->reload_set = true;
+        }
     }
 }
 
@@ -57,6 +60,7 @@ static void mark_lines(const bridge_api_t *api, uint32_t source,
         if (!path_is_under(&line, &folder))
             continue;
         cut = folder.len + (folder.len > 0) * (line.len > folder.len);
+        cut += (line.len > cut) & (line.at[cut] == '/');
         line.at += cut;
         line.len -= cut;
         mark_changed(source, line);

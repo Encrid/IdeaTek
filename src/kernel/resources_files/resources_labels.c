@@ -26,15 +26,14 @@ static void hear_label(const bridge_api_t *api, uint64_t id)
 {
     uint32_t at = bridge_native_find_value(api, id, LABEL);
     const ideatek_resource_label_t *c = (const void *)(api->shared_base + at);
-    uint32_t parent = at ? resource_of(c->resource.id) : RES_NONE;
-    uint32_t j = parent == RES_NONE ? RES_NONE : resource_of(id);
-    res_text_t label = { "", 0 };
+    uint32_t parent = resource_of(c->resource.id);
+    uint32_t j = resource_of(id);
+    res_text_t label = res_text(api, c->label);
+    bool fresh = (parent != RES_NONE) & (j == RES_NONE);
 
-    if (parent != RES_NONE && j == RES_NONE) {
-        label = res_text(api, c->label);
+    if (fresh)
         new_label(api, parent, &label, id);
-    } else if (j != RES_NONE)
-        res_module.resources[j].seen = true;
+    res_module.resources[j % res_module.s.max_resources].seen |= j != RES_NONE;
 }
 
 BRIDGE_NATIVE(labels)

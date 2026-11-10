@@ -27,5 +27,6 @@ A reload while a read runs waits for the read: the resource is marked, and start
 | --- | --- |
 | `tick_time` | Moves `now` with the clock. |
 | `reloads` | The observer of `ideatek:ResourceReload`. |
+| `restart` | Puts a record back at the start of its load. |
 | `begin_reload` | Starts the reload of a resource. |
 | `start_reloads` | Starts the reloads that are due. |

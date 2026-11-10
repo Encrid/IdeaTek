@@ -58,6 +58,7 @@ bool start_resources(const bridge_api_t *api)
     res_module.started = true;
     if (!read_settings(api)) {
         res_module.broken = true;
+        memset(&res_module.s, 0, sizeof(res_module.s));
         return (false);
     }
     take_tables(api);
@@ -66,7 +67,7 @@ bool start_resources(const bridge_api_t *api)
         return (true);
     start_watch(api, RES_DEFAULT);
     for (uint32_t i = 0; i < res_module.s.max_sources; i++)
-        if (res_module.sources[i].used && !res_module.sources[i].entity)
+        if (res_module.sources[i].used)
             start_watch(api, i);
     return (true);
 }

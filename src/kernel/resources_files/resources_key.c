@@ -32,3 +32,9 @@ uint64_t res_hash_key(const res_text_t *path, const res_text_t *type)
     hash = res_hash_more(hash, type);
     return (hash + (hash == 0));
 }
+
+void map_clear(res_map_t *map)
+{
+    memset(map->slots, 0, (size_t)map->count * sizeof(*map->slots));
+    map->used = 0;
+}

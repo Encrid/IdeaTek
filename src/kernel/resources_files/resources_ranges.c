@@ -28,7 +28,7 @@ BRIDGE_NATIVE(ranges)
     for (uint32_t k = 0; k < l->count; k++) {
         i = resource_of(t[k].id);
         at = bridge_native_find_value(api, t[k].id, READ);
-        if (i != RES_NONE && at)
+        if (i != RES_NONE)
             set_range(i, (const void *)(api->shared_base + at));
     }
     return (0);

@@ -59,7 +59,7 @@ bool label_handle(const bridge_api_t *api, uint32_t use)
     uint32_t j = u->resource;
     bool failed = parent->view.state == IDEATEK_LOAD_STATE_FAILED;
 
-    if (!at || parent->step != STEP_DONE)
+    if (parent->step != STEP_DONE)
         return (false);
     full = res_text(api, load->path);
     path_split(&full, &p);
@@ -82,8 +82,9 @@ void mark_labels(const bridge_api_t *api, uint32_t parent)
         gone = !r->seen;
         if (gone)
             fail_resource(api, j, IDEATEK_RESOURCE_ERROR_NO_LABEL);
-        if (!gone && r->view.state != IDEATEK_LOAD_STATE_FAILED) {
+        else {
             r->view.state = p->view.state;
+            r->view.error = IDEATEK_RESOURCE_ERROR_NONE;
             touch(j);
         }
         r->seen = false;

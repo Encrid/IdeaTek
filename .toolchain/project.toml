@@ -132,3 +132,45 @@ why = "res_module holds the tables of the native module between 2 calls, which n
 rule = "G4"
 path = "src/kernel/resources_files/resources_inside.h"
 why = "The declaration of res_module, the tables of the native module between 2 calls."
+
+[[branches.exception]]
+path = "src/kernel/resources_files/resources_changes.c"
+line = 57
+col = 20
+side = "false"
+why = "The files module ends each line of a change list with a newline. The last line without one is a guard against another files module."
+
+[[branches.exception]]
+path = "src/kernel/resources_files/resources_changes.c"
+line = 60
+col = 13
+side = "true"
+why = "The watch of a source is the watch of its folder, so the files module gives only the changes under that folder. The guard protects the cut of the folder against another files module."
+
+[[branches.exception]]
+path = "src/kernel/resources_files/resources_free.c"
+line = 15
+col = 13
+side = "false"
+why = "The owner of a use is an entity id that the module read from a live use, and the entity table of Bridge does not shrink, so the index is always inside it."
+
+[[branches.exception]]
+path = "src/kernel/resources_files/resources_table.c"
+line = 36
+col = 13
+side = "false"
+why = "The key is a hash of 64 bits of the path and the type. 2 different paths with 1 key is a collision that no case can make."
+
+[[branches.exception]]
+path = "src/kernel/resources_files/resources_table.c"
+line = 36
+col = 43
+side = "false"
+why = "The key is a hash of 64 bits of the path and the type. 2 different types with 1 key is a collision that no case can make."
+
+[[branches.exception]]
+path = "src/kernel/resources_files/resources_words.c"
+line = 58
+col = 9
+side = "true"
+why = "read_key trims each line before read_word, so a key with spaces only after it is a key with nothing after it, which find_key refuses first."

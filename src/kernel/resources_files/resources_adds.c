@@ -39,10 +39,8 @@ void place_add(const bridge_api_t *api, uint32_t k)
     res_use_t *u = &res_module.uses[k];
     uint32_t at = bridge_native_find_value(api, u->entity, ADD);
     const ideatek_resource_add_t *add = (const void *)(api->shared_base + at);
-    uint32_t i = at ? add_record(api, add) : RES_NONE;
+    uint32_t i = add_record(api, add);
 
-    if (!at)
-        return;
     u->handled = true;
     if (i == RES_NONE)
         return;

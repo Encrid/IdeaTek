@@ -55,8 +55,6 @@ static void add_loader(const bridge_api_t *api, uint64_t id)
     uint32_t k = slot_with(&res_module.loaders[0].entity,
         res_module.s.max_loaders, sizeof(res_loader_t), 0);
 
-    if (!at)
-        return;
     if (k == RES_NONE) {
         bridge_native_say(api, BRIDGE_LOG_WARN, "no room for the loader %.*s",
             (int)c->name.len, (const char *)api->shared_base + c->name.at);
@@ -78,9 +76,9 @@ BRIDGE_NATIVE(loaders)
         k = slot_with(&res_module.loaders[0].entity, res_module.s.max_loaders,
             sizeof(res_loader_t), t[i].id);
         leave = (t[i].events & BRIDGE_ON_LEAVE) != 0;
-        if (leave && k != RES_NONE)
+        if (leave & (k != RES_NONE))
             res_module.loaders[k].entity = 0;
-        else if (!leave && k == RES_NONE)
+        if (!leave & (k == RES_NONE))
             add_loader(api, t[i].id);
     }
     return (0);

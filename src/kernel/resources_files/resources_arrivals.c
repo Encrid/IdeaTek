@@ -34,9 +34,10 @@ static void take_file(const bridge_api_t *api, uint32_t i,
         return;
     if (!copy_bytes(api, i, &in->data))
         r->step = STEP_READ;
-    else if (r->loader == RES_NONE)
-        step_resource(api, i);
-    else
+    else if (r->loader == RES_NONE) {
+        r->step = STEP_PICK;
+        pick_for(api, i);
+    } else
         give_bytes(api, i);
 }
 
@@ -67,12 +68,12 @@ static void take_result(const bridge_api_t *api, uint32_t j)
     res_arrival_t in;
 
     read_arrival(api, j, &in);
-    r->size = read->kind == READ_RANGE ? r->size : in.size;
+    r->size = read->kind == READ_FILE ? in.size : r->size;
     dispatch(api, i, read->kind, &in);
     if (in.module)
         api->destroy(api, read->entity);
     read->entity = 0;
-    r->read = r->read == j ? RES_NONE : r->read;
+    r->read = RES_NONE;
 }
 
 void take_results(const bridge_api_t *api)

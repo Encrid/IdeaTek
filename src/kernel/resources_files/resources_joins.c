@@ -38,6 +38,7 @@ bool path_resolve(const res_text_t *path, const res_text_t *value,
     bool fits = true;
 
     out->len = 0;
+    out->at[0] = '\0';
     while (at < end && fits) {
         open = memchr(at, '{', (size_t)(end - at));
         close = open ? memchr(open, '}', (size_t)(end - open)) : nullptr;

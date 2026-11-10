@@ -13,7 +13,7 @@ A load of `path#label` waits for the resource of `path`. When that resource is d
 
 ## The labels of a reload
 
-`mark_labels` runs when a load ends. A sub-resource that the loader did not attach `ideatek:ResourceLabel` to during the reload gets `IDEATEK_RESOURCE_ERROR_NO_LABEL`. Each other sub-resource takes the state of its parent.
+`mark_labels` runs when a load ends. A sub-resource that the loader did not attach `ideatek:ResourceLabel` to during the reload gets `IDEATEK_RESOURCE_ERROR_NO_LABEL`. Each other sub-resource takes the state of its parent, and loses its error.
 
 ## Functions
 

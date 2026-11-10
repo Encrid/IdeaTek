@@ -9,7 +9,7 @@ A set of states is `IDEATEK_LOAD_STATE_FAILED` when 1 state failed. Else it is `
 `fold_state` gives the state of the set from its counts.
 
 For each resource, the module folds `dependencies` from the `state` of the resources of its dependencies. It folds `recursive` from its own `state` and from the `recursive` of its dependencies.
-A dependency is a use whose `owner` is that resource. The fold runs up to `RES_PASSES` passes over the resources, until a pass changes nothing, because a dependency can have dependencies.
+A dependency is a use whose `owner` is that resource. The fold runs up to `RES_PASSES` passes over the resources, until a pass changes nothing, because a dependency can have dependencies. A chain longer than `RES_PASSES` folds over more rounds.
 
 ## Functions
 

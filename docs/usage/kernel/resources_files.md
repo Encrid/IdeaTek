@@ -68,16 +68,16 @@ A use entity whose `owner` is dead is destroyed in that round, with the effects 
 
 | Key | Default of the manifest | Rule |
 | --- | --- | --- |
-| `pinned` | `false` | The module calls no library: any thread of Bridge can run it. |
+| `pinned` | `false` | No library: any thread of Bridge may run the module. |
 | `reloadable` | `false` | The tables of the module are in its persistent arena, but its reload is not tested. |
 | `spawns` | 4176 | 1 entity for each resource and each read that runs, and 1 for the watch of each source: `max_resources` + `max_reads` + `max_sources`. A larger bound needs a larger `spawns`. |
 | `changes` | 65536 | The handles, the states, the bytes and the tags that a round attaches, plus its destroys of the resources that go. |
-| `persistent` | 7602176 | `load_bytes` of the contract, plus 3407872 for the 6 tables, the text slots and the 3 hash maps at their defaults. A larger bound needs a larger `persistent`. |
+| `persistent` | 8388608 | `load_bytes` of the contract, plus 4194304 for the tables, the slots and the maps at their defaults. A larger bound needs a larger `persistent`. |
 | `scratch` | 16384 | What `init` declares, and the lines of the log. |
 | `log_ring` | 2048 | Each line of the log takes 32 bytes of the ring. |
 | `spans` | 16384 | The spans of its queries, the columns of its types and the lists of its observers. |
 
-- `round` is the 1 system of the module. Its phase `first` is the phase that starts the round, in the map of the deployment.
+- The module has 1 system, `round`, in its phase `first`, mapped by the deployment to the phase that starts the round.
 - A pair puts `ideatek_resources_files:resources:round` after `ideatek_files_mosl:files:results`, and before each reader of `ideatek:Resource` and `ideatek:ResourceHandle` of the first phase.
 - The module takes the grants of the resources module: `docs/extern/kernel/ideatek_resources.h.md`, *The grants*. It also reads `ideatek:Frame` of `docs/extern/kernel/ideatek_frame.h.md`, for the delay of the reloads.
 

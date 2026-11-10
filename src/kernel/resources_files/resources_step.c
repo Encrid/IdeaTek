@@ -49,14 +49,12 @@ void step_resource(const bridge_api_t *api, uint32_t i)
 {
     res_resource_t *r = &res_module.resources[i];
 
-    if (r->step == STEP_NEW && wants_meta(api, i)) {
+    if (wants_meta(api, i)) {
         r->step = start_read(api, i, READ_META) ? STEP_META : STEP_NEW;
         return;
     }
-    if (r->step == STEP_NEW)
-        r->step = STEP_PICK;
-    if (r->step == STEP_PICK)
-        pick_for(api, i);
+    r->step = STEP_PICK;
+    pick_for(api, i);
 }
 
 static void give_raw(const bridge_api_t *api, uint32_t i)

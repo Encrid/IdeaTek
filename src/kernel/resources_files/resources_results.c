@@ -25,7 +25,7 @@ static void watch_result(const bridge_api_t *api, uint64_t entity,
 
     for (uint32_t k = 0; k < res_module.s.max_sources; k++)
         watch |= res_module.sources[k].watch == entity;
-    if (!watch || !at || status == IDEATEK_FILE_STATUS_OK)
+    if (!watch || status == IDEATEK_FILE_STATUS_OK)
         return;
     q = (const void *)(api->shared_base + at);
     bridge_native_say(api, BRIDGE_LOG_WARN, "no watch of %.*s: %s",
@@ -45,11 +45,11 @@ BRIDGE_NATIVE(results)
     for (uint32_t i = 0; i < l->count; i++) {
         at = bridge_native_find_value(api, t[i].id, FILE_RESULT);
         c = (const void *)(api->shared_base + at);
-        j = at ? read_of(t[i].id) : RES_NONE;
-        if (j == RES_NONE && at)
+        j = read_of(t[i].id);
+        if (j == RES_NONE) {
             watch_result(api, t[i].id, c->status);
-        if (j == RES_NONE)
             continue;
+        }
         res_module.reads[j].status = c->status;
         res_module.reads[j].done = true;
     }
@@ -68,7 +68,7 @@ BRIDGE_NATIVE(answers)
     for (uint32_t i = 0; i < l->count; i++) {
         at = bridge_native_find_value(api, t[i].id, SOURCE_RESULT);
         c = (const void *)(api->shared_base + at);
-        j = at ? read_of(t[i].id) : RES_NONE;
+        j = read_of(t[i].id);
         if (j == RES_NONE)
             continue;
         res_module.reads[j].error = c->error;

@@ -4,7 +4,7 @@ This file runs the fold of the states in a dirty round, and writes the views of 
 
 ## The fold
 
-`fold_states` runs in a dirty round, in up to `RES_PASSES` passes, until a pass changes nothing.
+`fold_states` runs in a dirty round, in up to `RES_PASSES` passes, until a pass changes nothing. When the last pass still changes a state, the round stays dirty, and the fold goes on in the next round.
 `fold_uses` walks the uses whose `owner` is a resource. It folds the state and the `recursive` of the resource of each use into its owner: `docs/intern/kernel/resources_files/resources_fold.c.md`.
 `fold_views` folds the own state of each resource into its `recursive`, and writes `dependencies`, `recursive` and the first error of the view. A view that differs marks the resource changed.
 

@@ -14,7 +14,9 @@ This file applies the results of the reads in the round after their arrival.
 
 `refuse_file` ends a file read that cannot go on. A `NOT_FOUND` with a variable in the path and no fallback tried yet puts the resource back at `STEP_READ` with the fallback. Another error fails the resource. A file larger than `load_bytes` fails with `IDEATEK_RESOURCE_ERROR_TOO_BIG`, unless its loader is `ranged`.
 
-`take_file` copies the bytes into a block. When no gap holds them, the resource goes back to `STEP_READ`. When the pick waited for the bytes, `step_resource` picks now. Else `give_bytes` gives them to the loader.
+`take_file` copies the bytes into a block. When no gap holds them, the resource goes back to `STEP_READ`. When the pick waited for the bytes, `pick_for` picks now: `docs/intern/kernel/resources_files/resources_choice.c.md`. Else `give_bytes` gives them to the loader.
+
+`take_result` keeps the size of the file from a file read only: a meta read or a range read does not change it.
 
 A read of a source module is destroyed after the copy. The read record is freed.
 

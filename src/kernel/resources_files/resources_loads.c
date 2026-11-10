@@ -26,7 +26,7 @@ static void take_use(const bridge_api_t *api, uint64_t entity, bool add)
 
     while (k < res_module.s.max_uses && res_module.uses[k].entity)
         k++;
-    if (k == res_module.s.max_uses || !at) {
+    if (k == res_module.s.max_uses) {
         bridge_native_say(api, BRIDGE_LOG_WARN, "no room for the use %llu",
             (unsigned long long)entity);
         return;
@@ -58,9 +58,9 @@ void record_uses(const bridge_api_t *api, uint32_t list, bool add)
     for (uint32_t i = 0; i < l->count; i++) {
         k = use_of(t[i].id);
         leave = (t[i].events & BRIDGE_ON_LEAVE) != 0;
-        if (leave && k != RES_NONE)
+        if (leave & (k != RES_NONE))
             drop_use(k);
-        else if (!leave && k == RES_NONE)
+        if (!leave & (k == RES_NONE))
             take_use(api, t[i].id, add);
     }
 }

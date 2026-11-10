@@ -36,14 +36,12 @@ static uint32_t new_resource(const bridge_api_t *api, const res_load_t *load)
     return (i);
 }
 
-static bool read_load(const bridge_api_t *api, uint32_t k, res_load_t *load)
+static void read_load(const bridge_api_t *api, uint32_t k, res_load_t *load)
 {
     const res_use_t *u = &res_module.uses[k];
     uint32_t at = bridge_native_find_value(api, u->entity, LOAD);
     const ideatek_resource_load_t *c = (const void *)(api->shared_base + at);
 
-    if (!at)
-        return (false);
     load->full = res_text(api, c->path);
     load->type = res_text(api, c->type);
     load->settings = res_text(api, c->settings);
@@ -51,7 +49,6 @@ static bool read_load(const bridge_api_t *api, uint32_t k, res_load_t *load)
     load->keyed.at = load->full.at;
     load->keyed.len = (uint32_t)(load->p.path.at + load->p.path.len
         - load->full.at);
-    return (true);
 }
 
 static void place_load(const bridge_api_t *api, uint32_t k)
@@ -61,8 +58,7 @@ static void place_load(const bridge_api_t *api, uint32_t k)
     res_resource_t *r;
     uint32_t i;
 
-    if (!read_load(api, k, &load))
-        return;
+    read_load(api, k, &load);
     i = find_resource(&load.keyed, &load.type);
     i = i == RES_NONE ? new_resource(api, &load) : i;
     u->handled = i == RES_NONE;

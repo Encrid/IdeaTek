@@ -27,6 +27,19 @@ BRIDGE_NATIVE(reloads)
     return (0);
 }
 
+static void restart(res_resource_t *r)
+{
+    r->view.state = IDEATEK_LOAD_STATE_LOADING;
+    r->view.error = IDEATEK_RESOURCE_ERROR_NONE;
+    r->step = STEP_NEW;
+    r->loader = RES_NONE;
+    r->reloading = true;
+    r->reload_asked = false;
+    r->reload_set = false;
+    r->fallback_used = false;
+    r->reload_at = 0;
+}
+
 void begin_reload(const bridge_api_t *api, uint32_t i)
 {
     res_resource_t *r = &res_module.resources[i];
@@ -38,14 +51,7 @@ void begin_reload(const bridge_api_t *api, uint32_t i)
         return;
     }
     api->detach(api, r->entity, RELOAD);
-    r->view.state = IDEATEK_LOAD_STATE_LOADING;
-    r->view.error = IDEATEK_RESOURCE_ERROR_NONE;
-    r->step = STEP_NEW;
-    r->loader = RES_NONE;
-    r->reloading = true;
-    r->reload_asked = false;
-    r->fallback_used = false;
-    r->reload_at = 0;
+    restart(r);
     for (uint32_t j = 0; j < res_module.s.max_resources; j++)
         res_module.resources[j].seen &= res_module.resources[j].parent != i;
     touch(i);
@@ -63,7 +69,7 @@ void start_reloads(const bridge_api_t *api)
         if (!r->entity)
             continue;
         path = text_of(i, 0);
-        due = r->reload_asked | ((r->reload_at > 0) & (res_module.now
+        due = r->reload_asked | (r->reload_set & (res_module.now
             >= r->reload_at)) | (res_module.variables_changed
             & path_variable(&path, &name));
         if (due)
