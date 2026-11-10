@@ -1,0 +1,23 @@
+[[case]]
+name = "glslang compiles a fragment shader of GLSL with a define of its preamble into SPIR-V 1.6"
+run = ["{out}/glslang_smoke{exe}", "right"]
+claims = { status = 0, matches = ["^words [0-9]+ magic 07230203 version 00010600$"] }
+false = { run = ["{out}/glslang_smoke{exe}", "fault"] }
+
+[[case]]
+name = "a shader with an unknown name gives the line of the fault and no SPIR-V"
+run = ["{out}/glslang_smoke{exe}", "fault"]
+claims = { status = 1, has = ["ERROR: 0:3: 'missing' : undeclared identifier"] }
+false = { run = ["{out}/glslang_smoke{exe}", "right"] }
+
+[[case]]
+name = "a shader without the define of its preamble does not compile"
+run = ["{out}/glslang_smoke{exe}", "bare"]
+claims = { status = 1, has = ["'PALETTE_GAIN' : undeclared identifier"] }
+false = { run = ["{out}/glslang_smoke{exe}", "right"] }
+
+[[case]]
+name = "a mode that is not known gives the 3 modes"
+run = ["{out}/glslang_smoke{exe}", "other"]
+claims = { status = 2, has = ["the mode is right, fault or bare"] }
+false = { run = ["{out}/glslang_smoke{exe}", "right"] }
