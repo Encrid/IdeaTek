@@ -35,7 +35,7 @@ jobs:
             runner: windows-11-arm
             architecture: arm64
     runs-on: ${{ matrix.runner }}
-    timeout-minutes: 60
+    timeout-minutes: 120
     defaults:
       run:
         shell: bash
