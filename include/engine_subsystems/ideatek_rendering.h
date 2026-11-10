@@ -309,6 +309,16 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mesh_instances_t,
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mesh_instances_t,
     IDEATEK_MESH_INSTANCES_FIELDS);
 
+    #define IDEATEK_MESH_INSTANCE_VALUES_FIELDS { \
+        ideatek_color_t color; \
+        float values[8]; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_mesh_instance_values_t,
+    IDEATEK_MESH_INSTANCE_VALUES_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_mesh_instance_values_t,
+    IDEATEK_MESH_INSTANCE_VALUES_FIELDS);
+
     #define IDEATEK_MESH_MATERIALS_FIELDS { \
         bridge_text_t materials; \
     }
