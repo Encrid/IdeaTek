@@ -220,6 +220,14 @@ static void say_gap(const bridge_api_t *api)
         (unsigned long long)((now - game.last) / 1000000));
 }
 
+static void say_span(const bridge_api_t *api)
+{
+    uint64_t now = SDL_GetTicksNS();
+
+    bridge_native_say(api, BRIDGE_LOG_INFO, "r%u span %llu", game.round,
+        (unsigned long long)((now - game.mark) / 1000000));
+}
+
 static void say_clipboard(const bridge_api_t *api)
 {
     char *text = SDL_GetClipboardText();
@@ -391,6 +399,10 @@ static void run_step(const bridge_api_t *api, const char *verb, char *args)
         SDL_Delay((Uint32)atoi(args));
     if (!strcmp(verb, "gap"))
         say_gap(api);
+    if (!strcmp(verb, "mark"))
+        game.mark = SDL_GetTicksNS();
+    if (!strcmp(verb, "span"))
+        say_span(api);
 }
 
 static void read_script(const bridge_api_t *api)
