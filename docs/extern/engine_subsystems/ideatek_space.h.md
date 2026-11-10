@@ -192,12 +192,15 @@ Then the space module detaches `ideatek:Children`, and the husk goes at that bar
 ## ideatek:Sibling
 
 `ideatek:Sibling` links a child to the children next to it. The space module attaches it to each entity that has a parent.
-Its C type `ideatek_sibling_t` has 16 bytes, and an alignment of 8.
+Its C type `ideatek_sibling_t` has 24 bytes, and an alignment of 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `prev` | `ideatek_entity_t` | 0 | The child before, or 0 for the first child. |
 | `next` | `ideatek_entity_t` | 8 | The child after, or 0 for the last child. |
+| `parent` | `ideatek_entity_t` | 16 | The parent whose list holds the child. |
+
+When `ideatek:Parent` of a child changes, the space module reads `parent` to take the child out of the list of its old parent. Bridge gives an observer no old value.
 
 ## ideatek:Interpolated
 
@@ -256,7 +259,7 @@ A part of a model that other entities follow, for example a hand, is an entity w
 { ideatek_entity_t entity; int32_t order; ideatek_keep_t keep; ideatek_orphan_t orphan; uint8_t absolute; }
 { ideatek_position_t origin; float basis[9]; }
 { ideatek_entity_t first; ideatek_entity_t last; uint32_t count; }
-{ ideatek_entity_t prev; ideatek_entity_t next; }
+{ ideatek_entity_t prev; ideatek_entity_t next; ideatek_entity_t parent; }
 { ideatek_world_transform_t world; uint64_t tick; }
 ```
 
