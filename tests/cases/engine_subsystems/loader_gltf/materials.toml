@@ -1,0 +1,340 @@
+[[case]]
+name = "a material gives its factors, its slots with their transform, and the sampler of its image"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["material [material/Full] color 1.00 1.00 1.00 1.00 metallic 1.00 roughness 0.25 emissive 1.00 strength 4.00 normal 0.50 occlusion 0.75 cutoff 0.25 alpha 1 double 1 texture 1 texcoord 2 offset 0.50 scale 2.00 rotation 0.50", "sampler [t.ktx2] min 0 mag 0 mip 0 wrap 2 1 0"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Full","pbrMetallicRoughness":{"baseColorTexture":{"index":0,"texCoord":1,"extensions":{"KHR_texture_transform":{"offset":[0.5,0],"scale":[2,2],"rotation":0.5,"texCoord":2}}},"roughnessFactor":0.25},"normalTexture":{"index":0,"scale":0.5},"occlusionTexture":{"index":0,"strength":0.75},"emissiveFactor":[1,0,0],"alphaMode":"MASK","alphaCutoff":0.25,"doubleSided":true,"extensions":{"KHR_materials_emissive_strength":{"emissiveStrength":4}}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"images":[{"uri":"t.ktx2"}],"samplers":[{"magFilter":9728,"minFilter":9984,"wrapS":33071,"wrapT":33648}],"textures":[{"source":0,"sampler":0}]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "a sampler with no filters takes linear filters in the settings of the image"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["sampler [t.ktx2] min 1 mag 1 mip 1 wrap 0 0"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0,"baseColorTexture":{"index":0}}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"images":[{"uri":"t.ktx2"}],"samplers":[{"wrapS":10497}],"textures":[{"source":0,"sampler":0}]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "a minifying filter of linear with nearest mips in the settings of the image"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["sampler [t.ktx2] min 1 mag 1 mip 0"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0,"baseColorTexture":{"index":0}}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"images":[{"uri":"t.ktx2"}],"samplers":[{"minFilter":9985,"magFilter":9729}],"textures":[{"source":0,"sampler":0}]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "a minifying filter of nearest with linear mips in the settings of the image"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["sampler [t.ktx2] min 0 mag 1 mip 1"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0,"baseColorTexture":{"index":0}}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"images":[{"uri":"t.ktx2"}],"samplers":[{"minFilter":9986}],"textures":[{"source":0,"sampler":0}]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "a minifying filter of linear with no mips in the settings of the image"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["sampler [t.ktx2] min 1 mag 1 mip 0"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0,"baseColorTexture":{"index":0}}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"images":[{"uri":"t.ktx2"}],"samplers":[{"minFilter":9729}],"textures":[{"source":0,"sampler":0}]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "a minifying filter of nearest with no mips in the settings of the image"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["sampler [t.ktx2] min 0 mag 1 mip 0"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0,"baseColorTexture":{"index":0}}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"images":[{"uri":"t.ktx2"}],"samplers":[{"minFilter":9728}],"textures":[{"source":0,"sampler":0}]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "an image that is not a KTX 2.0 file of its own is not read, and a second sampler has no effect"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["m.gltf: the image 1 is not a KTX 2.0 file of its own", "m.gltf: the image 3 is not a KTX 2.0 file of its own", "m.gltf: the image 4 has a second sampler, which has no effect", "texture 0"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0,"baseColorTexture":{"index":1}}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"images":[{"uri":"t.ktx2","mimeType":"image/ktx2"},{"uri":"p.png"},{"uri":"u.bin","mimeType":"image/ktx2"},{"uri":"data:image/ktx2;base64,AAAA"},{"uri":"k.ktx2"}],"samplers":[{"magFilter":9728},{"magFilter":9729}],"textures":[{"source":1,"extensions":{"KHR_texture_basisu":{"source":0}}},{"source":1},{"source":2},{"source":4,"sampler":0},{"source":4,"sampler":1}],"extensionsUsed":["KHR_texture_basisu"]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|1:ktx2 {case}/host/content/u.bin,w=2;h=2|1:ktx2 {case}/host/content/k.ktx2,w=2;h=2|2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "an image of KHR_texture_basisu is the image of its texture, and a transform keeps its texCoord"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["texture 1 texcoord 1 offset 0.25 scale 1.00 rotation 0.00", "m.gltf: the image 1 is not a KTX 2.0 file of its own"], matches_not = ["image 3 has a second sampler"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0,"baseColorTexture":{"index":0,"texCoord":1,"extensions":{"KHR_texture_transform":{"offset":[0.25,0]}}}}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"images":[{"uri":"b.ktx2"},{"bufferView":0,"mimeType":"image/ktx2"},{"uri":"c.ktx2","mimeType":"image/png"},{"uri":"d.ktx2"}],"samplers":[{"magFilter":9728}],"textures":[{"extensions":{"KHR_texture_basisu":{"source":0}}},{"source":0,"sampler":0},{"source":0,"sampler":0},{"source":0,"sampler":0},{"source":3,"sampler":0},{"source":3,"sampler":0},{"source":3,"sampler":0}],"extensionsUsed":["KHR_texture_basisu"]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/b.ktx2,w=2;h=2|1:ktx2 {case}/host/content/d.ktx2,w=2;h=2|2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "a texture of a file with a buffer of its own names its image"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["texture 1 texcoord 0"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"m.bin"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"m.bin"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0,"baseColorTexture":{"index":0}}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"images":[{"uri":"t.ktx2"}],"textures":[{"source":0}]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "1:putbytes {case}/host/content/m.bin,0000000000000000000000000000803f0000000000000000000000000000803f00000000000001000200|1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "each extension of a material gives its type, and an extension with no type gives its line"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["material [material/Coat]", "ext 100000", "clearcoat factor 0.50 roughness 0.25", "specular factor 0.50 color 0.25 ior 1.25", "specular factor 1.00 color 1.00 ior 1.75", "transmission factor 0.50 thickness 0.00 distance 0.00", "transmission factor 0.00 thickness 2.00 distance 3.00", "ext 000100", "ext 000010", "ext 000001", "m.gltf: a material has an extension with no type", "alpha 2"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Coat","extensions":{"KHR_materials_clearcoat":{"clearcoatFactor":0.5,"clearcoatRoughnessFactor":0.25}}},{"name":"Spec","extensions":{"KHR_materials_specular":{"specularFactor":0.5,"specularColorFactor":[0.25,1,1]},"KHR_materials_ior":{"ior":1.25}}},{"name":"Ior","extensions":{"KHR_materials_ior":{"ior":1.75}}},{"name":"Glass","extensions":{"KHR_materials_transmission":{"transmissionFactor":0.5}}},{"name":"Volume","extensions":{"KHR_materials_volume":{"thicknessFactor":2,"attenuationDistance":3}}},{"name":"Aniso","extensions":{"KHR_materials_anisotropy":{"anisotropyStrength":0.5}}},{"name":"Leaf","extensions":{"KHR_materials_diffuse_transmission":{"diffuseTransmissionFactor":0.5}}},{"name":"Flat","extensions":{"KHR_materials_unlit":{}}},{"name":"Silk","extensions":{"KHR_materials_sheen":{"sheenColorFactor":[1,1,1]}}},{"name":"Oil","extensions":{"KHR_materials_iridescence":{"iridescenceFactor":1}}},{"name":"Prism","extensions":{"KHR_materials_dispersion":{"dispersion":1}}},{"name":"Blend","alphaMode":"BLEND"}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0,"extensionsUsed":["KHR_materials_anisotropy","KHR_materials_clearcoat","KHR_materials_diffuse_transmission","KHR_materials_dispersion","KHR_materials_ior","KHR_materials_iridescence","KHR_materials_sheen","KHR_materials_specular","KHR_materials_transmission","KHR_materials_unlit","KHR_materials_volume"]}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
+
+[[case]]
+name = "a primitive with no material takes the default material"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["material [material/default] color 1.00 1.00 1.00 1.00 metallic 1.00 roughness 1.00 emissive 0.00 strength 1.00 normal 1.00 occlusion 1.00 cutoff 0.50 alpha 0 double 0 texture 0"] }
+false = { files = { "{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_gltf", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/host/content/m.gltf" = '''
+{"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}'''
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_gltf.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "2:load -,m.gltf,ideatek:Model,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''
