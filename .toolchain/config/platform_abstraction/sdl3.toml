@@ -212,6 +212,11 @@ defines = ["GAME_FILES", "GAME_RESOURCES", "GAME_KTX2"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]
+name = "sdl3_game_gltf"
+defines = ["GAME_FILES", "GAME_RESOURCES", "GAME_KTX2", "GAME_GLTF"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
 name = "sdl3_game_all"
 defines = ["GAME_GPU", "GAME_FRAME"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
