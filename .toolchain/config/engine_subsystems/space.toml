@@ -61,3 +61,8 @@ manifest = ["test:space@1.0.0", "{space_spawn_words}"]
 name = "space_reader"
 defines = ["ROLE_READER"]
 manifest = ["test:reader@1.0.0", "{space_probe_words}"]
+
+[[artifact.variants]]
+name = "space_reader_remove"
+defines = ["ROLE_READER", "ROLE_REMOVE"]
+manifest = ["test:reader@1.0.0", "{space_probe_words}"]
