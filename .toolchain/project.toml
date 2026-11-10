@@ -205,3 +205,20 @@ line = 13
 col = 20
 side = "false"
 why = "The resources module attaches ideatek:Resource before ideatek:ResourceBytes, so a resource of a load always has its path. The length 0 is a guard."
+
+[[style.exception]]
+rule = "G4"
+path = "src/engine_subsystems/space_bridge/space_main.c"
+why = "space_module holds the slots and the last tick of the native module between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/engine_subsystems/space_bridge/space_inside.h"
+why = "The declaration of space_module, the state of the native module between 2 calls."
+
+[[branches.exception]]
+path = "src/engine_subsystems/space_bridge/space_ancestor.c"
+line = 13
+col = 13
+side = "false"
+why = "The space module alone writes ideatek:Sibling. It writes each list as a whole and keeps the links on a destroy, so each child of a list carries its link."
