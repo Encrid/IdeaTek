@@ -263,6 +263,42 @@ read = [
 '''
 
 [[case]]
+name = "the space module and a reader load together, each with ideatek:Children kept on a destroy"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:space@1.0.0, native, m/space_place{library}", "loaded: test:reader@1.0.0, native, m/space_reader{library}"] }
+
+[case.folders]
+"{case}/m" = ["space_place", "space_reader"]
+
+[case.false.folders]
+"{case}/m" = ["space_place", "space_reader_remove"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:space@1.0.0"]
+write = ["ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
+    "ideatek:PreviousWorldTransform", "ideatek:Teleported",
+]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:Interpolated", "ideatek:Tick",
+]
+[module."test:reader@1.0.0"]
+read = [
+    "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
+    "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling", "ideatek:PreviousWorldTransform",
+    "ideatek:Interpolated",
+]
+'''
+
+[[case]]
 name = "the release of a target holds the header and the licence, and a program builds from it"
 run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "space", "--pack"]
 claims = { status = 0, line = [

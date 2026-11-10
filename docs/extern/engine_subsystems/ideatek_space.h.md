@@ -129,6 +129,8 @@ The space module attaches `ideatek:WorldTransform` to each entity that has `idea
 An observer of the space module attaches the value at the barrier that applies the change of `ideatek:Transform` or `ideatek:Parent`.
 The deployment gives the space module `observer_passes` of 2 or more.
 The space module attaches a value only when its bytes differ from the bytes of the old value. Then it goes on to the children.
+
+In 1 call, the observer places only the changed entities that have no changed ancestor in that call. The walk of the ancestor places the others, so each entity is placed once.
 A reader that waits for a change observes `BRIDGE_ON_ATTACH` of `ideatek:WorldTransform`.
 
 ```pseudo
@@ -182,6 +184,10 @@ Its C type is `ideatek_children_t`: 24 bytes, with an alignment of 8.
 
 The bytes 20 to 23 hold no field, because the size is a multiple of 8.
 The children are in the order of `order`. Children with the same `order` are in the order of their ids.
+
+Each module declares `ideatek:Children` with `BRIDGE_ON_DESTROY_KEEP`. So when a parent is destroyed, its husk keeps `ideatek:Children`, as the document of `bridge_abi.h` of Bridge tells of a husk.
+An observer of the space module hears the husk leave. It walks the children of the husk by `ideatek:Sibling`, and applies `orphan` of each child.
+Then the space module detaches `ideatek:Children`, and the husk goes at that barrier. A child that the space module destroys is a parent that goes in its turn, so a chain goes 1 level at each barrier.
 
 ## ideatek:Sibling
 
@@ -268,7 +274,7 @@ A part of a model that other entities follow, for example a hand, is an entity w
 | `ideatek:Transform` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Parent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:WorldTransform` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
-| `ideatek:Children` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:Children` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_KEEP` |
 | `ideatek:Sibling` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:PreviousWorldTransform` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Interpolated` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |

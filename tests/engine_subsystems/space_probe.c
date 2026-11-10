@@ -17,6 +17,17 @@ static const char WHO[] = MANIFEST;
 #define TAG(api, name) BRIDGE_NATIVE_DECLARE_TAG(api, name, BRIDGE_STRIP, \
     BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
 
+static uint32_t declare_children(const bridge_api_t *api)
+{
+#if defined(ROLE_REMOVE)
+    return (STRUCT(api, "ideatek:Children", ideatek_children_t));
+#else
+    return (BRIDGE_NATIVE_COMPONENT(api, "ideatek:Children",
+        ideatek_children_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_KEEP));
+#endif
+}
+
 typedef struct {
     uint32_t transform;
     uint32_t parent;
@@ -54,7 +65,7 @@ typedef struct {
     slots.parent = STRUCT(api, "ideatek:Parent", ideatek_parent_t);
     slots.world = STRUCT(api, "ideatek:WorldTransform",
         ideatek_world_transform_t);
-    slots.children = STRUCT(api, "ideatek:Children", ideatek_children_t);
+    slots.children = declare_children(api);
     slots.sibling = STRUCT(api, "ideatek:Sibling", ideatek_sibling_t);
     slots.previous = STRUCT(api, "ideatek:PreviousWorldTransform",
         ideatek_previous_world_transform_t);
@@ -67,7 +78,7 @@ typedef struct {
 {
     declare_fields(api);
     STRUCT(api, "ideatek:WorldTransform", ideatek_world_transform_t);
-    STRUCT(api, "ideatek:Children", ideatek_children_t);
+    declare_children(api);
     STRUCT(api, "ideatek:Sibling", ideatek_sibling_t);
     STRUCT(api, "ideatek:PreviousWorldTransform",
         ideatek_previous_world_transform_t);
