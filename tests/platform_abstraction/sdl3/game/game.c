@@ -13,6 +13,7 @@
 #include "game_states.h"
 #include "game_resources.h"
 #include "game_ktx2.h"
+#include "game_space.h"
 #include "game_frame.h"
 #include "game_gpu.h"
 
@@ -270,6 +271,9 @@ static void declare_types(const bridge_api_t *api)
 #if defined(GAME_KTX2)
     game_declare_ktx2(api);
 #endif
+#if defined(GAME_SPACE)
+    game_declare_space(api);
+#endif
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -341,6 +345,12 @@ BRIDGE_NATIVE(init)
 #if defined(GAME_KTX2)
     changes[count++] = game_ktx2_slots.texture;
 #endif
+#if defined(GAME_SPACE)
+    changes[count++] = game_space_slots.transform;
+    changes[count++] = game_space_slots.parent;
+    changes[count++] = game_space_slots.interpolated;
+    changes[count++] = game_space_slots.teleported;
+#endif
     BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, count,
         nullptr, 0);
     queries[0] = ADD_SHOW(api, "show_state", game.slots.state);
@@ -368,6 +378,9 @@ BRIDGE_NATIVE(init)
 #endif
 #if defined(GAME_KTX2)
     game_watch_ktx2(api);
+#endif
+#if defined(GAME_SPACE)
+    game_watch_space(api);
 #endif
 #if defined(GAME_AUDIO)
     game_watch_audio(api);
