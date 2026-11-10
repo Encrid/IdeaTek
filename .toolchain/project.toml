@@ -140,6 +140,16 @@ why = "ktx2_module holds the table of the textures and the block list between 2 
 
 [[style.exception]]
 rule = "G4"
+path = "src/engine_subsystems/loader_gltf/gltf_main.c"
+why = "gltf_module holds the tables of the files, the dependencies, the caches and the parts between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/engine_subsystems/loader_gltf/gltf_inside.h"
+why = "The declaration of gltf_module, the state of the native module between 2 calls."
+
+[[style.exception]]
+rule = "G4"
 path = "src/engine_subsystems/loader_ktx2/ktx2_inside.h"
 why = "The declaration of ktx2_module, the state of the native module between 2 calls."
 
@@ -205,3 +215,45 @@ line = 13
 col = 20
 side = "false"
 why = "The resources module attaches ideatek:Resource before ideatek:ResourceBytes, so a resource of a load always has its path. The length 0 is a guard."
+
+[[branches.exception]]
+path = "src/engine_subsystems/loader_gltf/gltf_hear.c"
+line = 54
+col = 13
+side = "false"
+why = "The observer bytes hears ideatek:ResourceBytes enter or attach, so each item of its list carries the component at the barrier. The test of its value is a guard."
+
+[[branches.exception]]
+path = "src/engine_subsystems/loader_gltf/gltf_deps_hear.c"
+line = 15
+col = 19
+side = "false"
+why = "The observer handles hears ideatek:ResourceHandle enter, so the use entity carries the component at the barrier. The test of its value is a guard."
+
+[[branches.exception]]
+path = "src/engine_subsystems/loader_gltf/gltf_keep.c"
+line = 32
+col = 9
+side = "true"
+why = "The observer raw hears ideatek:RawBytes enter or attach, so the resource carries the component at the barrier. The test of its value is a guard."
+
+[[branches.exception]]
+path = "src/engine_subsystems/loader_gltf/gltf_say.c"
+line = 15
+col = 12
+side = "false"
+why = "The resources module attaches ideatek:Resource before ideatek:ResourceBytes, so a file of a load always has its path. The length 0 is a guard."
+
+[[branches.exception]]
+path = "src/engine_subsystems/loader_gltf/gltf_say.c"
+line = 16
+col = 13
+side = "false"
+why = "The resources module attaches ideatek:Resource before ideatek:ResourceBytes, so a file of a load always has its path. The empty path is a guard."
+
+[[branches.exception]]
+path = "src/engine_subsystems/loader_gltf/gltf_deps_hear.c"
+line = 18
+col = 61
+side = "true"
+why = "The resources module attaches ideatek:Resource to each resource before the handle of its use, so the test of its value is a guard."
