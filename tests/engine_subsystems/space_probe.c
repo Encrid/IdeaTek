@@ -28,6 +28,13 @@ static uint32_t declare_children(const bridge_api_t *api)
 #endif
 }
 
+static uint32_t declare_sibling(const bridge_api_t *api)
+{
+    return (BRIDGE_NATIVE_COMPONENT(api, "ideatek:Sibling",
+        ideatek_sibling_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_KEEP));
+}
+
 typedef struct {
     uint32_t transform;
     uint32_t parent;
@@ -66,7 +73,7 @@ typedef struct {
     slots.world = STRUCT(api, "ideatek:WorldTransform",
         ideatek_world_transform_t);
     slots.children = declare_children(api);
-    slots.sibling = STRUCT(api, "ideatek:Sibling", ideatek_sibling_t);
+    slots.sibling = declare_sibling(api);
     slots.previous = STRUCT(api, "ideatek:PreviousWorldTransform",
         ideatek_previous_world_transform_t);
     slots.interpolated = TAG(api, "ideatek:Interpolated");
@@ -79,7 +86,7 @@ typedef struct {
     declare_fields(api);
     STRUCT(api, "ideatek:WorldTransform", ideatek_world_transform_t);
     declare_children(api);
-    STRUCT(api, "ideatek:Sibling", ideatek_sibling_t);
+    declare_sibling(api);
     STRUCT(api, "ideatek:PreviousWorldTransform",
         ideatek_previous_world_transform_t);
     TAG(api, "ideatek:Interpolated");

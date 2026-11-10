@@ -263,7 +263,7 @@ read = [
 '''
 
 [[case]]
-name = "the space module and a reader load together, each with ideatek:Children kept on a destroy"
+name = "the space module and a reader load together, each with ideatek:Children and ideatek:Sibling kept on a destroy"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:space@1.0.0, native, m/space_place{library}", "loaded: test:reader@1.0.0, native, m/space_reader{library}"] }
 
