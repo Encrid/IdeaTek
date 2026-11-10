@@ -59,6 +59,7 @@ engine_subsystems/
     ideatek_persistence.h
     ideatek_physics.h
     ideatek_rendering.h
+    ideatek_scene.h
     ideatek_services.h
     ideatek_sound.h
     ideatek_space.h

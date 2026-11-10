@@ -59,6 +59,7 @@ Each part has a readme, which its release holds.
 | `persistence` | `BC-IdeaTek-Persistence` | `docs/usage/engine_subsystems/persistence.md` |
 | `physics` | `BC-IdeaTek-Physics` | `docs/usage/engine_subsystems/physics.md` |
 | `rendering` | `BC-IdeaTek-Rendering` | `docs/usage/engine_subsystems/rendering.md` |
+| `scene` | `BC-IdeaTek-Scene` | `docs/usage/engine_subsystems/scene.md` |
 | `services` | `BC-IdeaTek-Services` | `docs/usage/engine_subsystems/services.md` |
 | `sound` | `BC-IdeaTek-Sound` | `docs/usage/engine_subsystems/sound.md` |
 | `space` | `BC-IdeaTek-Space` | `docs/usage/engine_subsystems/space.md` |
