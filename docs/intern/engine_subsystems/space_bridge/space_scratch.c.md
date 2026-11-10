@@ -2,7 +2,7 @@
 
 This file gives the module its reads of values and its buffers in the scratch arena.
 
-`take_scratch` counts its bytes in `scratch_used`, so the lines of the log and the values of the attaches go above them. Each barrier frees them.
+`take_scratch` counts its bytes in `scratch_used`, so a later log line or a later attach puts its bytes above them. Each barrier frees them.
 `take_stack` takes at most half of the free scratch arena, and at most `STACK_ROOM` items, so the rest stays for the log and the attaches.
 
 ## Functions
