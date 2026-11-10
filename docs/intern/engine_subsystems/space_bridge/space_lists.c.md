@@ -1,22 +1,19 @@
 # src/engine_subsystems/space_bridge/space_lists.c
 
-This file writes the list of the children of 1 parent: `ideatek:Children` of the parent and `ideatek:Sibling` of each child.
+This file writes the list of the children of 1 parent as a whole.
 
-## The list
+1. `gather_children` copies the old list into the buffer, then adds the entities of the list of the observer. It keeps only the entities whose `ideatek:Parent` names the parent, once each.
+2. `sort_children` sorts the buffer by `order`, then by id.
+3. `write_list` attaches `ideatek:Sibling` to each child, and `ideatek:Children` to the parent. An empty list detaches `ideatek:Children`.
 
-The module writes a list again as a whole. Bridge applies the attaches at the next barrier, so 2 changes of 1 list in 1 call would read the same old list.
-
-1. `gather` copies the old list into a buffer of the scratch arena, from the first child to the last.
-2. The caller takes out the children that leave, and adds the children that arrive.
-3. `sort_children` sorts the buffer by `order` of `ideatek:Parent`, then by id.
-4. `write_list` attaches `ideatek:Sibling` to each child with `prev`, `next` and `parent`, and `ideatek:Children` with `first`, `last` and `count`.
-
-A list with no child detaches `ideatek:Children`. A buffer that the scratch arena cannot hold leaves the list as it was, and the log gets 1 line.
+A destroyed child is a husk that keeps its `ideatek:Sibling`, so the old list still goes through it. It has no `ideatek:Parent`, so it drops out.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `gather` | The children of the old list, in the buffer. |
+| `add_child` | Adds 1 child to the buffer when it belongs there. |
+| `gather_children` | The children of the new list, in the buffer. |
+| `is_before` | `true` when a child comes before another one. |
 | `sort_children` | The buffer in the order of the contract. |
 | `write_list` | Attaches the links and the list. |
