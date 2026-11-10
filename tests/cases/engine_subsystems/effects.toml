@@ -334,7 +334,8 @@ read = [
     "ideatek:ParticleLook", "ideatek:ParticleCollision",
     "ideatek:ParticleSpawn", "ideatek:ParticleLight", "ideatek:ParticleSound",
     "ideatek:WorldTransform", "ideatek:MeshInstance", "ideatek:Shape",
-    "ideatek:Wind", "ideatek:ForceField",
+    "ideatek:Wind", "ideatek:ForceField", "ideatek:ideatek_time_mode_t",
+    "ideatek:TimeArea",
 ]
 '''
 
@@ -369,6 +370,7 @@ read = [
     "ideatek:ParticleSpawn", "ideatek:ParticleLight", "ideatek:ParticleSound",
     "ideatek:WorldTransform", "ideatek:MeshInstance", "ideatek:Shape",
     "ideatek:Wind", "ideatek:ForceField", "ideatek:Transform",
+    "ideatek:ideatek_time_mode_t", "ideatek:TimeArea",
 ]
 '''
 

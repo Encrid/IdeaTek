@@ -212,6 +212,13 @@ static void show_mesh_instances(void)
     AT(ideatek_mesh_instances_t, revision);
 }
 
+static void show_mesh_instance_values(void)
+{
+    SIZE(ideatek_mesh_instance_values_t);
+    AT(ideatek_mesh_instance_values_t, color);
+    AT(ideatek_mesh_instance_values_t, values);
+}
+
 static void show_mesh_materials(void)
 {
     SIZE(ideatek_mesh_materials_t);
@@ -526,7 +533,8 @@ static void show_descriptors(void)
         ideatek_tonemap_curve_t_desc, ideatek_camera_t_desc,
         ideatek_projection_t_desc, ideatek_projection_angles_t_desc,
         ideatek_mesh_t_desc, ideatek_mesh_instance_t_desc,
-        ideatek_mesh_instances_t_desc, ideatek_mesh_materials_t_desc,
+        ideatek_mesh_instances_t_desc,
+        ideatek_mesh_instance_values_t_desc, ideatek_mesh_materials_t_desc,
         ideatek_visibility_t_desc, ideatek_affects_t_desc,
         ideatek_visibility_range_t_desc, ideatek_material_t_desc,
         ideatek_texture_t_desc, ideatek_sampler_t_desc, ideatek_light_t_desc,
@@ -566,6 +574,7 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_PROJECTION_ANGLES_FIELDS), TEXT_OF(IDEATEK_MESH_FIELDS),
         TEXT_OF(IDEATEK_MESH_INSTANCE_FIELDS),
         TEXT_OF(IDEATEK_MESH_INSTANCES_FIELDS),
+        TEXT_OF(IDEATEK_MESH_INSTANCE_VALUES_FIELDS),
         TEXT_OF(IDEATEK_MESH_MATERIALS_FIELDS),
         TEXT_OF(IDEATEK_VISIBILITY_FIELDS), TEXT_OF(IDEATEK_AFFECTS_FIELDS),
         TEXT_OF(IDEATEK_VISIBILITY_RANGE_FIELDS),
@@ -611,6 +620,7 @@ int main(int argc, char **argv)
         { "projection_angles", show_projection_angles }, { "mesh", show_mesh },
         { "mesh_instance", show_mesh_instance },
         { "mesh_instances", show_mesh_instances },
+        { "mesh_instance_values", show_mesh_instance_values },
         { "mesh_materials", show_mesh_materials },
         { "visibility", show_visibility }, { "affects", show_affects },
         { "visibility_range", show_visibility_range },

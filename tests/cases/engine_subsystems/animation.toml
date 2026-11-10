@@ -516,6 +516,8 @@ read = [
     "ideatek:RootMotion", "ideatek:PlayLink", "ideatek:BoneMask",
     "ideatek:WarpTargets", "ideatek:OrientationWarp", "ideatek:AnimationLod",
     "ideatek:Frame", "ideatek:State", "ideatek:StateChange",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_time_mode_t",
+    "ideatek:TimeArea", "ideatek:Motion",
 ]
 '''
 
@@ -542,6 +544,8 @@ read = [
     "ideatek:RootMotion", "ideatek:PlayLink", "ideatek:BoneMask",
     "ideatek:WarpTargets", "ideatek:OrientationWarp", "ideatek:AnimationLod",
     "ideatek:Frame", "ideatek:State", "ideatek:StateChange", "ideatek:ClipPlay",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_time_mode_t",
+    "ideatek:TimeArea", "ideatek:Motion",
 ]
 '''
 

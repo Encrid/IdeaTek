@@ -31,7 +31,7 @@ false = { run = ["{out}/physics_layout{exe}", "body"] }
 [[case]]
 name = "ideatek_body_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "body"]
-claims = { status = 0, order = ["size 64", "alignment 4", "center_of_mass 0", "inertia 12", "mass 24", "gravity_scale 28", "linear_damping 32", "angular_damping 36", "max_linear_speed 40", "max_angular_speed 44", "sleep_threshold 48", "inertia_scale 52", "kind 56", "mass_mode 57", "locked 58", "flags 59", "motion_quality 60", "velocity_steps 61", "position_steps 62"] }
+claims = { status = 0, order = ["size 68", "alignment 4", "center_of_mass 0", "inertia 12", "mass 24", "gravity_scale 28", "linear_damping 32", "angular_damping 36", "max_linear_speed 40", "max_angular_speed 44", "sleep_threshold 48", "inertia_scale 52", "drag 56", "kind 60", "mass_mode 61", "locked 62", "flags 63", "motion_quality 64", "velocity_steps 65", "position_steps 66"] }
 false = { run = ["{out}/physics_layout{exe}", "kinematic_target"] }
 
 [[case]]
@@ -49,7 +49,7 @@ false = { run = ["{out}/physics_layout{exe}", "motion"] }
 [[case]]
 name = "ideatek_motion_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "motion"]
-claims = { status = 0, order = ["size 28", "alignment 4", "linear 0", "angular 12", "sleeping 24"] }
+claims = { status = 0, order = ["size 32", "alignment 4", "linear 0", "angular 12", "sleeping 24", "rate 28"] }
 false = { run = ["{out}/physics_layout{exe}", "push"] }
 
 [[case]]
@@ -331,7 +331,7 @@ false = { run = ["{out}/physics_layout{exe}", "character"] }
 [[case]]
 name = "ideatek_character_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "character"]
-claims = { status = 0, order = ["size 48", "alignment 4", "up 0", "max_slope 12", "step_up 16", "stick_down 20", "min_step_forward 24", "padding 28", "predictive_distance 32", "mass 36", "max_strength 40", "non_walkable 44", "flags 45"] }
+claims = { status = 0, order = ["size 52", "alignment 4", "up 0", "max_slope 12", "step_up 16", "stick_down 20", "min_step_forward 24", "padding 28", "predictive_distance 32", "mass 36", "max_strength 40", "drag 44", "non_walkable 48", "flags 49"] }
 false = { run = ["{out}/physics_layout{exe}", "character_move"] }
 
 [[case]]
@@ -343,7 +343,7 @@ false = { run = ["{out}/physics_layout{exe}", "character_state"] }
 [[case]]
 name = "ideatek_character_state_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "character_state"]
-claims = { status = 0, order = ["size 48", "alignment 8", "ground 0", "ground_material 8", "ground_normal 16", "ground_velocity 28", "ground_state 40", "collision 41"] }
+claims = { status = 0, order = ["size 48", "alignment 8", "ground 0", "ground_material 8", "ground_normal 16", "ground_velocity 28", "ground_state 40", "collision 41", "rate 44"] }
 false = { run = ["{out}/physics_layout{exe}", "snapshot_action"] }
 
 [[case]]
@@ -590,30 +590,42 @@ false = { run = ["{out}/physics_layout{exe}", "liquid_foam"] }
 name = "ideatek_liquid_foam_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "liquid_foam"]
 claims = { status = 0, order = ["size 20", "alignment 4", "positions 0", "lifetimes 8", "count 16"] }
-false = { run = ["{out}/physics_layout{exe}", "smoke_flags"] }
+false = { run = ["{out}/physics_layout{exe}", "gas_flags"] }
 
 [[case]]
-name = "ideatek_smoke_flags_t is 1 byte"
-run = ["{out}/physics_layout{exe}", "smoke_flags"]
+name = "ideatek_gas_flags_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "gas_flags"]
 claims = { status = 0, order = ["size 1", "alignment 1"] }
-false = { run = ["{out}/physics_layout{exe}", "smoke_volume"] }
+false = { run = ["{out}/physics_layout{exe}", "gas_volume"] }
 
 [[case]]
-name = "ideatek_smoke_volume_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/physics_layout{exe}", "smoke_volume"]
-claims = { status = 0, order = ["size 48", "alignment 4", "cell_size 0", "steps_per_second 4", "buoyancy_per_temp 8", "buoyancy_per_smoke 12", "cooling 16", "vorticity 20", "ignition_temp 24", "burn_per_temp 28", "fuel_per_burn 32", "temp_per_burn 36", "smoke_per_burn 40", "flags 44"] }
-false = { run = ["{out}/physics_layout{exe}", "smoke_emitter"] }
+name = "ideatek_gas_volume_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "gas_volume"]
+claims = { status = 0, order = ["size 52", "alignment 4", "species 0", "reactions 8", "cell_size 16", "steps_per_second 20", "ambient_temperature 24", "ambient_pressure 28", "cooling 32", "vorticity 36", "species_count 40", "reaction_count 44", "flags 48"] }
+false = { run = ["{out}/physics_layout{exe}", "gas_emitter"] }
 
 [[case]]
-name = "ideatek_smoke_emitter_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/physics_layout{exe}", "smoke_emitter"]
-claims = { status = 0, order = ["size 56", "alignment 8", "volume 0", "velocity 8", "size 20", "temperature 32", "fuel 36", "smoke 40", "couple_rate 44", "shape 48"] }
-false = { run = ["{out}/physics_layout{exe}", "smoke_grid"] }
+name = "ideatek_gas_emitter_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "gas_emitter"]
+claims = { status = 0, order = ["size 56", "alignment 8", "volume 0", "velocity 8", "size 20", "rate 32", "temperature 36", "heat 40", "couple_rate 44", "species 48", "shape 52"] }
+false = { run = ["{out}/physics_layout{exe}", "gas_grid"] }
 
 [[case]]
-name = "ideatek_smoke_grid_t has the size, the alignment and the offsets of its Usage"
-run = ["{out}/physics_layout{exe}", "smoke_grid"]
-claims = { status = 0, order = ["size 8", "alignment 8", "texture 0"] }
+name = "ideatek_gas_grid_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "gas_grid"]
+claims = { status = 0, order = ["size 24", "alignment 8", "temperature 0", "amounts 8", "count 16"] }
+false = { run = ["{out}/physics_layout{exe}", "gas_sample"] }
+
+[[case]]
+name = "ideatek_gas_sample_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "gas_sample"]
+claims = { status = 0, order = ["size 48", "alignment 8", "query 0", "volume 8", "amounts 16", "velocity 24", "temperature 36", "pressure 40", "order 44"] }
+false = { run = ["{out}/physics_layout{exe}", "sight_sample"] }
+
+[[case]]
+name = "ideatek_sight_sample_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "sight_sample"]
+claims = { status = 0, order = ["size 16", "alignment 8", "query 0", "transmittance 8", "order 12"] }
 false = { run = ["{out}/physics_layout{exe}", "lag_history"] }
 
 [[case]]
@@ -662,6 +674,18 @@ false = { run = ["{out}/physics_layout{exe}", "gravity_area"] }
 name = "ideatek_gravity_area_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/physics_layout{exe}", "gravity_area"]
 claims = { status = 0, order = ["size 32", "alignment 4", "size 0", "gravity 12", "inner 16", "falloff 20", "priority 24", "mode 28", "shape 29", "point 30"] }
+false = { run = ["{out}/physics_layout{exe}", "time_mode"] }
+
+[[case]]
+name = "ideatek_time_mode_t is 1 byte"
+run = ["{out}/physics_layout{exe}", "time_mode"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/physics_layout{exe}", "time_area"] }
+
+[[case]]
+name = "ideatek_time_area_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/physics_layout{exe}", "time_area"]
+claims = { status = 0, order = ["size 32", "alignment 4", "size 0", "rate 12", "inner 16", "falloff 20", "priority 24", "mode 28", "shape 29"] }
 false = { run = ["{out}/physics_layout{exe}", "body_kind"] }
 
 [[case]]
@@ -673,10 +697,10 @@ claims = { status = 0, line = [
     "uint8_t { IDEATEK_MASS_MODE_SHAPES = 0, IDEATEK_MASS_MODE_CUSTOM = 1 }",
     "uint8_t { IDEATEK_LOCKED_X = 0x01, IDEATEK_LOCKED_Y = 0x02, IDEATEK_LOCKED_Z = 0x04, IDEATEK_LOCKED_ROLL = 0x08, IDEATEK_LOCKED_PITCH = 0x10, IDEATEK_LOCKED_YAW = 0x20 }",
     "uint8_t { IDEATEK_BODY_FLAGS_CAN_SLEEP = 0x01, IDEATEK_BODY_FLAGS_ENHANCED_EDGES = 0x02, IDEATEK_BODY_FLAGS_DESTRUCTIBLE = 0x04, IDEATEK_BODY_FLAGS_GYROSCOPIC = 0x08 }",
-    "{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; float max_linear_speed; float max_angular_speed; float sleep_threshold; float inertia_scale; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; ideatek_motion_quality_t motion_quality; uint8_t velocity_steps; uint8_t position_steps; }",
+    "{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; float max_linear_speed; float max_angular_speed; float sleep_threshold; float inertia_scale; float drag; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; ideatek_motion_quality_t motion_quality; uint8_t velocity_steps; uint8_t position_steps; }",
     "{ ideatek_position_t position; ideatek_quat_t rotation; }",
     "{ ideatek_entity_t body; uint32_t order; bool asleep; }",
-    "{ ideatek_vec3_t linear; ideatek_vec3_t angular; bool sleeping; }",
+    "{ ideatek_vec3_t linear; ideatek_vec3_t angular; bool sleeping; float rate; }",
     "{ ideatek_position_t point; ideatek_vec3_t force; ideatek_vec3_t torque; ideatek_vec3_t impulse; ideatek_vec3_t angular_impulse; }",
     "uint8_t { IDEATEK_SHAPE_KIND_SPHERE = 0, IDEATEK_SHAPE_KIND_BOX = 1, IDEATEK_SHAPE_KIND_CAPSULE = 2, IDEATEK_SHAPE_KIND_CYLINDER = 3, IDEATEK_SHAPE_KIND_CONVEX = 4, IDEATEK_SHAPE_KIND_TRIANGLES = 5, IDEATEK_SHAPE_KIND_PLANE = 6, IDEATEK_SHAPE_KIND_HEIGHT_FIELD = 7 }",
     "uint8_t { IDEATEK_SHAPE_FLAGS_SENSOR = 0x01, IDEATEK_SHAPE_FLAGS_SENSOR_EVENTS = 0x02, IDEATEK_SHAPE_FLAGS_CONTACT_EVENTS = 0x04, IDEATEK_SHAPE_FLAGS_HIT_EVENTS = 0x08 }",
@@ -688,7 +712,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t sensor; ideatek_entity_t visitor; uint32_t order; ideatek_touch_kind_t kind; }",
     "{ ideatek_entity_t a; ideatek_entity_t b; uint32_t order; ideatek_touch_kind_t kind; }",
     "{ ideatek_entity_t a; ideatek_entity_t b; ideatek_position_t point; ideatek_vec3_t normal; float speed; uint32_t order; }",
-    "uint8_t { IDEATEK_QUERY_KIND_RAY = 0, IDEATEK_QUERY_KIND_SHAPE_CAST = 1, IDEATEK_QUERY_KIND_OVERLAP = 2, IDEATEK_QUERY_KIND_WATER = 3 }",
+    "uint8_t { IDEATEK_QUERY_KIND_RAY = 0, IDEATEK_QUERY_KIND_SHAPE_CAST = 1, IDEATEK_QUERY_KIND_OVERLAP = 2, IDEATEK_QUERY_KIND_WATER = 3, IDEATEK_QUERY_KIND_GAS = 4, IDEATEK_QUERY_KIND_SIGHT = 5 }",
     "uint8_t { IDEATEK_QUERY_MODE_TEST = 0, IDEATEK_QUERY_MODE_CLOSEST = 1, IDEATEK_QUERY_MODE_ALL = 2 }",
     "{ ideatek_position_t origin; uint64_t categories; uint64_t touches; ideatek_quat_t rotation; ideatek_vec3_t translation; ideatek_vec3_t size; uint32_t max; uint32_t tick; ideatek_query_kind_t kind; ideatek_shape_kind_t shape; ideatek_query_mode_t mode; bool back_faces; }",
     "{ ideatek_entity_t query; ideatek_entity_t shape; ideatek_position_t point; ideatek_vec3_t normal; float fraction; ideatek_entity_t material; float uv[2]; float depth; uint32_t face; uint32_t sub_shape; uint32_t order; }",
@@ -723,9 +747,9 @@ claims = { status = 0, line = [
     "uint8_t { IDEATEK_NON_WALKABLE_SLIDE = 0, IDEATEK_NON_WALKABLE_PREVENT_CLIMB = 1 }",
     "uint8_t { IDEATEK_CHARACTER_FLAGS_INNER_BODY = 0x01, IDEATEK_CHARACTER_FLAGS_CAN_PUSH = 0x02, IDEATEK_CHARACTER_FLAGS_CAN_BE_PUSHED = 0x04 }",
     "uint8_t { IDEATEK_CHARACTER_COLLISION_SIDES = 0x01, IDEATEK_CHARACTER_COLLISION_UP = 0x02, IDEATEK_CHARACTER_COLLISION_DOWN = 0x04 }",
-    "{ ideatek_vec3_t up; float max_slope; float step_up; float stick_down; float min_step_forward; float padding; float predictive_distance; float mass; float max_strength; ideatek_non_walkable_t non_walkable; ideatek_character_flags_t flags; }",
+    "{ ideatek_vec3_t up; float max_slope; float step_up; float stick_down; float min_step_forward; float padding; float predictive_distance; float mass; float max_strength; float drag; ideatek_non_walkable_t non_walkable; ideatek_character_flags_t flags; }",
     "{ ideatek_vec3_t velocity; }",
-    "{ ideatek_entity_t ground; ideatek_entity_t ground_material; ideatek_vec3_t ground_normal; ideatek_vec3_t ground_velocity; ideatek_ground_state_t ground_state; ideatek_character_collision_t collision; }",
+    "{ ideatek_entity_t ground; ideatek_entity_t ground_material; ideatek_vec3_t ground_normal; ideatek_vec3_t ground_velocity; ideatek_ground_state_t ground_state; ideatek_character_collision_t collision; float rate; }",
     "uint8_t { IDEATEK_SNAPSHOT_ACTION_SAVE = 0, IDEATEK_SNAPSHOT_ACTION_RESTORE = 1 }",
     "uint8_t { IDEATEK_SNAPSHOT_STATUS_OK = 0, IDEATEK_SNAPSHOT_STATUS_TOO_BIG = 1, IDEATEK_SNAPSHOT_STATUS_FAILED = 2 }",
     "{ uint64_t categories; bridge_text_t data; ideatek_snapshot_action_t action; }",
@@ -767,10 +791,12 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t liquid; ideatek_vec3_t velocity; float rate; ideatek_vec3_t size; float start; float end; float jitter; ideatek_emitter_shape_t shape; }",
     "{ bridge_text_t positions; bridge_text_t velocities; uint32_t count; }",
     "{ bridge_text_t positions; bridge_text_t lifetimes; uint32_t count; }",
-    "uint8_t { IDEATEK_SMOKE_FLAGS_COLLIDE = 0x01 }",
-    "{ float cell_size; float steps_per_second; float buoyancy_per_temp; float buoyancy_per_smoke; float cooling; float vorticity; float ignition_temp; float burn_per_temp; float fuel_per_burn; float temp_per_burn; float smoke_per_burn; ideatek_smoke_flags_t flags; }",
-    "{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float temperature; float fuel; float smoke; float couple_rate; ideatek_emitter_shape_t shape; }",
-    "{ ideatek_entity_t texture; }",
+    "uint8_t { IDEATEK_GAS_FLAGS_COLLIDE = 0x01, IDEATEK_GAS_FLAGS_PUSH_BODIES = 0x02, IDEATEK_GAS_FLAGS_PRESSURE = 0x04 }",
+    "{ bridge_text_t species; bridge_text_t reactions; float cell_size; float steps_per_second; float ambient_temperature; float ambient_pressure; float cooling; float vorticity; uint32_t species_count; uint32_t reaction_count; ideatek_gas_flags_t flags; }",
+    "{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float rate; float temperature; float heat; float couple_rate; uint32_t species; ideatek_emitter_shape_t shape; }",
+    "{ ideatek_entity_t temperature; bridge_text_t amounts; uint32_t count; }",
+    "{ ideatek_entity_t query; ideatek_entity_t volume; bridge_text_t amounts; ideatek_vec3_t velocity; float temperature; float pressure; uint32_t order; }",
+    "{ ideatek_entity_t query; float transmittance; uint32_t order; }",
     "{ float seconds; }",
     "uint8_t { IDEATEK_FIELD_SHAPE_INFINITE = 0, IDEATEK_FIELD_SHAPE_SPHERE = 1, IDEATEK_FIELD_SHAPE_BOX = 2, IDEATEK_FIELD_SHAPE_CYLINDER = 3 }",
     "uint8_t { IDEATEK_FORCE_KIND_ATTRACTOR = 0, IDEATEK_FORCE_KIND_VORTEX = 1, IDEATEK_FORCE_KIND_DIRECTIONAL = 2, IDEATEK_FORCE_KIND_NOISE = 3, IDEATEK_FORCE_KIND_DRAG = 4, IDEATEK_FORCE_KIND_VECTOR_FIELD = 5 }",
@@ -779,6 +805,8 @@ claims = { status = 0, line = [
     "{ ideatek_vec3_t size; float inner; float speed; float gust_min; float gust_max; float gust_frequency; float falloff; ideatek_field_shape_t shape; }",
     "{ ideatek_entity_t texture; ideatek_vec3_t size; float inner; float acceleration; float frequency; float falloff; ideatek_force_kind_t kind; ideatek_field_shape_t shape; ideatek_field_target_t target; }",
     "{ ideatek_vec3_t size; float gravity; float inner; float falloff; int32_t priority; ideatek_gravity_mode_t mode; ideatek_field_shape_t shape; bool point; }",
+    "uint8_t { IDEATEK_TIME_MODE_REPLACE = 0, IDEATEK_TIME_MODE_MULTIPLY = 1 }",
+    "{ ideatek_vec3_t size; float rate; float inner; float falloff; int32_t priority; ideatek_time_mode_t mode; ideatek_field_shape_t shape; }",
 ] }
 false = { run = ["{out}/physics_layout{exe}", "texts"] }
 
@@ -791,10 +819,10 @@ claims = { status = 0, line = [
     "{ IDEATEK_MASS_MODE_SHAPES = 0, IDEATEK_MASS_MODE_CUSTOM = 1 }",
     "{ IDEATEK_LOCKED_X = 0x01, IDEATEK_LOCKED_Y = 0x02, IDEATEK_LOCKED_Z = 0x04, IDEATEK_LOCKED_ROLL = 0x08, IDEATEK_LOCKED_PITCH = 0x10, IDEATEK_LOCKED_YAW = 0x20 }",
     "{ IDEATEK_BODY_FLAGS_CAN_SLEEP = 0x01, IDEATEK_BODY_FLAGS_ENHANCED_EDGES = 0x02, IDEATEK_BODY_FLAGS_DESTRUCTIBLE = 0x04, IDEATEK_BODY_FLAGS_GYROSCOPIC = 0x08 }",
-    "{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; float max_linear_speed; float max_angular_speed; float sleep_threshold; float inertia_scale; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; ideatek_motion_quality_t motion_quality; uint8_t velocity_steps; uint8_t position_steps; }",
+    "{ ideatek_vec3_t center_of_mass; ideatek_vec3_t inertia; float mass; float gravity_scale; float linear_damping; float angular_damping; float max_linear_speed; float max_angular_speed; float sleep_threshold; float inertia_scale; float drag; ideatek_body_kind_t kind; ideatek_mass_mode_t mass_mode; ideatek_locked_t locked; ideatek_body_flags_t flags; ideatek_motion_quality_t motion_quality; uint8_t velocity_steps; uint8_t position_steps; }",
     "{ ideatek_position_t position; ideatek_quat_t rotation; }",
     "{ ideatek_entity_t body; uint32_t order; bool asleep; }",
-    "{ ideatek_vec3_t linear; ideatek_vec3_t angular; bool sleeping; }",
+    "{ ideatek_vec3_t linear; ideatek_vec3_t angular; bool sleeping; float rate; }",
     "{ ideatek_position_t point; ideatek_vec3_t force; ideatek_vec3_t torque; ideatek_vec3_t impulse; ideatek_vec3_t angular_impulse; }",
     "{ IDEATEK_SHAPE_KIND_SPHERE = 0, IDEATEK_SHAPE_KIND_BOX = 1, IDEATEK_SHAPE_KIND_CAPSULE = 2, IDEATEK_SHAPE_KIND_CYLINDER = 3, IDEATEK_SHAPE_KIND_CONVEX = 4, IDEATEK_SHAPE_KIND_TRIANGLES = 5, IDEATEK_SHAPE_KIND_PLANE = 6, IDEATEK_SHAPE_KIND_HEIGHT_FIELD = 7 }",
     "{ IDEATEK_SHAPE_FLAGS_SENSOR = 0x01, IDEATEK_SHAPE_FLAGS_SENSOR_EVENTS = 0x02, IDEATEK_SHAPE_FLAGS_CONTACT_EVENTS = 0x04, IDEATEK_SHAPE_FLAGS_HIT_EVENTS = 0x08 }",
@@ -806,7 +834,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t sensor; ideatek_entity_t visitor; uint32_t order; ideatek_touch_kind_t kind; }",
     "{ ideatek_entity_t a; ideatek_entity_t b; uint32_t order; ideatek_touch_kind_t kind; }",
     "{ ideatek_entity_t a; ideatek_entity_t b; ideatek_position_t point; ideatek_vec3_t normal; float speed; uint32_t order; }",
-    "{ IDEATEK_QUERY_KIND_RAY = 0, IDEATEK_QUERY_KIND_SHAPE_CAST = 1, IDEATEK_QUERY_KIND_OVERLAP = 2, IDEATEK_QUERY_KIND_WATER = 3 }",
+    "{ IDEATEK_QUERY_KIND_RAY = 0, IDEATEK_QUERY_KIND_SHAPE_CAST = 1, IDEATEK_QUERY_KIND_OVERLAP = 2, IDEATEK_QUERY_KIND_WATER = 3, IDEATEK_QUERY_KIND_GAS = 4, IDEATEK_QUERY_KIND_SIGHT = 5 }",
     "{ IDEATEK_QUERY_MODE_TEST = 0, IDEATEK_QUERY_MODE_CLOSEST = 1, IDEATEK_QUERY_MODE_ALL = 2 }",
     "{ ideatek_position_t origin; uint64_t categories; uint64_t touches; ideatek_quat_t rotation; ideatek_vec3_t translation; ideatek_vec3_t size; uint32_t max; uint32_t tick; ideatek_query_kind_t kind; ideatek_shape_kind_t shape; ideatek_query_mode_t mode; bool back_faces; }",
     "{ ideatek_entity_t query; ideatek_entity_t shape; ideatek_position_t point; ideatek_vec3_t normal; float fraction; ideatek_entity_t material; float uv[2]; float depth; uint32_t face; uint32_t sub_shape; uint32_t order; }",
@@ -841,9 +869,9 @@ claims = { status = 0, line = [
     "{ IDEATEK_NON_WALKABLE_SLIDE = 0, IDEATEK_NON_WALKABLE_PREVENT_CLIMB = 1 }",
     "{ IDEATEK_CHARACTER_FLAGS_INNER_BODY = 0x01, IDEATEK_CHARACTER_FLAGS_CAN_PUSH = 0x02, IDEATEK_CHARACTER_FLAGS_CAN_BE_PUSHED = 0x04 }",
     "{ IDEATEK_CHARACTER_COLLISION_SIDES = 0x01, IDEATEK_CHARACTER_COLLISION_UP = 0x02, IDEATEK_CHARACTER_COLLISION_DOWN = 0x04 }",
-    "{ ideatek_vec3_t up; float max_slope; float step_up; float stick_down; float min_step_forward; float padding; float predictive_distance; float mass; float max_strength; ideatek_non_walkable_t non_walkable; ideatek_character_flags_t flags; }",
+    "{ ideatek_vec3_t up; float max_slope; float step_up; float stick_down; float min_step_forward; float padding; float predictive_distance; float mass; float max_strength; float drag; ideatek_non_walkable_t non_walkable; ideatek_character_flags_t flags; }",
     "{ ideatek_vec3_t velocity; }",
-    "{ ideatek_entity_t ground; ideatek_entity_t ground_material; ideatek_vec3_t ground_normal; ideatek_vec3_t ground_velocity; ideatek_ground_state_t ground_state; ideatek_character_collision_t collision; }",
+    "{ ideatek_entity_t ground; ideatek_entity_t ground_material; ideatek_vec3_t ground_normal; ideatek_vec3_t ground_velocity; ideatek_ground_state_t ground_state; ideatek_character_collision_t collision; float rate; }",
     "{ IDEATEK_SNAPSHOT_ACTION_SAVE = 0, IDEATEK_SNAPSHOT_ACTION_RESTORE = 1 }",
     "{ IDEATEK_SNAPSHOT_STATUS_OK = 0, IDEATEK_SNAPSHOT_STATUS_TOO_BIG = 1, IDEATEK_SNAPSHOT_STATUS_FAILED = 2 }",
     "{ uint64_t categories; bridge_text_t data; ideatek_snapshot_action_t action; }",
@@ -885,10 +913,12 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t liquid; ideatek_vec3_t velocity; float rate; ideatek_vec3_t size; float start; float end; float jitter; ideatek_emitter_shape_t shape; }",
     "{ bridge_text_t positions; bridge_text_t velocities; uint32_t count; }",
     "{ bridge_text_t positions; bridge_text_t lifetimes; uint32_t count; }",
-    "{ IDEATEK_SMOKE_FLAGS_COLLIDE = 0x01 }",
-    "{ float cell_size; float steps_per_second; float buoyancy_per_temp; float buoyancy_per_smoke; float cooling; float vorticity; float ignition_temp; float burn_per_temp; float fuel_per_burn; float temp_per_burn; float smoke_per_burn; ideatek_smoke_flags_t flags; }",
-    "{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float temperature; float fuel; float smoke; float couple_rate; ideatek_emitter_shape_t shape; }",
-    "{ ideatek_entity_t texture; }",
+    "{ IDEATEK_GAS_FLAGS_COLLIDE = 0x01, IDEATEK_GAS_FLAGS_PUSH_BODIES = 0x02, IDEATEK_GAS_FLAGS_PRESSURE = 0x04 }",
+    "{ bridge_text_t species; bridge_text_t reactions; float cell_size; float steps_per_second; float ambient_temperature; float ambient_pressure; float cooling; float vorticity; uint32_t species_count; uint32_t reaction_count; ideatek_gas_flags_t flags; }",
+    "{ ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float rate; float temperature; float heat; float couple_rate; uint32_t species; ideatek_emitter_shape_t shape; }",
+    "{ ideatek_entity_t temperature; bridge_text_t amounts; uint32_t count; }",
+    "{ ideatek_entity_t query; ideatek_entity_t volume; bridge_text_t amounts; ideatek_vec3_t velocity; float temperature; float pressure; uint32_t order; }",
+    "{ ideatek_entity_t query; float transmittance; uint32_t order; }",
     "{ float seconds; }",
     "{ IDEATEK_FIELD_SHAPE_INFINITE = 0, IDEATEK_FIELD_SHAPE_SPHERE = 1, IDEATEK_FIELD_SHAPE_BOX = 2, IDEATEK_FIELD_SHAPE_CYLINDER = 3 }",
     "{ IDEATEK_FORCE_KIND_ATTRACTOR = 0, IDEATEK_FORCE_KIND_VORTEX = 1, IDEATEK_FORCE_KIND_DIRECTIONAL = 2, IDEATEK_FORCE_KIND_NOISE = 3, IDEATEK_FORCE_KIND_DRAG = 4, IDEATEK_FORCE_KIND_VECTOR_FIELD = 5 }",
@@ -897,6 +927,8 @@ claims = { status = 0, line = [
     "{ ideatek_vec3_t size; float inner; float speed; float gust_min; float gust_max; float gust_frequency; float falloff; ideatek_field_shape_t shape; }",
     "{ ideatek_entity_t texture; ideatek_vec3_t size; float inner; float acceleration; float frequency; float falloff; ideatek_force_kind_t kind; ideatek_field_shape_t shape; ideatek_field_target_t target; }",
     "{ ideatek_vec3_t size; float gravity; float inner; float falloff; int32_t priority; ideatek_gravity_mode_t mode; ideatek_field_shape_t shape; bool point; }",
+    "{ IDEATEK_TIME_MODE_REPLACE = 0, IDEATEK_TIME_MODE_MULTIPLY = 1 }",
+    "{ ideatek_vec3_t size; float rate; float inner; float falloff; int32_t priority; ideatek_time_mode_t mode; ideatek_field_shape_t shape; }",
 ] }
 false = { run = ["{out}/physics_layout{exe}", "descriptors"] }
 
@@ -907,7 +939,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/physics_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 118 types, each type after the types of its fields"
+name = "a module declares the 122 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/physics_probe{library}"] }
 
@@ -943,9 +975,10 @@ read = [
     "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
-    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_gas_flags_t",
     "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
     "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
+    "ideatek:ideatek_time_mode_t",
     "ideatek:Body", "ideatek:KinematicTarget", "ideatek:WakeEvent",
     "ideatek:Motion", "ideatek:Push", "ideatek:Shape", "ideatek:ShapeMaterials",
     "ideatek:PhysicsMaterial", "ideatek:SensorEvent", "ideatek:ContactEvent",
@@ -969,9 +1002,10 @@ read = [
     "ideatek:SoftBodyReset", "ideatek:Rope", "ideatek:Water", "ideatek:Wave",
     "ideatek:WaterSample", "ideatek:Buoyancy", "ideatek:Liquid",
     "ideatek:LiquidEmitter", "ideatek:LiquidParticles", "ideatek:LiquidFoam",
-    "ideatek:SmokeVolume", "ideatek:SmokeEmitter", "ideatek:SmokeGrid",
+    "ideatek:GasVolume", "ideatek:GasEmitter", "ideatek:GasGrid",
+    "ideatek:GasSample", "ideatek:SightSample",
     "ideatek:LagHistory", "ideatek:Wind", "ideatek:ForceField",
-    "ideatek:GravityArea",
+    "ideatek:GravityArea", "ideatek:TimeArea",
 ]
 '''
 
@@ -1010,10 +1044,10 @@ write = [
     "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
     "ideatek:WheelJoint", "ideatek:NoCollideJoint", "ideatek:VehicleEngine",
     "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
-    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
-    "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
+    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:GasVolume",
+    "ideatek:GasEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
     "ideatek:ArticulationCommand", "ideatek:Wind", "ideatek:ForceField",
-    "ideatek:GravityArea",
+    "ideatek:GravityArea", "ideatek:TimeArea",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -1034,9 +1068,10 @@ read = [
     "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
-    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_gas_flags_t",
     "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
     "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
+    "ideatek:ideatek_time_mode_t",
 ]
 '''
 
@@ -1064,8 +1099,8 @@ write = [
     "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
     "ideatek:WheelJoint", "ideatek:NoCollideJoint", "ideatek:VehicleEngine",
     "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
-    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
-    "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
+    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:GasVolume",
+    "ideatek:GasEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
     "ideatek:ArticulationCommand", "ideatek:Wind", "ideatek:ForceField",
 ]
 read = [
@@ -1087,10 +1122,11 @@ read = [
     "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
-    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_gas_flags_t",
     "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
     "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
-    "ideatek:GravityArea",
+    "ideatek:ideatek_time_mode_t",
+    "ideatek:GravityArea", "ideatek:TimeArea",
 ]
 '''
 
@@ -1117,7 +1153,8 @@ write = [
     "ideatek:WaterSample", "ideatek:Mesh", "ideatek:MeshInstance",
     "ideatek:WakeEvent", "ideatek:BodyJointState", "ideatek:CharacterState",
     "ideatek:PhysicsSnapshot", "ideatek:VehicleState",
-    "ideatek:LiquidParticles", "ideatek:LiquidFoam", "ideatek:SmokeGrid",
+    "ideatek:LiquidParticles", "ideatek:LiquidFoam", "ideatek:GasGrid",
+    "ideatek:GasSample", "ideatek:SightSample",
     "ideatek:ArticulationState", "ideatek:Texture",
 ]
 read = [
@@ -1143,9 +1180,10 @@ read = [
     "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
-    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_gas_flags_t",
     "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
     "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
+    "ideatek:ideatek_time_mode_t",
     "ideatek:Body", "ideatek:Push", "ideatek:Shape", "ideatek:PhysicsMaterial",
     "ideatek:Query", "ideatek:BodyJoint", "ideatek:FixedJoint",
     "ideatek:PointJoint", "ideatek:HingeJoint", "ideatek:SliderJoint",
@@ -1161,10 +1199,10 @@ read = [
     "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
     "ideatek:WheelJoint", "ideatek:NoCollideJoint", "ideatek:VehicleEngine",
     "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
-    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
-    "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
+    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:GasVolume",
+    "ideatek:GasEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
     "ideatek:ArticulationCommand", "ideatek:Wind", "ideatek:ForceField",
-    "ideatek:GravityArea", "ideatek:Tick",
+    "ideatek:GravityArea", "ideatek:TimeArea", "ideatek:Tick",
 ]
 '''
 
@@ -1183,7 +1221,8 @@ write = [
     "ideatek:WaterSample", "ideatek:Mesh", "ideatek:MeshInstance",
     "ideatek:WakeEvent", "ideatek:BodyJointState", "ideatek:CharacterState",
     "ideatek:PhysicsSnapshot", "ideatek:VehicleState",
-    "ideatek:LiquidParticles", "ideatek:LiquidFoam", "ideatek:SmokeGrid",
+    "ideatek:LiquidParticles", "ideatek:LiquidFoam", "ideatek:GasGrid",
+    "ideatek:GasSample", "ideatek:SightSample",
     "ideatek:ArticulationState",
 ]
 read = [
@@ -1209,9 +1248,10 @@ read = [
     "ideatek:ideatek_damage_shape_t", "ideatek:ideatek_bend_t",
     "ideatek:ideatek_lra_t", "ideatek:ideatek_rope_flags_t",
     "ideatek:ideatek_liquid_flags_t", "ideatek:ideatek_liquid_technique_t",
-    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_smoke_flags_t",
+    "ideatek:ideatek_emitter_shape_t", "ideatek:ideatek_gas_flags_t",
     "ideatek:ideatek_field_shape_t", "ideatek:ideatek_force_kind_t",
     "ideatek:ideatek_field_target_t", "ideatek:ideatek_gravity_mode_t",
+    "ideatek:ideatek_time_mode_t",
     "ideatek:Body", "ideatek:Push", "ideatek:Shape", "ideatek:PhysicsMaterial",
     "ideatek:Query", "ideatek:BodyJoint", "ideatek:FixedJoint",
     "ideatek:PointJoint", "ideatek:HingeJoint", "ideatek:SliderJoint",
@@ -1227,15 +1267,15 @@ read = [
     "ideatek:PathJoint", "ideatek:ConeJoint", "ideatek:MotorJoint",
     "ideatek:WheelJoint", "ideatek:NoCollideJoint", "ideatek:VehicleEngine",
     "ideatek:VehicleTransmission", "ideatek:VehicleDifferential",
-    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:SmokeVolume",
-    "ideatek:SmokeEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
+    "ideatek:AntiRollBar", "ideatek:SoftBodyAttachment", "ideatek:GasVolume",
+    "ideatek:GasEmitter", "ideatek:Articulation", "ideatek:ArticulationLink",
     "ideatek:ArticulationCommand", "ideatek:Wind", "ideatek:ForceField",
-    "ideatek:GravityArea", "ideatek:Tick", "ideatek:Texture",
+    "ideatek:GravityArea", "ideatek:TimeArea", "ideatek:Tick", "ideatek:Texture",
 ]
 '''
 
 [[case]]
-name = "the render module loads with read on the water, the liquids and the smoke"
+name = "the render module loads with read on the water, the liquids and the gases"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:renderer@1.0.0, native, m/physics_renderer{library}"] }
 
@@ -1253,7 +1293,7 @@ library = "{bb_native}/bridge_native"
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t", "ideatek:Water",
     "ideatek:Wave", "ideatek:LiquidParticles", "ideatek:LiquidFoam",
-    "ideatek:SmokeGrid",
+    "ideatek:ideatek_gas_flags_t", "ideatek:GasVolume", "ideatek:GasGrid",
 ]
 '''
 
@@ -1268,6 +1308,7 @@ library = "{bb_native}/bridge_native"
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t", "ideatek:Water",
     "ideatek:Wave", "ideatek:LiquidParticles", "ideatek:LiquidFoam",
+    "ideatek:ideatek_gas_flags_t", "ideatek:GasVolume",
 ]
 '''
 

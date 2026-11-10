@@ -135,14 +135,6 @@ static void show_terrain_viewer(void)
     AT(ideatek_terrain_viewer_t, flags);
 }
 
-static void show_terrain_split(void)
-{
-    SIZE(ideatek_terrain_split_t);
-    AT(ideatek_terrain_split_t, source);
-    AT(ideatek_terrain_split_t, piece);
-    AT(ideatek_terrain_split_t, order);
-}
-
 static void show_terrain_need(void)
 {
     SIZE(ideatek_terrain_need_t);
@@ -176,7 +168,7 @@ static void show_descriptors(void)
         ideatek_terrain_shape_t_desc, ideatek_terrain_op_t_desc,
         ideatek_terrain_edit_t_desc, ideatek_terrain_fill_t_desc,
         ideatek_viewer_flags_t_desc, ideatek_terrain_viewer_t_desc,
-        ideatek_terrain_split_t_desc, ideatek_terrain_need_t_desc,
+        ideatek_terrain_need_t_desc,
         ideatek_terrain_scatter_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
@@ -199,7 +191,6 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_TERRAIN_FILL_FIELDS),
         TEXT_OF(IDEATEK_VIEWER_FLAGS_VALUES),
         TEXT_OF(IDEATEK_TERRAIN_VIEWER_FIELDS),
-        TEXT_OF(IDEATEK_TERRAIN_SPLIT_FIELDS),
         TEXT_OF(IDEATEK_TERRAIN_NEED_FIELDS),
         TEXT_OF(IDEATEK_TERRAIN_SCATTER_FIELDS) };
 
@@ -223,7 +214,6 @@ int main(int argc, char **argv)
         { "terrain_fill", show_terrain_fill },
         { "viewer_flags", show_viewer_flags },
         { "terrain_viewer", show_terrain_viewer },
-        { "terrain_split", show_terrain_split },
         { "terrain_need", show_terrain_need },
         { "terrain_scatter", show_terrain_scatter },
         { "descriptors", show_descriptors }, { "texts", show_texts }

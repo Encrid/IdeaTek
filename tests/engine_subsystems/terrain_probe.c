@@ -50,7 +50,6 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:TerrainEdit", ideatek_terrain_edit_t);
     STRUCT(api, "ideatek:TerrainFill", ideatek_terrain_fill_t);
     STRUCT(api, "ideatek:TerrainViewer", ideatek_terrain_viewer_t);
-    STRUCT(api, "ideatek:TerrainSplit", ideatek_terrain_split_t);
     STRUCT(api, "ideatek:TerrainNeed", ideatek_terrain_need_t);
     STRUCT(api, "ideatek:TerrainScatter", ideatek_terrain_scatter_t);
 }
@@ -116,8 +115,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:TerrainScatter", ideatek_terrain_scatter_t);
     api->attach(api, id, STRUCT(api, "ideatek:TerrainChunk",
         ideatek_terrain_chunk_t), BRIDGE_ZEROED);
-    api->attach(api, id, STRUCT(api, "ideatek:TerrainSplit",
-        ideatek_terrain_split_t), BRIDGE_ZEROED);
+    api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:BreakEvent",
+        ideatek_break_event_t, BRIDGE_STRIP, BRIDGE_TABLE,
+        BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:TerrainNeed",
         ideatek_terrain_need_t), BRIDGE_ZEROED);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Mesh",

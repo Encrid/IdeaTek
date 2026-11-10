@@ -6,6 +6,7 @@
 #include "bridge_native.h"
 #include "ideatek_frame.h"
 #include "ideatek_states.h"
+#include "ideatek_physics.h"
 #include "ideatek_animation.h"
 
 [[gnu::section(MANIFEST_SECTION), gnu::used, gnu::retain]]
@@ -185,6 +186,12 @@ static const char WHO[] = MANIFEST;
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:State", ideatek_state_t, BRIDGE_STRIP,
         BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:StateChange", ideatek_state_change_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    ENUM(api, "ideatek:ideatek_field_shape_t", ideatek_field_shape_t);
+    ENUM(api, "ideatek:ideatek_time_mode_t", ideatek_time_mode_t);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:TimeArea", ideatek_time_area_t,
+        BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:Motion", ideatek_motion_t,
         BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Transform",
         ideatek_transform_t, BRIDGE_STRIP, BRIDGE_TABLE,

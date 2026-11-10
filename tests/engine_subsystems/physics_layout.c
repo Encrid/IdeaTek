@@ -57,6 +57,7 @@ static void show_body(void)
     AT(ideatek_body_t, max_angular_speed);
     AT(ideatek_body_t, sleep_threshold);
     AT(ideatek_body_t, inertia_scale);
+    AT(ideatek_body_t, drag);
     AT(ideatek_body_t, kind);
     AT(ideatek_body_t, mass_mode);
     AT(ideatek_body_t, locked);
@@ -87,6 +88,7 @@ static void show_motion(void)
     AT(ideatek_motion_t, linear);
     AT(ideatek_motion_t, angular);
     AT(ideatek_motion_t, sleeping);
+    AT(ideatek_motion_t, rate);
 }
 
 static void show_push(void)
@@ -499,6 +501,7 @@ static void show_character(void)
     AT(ideatek_character_t, predictive_distance);
     AT(ideatek_character_t, mass);
     AT(ideatek_character_t, max_strength);
+    AT(ideatek_character_t, drag);
     AT(ideatek_character_t, non_walkable);
     AT(ideatek_character_t, flags);
 }
@@ -518,6 +521,7 @@ static void show_character_state(void)
     AT(ideatek_character_state_t, ground_velocity);
     AT(ideatek_character_state_t, ground_state);
     AT(ideatek_character_state_t, collision);
+    AT(ideatek_character_state_t, rate);
 }
 
 static void show_snapshot_action(void)
@@ -909,45 +913,67 @@ static void show_liquid_foam(void)
     AT(ideatek_liquid_foam_t, count);
 }
 
-static void show_smoke_flags(void)
+static void show_gas_flags(void)
 {
-    SIZE(ideatek_smoke_flags_t);
+    SIZE(ideatek_gas_flags_t);
 }
 
-static void show_smoke_volume(void)
+static void show_gas_volume(void)
 {
-    SIZE(ideatek_smoke_volume_t);
-    AT(ideatek_smoke_volume_t, cell_size);
-    AT(ideatek_smoke_volume_t, steps_per_second);
-    AT(ideatek_smoke_volume_t, buoyancy_per_temp);
-    AT(ideatek_smoke_volume_t, buoyancy_per_smoke);
-    AT(ideatek_smoke_volume_t, cooling);
-    AT(ideatek_smoke_volume_t, vorticity);
-    AT(ideatek_smoke_volume_t, ignition_temp);
-    AT(ideatek_smoke_volume_t, burn_per_temp);
-    AT(ideatek_smoke_volume_t, fuel_per_burn);
-    AT(ideatek_smoke_volume_t, temp_per_burn);
-    AT(ideatek_smoke_volume_t, smoke_per_burn);
-    AT(ideatek_smoke_volume_t, flags);
+    SIZE(ideatek_gas_volume_t);
+    AT(ideatek_gas_volume_t, species);
+    AT(ideatek_gas_volume_t, reactions);
+    AT(ideatek_gas_volume_t, cell_size);
+    AT(ideatek_gas_volume_t, steps_per_second);
+    AT(ideatek_gas_volume_t, ambient_temperature);
+    AT(ideatek_gas_volume_t, ambient_pressure);
+    AT(ideatek_gas_volume_t, cooling);
+    AT(ideatek_gas_volume_t, vorticity);
+    AT(ideatek_gas_volume_t, species_count);
+    AT(ideatek_gas_volume_t, reaction_count);
+    AT(ideatek_gas_volume_t, flags);
 }
 
-static void show_smoke_emitter(void)
+static void show_gas_emitter(void)
 {
-    SIZE(ideatek_smoke_emitter_t);
-    AT(ideatek_smoke_emitter_t, volume);
-    AT(ideatek_smoke_emitter_t, velocity);
-    AT(ideatek_smoke_emitter_t, size);
-    AT(ideatek_smoke_emitter_t, temperature);
-    AT(ideatek_smoke_emitter_t, fuel);
-    AT(ideatek_smoke_emitter_t, smoke);
-    AT(ideatek_smoke_emitter_t, couple_rate);
-    AT(ideatek_smoke_emitter_t, shape);
+    SIZE(ideatek_gas_emitter_t);
+    AT(ideatek_gas_emitter_t, volume);
+    AT(ideatek_gas_emitter_t, velocity);
+    AT(ideatek_gas_emitter_t, size);
+    AT(ideatek_gas_emitter_t, rate);
+    AT(ideatek_gas_emitter_t, temperature);
+    AT(ideatek_gas_emitter_t, heat);
+    AT(ideatek_gas_emitter_t, couple_rate);
+    AT(ideatek_gas_emitter_t, species);
+    AT(ideatek_gas_emitter_t, shape);
 }
 
-static void show_smoke_grid(void)
+static void show_gas_grid(void)
 {
-    SIZE(ideatek_smoke_grid_t);
-    AT(ideatek_smoke_grid_t, texture);
+    SIZE(ideatek_gas_grid_t);
+    AT(ideatek_gas_grid_t, temperature);
+    AT(ideatek_gas_grid_t, amounts);
+    AT(ideatek_gas_grid_t, count);
+}
+
+static void show_gas_sample(void)
+{
+    SIZE(ideatek_gas_sample_t);
+    AT(ideatek_gas_sample_t, query);
+    AT(ideatek_gas_sample_t, volume);
+    AT(ideatek_gas_sample_t, amounts);
+    AT(ideatek_gas_sample_t, velocity);
+    AT(ideatek_gas_sample_t, temperature);
+    AT(ideatek_gas_sample_t, pressure);
+    AT(ideatek_gas_sample_t, order);
+}
+
+static void show_sight_sample(void)
+{
+    SIZE(ideatek_sight_sample_t);
+    AT(ideatek_sight_sample_t, query);
+    AT(ideatek_sight_sample_t, transmittance);
+    AT(ideatek_sight_sample_t, order);
 }
 
 static void show_lag_history(void)
@@ -1016,6 +1042,23 @@ static void show_gravity_area(void)
     AT(ideatek_gravity_area_t, point);
 }
 
+static void show_time_mode(void)
+{
+    SIZE(ideatek_time_mode_t);
+}
+
+static void show_time_area(void)
+{
+    SIZE(ideatek_time_area_t);
+    AT(ideatek_time_area_t, size);
+    AT(ideatek_time_area_t, rate);
+    AT(ideatek_time_area_t, inner);
+    AT(ideatek_time_area_t, falloff);
+    AT(ideatek_time_area_t, priority);
+    AT(ideatek_time_area_t, mode);
+    AT(ideatek_time_area_t, shape);
+}
+
 static void show_descriptors(void)
 {
     const char *descriptors[] = {
@@ -1067,13 +1110,15 @@ static void show_descriptors(void)
         ideatek_liquid_flags_t_desc, ideatek_liquid_technique_t_desc,
         ideatek_emitter_shape_t_desc, ideatek_liquid_t_desc,
         ideatek_liquid_emitter_t_desc, ideatek_liquid_particles_t_desc,
-        ideatek_liquid_foam_t_desc, ideatek_smoke_flags_t_desc,
-        ideatek_smoke_volume_t_desc, ideatek_smoke_emitter_t_desc,
-        ideatek_smoke_grid_t_desc, ideatek_lag_history_t_desc,
+        ideatek_liquid_foam_t_desc, ideatek_gas_flags_t_desc,
+        ideatek_gas_volume_t_desc, ideatek_gas_emitter_t_desc,
+        ideatek_gas_grid_t_desc, ideatek_gas_sample_t_desc,
+        ideatek_sight_sample_t_desc, ideatek_lag_history_t_desc,
         ideatek_field_shape_t_desc, ideatek_force_kind_t_desc,
         ideatek_field_target_t_desc, ideatek_gravity_mode_t_desc,
         ideatek_wind_t_desc, ideatek_force_field_t_desc,
-        ideatek_gravity_area_t_desc };
+        ideatek_gravity_area_t_desc, ideatek_time_mode_t_desc,
+        ideatek_time_area_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -1162,15 +1207,20 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_LIQUID_EMITTER_FIELDS),
         TEXT_OF(IDEATEK_LIQUID_PARTICLES_FIELDS),
         TEXT_OF(IDEATEK_LIQUID_FOAM_FIELDS),
-        TEXT_OF(IDEATEK_SMOKE_FLAGS_VALUES),
-        TEXT_OF(IDEATEK_SMOKE_VOLUME_FIELDS),
-        TEXT_OF(IDEATEK_SMOKE_EMITTER_FIELDS),
-        TEXT_OF(IDEATEK_SMOKE_GRID_FIELDS), TEXT_OF(IDEATEK_LAG_HISTORY_FIELDS),
+        TEXT_OF(IDEATEK_GAS_FLAGS_VALUES),
+        TEXT_OF(IDEATEK_GAS_VOLUME_FIELDS),
+        TEXT_OF(IDEATEK_GAS_EMITTER_FIELDS),
+        TEXT_OF(IDEATEK_GAS_GRID_FIELDS),
+        TEXT_OF(IDEATEK_GAS_SAMPLE_FIELDS),
+        TEXT_OF(IDEATEK_SIGHT_SAMPLE_FIELDS),
+        TEXT_OF(IDEATEK_LAG_HISTORY_FIELDS),
         TEXT_OF(IDEATEK_FIELD_SHAPE_VALUES), TEXT_OF(IDEATEK_FORCE_KIND_VALUES),
         TEXT_OF(IDEATEK_FIELD_TARGET_VALUES),
         TEXT_OF(IDEATEK_GRAVITY_MODE_VALUES), TEXT_OF(IDEATEK_WIND_FIELDS),
         TEXT_OF(IDEATEK_FORCE_FIELD_FIELDS),
-        TEXT_OF(IDEATEK_GRAVITY_AREA_FIELDS) };
+        TEXT_OF(IDEATEK_GRAVITY_AREA_FIELDS),
+        TEXT_OF(IDEATEK_TIME_MODE_VALUES),
+        TEXT_OF(IDEATEK_TIME_AREA_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -1259,15 +1309,20 @@ int main(int argc, char **argv)
         { "liquid_emitter", show_liquid_emitter },
         { "liquid_particles", show_liquid_particles },
         { "liquid_foam", show_liquid_foam },
-        { "smoke_flags", show_smoke_flags },
-        { "smoke_volume", show_smoke_volume },
-        { "smoke_emitter", show_smoke_emitter },
-        { "smoke_grid", show_smoke_grid }, { "lag_history", show_lag_history },
+        { "gas_flags", show_gas_flags },
+        { "gas_volume", show_gas_volume },
+        { "gas_emitter", show_gas_emitter },
+        { "gas_grid", show_gas_grid },
+        { "gas_sample", show_gas_sample },
+        { "sight_sample", show_sight_sample },
+        { "lag_history", show_lag_history },
         { "field_shape", show_field_shape }, { "force_kind", show_force_kind },
         { "field_target", show_field_target },
         { "gravity_mode", show_gravity_mode }, { "wind", show_wind },
         { "force_field", show_force_field },
         { "gravity_area", show_gravity_area },
+        { "time_mode", show_time_mode },
+        { "time_area", show_time_area },
         { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 
