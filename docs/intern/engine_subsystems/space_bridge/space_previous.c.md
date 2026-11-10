@@ -2,20 +2,15 @@
 
 This file keeps `ideatek:PreviousWorldTransform`: `docs/extern/engine_subsystems/ideatek_space.h.md`, *ideatek:PreviousWorldTransform*.
 
-## The observer
-
-`previous` hears `ideatek:Interpolated` enter: it attaches `ideatek:PreviousWorldTransform` with the place of now and the `tick` of now.
-It hears `ideatek:Interpolated` leave: it detaches `ideatek:PreviousWorldTransform`.
-
-## The system
-
-`step` runs first in each pass of the fixed phase, before the movers. When `tick` of `ideatek:Tick` differs from `tick` of `space_module`, it walks its query.
-For each row, it attaches `ideatek:PreviousWorldTransform` with the `ideatek:WorldTransform` of the row and the old tick. Then it keeps the new tick.
+`previous` hears `ideatek:Interpolated` enter: an entity with a place gets its place before at the place of now and the tick of now. It hears the tag leave, and detaches the place before.
+An entity with no place yet gets its place before from `place`: `docs/intern/engine_subsystems/space_bridge/space_one.c.md`.
+`step` runs in each pass of the fixed phase. When the tick changed, it copies the place of each row of its query into the place before, with the tick of the last pass.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `remember` | Attaches the place before of 1 entity. |
+| `remember` | Attaches the place before of 1 entity, at its place. |
+| `get_tick` | The tick of `ideatek:Tick`, or 0 with no clock. |
 | `previous` | The observer of `ideatek:Interpolated`. Gives 0. |
 | `step` | The system of the fixed phase. Gives 0. |

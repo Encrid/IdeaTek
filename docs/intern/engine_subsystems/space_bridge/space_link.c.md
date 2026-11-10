@@ -1,22 +1,19 @@
 # src/engine_subsystems/space_bridge/space_link.c
 
-This file runs the observer `link`: it moves each child whose `ideatek:Parent` changed to the list of its new parent.
+This file runs the observer `link`: each child whose `ideatek:Parent` changed moves to the list of its new parent.
 
-## The call
+1. The old parent is `parent` of `ideatek:Sibling`, and the new parent is `entity` of `ideatek:Parent`.
+2. A child with no new parent loses `ideatek:Sibling`. With `IDEATEK_KEEP_WORLD`, a new parent keeps the place: `docs/intern/engine_subsystems/space_bridge/space_keep.c.md`.
+3. The function puts each old and new parent in a set, then writes the list of each one again: `docs/intern/engine_subsystems/space_bridge/space_lists.c.md`.
 
-1. For each child, the function reads its old parent in `ideatek:Sibling`, and its new parent in `ideatek:Parent`.
-2. The function marks each old parent and each new parent in a set of the scratch arena.
-3. For each marked parent, it writes the list again: `docs/intern/engine_subsystems/space_bridge/space_lists.c.md`.
-4. A child with no new parent loses `ideatek:Sibling`, and becomes a root.
-
-With `IDEATEK_KEEP_WORLD`, the function attaches the transform that keeps the place in the world under the new parent: `docs/intern/engine_subsystems/space_bridge/space_keep.c.md`.
-The new place comes at the next barrier, when `relink` hears `ideatek:Sibling`.
+When the set cannot hold the parents, the function writes the 2 lists of each child at once. 2 writes of 1 list in 1 call give the same list.
+When the buffer of a list does not fit, the list keeps its old links, and the log gets 1 line.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
-| `old_parent` | `parent` of the `ideatek:Sibling` of a child, or 0. |
-| `mark_parents` | Puts the old and the new parents of the list in the set. |
+| `get_old_parent` | The parent of the old list of a child, or 0. |
 | `rewrite` | Writes the list of 1 parent again. |
+| `move_child` | Notes the 2 parents of a child, or writes their lists. |
 | `link` | The observer of `ideatek:Parent`. Gives 0. |

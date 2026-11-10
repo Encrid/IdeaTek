@@ -1,17 +1,16 @@
 # src/engine_subsystems/space_bridge/space_split.c
 
-This file gives the rotation and the scale of a basis. It is pure: the program `space_split` of the tests calls it.
+This file gives the rotation and the scale of a basis. It reads only its arguments. The cases of the split in `space_math` check it.
 
-## The split
-
-`split_basis` follows the 4 steps of `docs/extern/engine_subsystems/ideatek_space.h.md`, *The split of a basis*, in their order.
-Its only freedom is the order of the floating point operations, which the program `space_split` fixes by its cases.
-
-`rotation_of` turns the 3 orthonormal columns into a quaternion of length 1.
+`split_basis` follows the 4 steps of `docs/extern/engine_subsystems/ideatek_space.h.md`, *The split of a basis*, in their order, and with no branch.
+A column of length 0 takes the cross of the others, made of length 1. Two columns of length 0 give no rotation of use.
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
+| `get_length` | The length of a column. |
+| `remove_part` | Takes out of a column its part along an axis. |
+| `cross` | The cross product of 2 columns. |
+| `make_unit` | Makes a column of length 1, or fills a column of length 0. |
 | `split_basis` | The rotation and the scale of a basis. |
-| `rotation_of` | The quaternion of an orthonormal basis. |
