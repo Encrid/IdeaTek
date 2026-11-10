@@ -15,6 +15,7 @@
 #include "game_sockets.h"
 #include "game_states.h"
 #include "game_resources.h"
+#include "game_ktx2.h"
 
 static const char HINT[] = "IDEATEK_TEST_DISPLAYS";
 static const uint64_t DEAD = (7ULL << 32) | 9ULL;
@@ -318,6 +319,10 @@ static void run_step(const bridge_api_t *api, const char *verb, char *args)
 #endif
 #if defined(GAME_RESOURCES)
     if (game_resources_step(api, verb, args))
+        return;
+#endif
+#if defined(GAME_KTX2)
+    if (game_ktx2_step(api, verb, args))
         return;
 #endif
     if (!strcmp(verb, "request"))

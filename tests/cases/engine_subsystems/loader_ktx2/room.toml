@@ -1,0 +1,387 @@
+[[case]]
+name = "a texture above texture_bytes is refused with its size and the free bytes"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 needs 4160 bytes, and the most free bytes in 1 part are 4096", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=64;h=64|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=65;h=64|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a texture that fits in texture_bytes but in no free part is refused"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["u.ktx2 needs 3000 bytes, and the most free bytes in 1 part are 1096", "use 1 path [u.ktx2] type [ideatek:Texture] state 3"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=60;h=50|2:load -,t.ktx2,ideatek:Texture,,0,0|3:ktx2 {case}/host/content/u.ktx2,w=30;h=30|4:load -,u.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=60;h=50|2:load -,t.ktx2,ideatek:Texture,,0,0|3:ktx2 {case}/host/content/u.ktx2,w=60;h=50|4:load -,u.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "the bytes of a texture come back when its resource goes, so the next texture fits"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["texture [t.ktx2] format 9 size 60x50x1", "use 1 path [u.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=60;h=50|2:load -,t.ktx2,ideatek:Texture,,0,0|11:ktx2 {case}/host/content/u.ktx2,w=60;h=50|12:load -,u.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=60;h=50|2:load -,t.ktx2,ideatek:Texture,,0,0|9:usekill 0|11:ktx2 {case}/host/content/u.ktx2,w=60;h=50|12:load -,u.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a reload with no room for the new texels keeps the old texture, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 needs 3000 bytes, and the most free bytes in 1 part are 1096"], matches_not = ["rev 2"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=60;h=50|2:load -,t.ktx2,ideatek:Texture,,0,0|6:ktx2 {case}/host/content/t.ktx2,w=20;h=20|7:reload 0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=60;h=50|2:load -,t.ktx2,ideatek:Texture,,0,0|6:reload 0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "the old texels of a reload come back after the barrier, so a second reload fits"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["texture [t.ktx2] format 9 size 50x30x1 mips 1 top 0 rev 3"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=50;h=30|2:load -,t.ktx2,ideatek:Texture,,0,0|6:reload 0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=50;h=30|2:load -,t.ktx2,ideatek:Texture,,0,0|6:reload 0|10:reload 0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "the largest free part between 2 textures is the room of the line, when it is larger than the end"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["x.ktx2 needs 2100 bytes, and the most free bytes in 1 part are 2000"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 24
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=40;h=25|2:load -,t.ktx2,ideatek:Texture,,0,0|3:ktx2 {case}/host/content/u.ktx2,w=50;h=40|4:load -,u.ktx2,ideatek:Texture,,0,0|5:ktx2 {case}/host/content/v.ktx2,w=40;h=25|6:load -,v.ktx2,ideatek:Texture,,0,0|11:usekill 1|13:ktx2 {case}/host/content/x.ktx2,w=50;h=30|14:load -,x.ktx2,ideatek:Texture,,0,0|24:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 24
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=40;h=25|2:load -,t.ktx2,ideatek:Texture,,0,0|3:ktx2 {case}/host/content/u.ktx2,w=50;h=40|4:load -,u.ktx2,ideatek:Texture,,0,0|5:ktx2 {case}/host/content/v.ktx2,w=40;h=25|6:load -,v.ktx2,ideatek:Texture,,0,0|11:usekill 1|13:ktx2 {case}/host/content/x.ktx2,w=70;h=30|14:load -,x.ktx2,ideatek:Texture,,0,0|24:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a load above max_textures is refused with its line"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["u.ktx2 is refused: 1 textures are loaded", "use 1 path [u.ktx2] type [ideatek:Texture] state 3"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+max_textures = 1
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+max_textures = 1
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,t.ktx2,ideatek:Texture,,0,0|3:ktx2 {case}/host/content/u.ktx2,w=2;h=2|4:load -,u.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a first load that is refused for its size frees its record, so the next texture takes it"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["use 1 path [u.ktx2] type [ideatek:Texture] state 2 deps 2 rec 2 error 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+max_textures = 1
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=65;h=64|2:load -,t.ktx2,ideatek:Texture,,0,0|5:ktx2 {case}/host/content/u.ktx2,w=65;h=64|6:load -,u.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 4096
+max_textures = 1
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=65;h=64|2:load -,t.ktx2,ideatek:Texture,,0,0|5:ktx2 {case}/host/content/u.ktx2,w=2;h=2|6:load -,u.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a texture_bytes outside its range breaks the module, and each load is refused"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 1, has = ["texture_bytes: 1 is outside 4096 to 1073741824", "t.ktx2 is refused: the settings of the module are wrong", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+texture_bytes = 1
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a max_textures of 0 breaks the module"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 1, has = ["max_textures: 0 is outside 1 to 65536", "t.ktx2 is refused: the settings of the module are wrong"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_ktx2:loader@0.1.0".config]
+max_textures = 0
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=2;h=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''

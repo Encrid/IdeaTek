@@ -156,7 +156,7 @@ kind = "native_module"
 part = "sdl3"
 test = true
 sources = ["tests/platform_abstraction/sdl3/game/*.c"]
-include = ["include/platform_abstraction", "include/kernel"]
+include = ["include/platform_abstraction", "include/kernel", "include/engine_subsystems"]
 link = ["{out}/SDL3{library}"]
 flags = ["-isystem", "{sdl_root}/include", "{rpath}"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
@@ -199,6 +199,16 @@ manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 [[artifact.variants]]
 name = "sdl3_game_resources"
 defines = ["GAME_FILES", "GAME_RESOURCES"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
+name = "sdl3_game_resources_early"
+defines = ["GAME_FILES", "GAME_RESOURCES", "GAME_INIT_LOADER"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
+name = "sdl3_game_ktx2"
+defines = ["GAME_FILES", "GAME_RESOURCES", "GAME_KTX2"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]

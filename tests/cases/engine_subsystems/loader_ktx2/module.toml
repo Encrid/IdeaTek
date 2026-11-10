@@ -1,0 +1,11 @@
+[[case]]
+name = "a reload of the module gives 0"
+run = ["{out}/loader_ktx2_reload{exe}", "reload"]
+claims = { status = 0, line = ["reload 0"] }
+false = { run = ["{out}/loader_ktx2_reload{exe}", "shutdown"] }
+
+[[case]]
+name = "a shutdown gives 0, because the module holds nothing of the system"
+run = ["{out}/loader_ktx2_reload{exe}", "shutdown"]
+claims = { status = 0, line = ["shutdown 0"] }
+false = { run = ["{out}/loader_ktx2_reload{exe}", "reload"] }

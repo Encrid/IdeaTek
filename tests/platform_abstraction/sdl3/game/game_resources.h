@@ -56,4 +56,5 @@ BRIDGE_SCHEMA_STRUCT_DESC(game_text_t, GAME_TEXT_FIELDS);
         char *args);
     void game_declare_resources(const bridge_api_t *api);
     void game_watch_resources(const bridge_api_t *api);
+    void game_init_loader(const bridge_api_t *api);
 #endif

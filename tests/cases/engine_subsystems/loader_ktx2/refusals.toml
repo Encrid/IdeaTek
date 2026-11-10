@@ -1,0 +1,804 @@
+[[case]]
+name = "a file shorter than its header is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: the file is shorter than its header", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,cut=40|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a file with another identifier is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: the identifier is not the one of KTX 2.0", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,magic=0|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a vkFormat of 0 is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: vkFormat is 0", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,format=0|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a supercompressionScheme of 1 is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: supercompressionScheme is not 0", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,scheme=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a 1D texture is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: pixelWidth or pixelHeight is 0", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,h=0|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a pixelWidth of 0 is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: pixelWidth or pixelHeight is 0", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=0|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a faceCount of 2 is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: faceCount is not 1 or 6", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,faces=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a cube that is not square is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: a cube is not square or has a pixelDepth", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,faces=6;w=4;h=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a cube with a pixelDepth is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: a cube is not square or has a pixelDepth", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,faces=6;w=2;h=2;d=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "an array of cubes is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: a cube or a volume has a layerCount", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,faces=6;w=2;h=2;layers=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "an array of volumes is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: a cube or a volume has a layerCount", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,d=2;layers=2|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a levelCount above the levels of the largest side is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: levelCount is above the levels of the largest side", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=4|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a data format descriptor outside the file is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: the data format descriptor is outside the file", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,dfdat=100000|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a data format descriptor of 20 bytes is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: the data format descriptor has no basic block", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,dfdlen=20|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a data format descriptor of another vendor is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: the data format descriptor has no basic block", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,vendor=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a bytesPlane0 of 0 is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: bytesPlane0 is 0", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,bpb=0|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a level index outside the file is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: the level index is outside the file", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=3;index=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a level outside the file is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: a level is outside the file", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,at0=100000|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a level whose end passes the largest offset is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: a level is outside the file", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,at0=18446744073709551615|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "an uncompressedByteLength that is not byteLength is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: uncompressedByteLength is not byteLength", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,unc0=5|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a fault of level 0 of 3 levels is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: uncompressedByteLength is not byteLength", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=3;unc0=5|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a level with 1 byte less than its size is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: a level has not the bytes of its size", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,len0=15|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
+
+[[case]]
+name = "a level whose size passes 64 bits is refused with the line of its reason, and the load fails"
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["t.ktx2 is not a KTX 2.0 file: a level has not the bytes of its size", "use 0 path [t.ktx2] type [ideatek:Texture] state 3 deps 2 rec 3 error 5"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,levels=1|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "sdl3_game_ktx2", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_ktx2.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:ktx2 {case}/host/content/t.ktx2,w=4294967295;h=4294967295;bpb=16;len0=16|2:load -,t.ktx2,ideatek:Texture,,0,0|20:show_resources|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300|21:stall 300|23:stall 300"
+'''
