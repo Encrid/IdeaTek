@@ -1257,7 +1257,6 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_gas_flags_t,
         float cell_size; \
         float steps_per_second; \
         float ambient_temperature; \
-        float ambient_pressure; \
         float cooling; \
         float vorticity; \
         uint32_t species_count; \
@@ -1435,5 +1434,28 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_time_mode_t,
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_time_area_t, IDEATEK_TIME_AREA_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_time_area_t, IDEATEK_TIME_AREA_FIELDS);
+
+    #define IDEATEK_AIR_MODE_VALUES { \
+        IDEATEK_AIR_MODE_REPLACE = 0, \
+        IDEATEK_AIR_MODE_MULTIPLY = 1 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_air_mode_t,
+    uint8_t, IDEATEK_AIR_MODE_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_air_mode_t,
+    uint8_t, IDEATEK_AIR_MODE_VALUES);
+
+    #define IDEATEK_AIR_AREA_FIELDS { \
+        ideatek_vec3_t size; \
+        float pressure; \
+        float inner; \
+        float falloff; \
+        int32_t priority; \
+        ideatek_air_mode_t mode; \
+        ideatek_field_shape_t shape; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_air_area_t, IDEATEK_AIR_AREA_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_air_area_t, IDEATEK_AIR_AREA_FIELDS);
 
 #endif
