@@ -73,6 +73,7 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_action_edges_t,
         float held; \
         ideatek_action_state_t state; \
         ideatek_action_edges_t edges; \
+        uint64_t tick; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_input_action_state_t,
