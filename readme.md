@@ -54,6 +54,7 @@ Each part has a readme, which its release holds.
 | `effects` | `BC-IdeaTek-Effects` | `docs/usage/engine_subsystems/effects.md` |
 | `input_mapping` | `BC-IdeaTek-InputMapping` | `docs/usage/engine_subsystems/input_mapping.md` |
 | `localization` | `BC-IdeaTek-Localization` | `docs/usage/engine_subsystems/localization.md` |
+| `matter` | `BC-IdeaTek-Matter` | `docs/usage/engine_subsystems/matter.md` |
 | `navigation` | `BC-IdeaTek-Navigation` | `docs/usage/engine_subsystems/navigation.md` |
 | `networking` | `BC-IdeaTek-Networking` | `docs/usage/engine_subsystems/networking.md` |
 | `persistence` | `BC-IdeaTek-Persistence` | `docs/usage/engine_subsystems/persistence.md` |
