@@ -9,8 +9,8 @@ The observer `request` gets each write and each detach of `ideatek:FileRequest`:
 1. A detach cancels the job of the entity: `docs/intern/platform_abstraction/files_mosl/files_jobs.c.md`.
 2. A write copies the path of the request. Then `judge` gives it a status before it runs, from the table below.
 3. A watch that `judge` allows starts in the observer: `docs/intern/platform_abstraction/files_mosl/files_watch.c.md`. Its status is the status of the start.
-4. Each other request that `judge` allows takes a free job, with the round of its arrival. The thread does it, and `results` publishes it when the thread is done.
-5. Each other status is an early result: `results` publishes it in the next round.
+4. Each other request that `judge` allows takes a free job, with the round of its arrival. Its `due` gives the round of its result, and its `seq` gives its order:`docs/intern/platform_abstraction/files_mosl/files_due.c.md`. The thread does it, and `results` publishes it when the thread is done.
+5. Each other status is an early result: `results` publishes it in the next round, or in its round with `deterministic_rounds`.
 
 The observer holds `lock` for all the triggers of a barrier, then wakes the thread once. So the thread sees the requests of a round together, and takes them in the order of their priorities.
 

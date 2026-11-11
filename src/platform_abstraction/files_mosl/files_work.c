@@ -66,6 +66,7 @@ static void finish_job(files_job_t *job, uint32_t status)
         - files_module.jobs);
     files_module.done_count += !canceled;
     os_mutex_unlock(files_module.lock);
+    os_event_set(files_module.finished);
 }
 
 void work_loop([[maybe_unused]] void *arg)

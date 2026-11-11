@@ -15,8 +15,10 @@ files_module_t files_module;
 static void free_thread(void)
 {
     os_event_free(files_module.wake);
+    os_event_free(files_module.finished);
     os_mutex_free(files_module.lock);
     files_module.wake = nullptr;
+    files_module.finished = nullptr;
     files_module.lock = nullptr;
 }
 
@@ -26,7 +28,8 @@ BRIDGE_NATIVE(init)
     add_runs(api);
     files_module.lock = os_mutex_create();
     files_module.wake = os_event_create();
-    if (files_module.lock && files_module.wake)
+    files_module.finished = os_event_create();
+    if (files_module.lock && files_module.wake && files_module.finished)
         files_module.thread = os_thread_start(work_loop, nullptr,
             FILES_STACK);
     if (!files_module.thread) {

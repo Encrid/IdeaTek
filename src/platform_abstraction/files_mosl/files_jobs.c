@@ -17,7 +17,7 @@ void put_early(const bridge_api_t *api, uint64_t entity, uint32_t status,
     bool keep)
 {
     files_early_t early = { .entity = entity, .status = status,
-        .keep = keep };
+        .keep = keep, .due = files_module.round + files_module.rounds };
 
     if (files_module.early_count == FILES_EARLY) {
         bridge_native_say(api, BRIDGE_LOG_WARN,

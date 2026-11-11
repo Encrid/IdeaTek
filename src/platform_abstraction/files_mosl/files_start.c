@@ -95,6 +95,7 @@ bool start_files(const bridge_api_t *api)
     uint8_t *base = api->shared_base;
     bool ok = check_bytes(api, s->read_bytes);
 
+    ok &= take_rounds(api, s);
     files_module.started = true;
     ok &= copy_setting(api, "user_folder", s->user_folder, user_folder);
     ok &= copy_setting(api, "content_folder", s->content_folder,
@@ -102,8 +103,7 @@ bool start_files(const bridge_api_t *api)
     files_module.broken = !ok;
     if (!ok)
         return (false);
-    files_module.half.at = api->alloc(api, s->read_bytes);
-    files_module.half.size = s->read_bytes / 2;
+    take_halves(api, s->read_bytes);
     files_module.content = (char *)(base + api->alloc(api, FILES_PATH));
     files_module.user = (char *)(base + api->alloc(api, FILES_PATH));
     find_content(api, content_folder);

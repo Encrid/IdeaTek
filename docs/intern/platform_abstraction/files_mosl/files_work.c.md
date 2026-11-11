@@ -9,7 +9,7 @@ This file runs the worker thread, which does the jobs that wait.
 1. Under `lock`, `pick_job` takes the waiting job with the highest key, and marks it as running. `job_key` gives the key of a job: its priority, then the rounds left, so 1 comparison picks it. A job that does not wait has the key 0.
 2. With no job, the thread waits on `wake` for at most `FILES_WAIT` nanoseconds, then looks again.
 3. With a job, `run_job` does the action: `docs/intern/platform_abstraction/files_mosl/files_actions.c.md` and `docs/intern/platform_abstraction/files_mosl/files_list.c.md`. The thread calls no function of Bridge.
-4. Under `lock`, `finish_job` makes the job done with its status, and puts it in `done`. A job that the game canceled while it ran becomes free, and its bytes go back to the heap. The timing of the cancel is outside the tests, so the change is arithmetic, with no branch.
+4. Under `lock`, `finish_job` makes the job done with its status, and puts it in `done`. Then it sets `finished`, for a round that waits: `docs/intern/platform_abstraction/files_mosl/files_due.c.md`. A job that the game canceled while it ran becomes free, and its bytes go back to the heap. The timing of the cancel is outside the tests, so the change is arithmetic, with no branch.
 
 The thread reads the bytes of a write where the request points into the share of the game. The game keeps them until the result: `docs/extern/platform_abstraction/ideatek_files.h.md`, *The requests*.
 

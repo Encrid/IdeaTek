@@ -16,7 +16,8 @@ A project names the zip of `BM-IdeaTek-Files-Mosl` in a `[[source]]`: `.toolchai
 
 The identity of the module is `ideatek_files_mosl:files@0.1.0`.
 Its role is the files module: `docs/extern/platform_abstraction/ideatek_files.h.md`, *The roles*.
-The component of its settings is `ideatek_files_mosl:Settings`. It holds the settings of `docs/extern/platform_abstraction/ideatek_files.h.md`, *The bytes of the results*: `read_bytes`, `user_folder` and `content_folder`. It has no setting beyond those 3.
+The component of its settings is `ideatek_files_mosl:Settings`. It holds the settings of `docs/extern/platform_abstraction/ideatek_files.h.md`, *The bytes of the results*: `read_bytes`, `user_folder` and `content_folder`.
+It also holds `deterministic_rounds`: `docs/extern/platform_abstraction/ideatek_files.h.md`, *The rounds of a result*. It has no setting beyond those 4.
 
 ### The folders
 
@@ -72,6 +73,7 @@ The module writes these lines:
 | `no content folder: <path>` | `content_folder` is not a folder beside the program. Each request of `IDEATEK_STORAGE_CONTENT` gets `IDEATEK_FILE_STATUS_NOT_FOUND`. |
 | `no user folder: <reason>` | The system has no variable for the data of programs, or refuses to make `user_folder`. Each request of `IDEATEK_STORAGE_USER` gets `IDEATEK_FILE_STATUS_UNSUPPORTED`. |
 | `the watch of <path> stopped` | The watched folder went. The watch gets `IDEATEK_FILE_STATUS_NOT_FOUND`. |
+| `round <round> waits for the result of <entity>` | With `deterministic_rounds`, the worker thread had not ended the read when its round came. The round waits for it. |
 | `no result for <entity>: <count> results wait for the next round` | 256 refusals or starts of watches wait for the next round already. The request gets no result. |
 
 A setting outside its range gets the line that `readme.md`, *The contracts*, gives.
