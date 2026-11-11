@@ -28,4 +28,4 @@ The slots come in the order of the declarations: the 7 types of the fields from 
 | `space_stack_t` | The stack of a walk in the scratch arena, with its top, its room and the mark of a full stack. |
 | `space_ids_t` | A buffer of ids in the scratch arena, with its count and its room. |
 
-`SPACE_FIND` reads a value of an entity as a typed pointer, or gives `nullptr`.
+`SPACE_FIND` reads a value of an entity as a typed pointer, or gives `nullptr`. `SPACE_EDIT` gives the same pointer for a write in place.
