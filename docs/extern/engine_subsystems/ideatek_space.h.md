@@ -122,16 +122,18 @@ Its C type `ideatek_world_transform_t` has 64 bytes, and an alignment of 8.
 | --- | --- | --- | --- |
 | `origin` | `ideatek_position_t` | 0 | The position in the world. |
 | `basis` | `float[9]` | 24 | The X axis, then the Y axis, then the Z axis of the entity in the world: 3 columns of 3 values. |
+| `revision` | `uint32_t` | 60 | The count of the values of the entity since its first place, from 1. |
 
-The bytes 60 to 63 hold no field, because the size is a multiple of 8.
+The space module attaches `ideatek:WorldTransform` at the first place of each entity that has `ideatek:Transform`, with `revision` 1.
+Then it writes each new value in place, and adds 1 to `revision`. A write in place raises no event. The module detaches the type when `ideatek:Transform` goes.
 
-The space module attaches `ideatek:WorldTransform` to each entity that has `ideatek:Transform`, and detaches it when `ideatek:Transform` goes.
-An observer of the space module attaches the value at the barrier that applies the change of `ideatek:Transform` or `ideatek:Parent`.
+An observer of the space module writes the value at the barrier that applies the change of `ideatek:Transform` or `ideatek:Parent`.
 The deployment gives the space module `observer_passes` of 3 or more. A new parent needs 1 barrier for the lists of children, and 1 for the place.
-The space module attaches a value only when its bytes differ from the bytes of the old value. Then it goes on to the children.
+The space module writes a value only when its origin or its basis differs from the old value. Then it goes on to the children.
 
 In 1 call, the observer places only the changed entities that have no changed ancestor in that call. The walk of the ancestor places the others, so each entity is placed once.
-A reader that waits for a change observes `BRIDGE_ON_ATTACH` of `ideatek:WorldTransform`.
+A reader that waits for a change keeps the last `revision` that it read, and compares it in a later round. It hears `BRIDGE_ON_ENTER` at the first place, and `BRIDGE_ON_LEAVE` when the type goes.
+An observer of another module that reads `ideatek:WorldTransform` at a barrier needs a pair of the deployment with the observer of the space module.
 
 ```pseudo
 PROCEDURE place(e : U64)
@@ -212,6 +214,7 @@ The space module takes the husk out of the list of its parent, then detaches `id
 ## ideatek:PreviousWorldTransform
 
 `ideatek:PreviousWorldTransform` is the place in the world at the step before. The space module attaches it only to an entity that has `ideatek:Interpolated`.
+It attaches the type at the first step of the entity, and then writes each new value in place, with no event.
 Its C type `ideatek_previous_world_transform_t` has 72 bytes, and an alignment of 8.
 
 | Field | C type | Offset | Value |
@@ -260,7 +263,7 @@ A part of a model that other entities follow, for example a hand, is an entity w
 { IDEATEK_ORPHAN_DESTROY = 0, IDEATEK_ORPHAN_KEEP_WORLD = 1 }
 { ideatek_position_t position; ideatek_quat_t rotation; ideatek_vec3_t scale; }
 { ideatek_entity_t entity; int32_t order; ideatek_keep_t keep; ideatek_orphan_t orphan; uint8_t absolute; }
-{ ideatek_position_t origin; float basis[9]; }
+{ ideatek_position_t origin; float basis[9]; uint32_t revision; }
 { ideatek_entity_t first; ideatek_entity_t last; uint32_t count; }
 { ideatek_entity_t prev; ideatek_entity_t next; ideatek_entity_t parent; }
 { ideatek_world_transform_t world; uint64_t tick; }
