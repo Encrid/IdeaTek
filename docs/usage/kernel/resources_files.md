@@ -75,7 +75,43 @@ A use entity whose `owner` is dead is destroyed in that round, with the effects 
 | `persistent` | 8388608 | `load_bytes` of the contract, plus 4194304 for the tables, the slots and the maps at their defaults. A larger bound needs a larger `persistent`. |
 | `scratch` | 16384 | What `init` declares, and the lines of the log. |
 | `log_ring` | 2048 | Each line of the log takes 32 bytes of the ring. |
-| `spans` | 16384 | The spans of its queries, the columns of its types and the lists of its observers. |
+| `spans` | 32768 | The cells of its types, the spans of its queries and the lists of its observers: *The size of spans*. |
+
+### The size of spans
+
+At each barrier, Bridge writes 3 parts in the span region of the module. When they do not fit, Bridge stops the module for the rest of the run.
+
+1. The cells: 4 bytes for each of the 28 types of the module in each table id.
+   Also 632 bytes for its 2 systems, its 12 observers and its types. There are `tables` + `sparse_sets` + 1 table ids.
+2. The spans: 4 bytes for each table that 1 of its 2 queries matches. Thus 8 bytes for each table id at most.
+3. The lists: 16 bytes for each entity in the list of 1 of its observers at this barrier.
+
+A load that a module asks adds 1 entry at the barrier of its round, and a use that leaves adds 1. The other lists of a load take at most 1024 bytes in 1 barrier.
+So `spans` must hold 120 x (`tables` + `sparse_sets` + 1) + 1656 + 16 x (the loads asked in 1 round + the uses that leave in 1 round).
+
+| `tables` of the budget | Loads asked and uses that leave in 1 round | `spans` at least |
+| --- | --- | --- |
+| 16 | 256 | 7792 |
+| 128 | 256 | 21232 |
+| 128 | 1024 | 33520 |
+| 1024 | 256 | 128752 |
+
+The default of 32768 holds a world of 128 tables with about 970 loads and leaves in 1 round.
+The bench of a level of 200 glTF files, asked in 1 round in a world of 128 tables, needs 18944 bytes.
+
+### The size of a level
+
+The bytes of a level that loads at once are in flight together. The values below fit a level of 200 glTF files that a module asks in 1 round. Each file has a buffer file and a KTX2 image, and the level has 61 MB:
+
+| Module | Key or setting | Default | For the level |
+| --- | --- | --- | --- |
+| The resources module | `spans` | 32768 | 32768 |
+| The resources module | `load_bytes`, and `persistent` with it | 4194304 | 67108864, and 71303168 |
+| The files module | `read_bytes`, and `persistent` with it | 4194304 | 67108864, and 67125248 |
+| The KTX2 loader | `texture_bytes`, and `persistent` with it | 33554432 | 67108864, and 67239936 |
+
+With these values, at 60 rounds in each second, the level loads in 39 rounds. With the defaults, a part of its loads fails.
+The `persistent` of the budget of the world must hold the shares of the modules.
 
 - The module has 2 systems in its phase `first`, mapped by the deployment to the phase that starts the round: `round`, then `found`.
   In its first call, `found` takes each loader that exists.
