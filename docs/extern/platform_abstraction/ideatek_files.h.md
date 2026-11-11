@@ -68,6 +68,16 @@ A line of `paths` gives 1 changed path, relative to the folder of the storage, a
 A rename gives the old path and the new path.
 The paths that do not fit in the rest of the half go in a later round.
 
+## The rounds of a result
+
+The files module reads on a worker thread of its own, so a result can arrive in another round on each run.
+Let D be `deterministic_rounds`. When D is above 0, the result of a request of round R is attached in round R + D, never before.
+If the worker thread is late, the system of the files module waits for it, and the log names the wait in 1 line.
+So the same requests give their results in the same rounds. The results of 1 round are attached in the order of their requests.
+
+With 0, a result is attached in the round where it arrives. This is the fastest, but the rounds are not deterministic.
+A change of a watch comes from the OS, so its round is not deterministic in each case.
+
 ## The bytes of the results
 
 At `init`, the files module takes `read_bytes` bytes of its persistent arena.
@@ -81,6 +91,7 @@ The `persistent` of its manifest includes `read_bytes`.
 | `read_bytes` | 4194304 | 2 to 1073741824, an even number | The bytes for the results. Each round uses at most the half. |
 | `user_folder` | `IdeaTek` | A name that the path rule allows. | The folder of `IDEATEK_STORAGE_USER`. |
 | `content_folder` | `content` | A path that the path rule allows. | The folder of `IDEATEK_STORAGE_CONTENT`. |
+| `deterministic_rounds` | 0 | 0 to 100000 | The rounds from a request to its result: *The rounds of a result*. Its default comes from a bench, by the need Measured defaults of `docs/contributing/needs.md`. |
 
 ## ideatek:FileRequest
 
