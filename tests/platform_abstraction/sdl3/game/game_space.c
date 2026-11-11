@@ -24,7 +24,7 @@ game_space_slots_t game_space_slots;
 static uint64_t nodes[2048];
 static ideatek_transform_t locals[2048];
 static uint32_t node_count;
-static uint32_t lists[1];
+static uint32_t revisions[2048];
 
 static int index_of(uint64_t id)
 {
@@ -156,9 +156,9 @@ static void show_space(const bridge_api_t *api)
         w = game_cell(api, nodes[k], game_space_slots.world);
         if (w)
             bridge_native_say(api, BRIDGE_LOG_INFO, "r%u world %u at %.3f "
-                "%.3f %.3f x %.3f %.3f %.3f", game.round, k, w->origin.x,
-                w->origin.y, w->origin.z, w->basis[0], w->basis[1],
-                w->basis[2]);
+                "%.3f %.3f x %.3f %.3f %.3f rev %u", game.round, k,
+                w->origin.x, w->origin.y, w->origin.z, w->basis[0],
+                w->basis[1], w->basis[2], w->revision);
         else
             bridge_native_say(api, BRIDGE_LOG_INFO, "r%u world %u none%s",
                 game.round, k, game_cell(api, nodes[k],
@@ -238,16 +238,16 @@ void game_declare_space(const bridge_api_t *api)
 
 BRIDGE_NATIVE(seen_world)
 {
-    const bridge_list_t *list = bridge_native_get_list(api, lists[0]);
-    const bridge_trigger_t *t = (const void *)(api->private_base + list->at);
     const ideatek_world_transform_t *w;
 
-    for (uint32_t i = 0; i < list->count; i++) {
-        w = game_cell(api, t[i].id, game_space_slots.world);
-        if (w)
-            bridge_native_say(api, BRIDGE_LOG_INFO, "r%u placed %d at %.3f "
-                "%.3f %.3f", game.round + 1, index_of(t[i].id), w->origin.x,
-                w->origin.y, w->origin.z);
+    for (uint32_t k = 0; k < node_count; k++) {
+        w = game_cell(api, nodes[k], game_space_slots.world);
+        if (!w || w->revision == revisions[k])
+            continue;
+        revisions[k] = w->revision;
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u placed %u at %.3f %.3f "
+            "%.3f rev %u", game.round, k, w->origin.x, w->origin.y,
+            w->origin.z, w->revision);
     }
     return (0);
 }
@@ -257,8 +257,8 @@ void game_watch_space(const bridge_api_t *api)
     bridge_term_t world[1] = {{ game_space_slots.world, BRIDGE_READ,
         BRIDGE_AND, 0 }};
 
-    lists[0] = BRIDGE_NATIVE_OBSERVER(api, "seen_world", BRIDGE_ON_ATTACH
-        | BRIDGE_ON_ENTER, world, 1, nullptr, 0, nullptr, 0);
+    BRIDGE_NATIVE_ADD_SYSTEM(api, "seen_world", "check", world, 1, nullptr, 0,
+        nullptr, 0);
 }
 
 #endif
