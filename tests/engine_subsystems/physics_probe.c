@@ -17,6 +17,8 @@ static const char WHO[] = MANIFEST;
     BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
 #define MASK(api, name, T) BRIDGE_NATIVE_DECLARE(api, BRIDGE_BITMASK, name, \
     T, BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
+#define SINGLE(api, name, T) BRIDGE_NATIVE_COMPONENT(api, name, T, \
+    BRIDGE_STRIP, BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE)
 #define TAG(api, name) BRIDGE_NATIVE_DECLARE_TAG(api, name, BRIDGE_STRIP, \
     BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
 
@@ -162,6 +164,24 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:GravityArea", ideatek_gravity_area_t);
     STRUCT(api, "ideatek:TimeArea", ideatek_time_area_t);
     STRUCT(api, "ideatek:AirArea", ideatek_air_area_t);
+    ENUM(api, "ideatek:ideatek_gas_face_kind_t", ideatek_gas_face_kind_t);
+    STRUCT(api, "ideatek:ideatek_gas_face_t", ideatek_gas_face_t);
+    STRUCT(api, "ideatek:GasFill", ideatek_gas_fill_t);
+    STRUCT(api, "ideatek:AirProbe", ideatek_air_probe_t);
+    STRUCT(api, "ideatek:SpinArea", ideatek_spin_area_t);
+    STRUCT(api, "ideatek:ideatek_contact_work_t", ideatek_contact_work_t);
+    SINGLE(api, "ideatek:ContactWork", ideatek_contact_work_list_t);
+    MASK(api, "ideatek:ideatek_particle_set_flags_t", ideatek_particle_set_flags_t);
+    STRUCT(api, "ideatek:ideatek_particle_t", ideatek_particle_t);
+    STRUCT(api, "ideatek:ParticleSet", ideatek_particle_set_t);
+    ENUM(api, "ideatek:ideatek_solver_t", ideatek_solver_t);
+    STRUCT(api, "ideatek:ideatek_phase_request_t", ideatek_phase_request_t);
+    SINGLE(api, "ideatek:PhaseRequest", ideatek_phase_request_list_t);
+    STRUCT(api, "ideatek:ideatek_surface_material_t", ideatek_surface_material_t);
+    SINGLE(api, "ideatek:SurfaceMaterial", ideatek_surface_material_list_t);
+    STRUCT(api, "ideatek:ideatek_heat_source_t", ideatek_heat_source_t);
+    SINGLE(api, "ideatek:HeatSource", ideatek_heat_source_list_t);
+    SINGLE(api, "ideatek:HeatTaken", ideatek_heat_taken_t);
 }
 
 [[maybe_unused]] static void role_author(const bridge_api_t *api)
@@ -325,6 +345,19 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_air_mode_t", ideatek_air_mode_t);
     api->attach(api, id, STRUCT(api, "ideatek:AirArea", ideatek_air_area_t),
         BRIDGE_ZEROED);
+    ENUM(api, "ideatek:ideatek_gas_face_kind_t", ideatek_gas_face_kind_t);
+    STRUCT(api, "ideatek:ideatek_gas_face_t", ideatek_gas_face_t);
+    MASK(api, "ideatek:ideatek_particle_set_flags_t",
+        ideatek_particle_set_flags_t);
+    STRUCT(api, "ideatek:ideatek_particle_t", ideatek_particle_t);
+    api->attach(api, id, STRUCT(api, "ideatek:GasFill", ideatek_gas_fill_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:AirProbe", ideatek_air_probe_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:SpinArea", ideatek_spin_area_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ParticleSet",
+        ideatek_particle_set_t), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_physics(const bridge_api_t *api)
@@ -443,6 +476,28 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:TimeArea", ideatek_time_area_t);
     ENUM(api, "ideatek:ideatek_air_mode_t", ideatek_air_mode_t);
     STRUCT(api, "ideatek:AirArea", ideatek_air_area_t);
+    ENUM(api, "ideatek:ideatek_gas_face_kind_t", ideatek_gas_face_kind_t);
+    STRUCT(api, "ideatek:ideatek_gas_face_t", ideatek_gas_face_t);
+    MASK(api, "ideatek:ideatek_particle_set_flags_t",
+        ideatek_particle_set_flags_t);
+    STRUCT(api, "ideatek:ideatek_particle_t", ideatek_particle_t);
+    ENUM(api, "ideatek:ideatek_solver_t", ideatek_solver_t);
+    STRUCT(api, "ideatek:ideatek_contact_work_t", ideatek_contact_work_t);
+    STRUCT(api, "ideatek:ideatek_phase_request_t", ideatek_phase_request_t);
+    STRUCT(api, "ideatek:ideatek_surface_material_t",
+        ideatek_surface_material_t);
+    STRUCT(api, "ideatek:ideatek_heat_source_t", ideatek_heat_source_t);
+    SINGLE(api, "ideatek:PhaseRequest", ideatek_phase_request_list_t);
+    SINGLE(api, "ideatek:SurfaceMaterial", ideatek_surface_material_list_t);
+    SINGLE(api, "ideatek:HeatSource", ideatek_heat_source_list_t);
+    api->attach(api, 0, SINGLE(api, "ideatek:ContactWork",
+        ideatek_contact_work_list_t), BRIDGE_ZEROED);
+    api->attach(api, 0, SINGLE(api, "ideatek:HeatTaken", ideatek_heat_taken_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:AirProbe", ideatek_air_probe_t),
+        BRIDGE_ZEROED);
+    api->attach(api, id, STRUCT(api, "ideatek:ParticleSet",
+        ideatek_particle_set_t), BRIDGE_ZEROED);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Tick", ideatek_tick_t, BRIDGE_STRIP,
         BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
     api->attach(api, id, BRIDGE_NATIVE_COMPONENT(api, "ideatek:Transform",
@@ -499,6 +554,41 @@ static const char WHO[] = MANIFEST;
         BRIDGE_ON_DESTROY_REMOVE), BRIDGE_ZEROED);
 }
 
+[[maybe_unused]] static void role_matter(const bridge_api_t *api)
+{
+    STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
+    STRUCT(api, "ideatek:ideatek_vec3_t", ideatek_vec3_t);
+    STRUCT(api, "ideatek:ideatek_position_t", ideatek_position_t);
+    ENUM(api, "ideatek:ideatek_combine_t", ideatek_combine_t);
+    ENUM(api, "ideatek:ideatek_body_kind_t", ideatek_body_kind_t);
+    ENUM(api, "ideatek:ideatek_mass_mode_t", ideatek_mass_mode_t);
+    MASK(api, "ideatek:ideatek_locked_t", ideatek_locked_t);
+    MASK(api, "ideatek:ideatek_body_flags_t", ideatek_body_flags_t);
+    ENUM(api, "ideatek:ideatek_motion_quality_t", ideatek_motion_quality_t);
+    MASK(api, "ideatek:ideatek_particle_set_flags_t",
+        ideatek_particle_set_flags_t);
+    ENUM(api, "ideatek:ideatek_solver_t", ideatek_solver_t);
+    STRUCT(api, "ideatek:ideatek_contact_work_t", ideatek_contact_work_t);
+    STRUCT(api, "ideatek:ideatek_particle_t", ideatek_particle_t);
+    STRUCT(api, "ideatek:ideatek_phase_request_t", ideatek_phase_request_t);
+    STRUCT(api, "ideatek:ideatek_surface_material_t",
+        ideatek_surface_material_t);
+    STRUCT(api, "ideatek:ideatek_heat_source_t", ideatek_heat_source_t);
+    SINGLE(api, "ideatek:ContactWork", ideatek_contact_work_list_t);
+    SINGLE(api, "ideatek:HeatTaken", ideatek_heat_taken_t);
+    STRUCT(api, "ideatek:AirProbe", ideatek_air_probe_t);
+    STRUCT(api, "ideatek:ParticleSet", ideatek_particle_set_t);
+    STRUCT(api, "ideatek:DestructibleAsset", ideatek_destructible_asset_t);
+    STRUCT(api, "ideatek:PhysicsMaterial", ideatek_physics_material_t);
+    STRUCT(api, "ideatek:Body", ideatek_body_t);
+    api->attach(api, 0, SINGLE(api, "ideatek:PhaseRequest",
+        ideatek_phase_request_list_t), BRIDGE_ZEROED);
+    api->attach(api, 0, SINGLE(api, "ideatek:SurfaceMaterial",
+        ideatek_surface_material_list_t), BRIDGE_ZEROED);
+    api->attach(api, 0, SINGLE(api, "ideatek:HeatSource",
+        ideatek_heat_source_list_t), BRIDGE_ZEROED);
+}
+
 [[maybe_unused]] static void role_renderer(const bridge_api_t *api)
 {
     STRUCT(api, "ideatek:ideatek_entity_t", ideatek_entity_t);
@@ -522,6 +612,8 @@ BRIDGE_NATIVE(init)
     role_physics(api);
 #elif defined(ROLE_RENDERER)
     role_renderer(api);
+#elif defined(ROLE_MATTER)
+    role_matter(api);
 #else
     declare_all(api);
 #endif

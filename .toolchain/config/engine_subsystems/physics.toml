@@ -58,6 +58,11 @@ defines = ["ROLE_PHYSICS"]
 manifest = ["test:physics@1.0.0", "{physics_spawn_words}"]
 
 [[artifact.variants]]
+name = "physics_matter"
+defines = ["ROLE_MATTER"]
+manifest = ["test:matter@1.0.0", "{physics_spawn_words}"]
+
+[[artifact.variants]]
 name = "physics_renderer"
 defines = ["ROLE_RENDERER"]
 manifest = ["test:renderer@1.0.0", "{physics_probe_words}"]
