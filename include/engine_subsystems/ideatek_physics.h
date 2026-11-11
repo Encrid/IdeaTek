@@ -1262,6 +1262,7 @@ BRIDGE_SCHEMA_BITMASK_DESC(ideatek_gas_flags_t,
         uint32_t species_count; \
         uint32_t reaction_count; \
         ideatek_gas_flags_t flags; \
+        bridge_text_t faces; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gas_volume_t, IDEATEK_GAS_VOLUME_FIELDS);
@@ -1457,5 +1458,201 @@ BRIDGE_SCHEMA_ENUM_DESC(ideatek_air_mode_t,
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_air_area_t, IDEATEK_AIR_AREA_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_air_area_t, IDEATEK_AIR_AREA_FIELDS);
+
+    #define IDEATEK_GAS_FACE_KIND_VALUES { \
+        IDEATEK_GAS_FACE_KIND_WALL = 0, \
+        IDEATEK_GAS_FACE_KIND_SPACE = 1, \
+        IDEATEK_GAS_FACE_KIND_GAS = 2 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_gas_face_kind_t,
+    uint8_t, IDEATEK_GAS_FACE_KIND_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_gas_face_kind_t,
+    uint8_t, IDEATEK_GAS_FACE_KIND_VALUES);
+
+    #define IDEATEK_GAS_FACE_FIELDS { \
+        ideatek_gas_face_kind_t kind; \
+        uint32_t species; \
+        float temperature; \
+        float pressure; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gas_face_t, IDEATEK_GAS_FACE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gas_face_t, IDEATEK_GAS_FACE_FIELDS);
+
+    #define IDEATEK_GAS_FILL_FIELDS { \
+        ideatek_entity_t volume; \
+        ideatek_vec3_t size; \
+        float temperature; \
+        float pressure; \
+        uint32_t species; \
+        ideatek_field_shape_t shape; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_gas_fill_t, IDEATEK_GAS_FILL_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_gas_fill_t, IDEATEK_GAS_FILL_FIELDS);
+
+    #define IDEATEK_AIR_PROBE_FIELDS { \
+        float pressure; \
+        float temperature; \
+        float density; \
+        bool covered; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_air_probe_t, IDEATEK_AIR_PROBE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_air_probe_t, IDEATEK_AIR_PROBE_FIELDS);
+
+    #define IDEATEK_SPIN_AREA_FIELDS { \
+        ideatek_vec3_t size; \
+        float rate; \
+        float inner; \
+        float falloff; \
+        int32_t priority; \
+        ideatek_field_shape_t shape; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_spin_area_t, IDEATEK_SPIN_AREA_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_spin_area_t, IDEATEK_SPIN_AREA_FIELDS);
+
+    #define IDEATEK_CONTACT_WORK_FIELDS { \
+        ideatek_entity_t a; \
+        ideatek_entity_t b; \
+        ideatek_position_t point; \
+        float energy; \
+        float work; \
+        uint32_t points; \
+        uint32_t chunk_a; \
+        uint32_t chunk_b; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_contact_work_t, IDEATEK_CONTACT_WORK_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_contact_work_t, IDEATEK_CONTACT_WORK_FIELDS);
+
+    #define IDEATEK_CONTACT_WORK_LIST_FIELDS { \
+        bridge_text_t records; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_contact_work_list_t,
+    IDEATEK_CONTACT_WORK_LIST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_contact_work_list_t,
+    IDEATEK_CONTACT_WORK_LIST_FIELDS);
+
+    #define IDEATEK_PARTICLE_SET_FLAGS_VALUES { \
+        IDEATEK_PARTICLE_SET_FLAGS_TEARS = 0x01 \
+    }
+
+BRIDGE_SCHEMA_BITMASK_TYPE(ideatek_particle_set_flags_t,
+    uint8_t, IDEATEK_PARTICLE_SET_FLAGS_VALUES);
+BRIDGE_SCHEMA_BITMASK_DESC(ideatek_particle_set_flags_t,
+    uint8_t, IDEATEK_PARTICLE_SET_FLAGS_VALUES);
+
+    #define IDEATEK_PARTICLE_FIELDS { \
+        float position[3]; \
+        float radius; \
+        float velocity[3]; \
+        float mass; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_particle_t, IDEATEK_PARTICLE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_particle_t, IDEATEK_PARTICLE_FIELDS);
+
+    #define IDEATEK_PARTICLE_SET_FIELDS { \
+        bridge_text_t particles; \
+        uint32_t count; \
+        uint32_t cap; \
+        ideatek_entity_t material; \
+        ideatek_particle_set_flags_t flags; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_particle_set_t, IDEATEK_PARTICLE_SET_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_particle_set_t, IDEATEK_PARTICLE_SET_FIELDS);
+
+    #define IDEATEK_SOLVER_VALUES { \
+        IDEATEK_SOLVER_RIGID = 0, \
+        IDEATEK_SOLVER_SOFT = 1, \
+        IDEATEK_SOLVER_LIQUID = 2, \
+        IDEATEK_SOLVER_GAS = 3 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_solver_t,
+    uint8_t, IDEATEK_SOLVER_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_solver_t,
+    uint8_t, IDEATEK_SOLVER_VALUES);
+
+    #define IDEATEK_PHASE_REQUEST_FIELDS { \
+        ideatek_entity_t entity; \
+        uint32_t index; \
+        ideatek_solver_t solver; \
+        bool particle; \
+        uint32_t species; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_phase_request_t,
+    IDEATEK_PHASE_REQUEST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_phase_request_t,
+    IDEATEK_PHASE_REQUEST_FIELDS);
+
+    #define IDEATEK_PHASE_REQUEST_LIST_FIELDS { \
+        bridge_text_t records; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_phase_request_list_t,
+    IDEATEK_PHASE_REQUEST_LIST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_phase_request_list_t,
+    IDEATEK_PHASE_REQUEST_LIST_FIELDS);
+
+    #define IDEATEK_SURFACE_MATERIAL_FIELDS { \
+        ideatek_entity_t body; \
+        ideatek_entity_t material; \
+        uint32_t chunk; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_surface_material_t,
+    IDEATEK_SURFACE_MATERIAL_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_surface_material_t,
+    IDEATEK_SURFACE_MATERIAL_FIELDS);
+
+    #define IDEATEK_SURFACE_MATERIAL_LIST_FIELDS { \
+        bridge_text_t records; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_surface_material_list_t,
+    IDEATEK_SURFACE_MATERIAL_LIST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_surface_material_list_t,
+    IDEATEK_SURFACE_MATERIAL_LIST_FIELDS);
+
+    #define IDEATEK_HEAT_SOURCE_FIELDS { \
+        ideatek_position_t position; \
+        float area; \
+        float temperature; \
+        float rate; \
+        float smoke; \
+        float ash; \
+        uint32_t smoke_species; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_heat_source_t, IDEATEK_HEAT_SOURCE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_heat_source_t, IDEATEK_HEAT_SOURCE_FIELDS);
+
+    #define IDEATEK_HEAT_SOURCE_LIST_FIELDS { \
+        bridge_text_t records; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_heat_source_list_t,
+    IDEATEK_HEAT_SOURCE_LIST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_heat_source_list_t,
+    IDEATEK_HEAT_SOURCE_LIST_FIELDS);
+
+    #define IDEATEK_HEAT_TAKEN_FIELDS { \
+        bridge_text_t heats; \
+        uint32_t count; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_heat_taken_t, IDEATEK_HEAT_TAKEN_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_heat_taken_t, IDEATEK_HEAT_TAKEN_FIELDS);
 
 #endif
