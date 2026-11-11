@@ -98,6 +98,7 @@ extern game_t game;
 typedef void (*game_show_t)(const bridge_api_t *, uint64_t, const void *);
 
 const void *game_cell(const bridge_api_t *api, uint64_t id, uint32_t slot);
+bridge_text_t game_put_text(const bridge_api_t *api, const char *text);
 uint32_t game_rows(const bridge_api_t *api, uint32_t query, uint32_t slot,
     game_show_t show);
 uint64_t game_find_display(const char *name);

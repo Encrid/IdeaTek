@@ -107,15 +107,6 @@ static void ask_window(const bridge_api_t *api, char *args)
     BRIDGE_NATIVE_ATTACH(api, game.window, game.slots.request, *r);
 }
 
-static bridge_text_t put_text(const bridge_api_t *api, const char *text)
-{
-    uint32_t len = (uint32_t)strlen(text);
-    uint32_t at = api->alloc(api, len ? len : 1);
-
-    memcpy(api->shared_base + at, text, len);
-    return ((bridge_text_t){ .at = at, .len = len });
-}
-
 static void push(const bridge_api_t *api, const char *name)
 {
     SDL_Event e = {};
@@ -261,7 +252,7 @@ static void clip(const bridge_api_t *api, const char *args, int how)
     uint64_t id = api->spawn(api);
 
     if (how != 1)
-        c.text = put_text(api, args);
+        c.text = game_put_text(api, args);
     if (how == 2)
         c.text.len = 1U << 30;
     if (how == 4)

@@ -49,15 +49,6 @@ static game_sub_t subs[64];
 static uint32_t sub_count;
 static uint32_t lists[8];
 
-static bridge_text_t put_bytes(const bridge_api_t *api, const char *text)
-{
-    uint32_t len = (uint32_t)strlen(text);
-    uint32_t at = api->alloc(api, len ? len : 1);
-
-    memcpy(api->shared_base + at, text, len);
-    return ((bridge_text_t){ .at = at, .len = len });
-}
-
 static const char *field(char **left)
 {
     char *start = *left;
@@ -114,15 +105,15 @@ static void add_loader(const bridge_api_t *api, char *args)
     char lines[256];
     size_t n;
 
-    l.name = put_bytes(api, field(&left));
-    l.type = put_bytes(api, field(&left));
+    l.name = game_put_text(api, field(&left));
+    l.type = game_put_text(api, field(&left));
     n = strlen(strcpy(lines, field(&left)));
     for (size_t i = 0; i < n; i++)
         lines[i] = lines[i] == ';' ? '\n' : lines[i];
     if (n)
         strcat(lines, "\n");
-    l.extensions = put_bytes(api, lines);
-    l.magic = put_bytes(api, field(&left));
+    l.extensions = game_put_text(api, lines);
+    l.magic = game_put_text(api, field(&left));
     l.ranged = atoi(field(&left)) != 0;
     BRIDGE_NATIVE_ATTACH(api, id, game_resources_slots.loader, l);
     loaders[loader_count++] = id;
@@ -137,7 +128,7 @@ void game_init_loader(const bridge_api_t *api)
 
 static void add_source(const bridge_api_t *api, const char *name)
 {
-    ideatek_resource_source_t s = { .name = put_bytes(api, name) };
+    ideatek_resource_source_t s = { .name = game_put_text(api, name) };
     uint64_t id = api->spawn(api);
 
     BRIDGE_NATIVE_ATTACH(api, id, game_resources_slots.source, s);
@@ -156,9 +147,9 @@ static void ask_load(const bridge_api_t *api, char *args)
         *c = *c == '<' ? '{' : *c;
         *c = *c == '>' ? '}' : *c;
     }
-    l.path = put_bytes(api, field(&left));
-    l.type = put_bytes(api, field(&left));
-    l.settings = put_bytes(api, field(&left));
+    l.path = game_put_text(api, field(&left));
+    l.type = game_put_text(api, field(&left));
+    l.settings = game_put_text(api, field(&left));
     l.reload_owner = (uint8_t)atoi(field(&left));
     l.priority = (uint8_t)atoi(field(&left));
     uses[use_count++] = id;
@@ -171,7 +162,7 @@ static void ask_add(const bridge_api_t *api, const char *type)
     uint64_t id = api->spawn(api);
     game_text_t text = { .bytes = 7 };
     ideatek_resource_add_t a = { .resource = { resource },
-        .type = put_bytes(api, type) };
+        .type = game_put_text(api, type) };
 
     BRIDGE_NATIVE_ATTACH(api, resource, game_resources_slots.text, text);
     uses[use_count++] = id;
@@ -182,7 +173,7 @@ static void ask_again(const bridge_api_t *api, const char *args)
 {
     uint64_t id = api->spawn(api);
     ideatek_resource_add_t a = { .resource = { resource_of_use(api,
-        (uint32_t)atoi(args)) }, .type = put_bytes(api, "test:Text") };
+        (uint32_t)atoi(args)) }, .type = game_put_text(api, "test:Text") };
 
     uses[use_count++] = id;
     BRIDGE_NATIVE_ATTACH(api, id, game_resources_slots.add, a);
@@ -194,7 +185,7 @@ static void stray(const bridge_api_t *api, const char *kind)
     uint64_t id = api->spawn(api);
     ideatek_resource_outcome_t o = {};
     ideatek_resource_read_t r = { .length = 1 };
-    ideatek_resource_label_t l = { .label = put_bytes(api, "x") };
+    ideatek_resource_label_t l = { .label = game_put_text(api, "x") };
     ideatek_resource_source_result_t a = {};
     game_text_t text = { .bytes = 1 };
 
@@ -256,13 +247,13 @@ static void add_variable(const bridge_api_t *api, char *args, bool again)
 {
     char *left = args;
     const char *name = field(&left);
-    ideatek_resource_variable_t v = { .name = put_bytes(api, name) };
+    ideatek_resource_variable_t v = { .name = game_put_text(api, name) };
     uint64_t id = again ? 0 : api->spawn(api);
     const ideatek_resource_variable_t *old;
     char own[64];
 
-    v.value = put_bytes(api, field(&left));
-    v.fallback = put_bytes(api, field(&left));
+    v.value = game_put_text(api, field(&left));
+    v.fallback = game_put_text(api, field(&left));
     for (uint32_t i = 0; i < other_count && again; i++) {
         old = game_cell(api, others[i], game_resources_slots.variable);
         if (!old)
@@ -446,7 +437,7 @@ static void spawn_label(const bridge_api_t *api, uint64_t resource,
 {
     game_sub_t *sub = nullptr;
     ideatek_resource_label_t l = { .resource = { resource },
-        .label = put_bytes(api, label) };
+        .label = game_put_text(api, label) };
     game_text_t text = { .bytes = 3 };
 
     for (uint32_t j = 0; j < sub_count; j++)
@@ -541,7 +532,7 @@ static void answer_source(const bridge_api_t *api, uint64_t id,
         r.size = size;
         r.error = IDEATEK_RESOURCE_ERROR_NONE;
     }
-    r.data = put_bytes(api, data);
+    r.data = game_put_text(api, data);
     BRIDGE_NATIVE_ATTACH(api, id, game_resources_slots.source_result, r);
 }
 
