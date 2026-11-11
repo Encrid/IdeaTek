@@ -22,12 +22,16 @@ static const char *const NAMES[] = { "link", "place", "relink", "previous",
 static uint32_t add_observer(const bridge_api_t *api, uint32_t k,
     const uint32_t *changes, uint32_t count)
 {
-    bridge_term_t term[1] = {{ TERMS[k], BRIDGE_READ, BRIDGE_AND, 0 }};
+    bridge_term_t term[3] = {{ TERMS[k], BRIDGE_READ, BRIDGE_AND, 0 },
+        { WORLD, BRIDGE_WRITE, BRIDGE_OPTIONAL, 0 },
+        { PREVIOUS, BRIDGE_WRITE, BRIDGE_OPTIONAL, 0 }};
+    uint32_t terms = k == LIST_PLACE || k == LIST_RELINK ? 3 : 1;
     const uint32_t *before = k ? &space_module.lists[k - 1] : nullptr;
     bridge_observer_statement_t s = {
         .name = bridge_native_put(api, NAMES[k], (uint32_t)strlen(NAMES[k])),
         .name_len = (uint32_t)strlen(NAMES[k]), .events = EVENTS[k],
-        .terms = bridge_native_put(api, term, sizeof(term)), .term_count = 1,
+        .terms = bridge_native_put(api, term, terms * sizeof(term[0])),
+        .term_count = terms,
         .changes = bridge_native_put_slots(api, changes, count),
         .change_count = count,
         .before = bridge_native_put_slots(api, before, k > 0),
@@ -41,7 +45,7 @@ static void add_step(const bridge_api_t *api)
     const uint32_t changes[] = { PREVIOUS };
     bridge_term_t terms[3] = {{ INTERPOLATED, BRIDGE_READ, BRIDGE_AND, 0 },
         { WORLD, BRIDGE_READ, BRIDGE_AND, 0 },
-        { PREVIOUS, BRIDGE_READ, BRIDGE_AND, 0 }};
+        { PREVIOUS, BRIDGE_WRITE, BRIDGE_AND, 0 }};
 
     space_module.step = BRIDGE_NATIVE_ADD_SYSTEM(api, "step", "fixed", terms,
         3, changes, 1, nullptr, 0);

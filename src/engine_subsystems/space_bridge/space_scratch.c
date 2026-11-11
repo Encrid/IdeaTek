@@ -5,7 +5,7 @@
 */
 #include "space_inside.h"
 
-const void *space_find(const bridge_api_t *api, uint64_t id, uint32_t slot)
+void *space_find(const bridge_api_t *api, uint64_t id, uint32_t slot)
 {
     uint32_t at = id ? bridge_native_find_value(api, id, slot) : 0;
 
