@@ -1,0 +1,267 @@
+[[case]]
+name = "ideatek_coating_rule_t is 1 byte"
+run = ["{out}/matter_layout{exe}", "coating_rule"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/matter_layout{exe}", "family"] }
+
+[[case]]
+name = "ideatek_matter_family_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/matter_layout{exe}", "family"]
+claims = { status = 0, order = ["size 32", "alignment 4", "thermal_conductivity 0", "specific_heat 4", "emissivity 8", "air_rate 12", "volume_keep 16", "smoke_share 20", "ash_share 24", "particles_burn 28"] }
+false = { run = ["{out}/matter_layout{exe}", "material"] }
+
+[[case]]
+name = "ideatek_matter_material_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/matter_layout{exe}", "material"]
+claims = { status = 0, order = ["size 80", "alignment 8", "family 0", "solid 8", "soft 16", "liquid 24", "gas 32", "softening_point 40", "melting_point 44", "boiling_point 48", "fire_temperature 52", "burn_rate 56", "burn_heat 60", "electric_conductivity 64", "adhesion 68", "flammable 72"] }
+false = { run = ["{out}/matter_layout{exe}", "chunk"] }
+
+[[case]]
+name = "ideatek_matter_chunk_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/matter_layout{exe}", "chunk"]
+claims = { status = 0, order = ["size 24", "alignment 8", "temperature 0", "coating_mass 4", "coating 8", "phase 16", "burning 17"] }
+false = { run = ["{out}/matter_layout{exe}", "matter"] }
+
+[[case]]
+name = "ideatek_matter_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/matter_layout{exe}", "matter"]
+claims = { status = 0, order = ["size 24", "alignment 8", "material 0", "chunks 8", "chunk_count 16", "charge 20"] }
+false = { run = ["{out}/matter_layout{exe}", "particle_state"] }
+
+[[case]]
+name = "ideatek_particle_state_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/matter_layout{exe}", "particle_state"]
+claims = { status = 0, order = ["size 8", "alignment 4", "temperature 0", "material 4"] }
+false = { run = ["{out}/matter_layout{exe}", "particle_matter"] }
+
+[[case]]
+name = "ideatek_particle_matter_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/matter_layout{exe}", "particle_matter"]
+claims = { status = 0, order = ["size 24", "alignment 4", "materials 0", "states 8", "material_count 16", "state_count 20"] }
+false = { run = ["{out}/matter_layout{exe}", "coating_rule"] }
+
+[[case]]
+name = "each descriptor holds the bytes of its Usage"
+run = ["{out}/matter_layout{exe}", "descriptors"]
+claims = { status = 0, line = [
+    "uint8_t { IDEATEK_COATING_RULE_LARGER = 0, IDEATEK_COATING_RULE_NEWER = 1, IDEATEK_COATING_RULE_OLDER = 2 }",
+    "{ float thermal_conductivity; float specific_heat; float emissivity; float air_rate; float volume_keep; float smoke_share; float ash_share; bool particles_burn; }",
+    "{ ideatek_entity_t family; ideatek_entity_t solid; ideatek_entity_t soft; ideatek_entity_t liquid; ideatek_entity_t gas; float softening_point; float melting_point; float boiling_point; float fire_temperature; float burn_rate; float burn_heat; float electric_conductivity; float adhesion; bool flammable; }",
+    "{ float temperature; float coating_mass; ideatek_entity_t coating; ideatek_solver_t phase; bool burning; }",
+    "{ ideatek_entity_t material; bridge_text_t chunks; uint32_t chunk_count; float charge; }",
+    "{ float temperature; uint32_t material; }",
+    "{ bridge_text_t materials; bridge_text_t states; uint32_t material_count; uint32_t state_count; }",
+] }
+false = { run = ["{out}/matter_layout{exe}", "texts"] }
+
+[[case]]
+name = "each macro of a text gives the braces of its type and the text between them"
+run = ["{out}/matter_layout{exe}", "texts"]
+claims = { status = 0, line = [
+    "{ IDEATEK_COATING_RULE_LARGER = 0, IDEATEK_COATING_RULE_NEWER = 1, IDEATEK_COATING_RULE_OLDER = 2 }",
+    "{ float thermal_conductivity; float specific_heat; float emissivity; float air_rate; float volume_keep; float smoke_share; float ash_share; bool particles_burn; }",
+    "{ ideatek_entity_t family; ideatek_entity_t solid; ideatek_entity_t soft; ideatek_entity_t liquid; ideatek_entity_t gas; float softening_point; float melting_point; float boiling_point; float fire_temperature; float burn_rate; float burn_heat; float electric_conductivity; float adhesion; bool flammable; }",
+    "{ float temperature; float coating_mass; ideatek_entity_t coating; ideatek_solver_t phase; bool burning; }",
+    "{ ideatek_entity_t material; bridge_text_t chunks; uint32_t chunk_count; float charge; }",
+    "{ float temperature; uint32_t material; }",
+    "{ bridge_text_t materials; bridge_text_t states; uint32_t material_count; uint32_t state_count; }",
+] }
+false = { run = ["{out}/matter_layout{exe}", "descriptors"] }
+
+[[case]]
+name = "the header compiles with the headers of the physics, world and space parts and of Bridge and nothing else"
+run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-I", "{bridge}/include", "-c", "tests/engine_subsystems/matter_alone.c", "-o", "{case}/alone.o"]
+claims = { status = 0 }
+false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/matter_alone.c", "-o", "{case}/alone.o"] }
+
+[[case]]
+name = "a module declares the 9 types, each type after the types of its fields"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/matter_probe{library}"] }
+
+[case.folders]
+"{case}/m" = ["matter_probe"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:probe@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_solver_t",
+    "ideatek:ideatek_coating_rule_t",
+    "ideatek:ideatek_matter_chunk_t",
+    "ideatek:ideatek_particle_state_t",
+    "ideatek:MatterFamily",
+    "ideatek:MatterMaterial",
+    "ideatek:Matter",
+    "ideatek:ParticleMatter",
+]
+'''
+
+[case.false.folders]
+"{case}/m" = ["matter_late"]
+
+[[case]]
+name = "the game loads with write on the families, the materials and the first state of the matter"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:author@1.0.0, native, m/matter_author{library}"] }
+
+[case.folders]
+"{case}/m" = ["matter_author"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:MatterFamily",
+    "ideatek:MatterMaterial",
+    "ideatek:Matter",
+    "ideatek:ParticleMatter",
+]
+read = [
+    "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_solver_t",
+    "ideatek:ideatek_coating_rule_t",
+    "ideatek:ideatek_matter_chunk_t",
+    "ideatek:ideatek_particle_state_t",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:author@1.0.0"]
+write = [
+    "ideatek:MatterFamily",
+    "ideatek:MatterMaterial",
+    "ideatek:Matter",
+]
+read = [
+    "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_solver_t",
+    "ideatek:ideatek_coating_rule_t",
+    "ideatek:ideatek_matter_chunk_t",
+    "ideatek:ideatek_particle_state_t",
+    "ideatek:ParticleMatter",
+]
+'''
+
+[[case]]
+name = "the matter module loads with write on the matter of the bodies and of the particles"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:matter@1.0.0, native, m/matter_module{library}"] }
+
+[case.folders]
+"{case}/m" = ["matter_module"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:matter@1.0.0"]
+write = [
+    "ideatek:Matter",
+    "ideatek:ParticleMatter",
+]
+read = [
+    "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_solver_t",
+    "ideatek:ideatek_coating_rule_t",
+    "ideatek:ideatek_matter_chunk_t",
+    "ideatek:ideatek_particle_state_t",
+    "ideatek:MatterFamily",
+    "ideatek:MatterMaterial",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:matter@1.0.0"]
+write = [
+    "ideatek:ParticleMatter",
+]
+read = [
+    "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_solver_t",
+    "ideatek:ideatek_coating_rule_t",
+    "ideatek:ideatek_matter_chunk_t",
+    "ideatek:ideatek_particle_state_t",
+    "ideatek:MatterFamily",
+    "ideatek:MatterMaterial",
+    "ideatek:Matter",
+]
+'''
+
+[[case]]
+name = "a reader loads with read on the matter of the bodies and of the particles"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+claims = { status = 0, line = ["loaded: test:reader@1.0.0, native, m/matter_reader{library}"] }
+
+[case.folders]
+"{case}/m" = ["matter_reader"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_solver_t",
+    "ideatek:ideatek_matter_chunk_t",
+    "ideatek:ideatek_particle_state_t",
+    "ideatek:Matter",
+    "ideatek:ParticleMatter",
+]
+'''
+
+[case.false.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/check.toml"]
+[content]
+paths = ["m"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:reader@1.0.0"]
+read = [
+    "ideatek:ideatek_entity_t",
+    "ideatek:ideatek_solver_t",
+    "ideatek:ideatek_matter_chunk_t",
+    "ideatek:ideatek_particle_state_t",
+    "ideatek:Matter",
+]
+'''
+
+[[case]]
+name = "the release of a target holds the header and the licence, and a program builds from it"
+run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "matter", "--pack"]
+claims = { status = 0, line = [
+    "{case}/out/BC-IdeaTek-Matter-{target}.zip", "include/ideatek_matter.h", "license",
+    "package proof: BC-IdeaTek-Matter ran",
+] }
+false = { run = ["{python}", "{root}/.toolchain/tools/build.py", "--root", "{root}", "--out", "{case}/out", "--part", "matter"] }
