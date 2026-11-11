@@ -9,7 +9,7 @@ This file gives the module its reads of values and its buffers in the scratch ar
 
 | Function | Result |
 | --- | --- |
-| `space_find` | The value of a type on an entity, or `nullptr`. |
+| `space_find` | The cell of a type on an entity, or `nullptr`. `SPACE_FIND` reads it, and `SPACE_EDIT` writes it. |
 | `take_scratch` | A buffer of the scratch arena, or `nullptr`. |
 | `take_set` | A set of a room. `false` when the scratch arena cannot hold it. |
 | `get_parent` | The parent of an entity, or 0. |

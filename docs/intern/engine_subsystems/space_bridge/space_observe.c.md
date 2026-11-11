@@ -10,7 +10,11 @@ This file registers the 5 observers and the system of the module.
 | `previous` | `ideatek:Interpolated` | Enter and leave | `ideatek:PreviousWorldTransform` |
 | `gone` | `ideatek:Transform` | Leave | The places, the lists, `ideatek:Parent` and `ideatek:Transform` |
 
-Each observer runs after the observer before it in the table. The query of `step` names `ideatek:Interpolated`, `ideatek:WorldTransform` and `ideatek:PreviousWorldTransform`.
+Each observer runs after the observer before it in the table. The query of `step` names `ideatek:Interpolated`, `ideatek:WorldTransform` and `ideatek:PreviousWorldTransform`, and writes the last.
+
+`place` and `relink` also have 2 terms that write `ideatek:WorldTransform` and `ideatek:PreviousWorldTransform`, with `BRIDGE_OPTIONAL`. They change no match.
+Bridge needs them for a write in place, and `validate` counts the writes as declared. An observer of another module that reads these types at a barrier needs a pair with them.
+An optional term also counts for `BRIDGE_ON_ATTACH`. So `place` hears the first attach of a place 1 time, and places the entity again with no write.
 
 ## Functions
 
