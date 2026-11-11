@@ -82,6 +82,7 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_parent_t, IDEATEK_PARENT_FIELDS);
     #define IDEATEK_WORLD_TRANSFORM_FIELDS { \
         ideatek_position_t origin; \
         float basis[9]; \
+        uint32_t revision; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_world_transform_t,
