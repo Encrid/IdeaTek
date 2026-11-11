@@ -17,6 +17,9 @@ The times of the triggers count with `elapsed` of `ideatek:Tick`.
 
 A context with `IDEATEK_CONTEXT_FLAGS_REAL_TIME` is mapped in each round instead, also in a pause. Its times count with `real_delta` of `ideatek:Frame`.
 
+Each action state names the tick of the step that took it, in `tick`. So the simulation is deterministic over its actions by tick, whatever the rounds.
+A replay or a peer of the network gives the actions at their ticks.
+
 ## The sources
 
 | Source | `control` | Value |
@@ -180,7 +183,7 @@ Bytes 10 to 11 hold no field.
 ## ideatek:InputActionState
 
 `ideatek:InputActionState` is the value and the state of an action. The mapping module writes it.
-`ideatek_input_action_state_t` takes 20 bytes. Its alignment is 4.
+`ideatek_input_action_state_t` takes 32 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
@@ -190,8 +193,9 @@ Bytes 10 to 11 hold no field.
 | `held` | `float` | 12 | The seconds since the start. |
 | `state` | `ideatek_action_state_t` | 16 | The state. |
 | `edges` | `ideatek_action_edges_t` | 17 | The changes of the step. |
+| `tick` | `uint64_t` | 24 | The `tick` of `ideatek:Tick` of the step that took the action. A context in real time gives the tick of the next step. |
 
-Bytes 18 to 19 hold no field.
+Bytes 18 to 23 hold no field.
 
 ## ideatek:ideatek_input_source_t
 
@@ -716,7 +720,7 @@ The game picks the glyph of a prompt from the binding whose source fits `kind`. 
 { bridge_text_t name; ideatek_action_type_t type; ideatek_accumulate_t accumulate; }
 { IDEATEK_ACTION_STATE_IDLE = 0, IDEATEK_ACTION_STATE_ONGOING = 1, IDEATEK_ACTION_STATE_TRIGGERED = 2 }
 { IDEATEK_ACTION_EDGES_STARTED = 0x01, IDEATEK_ACTION_EDGES_TRIGGERED = 0x02, IDEATEK_ACTION_EDGES_CANCELED = 0x04, IDEATEK_ACTION_EDGES_COMPLETED = 0x08 }
-{ float x; float y; float z; float held; ideatek_action_state_t state; ideatek_action_edges_t edges; }
+{ float x; float y; float z; float held; ideatek_action_state_t state; ideatek_action_edges_t edges; uint64_t tick; }
 { IDEATEK_INPUT_SOURCE_KEY = 0, IDEATEK_INPUT_SOURCE_KEY_LAYOUT = 1, IDEATEK_INPUT_SOURCE_MOUSE_BUTTON = 2, IDEATEK_INPUT_SOURCE_MOUSE_MOTION = 3, IDEATEK_INPUT_SOURCE_MOUSE_WHEEL = 4, IDEATEK_INPUT_SOURCE_GAMEPAD_BUTTON = 5, IDEATEK_INPUT_SOURCE_GAMEPAD_STICK = 6, IDEATEK_INPUT_SOURCE_GAMEPAD_TRIGGER = 7, IDEATEK_INPUT_SOURCE_TOUCH = 8, IDEATEK_INPUT_SOURCE_TOUCH_MOTION = 9, IDEATEK_INPUT_SOURCE_EXTERNAL = 10 }
 { ideatek_entity_t context; ideatek_entity_t action; uint32_t control; ideatek_input_source_t source; }
 { IDEATEK_DEAD_ZONE_KIND_AXIAL = 0, IDEATEK_DEAD_ZONE_KIND_RADIAL = 1, IDEATEK_DEAD_ZONE_KIND_UNSCALED_RADIAL = 2 }
