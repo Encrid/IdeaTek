@@ -32,10 +32,13 @@ Its 5 observers run at the barriers, in this order:
 
 `place` also applies `ideatek:Teleported`, as `docs/extern/engine_subsystems/ideatek_space.h.md`, *ideatek:Teleported*, tells. Then it detaches the tag.
 
-The system `step` runs in the phase `fixed` of the module, before the movers of the fixed phase. When `tick` of `ideatek:Tick` changed, it copies `ideatek:WorldTransform` into `ideatek:PreviousWorldTransform` for each entity with `ideatek:Interpolated`.
+The system `step` runs in the phase `fixed` of the module, before the movers of the fixed phase. When `tick` of `ideatek:Tick` changed, it writes `ideatek:WorldTransform` in place into `ideatek:PreviousWorldTransform` for each entity with `ideatek:Interpolated`.
 
 A change of a parent takes 2 barriers: `link` writes the lists at the first, and `place` reads them at the second.
 So a moved entity gets its `ideatek:WorldTransform` within 2 barriers. A child with a new parent gets it within 3.
+
+The table ids are `tables` + `sparse_sets` + 1 of the budget of the world. In a world of 128 tables, the default `spans` holds about 3500 entities that move in 1 round.
+A deployment with more raises `spans` by 16 bytes for each entity.
 
 ### The deployment
 
@@ -44,11 +47,11 @@ So a moved entity gets its `ideatek:WorldTransform` within 2 barriers. A child w
 | `pinned` | `false` | The module asks no thread of its own. |
 | `reloadable` | `false` | A reload of the module has no case yet. |
 | `spawns` | `"none"` | The module makes no entity. It only destroys orphans. |
-| `changes` | 262144 | The attaches of `ideatek:WorldTransform` and the links of a round: about 2 for each moved entity. |
+| `changes` | 262144 | The first attach of `ideatek:WorldTransform` of each new entity, and the links of a round. A moved entity takes no changes. |
 | `persistent` | `"none"` | The module keeps nothing between the rounds. |
 | `scratch` | 1048576 | The set of the entities of 1 call of `place`, 16 bytes for each, and the stack of the walk. |
 | `log_ring` | 512 | 16 log lines fit, with 32 bytes for each line. |
-| `spans` | 65536 | The spans of its query, and the columns of its 8 types. |
+| `spans` | 65536 | The cells of its 16 types and the spans of its query: 68 bytes for each table id, and 376 bytes. Also 16 bytes for each entity in the lists of its observers at 1 barrier. |
 
 - The deployment sets `observer_passes` to 3 or more, as the document of `bridge.h` of Bridge tells.
 - `fixed` of the module is the fixed phase of the deployment.
