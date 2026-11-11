@@ -92,6 +92,20 @@ static void put_file(char *args)
     SDL_SaveFile(args, comma + 1, strlen(comma + 1));
 }
 
+static void put_big(char *args)
+{
+    char *comma = strchr(args, ',');
+    size_t size;
+    void *bytes;
+
+    *comma = '\0';
+    size = strtoull(comma + 1, nullptr, 0);
+    bytes = calloc(size ? size : 1, 1);
+    if (bytes)
+        SDL_SaveFile(args, bytes, size);
+    free(bytes);
+}
+
 static void show_results(const bridge_api_t *api)
 {
     const ideatek_file_result_t *r;
@@ -146,6 +160,8 @@ bool game_files_step(const bridge_api_t *api, const char *verb, char *args)
             SDL_RemovePath(args), SDL_GetError());
     else if (!strcmp(verb, "putfile"))
         put_file(args);
+    else if (!strcmp(verb, "putbig"))
+        put_big(args);
     else
         done = false;
     return (done);
