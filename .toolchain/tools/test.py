@@ -33,10 +33,20 @@ def environment(changes, values):
     return env
 
 
-def free_port():
-    with socket.socket() as free:
-        free.bind(('127.0.0.1', 0))
+def bound(kind, port):
+    with socket.socket(socket.AF_INET, kind) as free:
+        try:
+            free.bind(('127.0.0.1', port))
+        except OSError:
+            return 0
         return free.getsockname()[1]
+
+
+def free_port():
+    port = 0
+    while port == 0:
+        port = bound(socket.SOCK_STREAM, bound(socket.SOCK_DGRAM, 0))
+    return port
 
 
 def started(argv, root, timeout, env=None, use=None):
