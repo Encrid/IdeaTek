@@ -16,6 +16,7 @@
         uint32_t read_bytes; \
         bridge_text_t user_folder; \
         bridge_text_t content_folder; \
+        uint32_t deterministic_rounds; \
     }
 
 BRIDGE_SCHEMA_STRUCT_TYPE(files_settings_t, FILES_SETTINGS_FIELDS);
@@ -61,12 +62,15 @@ typedef struct {
     uint32_t status;
     uint32_t state;
     uint32_t round;
+    uint32_t due;
+    uint32_t seq;
 } files_job_t;
 
 typedef struct {
     uint64_t entity;
     uint32_t status;
     bool keep;
+    uint32_t due;
 } files_early_t;
 
 typedef struct {
@@ -95,6 +99,7 @@ typedef struct {
     os_thread_t *thread;
     os_mutex_t *lock;
     os_event_t *wake;
+    os_event_t *finished;
 
     files_job_t jobs[FILES_QUEUE];
     uint32_t done[FILES_QUEUE];
@@ -111,6 +116,8 @@ typedef struct {
     char *content;
     char *user;
     uint32_t round;
+    uint32_t rounds;
+    uint32_t seq;
     uint32_t request_list;
 } files_module_t;
 
@@ -134,9 +141,13 @@ uint32_t do_list(files_job_t *job, const char *storage);
 uint32_t do_remove(files_job_t *job, const char *storage);
 
 bool has_room(const bridge_api_t *api, uint32_t bytes);
+void take_halves(const bridge_api_t *api, uint32_t bytes);
 void turn_results(const bridge_api_t *api);
 bridge_text_t put_bytes(const bridge_api_t *api, const char *bytes,
     uint32_t len);
+void publish_job(const bridge_api_t *api, files_job_t *job);
+void take_jobs(const bridge_api_t *api, uint32_t bytes);
+bool take_rounds(const bridge_api_t *api, const files_settings_t *s);
 void publish(const bridge_api_t *api, uint64_t entity,
     ideatek_file_result_t result, bool keep);
 

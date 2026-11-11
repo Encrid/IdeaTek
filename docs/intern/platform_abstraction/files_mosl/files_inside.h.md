@@ -13,6 +13,7 @@ The worker thread and the thread of the phases share `jobs`, `done`, `early`, `w
 | `stop` | The flag that ends the worker thread. |
 | `has_content`, `has_user` | The storage is there. |
 | `thread`, `lock`, `wake` | The worker thread, the mutex of the shared fields, and the event that wakes the thread. |
+| `finished` | The event that the worker thread sets at the end of each job, for a round that waits: `docs/intern/platform_abstraction/files_mosl/files_due.c.md`. |
 | `jobs` | The requests that the thread does, as `files_job_t`. |
 | `done`, `done_count` | The jobs that the thread finished, in the order of their end, as indexes into `jobs`. |
 | `early`, `early_count` | The results that the thread of the phases decides, as `files_early_t`: the refusals and the starts of the watches. |
@@ -20,7 +21,9 @@ The worker thread and the thread of the phases share `jobs`, `done`, `early`, `w
 | `half` | The 2 halves of `read_bytes`, as `files_half_t`: the bytes that the results and the changes of a round hold. |
 | `gone`, `gone_count` | The result entities of the last round, which the next round destroys. |
 | `content`, `user` | The paths of the 2 storages, in the persistent arena. |
-| `round` | The count of the rounds, for the order of the jobs. |
+| `round` | The count of the rounds, for the order of the jobs and for `due`. |
+| `rounds` | The value of `deterministic_rounds`. |
+| `seq` | The count of the jobs that arrived, for the order of their requests. |
 | `request_list` | The list of the observer `request`, by its index. |
 
 ## The jobs
@@ -38,10 +41,13 @@ The worker thread and the thread of the phases share `jobs`, `done`, `early`, `w
 | `status` | The status of the result. |
 | `state` | `FILES_FREE`, `FILES_WAITING`, `FILES_RUNNING`, `FILES_DONE` or `FILES_CANCELED`. |
 | `round` | The round of the arrival, for the order of 1 priority. |
+| `due` | The first round of its result: `round` plus `rounds`. |
+| `seq` | The place of the request in the order of the arrivals. |
 
 A job is `FILES_FREE` before a request and after its result. A cancel turns a waiting job into a free one, and a running or done job into a canceled one: `docs/intern/platform_abstraction/files_mosl/files_jobs.c.md`.
 
-`files_early_t` is 1 result that the thread of the phases decides: its entity, its status, and `keep`. `keep` is `true` for the start of a watch, whose entity stays.
+`files_early_t` is 1 result that the thread of the phases decides: its entity, its status, `keep` and `due`. `keep` is `true` for the start of a watch, whose entity stays. `due` is as in a job.
+
 `files_watch_t` is 1 watch: its entity, its `os_watch_t`, its path in the content storage, and whether the round before attached a change.
 `files_half_t` is the 2 halves of a block of bytes: its place, its size, the bytes used and the side of the round. The window module keeps its drops the same way.
 `files_action_t` is the function of 1 action of the worker thread: `docs/intern/platform_abstraction/files_mosl/files_work.c.md`.
@@ -63,4 +69,4 @@ A job is `FILES_FREE` before a request and after its result. A cancel turns a wa
 ## The slots
 
 The slots are, in the order of the declarations: `STORAGE`, `ACTION`, `STATUS`, `REQUEST`, `RESULT`, `CHANGE`, then `SETTINGS`.
-`files_settings_t` holds `read_bytes`, `user_folder` and `content_folder`, as the table of the contract orders them.
+`files_settings_t` holds `read_bytes`, `user_folder`, `content_folder` and `deterministic_rounds`, as the table of the contract orders them.

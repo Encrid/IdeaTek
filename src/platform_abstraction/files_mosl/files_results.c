@@ -16,7 +16,7 @@ void publish(const bridge_api_t *api, uint64_t entity,
     files_module.gone_count += !keep;
 }
 
-static void publish_job(const bridge_api_t *api, files_job_t *job)
+void publish_job(const bridge_api_t *api, files_job_t *job)
 {
     files_half_t *half = &files_module.half;
     bool canceled = job->state == FILES_CANCELED;
@@ -38,23 +38,19 @@ static void publish_job(const bridge_api_t *api, files_job_t *job)
 static void take_results(const bridge_api_t *api)
 {
     files_early_t *early = files_module.early;
-    uint32_t *done = files_module.done;
     uint32_t bytes = CHANGE_BYTES(ideatek_file_result_t);
     ideatek_file_result_t result = {};
     uint32_t i = 0;
-    uint32_t k = 0;
 
     os_mutex_lock(files_module.lock);
-    for (; i < files_module.early_count && has_room(api, bytes); i++) {
+    for (; i < files_module.early_count && early[i].due <= files_module.round
+        && has_room(api, bytes); i++) {
         result.status = (ideatek_file_status_t)early[i].status;
         publish(api, early[i].entity, result, early[i].keep);
     }
     memmove(early, early + i, (files_module.early_count - i) * sizeof(*early));
     files_module.early_count -= i;
-    for (; k < files_module.done_count && has_room(api, bytes); k++)
-        publish_job(api, &files_module.jobs[done[k]]);
-    memmove(done, done + k, (files_module.done_count - k) * sizeof(*done));
-    files_module.done_count -= k;
+    take_jobs(api, bytes);
     os_mutex_unlock(files_module.lock);
 }
 

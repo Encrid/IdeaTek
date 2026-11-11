@@ -50,6 +50,8 @@ static void fill_job(const bridge_api_t *api, files_job_t *job,
     job->size = 0;
     job->status = IDEATEK_FILE_STATUS_OK;
     job->round = files_module.round;
+    job->due = files_module.round + files_module.rounds;
+    job->seq = files_module.seq++;
     job->state = FILES_WAITING;
 }
 
