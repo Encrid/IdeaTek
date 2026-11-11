@@ -9,12 +9,17 @@ static void remember(const bridge_api_t *api, uint64_t id, uint64_t tick)
 {
     const ideatek_world_transform_t *w = SPACE_FIND(api, id, WORLD,
         ideatek_world_transform_t);
+    ideatek_previous_world_transform_t *old = SPACE_EDIT(api, id, PREVIOUS,
+        ideatek_previous_world_transform_t);
     ideatek_previous_world_transform_t p = { .tick = tick };
 
     if (!w)
         return;
     p.world = *w;
-    BRIDGE_NATIVE_ATTACH(api, id, PREVIOUS, p);
+    if (old)
+        *old = p;
+    else
+        BRIDGE_NATIVE_ATTACH(api, id, PREVIOUS, p);
 }
 
 static uint64_t get_tick(const bridge_api_t *api)

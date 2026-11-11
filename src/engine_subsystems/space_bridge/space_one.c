@@ -23,7 +23,7 @@ static uint8_t get_absolute(const bridge_api_t *api, uint64_t id)
 static void keep_previous(const bridge_api_t *api, space_item_t *item,
     const ideatek_world_transform_t *world)
 {
-    const ideatek_previous_world_transform_t *p = SPACE_FIND(api, item->id,
+    ideatek_previous_world_transform_t *p = SPACE_EDIT(api, item->id,
         PREVIOUS, ideatek_previous_world_transform_t);
     bool fresh = !p && space_find(api, item->id, INTERPOLATED);
     ideatek_previous_world_transform_t next = { .world = *world };
@@ -31,10 +31,26 @@ static void keep_previous(const bridge_api_t *api, space_item_t *item,
     item->teleport |= space_find(api, item->id, TELEPORTED) != nullptr;
     if (item->teleport)
         api->detach(api, item->id, TELEPORTED);
-    if (!fresh && !(item->teleport && p))
-        return;
-    next.tick = p ? p->tick : 0;
-    BRIDGE_NATIVE_ATTACH(api, item->id, PREVIOUS, next);
+    if (fresh)
+        BRIDGE_NATIVE_ATTACH(api, item->id, PREVIOUS, next);
+    else if (item->teleport && p)
+        p->world = *world;
+}
+
+static void write_world(const bridge_api_t *api, uint64_t id,
+    ideatek_world_transform_t *world)
+{
+    ideatek_world_transform_t *old = SPACE_EDIT(api, id, WORLD,
+        ideatek_world_transform_t);
+
+    if (!old) {
+        world->revision = 1;
+        BRIDGE_NATIVE_ATTACH(api, id, WORLD, *world);
+    } else if (!is_same_world(old, world)) {
+        world->revision = old->revision + 1;
+        *old = *world;
+    } else
+        world->revision = old->revision;
 }
 
 bool place_one(const bridge_api_t *api, space_item_t *item,
@@ -42,8 +58,6 @@ bool place_one(const bridge_api_t *api, space_item_t *item,
 {
     const ideatek_transform_t *t = SPACE_FIND(api, item->id, TRANSFORM,
         ideatek_transform_t);
-    const ideatek_world_transform_t *old = SPACE_FIND(api, item->id, WORLD,
-        ideatek_world_transform_t);
     ideatek_world_transform_t local;
 
     if (!t)
@@ -55,7 +69,6 @@ bool place_one(const bridge_api_t *api, space_item_t *item,
     if (item->has_parent)
         compose(&item->parent, &local, get_absolute(api, item->id), world);
     keep_previous(api, item, world);
-    if (!old || !is_same_world(old, world))
-        BRIDGE_NATIVE_ATTACH(api, item->id, WORLD, *world);
+    write_world(api, item->id, world);
     return (true);
 }

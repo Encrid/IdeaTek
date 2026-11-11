@@ -21,6 +21,7 @@
         BRIDGE_STRIP, BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE)
     #define SPACE_FIND(api, id, slot, T) ((const T *)space_find(api, id, \
         slot))
+    #define SPACE_EDIT(api, id, slot, T) ((T *)space_find(api, id, slot))
 
 constexpr uint32_t ENTITY = 0;
 constexpr uint32_t TRANSFORM = 7;
@@ -76,7 +77,7 @@ extern space_module_t space_module;
 void declare_types(const bridge_api_t *api);
 void add_observers(const bridge_api_t *api);
 
-const void *space_find(const bridge_api_t *api, uint64_t id, uint32_t slot);
+void *space_find(const bridge_api_t *api, uint64_t id, uint32_t slot);
 void *take_scratch(const bridge_api_t *api, uint32_t size);
 bool take_set(const bridge_api_t *api, space_set_t *set, uint32_t room);
 void take_stack(const bridge_api_t *api, space_stack_t *stack);
