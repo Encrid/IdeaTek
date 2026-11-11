@@ -20,3 +20,8 @@ This document gives the needs of the project.
 ## The needs of a project
 
 A project can add needs of its own below the table, each with its meaning.
+
+| Need | Meaning |
+| --- | --- |
+| Deterministic | The same deployment, modules and inputs give the same results in the same order, on each run, each machine and each platform. No result depends on the time, on the order of the threads or on an address of memory. Each limit that changes a result is a stated value. A measure of time is no result. |
+| Control | Each value and each behavior that can be a setting is a setting. A game, a level or a user changes it with no change of the code. A law or a feature that costs time is a setting, and a measure on the reference hardware gives its default. |
