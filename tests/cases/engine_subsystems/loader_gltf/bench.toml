@@ -49,3 +49,47 @@ output_bytes = 8388608
 [module."test:game@1.0.0".config]
 script = "2:level 2|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
 '''
+
+[[case]]
+name = "200 loads asked in 1 round, in a world of 128 tables, load with the default spans of the resources module"
+helper = { run = ["{out}/gltf_bench{exe}", "write", "{case}/host/content", "200", "4", "2"], wait = "written 200", stdin = "", claims = { has = ["written 200"] } }
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["level 200 models 200 meshes 200 textures 200 vertices 800 indices 1200 texels 12800"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_level.toml"]
+rounds = 4000
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_resources_files:resources@0.1.0"]
+spans = 16384
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "2:level 200"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_level", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_level.toml"]
+rounds = 4000
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "2:level 200"
+'''
