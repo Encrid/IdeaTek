@@ -95,6 +95,13 @@ A player in a zone sends its signal times `reverb_send` to `reverb_bus`.
 When the listener is in a zone and the player is not, the player takes the exterior volume and cutoff of the zone. When the player is in it and the listener is not, it takes the interior values.
 The changes fade over `fade`.
 
+## The air
+
+A sound carries only through air. The sound module reads the pressure of the air at each spatial player and at its listener.
+The pressure comes from `docs/extern/engine_subsystems/ideatek_physics.h.md`, *The air of an area*.
+When the pressure at the player or at the listener is 0, the listener does not hear the player. A player that is not spatial, as music or a menu, does not change.
+In a deployment with no air area, the air is everywhere, so each sound carries.
+
 ## The materials of the sound
 
 Only a shape with `ideatek:SoundMaterial` acts on the sound. A sensor shape with a sound material blocks the sound but not the bodies.
@@ -863,4 +870,4 @@ Bytes 28 to 31 hold no field.
 | Role | `write` | `read` |
 | --- | --- | --- |
 | The game | The sounds, the players, the buses, the effects, the zones, the materials, the streams, the clocks, the meters and the other requests | The types of the fields |
-| The sound module | `ideatek:SoundPlayback`, `ideatek:SoundEnded`, `ideatek:SoundBus`, `ideatek:SoundStreamState`, `ideatek:SoundBeat`, `ideatek:SoundLevel` and `ideatek:SoundBandLevel` | Each type that the game writes, `ideatek:WorldTransform`, `ideatek:Shape`, and the types of the fields |
+| The sound module | `ideatek:SoundPlayback`, `ideatek:SoundEnded`, `ideatek:SoundBus`, `ideatek:SoundStreamState`, `ideatek:SoundBeat`, `ideatek:SoundLevel` and `ideatek:SoundBandLevel` | Each type that the game writes, `ideatek:WorldTransform`, `ideatek:Shape`, `ideatek:AirArea`, and the types of the fields |

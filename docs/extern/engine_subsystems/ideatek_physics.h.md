@@ -1,6 +1,6 @@
 # include/engine_subsystems/ideatek_physics.h
 
-`include/engine_subsystems/ideatek_physics.h` gives the types of the physics: bodies, shapes, materials, characters, joints, vehicles, destruction, soft bodies, ropes, fluids, fields and time areas.
+`include/engine_subsystems/ideatek_physics.h` gives the types of the physics: bodies, shapes, materials, characters, joints, vehicles, destruction, soft bodies, ropes, fluids, fields, time areas and air areas.
 `readme.md`, *The contracts*, tells the rules of each contract.
 The header includes the headers of the world and space parts, for the entities, the positions, the vectors and the rotations of its fields.
 
@@ -233,13 +233,13 @@ After each step, the module writes `ideatek:LiquidParticles` and the surface as 
 ## The gases
 
 Gases fill a grid of cells in a sensor box: the entity with `ideatek:GasVolume`. The grid has the size of the box.
-Each record of `species` is 1 gas, and its index is its number. Each cell holds the amount of each gas in kg / m^3, a temperature in K and a velocity. The air fills the rest of each cell.
+Each record of `species` is 1 gas, and its index is its number. Each cell holds the amount of each gas in kg / m^3, a temperature in K and a velocity. The air fills the rest of each cell, at the pressure of *The air of an area*.
 
 A record of `species`:
 
 | Field | C type | Offset in the record | Value |
 | --- | --- | --- | --- |
-| `density` | `float` | 0 | The density relative to the air at the same temperature. Below 1, the gas rises. Above 1, it sinks. |
+| `density` | `float` | 0 | The density relative to the air at the same temperature and pressure. Below 1, the gas rises in air. Above 1, it sinks. |
 | `diffusion` | `float` | 4 | How fast the gas spreads alone, in m^2 / s. |
 | `opacity` | `float` | 8 | The part of the light that 1 kg / m^3 of the gas stops in each meter. |
 | `specific_heat` | `float` | 12 | The heat that warms 1 kg of the gas by 1 K, in J. |
@@ -255,17 +255,23 @@ A record of `reactions`:
 | `rate` | `float` | 12 | The part of the reactant of a cell that burns in each second. |
 | `heat` | `float` | 16 | The heat that 1 kg of the reactant gives, in J. |
 | `yield` | `float` | 20 | The kg of the product for each kg of the reactant. |
+| `needs_air` | `uint32_t` | 24 | 1 if the reactant burns only where the pressure of the air is above 0. 0 if it also burns in a vacuum, as a fuel that holds its own oxygen. |
 
 The records have no bytes between them. The game writes the gases and the reactions from its materials. The module only applies them in each cell.
 
-The pressure of a cell is `ambient_pressure` plus, for each gas, the amount times 287.05 divided by `density`, times the temperature. This is the law of the ideal gas, with the air as the unit.
-A gas that heats rises in pressure, and flows toward the cells of lower pressure. Heat rises. Each cell loses the part `cooling` of its difference to `ambient_temperature` in each second.
+The air of a cell has the pressure of *The air of an area*. Each gas adds the amount times 287.05 divided by `density`, times the temperature.
+This is the law of the ideal gas, with the air as the unit. A gas that heats rises in pressure, and flows toward the cells of lower pressure.
+Each cell loses the part `cooling` of its difference to `ambient_temperature` in each second.
+
+The density of the air is its pressure divided by 287.05 times the temperature. The gravity at a cell comes from the module and from *The gravity areas*.
+A gas rises by that gravity times the density of the air minus the density of the gas, divided by the density of the gas.
+So heat rises in air. In a vacuum, a gas falls as a body falls, and no gas rises.
 
 An emitter is an entity with `ideatek:GasEmitter`. It adds `rate` kg of 1 gas in each second, at `temperature`. It adds `heat` watts to the cells of its shape, and moves them toward `velocity` at `couple_rate`.
 An emitter with a `rate` of 0 adds no gas: it is a wind or a heater inside the grid.
 
 With `IDEATEK_GAS_FLAGS_COLLIDE`, the shapes push the gas. With `IDEATEK_GAS_FLAGS_PUSH_BODIES`, the gas pushes each body in it as a wind, with the velocity and the density of its cells: *The fields*.
-With `IDEATEK_GAS_FLAGS_PRESSURE`, the pressure above `ambient_pressure` pushes the shapes in the grid, and loads the bonds of a destructible body as a strain. So a heated gas breaks a closed body: *The destruction*.
+With `IDEATEK_GAS_FLAGS_PRESSURE`, the pressure of the gases pushes the shapes in the grid, and loads the bonds of a destructible body as a strain. So a heated gas breaks a closed body: *The destruction*.
 
 After each step, the module writes a 3D texture of the temperature, and 1 3D texture for each 4 gases. It points `ideatek:GasGrid` at them. Render draws them with the `color` and the `opacity` of each gas.
 A query of the kind `IDEATEK_QUERY_KIND_GAS` answers with `ideatek:GasSample` at `origin`. A query of the kind `IDEATEK_QUERY_KIND_SIGHT` answers with `ideatek:SightSample`, for the sight of a sensor through smoke or steam.
@@ -292,6 +298,8 @@ With `IDEATEK_FIELD_TARGET_VELOCITY`, `acceleration` is a speed in m / s. With `
 
 A force field gives the same acceleration to each mass. A wind pushes a rigid body and a character by their `drag`, along the speed of the air relative to the body.
 The force is 0.5 times `air_density`, times the square of that speed, times `drag`.
+It also scales with the pressure of the air at the body divided by 101325. So a wind pushes no body in a vacuum: *The air of an area*.
+
 So a light body flies in a wind, and a heavy body stays. A `drag` of 0 keeps the wind off a body.
 
 The defaults are neutral: a speed and an acceleration of 0, a shape that fills the world, no falloff and no gust. The references do not agree on a size, so the game sets it.
@@ -334,7 +342,7 @@ A sound follows the rate of its place through the `pitch` of its player: `docs/e
 | `stress_iterations` | 0 | 0 or more | The passes of the solver of the stress on the bonds. 0 lets the module choose. |
 | `snapshot_bytes` | 1048576 | 0 or more | The bytes for a snapshot. Each half holds 1 snapshot. |
 | `deterministic` | `false` | `true` or `false` | The same inputs give the same steps on each machine of a target. |
-| `air_density` | 1.204 | Above 0 | The density of the air, in kg / m^3, for the push of a wind. The default is the air at 20 degrees Celsius and at sea level. |
+| `air_density` | 1.204 | Above 0 | The density of the air at 101325 Pa, in kg / m^3, for the push of a wind. The default is the air at 20 degrees Celsius and at sea level. |
 
 ## ideatek:ideatek_body_kind_t
 
@@ -1758,7 +1766,7 @@ Bytes 49 to 55 hold no field.
 ## ideatek:GasVolume
 
 `ideatek:GasVolume` is a grid of gases in a sensor box: *The gases*.
-`ideatek_gas_volume_t` takes 52 bytes. Its alignment is 4.
+`ideatek_gas_volume_t` takes 48 bytes. Its alignment is 4.
 
 | Field | C type | Offset | Default | Value |
 | --- | --- | --- | --- | --- |
@@ -1767,16 +1775,15 @@ Bytes 49 to 55 hold no field.
 | `cell_size` | `float` | 16 | 0.5 | The size of a cell of the grid, in m. |
 | `steps_per_second` | `float` | 20 | 60 | The steps of the grid in each second. |
 | `ambient_temperature` | `float` | 24 | 293.15 | The temperature of the air, in K. |
-| `ambient_pressure` | `float` | 28 | 101325 | The pressure of the air, in Pa. |
-| `cooling` | `float` | 32 | 0 | The part of the difference to `ambient_temperature` that a cell loses in each second. |
-| `vorticity` | `float` | 36 | 0.6 | The strength that keeps the swirls. |
-| `species_count` | `uint32_t` | 40 | No default | The records in `species`. |
-| `reaction_count` | `uint32_t` | 44 | No default | The records in `reactions`. |
-| `flags` | `ideatek_gas_flags_t` | 48 | 0 | The options. |
+| `cooling` | `float` | 28 | 0 | The part of the difference to `ambient_temperature` that a cell loses in each second. |
+| `vorticity` | `float` | 32 | 0.6 | The strength that keeps the swirls. |
+| `species_count` | `uint32_t` | 36 | No default | The records in `species`. |
+| `reaction_count` | `uint32_t` | 40 | No default | The records in `reactions`. |
+| `flags` | `ideatek_gas_flags_t` | 44 | 0 | The options. |
 
-Bytes 49 to 51 hold no field.
+Bytes 45 to 47 hold no field.
 
-The defaults of the air are the air at 20 degrees Celsius and at sea level. The vorticity is the default of NVIDIA Flow. The references do not agree on a cooling, so the game sets it.
+The default of the temperature is the air at 20 degrees Celsius. The pressure of the air comes from *The air of an area*. The vorticity is the default of NVIDIA Flow. The references do not agree on a cooling, so the game sets it.
 
 ## ideatek:GasEmitter
 
@@ -1933,6 +1940,19 @@ Bytes 37 to 39 hold no field.
 
 Byte 39 holds no field.
 
+## The air of an area
+
+An entity with `ideatek:AirArea` changes the pressure of the air in its shape. A pressure of 0 is a vacuum.
+Where no area acts, the pressure of the air is 101325 Pa, the air at sea level. An area of the shape `IDEATEK_FIELD_SHAPE_INFINITE` with the lowest `priority` gives the air of a level.
+
+`IDEATEK_AIR_MODE_REPLACE` takes the place of the pressure, and `IDEATEK_AIR_MODE_MULTIPLY` multiplies it.
+Where areas overlap, the replacing area with the highest `priority` wins, and each multiplying area multiplies.
+Past `inner`, the pressure goes toward the pressure without the area, as the strength of a field: *The fields*.
+
+The physics module reads the air at each body for a wind, and at each cell of a gas: *The fields*, *The gases*.
+The sound module reads it for the silence of a sound in a vacuum: `docs/extern/engine_subsystems/ideatek_sound.h.md`, *The air*.
+A reader with no body reads the areas at the origin of its `ideatek:WorldTransform`.
+
 ## ideatek:GravityArea
 
 `ideatek:GravityArea` changes the gravity in its shape: *The gravity areas*.
@@ -1974,6 +1994,33 @@ Byte 31 holds no field.
 | `falloff` | `float` | 20 | 0 | The exponent of the falloff. |
 | `priority` | `int32_t` | 24 | 0 | The rank among the areas that replace. |
 | `mode` | `ideatek_time_mode_t` | 28 | `IDEATEK_TIME_MODE_REPLACE` | How the area applies. |
+| `shape` | `ideatek_field_shape_t` | 29 | `IDEATEK_FIELD_SHAPE_SPHERE` | The place where it acts. |
+
+Bytes 30 to 31 hold no field.
+
+## ideatek:ideatek_air_mode_t
+
+`ideatek_air_mode_t` tells how an air area applies.
+`ideatek_air_mode_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_AIR_MODE_REPLACE` | The area takes the place of the pressure of the air. |
+| 1 | `IDEATEK_AIR_MODE_MULTIPLY` | The area multiplies the pressure of the air. |
+
+## ideatek:AirArea
+
+`ideatek:AirArea` changes the pressure of the air in its shape: *The air of an area*.
+`ideatek_air_area_t` takes 32 bytes. Its alignment is 4.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `size` | `ideatek_vec3_t` | 0 | 0, 0, 0 | The size of the shape. |
+| `pressure` | `float` | 12 | 101325 | The pressure of the air, in Pa, 0 or more. |
+| `inner` | `float` | 16 | 0 | The distance under which the pressure is full. |
+| `falloff` | `float` | 20 | 0 | The exponent of the falloff. |
+| `priority` | `int32_t` | 24 | 0 | The rank among the areas that replace. |
+| `mode` | `ideatek_air_mode_t` | 28 | `IDEATEK_AIR_MODE_REPLACE` | How the area applies. |
 | `shape` | `ideatek_field_shape_t` | 29 | `IDEATEK_FIELD_SHAPE_SPHERE` | The place where it acts. |
 
 Bytes 30 to 31 hold no field.
@@ -2097,6 +2144,8 @@ Bytes 30 to 31 hold no field.
 | `ideatek:GravityArea` | `ideatek_gravity_area_t` | `ideatek_gravity_area_t_desc` | `IDEATEK_GRAVITY_AREA_FIELDS` |
 | `ideatek:ideatek_time_mode_t` | `ideatek_time_mode_t` | `ideatek_time_mode_t_desc` | `IDEATEK_TIME_MODE_VALUES` |
 | `ideatek:TimeArea` | `ideatek_time_area_t` | `ideatek_time_area_t_desc` | `IDEATEK_TIME_AREA_FIELDS` |
+| `ideatek:ideatek_air_mode_t` | `ideatek_air_mode_t` | `ideatek_air_mode_t_desc` | `IDEATEK_AIR_MODE_VALUES` |
+| `ideatek:AirArea` | `ideatek_air_area_t` | `ideatek_air_area_t_desc` | `IDEATEK_AIR_AREA_FIELDS` |
 
 ```text
 { IDEATEK_BODY_KIND_STATIC = 0, IDEATEK_BODY_KIND_KINEMATIC = 1, IDEATEK_BODY_KIND_DYNAMIC = 2 }
@@ -2199,7 +2248,7 @@ Bytes 30 to 31 hold no field.
 { bridge_text_t positions; bridge_text_t velocities; uint32_t count; }
 { bridge_text_t positions; bridge_text_t lifetimes; uint32_t count; }
 { IDEATEK_GAS_FLAGS_COLLIDE = 0x01, IDEATEK_GAS_FLAGS_PUSH_BODIES = 0x02, IDEATEK_GAS_FLAGS_PRESSURE = 0x04 }
-{ bridge_text_t species; bridge_text_t reactions; float cell_size; float steps_per_second; float ambient_temperature; float ambient_pressure; float cooling; float vorticity; uint32_t species_count; uint32_t reaction_count; ideatek_gas_flags_t flags; }
+{ bridge_text_t species; bridge_text_t reactions; float cell_size; float steps_per_second; float ambient_temperature; float cooling; float vorticity; uint32_t species_count; uint32_t reaction_count; ideatek_gas_flags_t flags; }
 { ideatek_entity_t volume; ideatek_vec3_t velocity; ideatek_vec3_t size; float rate; float temperature; float heat; float couple_rate; uint32_t species; ideatek_emitter_shape_t shape; }
 { ideatek_entity_t temperature; bridge_text_t amounts; uint32_t count; }
 { ideatek_entity_t query; ideatek_entity_t volume; bridge_text_t amounts; ideatek_vec3_t velocity; float temperature; float pressure; uint32_t order; }
@@ -2214,6 +2263,8 @@ Bytes 30 to 31 hold no field.
 { ideatek_vec3_t size; float gravity; float inner; float falloff; int32_t priority; ideatek_gravity_mode_t mode; ideatek_field_shape_t shape; bool point; }
 { IDEATEK_TIME_MODE_REPLACE = 0, IDEATEK_TIME_MODE_MULTIPLY = 1 }
 { ideatek_vec3_t size; float rate; float inner; float falloff; int32_t priority; ideatek_time_mode_t mode; ideatek_field_shape_t shape; }
+{ IDEATEK_AIR_MODE_REPLACE = 0, IDEATEK_AIR_MODE_MULTIPLY = 1 }
+{ ideatek_vec3_t size; float pressure; float inner; float falloff; int32_t priority; ideatek_air_mode_t mode; ideatek_field_shape_t shape; }
 ```
 
 ## The declarations
@@ -2266,6 +2317,7 @@ Bytes 30 to 31 hold no field.
 | `ideatek:ideatek_field_target_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_gravity_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_time_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_air_mode_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Body` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:KinematicTarget` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:WakeEvent` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -2342,6 +2394,7 @@ Bytes 30 to 31 hold no field.
 | `ideatek:ForceField` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:GravityArea` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:TimeArea` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:AirArea` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
 
