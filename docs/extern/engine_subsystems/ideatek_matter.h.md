@@ -48,7 +48,7 @@ The module casts 1 ray for each pair, so a wall stops the heat. It updates these
 
 ## The phases
 
-A chunk is solid, soft, liquid or gas: `ideatek_matter_phase_t`. Its phase follows its temperature and the points of its material:
+A chunk is in 1 solver of the physics part: `ideatek_solver_t`. Its phase follows its temperature and the points of its material:
 
 | From | To | When |
 | --- | --- | --- |
@@ -119,17 +119,6 @@ The defaults of `radiation_between` and `arcs` are `false` until a bench measure
 The defaults of `sigma`, of the breakdown and of Paschen are the values of physics for air at sea level.
 The other defaults are typical values: `air_rate` is the flow of still air, and `contact_area` is 1 cm^2. A measure on the reference hardware can change each of them.
 
-## ideatek:ideatek_matter_phase_t
-
-`ideatek_matter_phase_t` is the phase of a chunk. It is an enum of 1 byte.
-
-| Value | Name | Meaning |
-| --- | --- | --- |
-| 0 | `IDEATEK_MATTER_PHASE_SOLID` | The chunk is in the rigid solver. |
-| 1 | `IDEATEK_MATTER_PHASE_SOFT` | The chunk is in the solver of soft bodies. |
-| 2 | `IDEATEK_MATTER_PHASE_LIQUID` | The chunk is in the solver of liquids. |
-| 3 | `IDEATEK_MATTER_PHASE_GAS` | The chunk is in the gas grid. |
-
 ## ideatek:ideatek_coating_rule_t
 
 `ideatek_coating_rule_t` tells what a coating of another material does. It is an enum of 1 byte.
@@ -194,7 +183,7 @@ Bytes 73 to 79 hold no field.
 | `temperature` | `float` | 0 | The temperature, in K. |
 | `coating_mass` | `float` | 4 | The mass of the coating for each m^2, in kg. |
 | `coating` | `ideatek_entity_t` | 8 | The `ideatek:MatterMaterial` of the coating, or 0 for none. |
-| `phase` | `ideatek_matter_phase_t` | 16 | The phase. |
+| `phase` | `ideatek_solver_t` | 16 | The solver of its phase. |
 | `burning` | `bool` | 17 | `true` while the chunk burns. |
 
 Bytes 18 to 23 hold no field.
@@ -237,7 +226,6 @@ Bytes 18 to 23 hold no field.
 
 | Type of Bridge | C type | Descriptor | Macro of the text |
 | --- | --- | --- | --- |
-| `ideatek:ideatek_matter_phase_t` | `ideatek_matter_phase_t` | `ideatek_matter_phase_t_desc` | `IDEATEK_MATTER_PHASE_VALUES` |
 | `ideatek:ideatek_coating_rule_t` | `ideatek_coating_rule_t` | `ideatek_coating_rule_t_desc` | `IDEATEK_COATING_RULE_VALUES` |
 | `ideatek:MatterFamily` | `ideatek_matter_family_t` | `ideatek_matter_family_t_desc` | `IDEATEK_MATTER_FAMILY_FIELDS` |
 | `ideatek:MatterMaterial` | `ideatek_matter_material_t` | `ideatek_matter_material_t_desc` | `IDEATEK_MATTER_MATERIAL_FIELDS` |
@@ -247,11 +235,10 @@ Bytes 18 to 23 hold no field.
 | `ideatek:ParticleMatter` | `ideatek_particle_matter_t` | `ideatek_particle_matter_t_desc` | `IDEATEK_PARTICLE_MATTER_FIELDS` |
 
 ```text
-{ IDEATEK_MATTER_PHASE_SOLID = 0, IDEATEK_MATTER_PHASE_SOFT = 1, IDEATEK_MATTER_PHASE_LIQUID = 2, IDEATEK_MATTER_PHASE_GAS = 3 }
 { IDEATEK_COATING_RULE_LARGER = 0, IDEATEK_COATING_RULE_NEWER = 1, IDEATEK_COATING_RULE_OLDER = 2 }
 { float thermal_conductivity; float specific_heat; float emissivity; float air_rate; float volume_keep; float smoke_share; float ash_share; bool particles_burn; }
 { ideatek_entity_t family; ideatek_entity_t solid; ideatek_entity_t soft; ideatek_entity_t liquid; ideatek_entity_t gas; float softening_point; float melting_point; float boiling_point; float fire_temperature; float burn_rate; float burn_heat; float electric_conductivity; float adhesion; bool flammable; }
-{ float temperature; float coating_mass; ideatek_entity_t coating; ideatek_matter_phase_t phase; bool burning; }
+{ float temperature; float coating_mass; ideatek_entity_t coating; ideatek_solver_t phase; bool burning; }
 { ideatek_entity_t material; bridge_text_t chunks; uint32_t chunk_count; float charge; }
 { float temperature; uint32_t material; }
 { bridge_text_t materials; bridge_text_t states; uint32_t material_count; uint32_t state_count; }
@@ -261,7 +248,6 @@ Bytes 18 to 23 hold no field.
 
 | Type of Bridge | Kind | Storage layout | `on_destroy` |
 | --- | --- | --- | --- |
-| `ideatek:ideatek_matter_phase_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_coating_rule_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:MatterFamily` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:MatterMaterial` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
