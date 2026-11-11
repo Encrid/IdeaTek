@@ -511,6 +511,8 @@ read = [
     "ideatek:SoundStream", "ideatek:SoundFrames", "ideatek:SoundClock",
     "ideatek:SoundSync", "ideatek:SoundMeter", "ideatek:SoundBand",
     "ideatek:WorldTransform", "ideatek:Shape",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_air_mode_t",
+    "ideatek:AirArea",
 ]
 '''
 
@@ -545,6 +547,8 @@ read = [
     "ideatek:SoundStream", "ideatek:SoundFrames", "ideatek:SoundClock",
     "ideatek:SoundSync", "ideatek:SoundMeter", "ideatek:SoundBand",
     "ideatek:WorldTransform", "ideatek:Shape", "ideatek:SoundBandLevel",
+    "ideatek:ideatek_field_shape_t", "ideatek:ideatek_air_mode_t",
+    "ideatek:AirArea",
 ]
 '''
 

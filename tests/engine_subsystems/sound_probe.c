@@ -204,6 +204,9 @@ static const char WHO[] = MANIFEST;
         BRIDGE_ON_DESTROY_REMOVE);
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Shape", ideatek_shape_t, BRIDGE_STRIP,
         BRIDGE_TABLE, BRIDGE_ON_DESTROY_REMOVE);
+    ENUM(api, "ideatek:ideatek_field_shape_t", ideatek_field_shape_t);
+    ENUM(api, "ideatek:ideatek_air_mode_t", ideatek_air_mode_t);
+    STRUCT(api, "ideatek:AirArea", ideatek_air_area_t);
     api->attach(api, id, STRUCT(api, "ideatek:SoundPlayback",
         ideatek_sound_playback_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:SoundEnded",

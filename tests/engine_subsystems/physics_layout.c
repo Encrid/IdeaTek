@@ -926,7 +926,6 @@ static void show_gas_volume(void)
     AT(ideatek_gas_volume_t, cell_size);
     AT(ideatek_gas_volume_t, steps_per_second);
     AT(ideatek_gas_volume_t, ambient_temperature);
-    AT(ideatek_gas_volume_t, ambient_pressure);
     AT(ideatek_gas_volume_t, cooling);
     AT(ideatek_gas_volume_t, vorticity);
     AT(ideatek_gas_volume_t, species_count);
@@ -1059,6 +1058,23 @@ static void show_time_area(void)
     AT(ideatek_time_area_t, shape);
 }
 
+static void show_air_mode(void)
+{
+    SIZE(ideatek_air_mode_t);
+}
+
+static void show_air_area(void)
+{
+    SIZE(ideatek_air_area_t);
+    AT(ideatek_air_area_t, size);
+    AT(ideatek_air_area_t, pressure);
+    AT(ideatek_air_area_t, inner);
+    AT(ideatek_air_area_t, falloff);
+    AT(ideatek_air_area_t, priority);
+    AT(ideatek_air_area_t, mode);
+    AT(ideatek_air_area_t, shape);
+}
+
 static void show_descriptors(void)
 {
     const char *descriptors[] = {
@@ -1118,7 +1134,8 @@ static void show_descriptors(void)
         ideatek_field_target_t_desc, ideatek_gravity_mode_t_desc,
         ideatek_wind_t_desc, ideatek_force_field_t_desc,
         ideatek_gravity_area_t_desc, ideatek_time_mode_t_desc,
-        ideatek_time_area_t_desc };
+        ideatek_time_area_t_desc, ideatek_air_mode_t_desc,
+        ideatek_air_area_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -1220,7 +1237,9 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_FORCE_FIELD_FIELDS),
         TEXT_OF(IDEATEK_GRAVITY_AREA_FIELDS),
         TEXT_OF(IDEATEK_TIME_MODE_VALUES),
-        TEXT_OF(IDEATEK_TIME_AREA_FIELDS) };
+        TEXT_OF(IDEATEK_TIME_AREA_FIELDS),
+        TEXT_OF(IDEATEK_AIR_MODE_VALUES),
+        TEXT_OF(IDEATEK_AIR_AREA_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -1323,6 +1342,7 @@ int main(int argc, char **argv)
         { "gravity_area", show_gravity_area },
         { "time_mode", show_time_mode },
         { "time_area", show_time_area },
+        { "air_mode", show_air_mode }, { "air_area", show_air_area },
         { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 
