@@ -931,6 +931,7 @@ static void show_gas_volume(void)
     AT(ideatek_gas_volume_t, species_count);
     AT(ideatek_gas_volume_t, reaction_count);
     AT(ideatek_gas_volume_t, flags);
+    AT(ideatek_gas_volume_t, faces);
 }
 
 static void show_gas_emitter(void)
@@ -1075,6 +1076,158 @@ static void show_air_area(void)
     AT(ideatek_air_area_t, shape);
 }
 
+static void show_gas_face_kind(void)
+{
+    SIZE(ideatek_gas_face_kind_t);
+}
+
+static void show_gas_face(void)
+{
+    SIZE(ideatek_gas_face_t);
+    AT(ideatek_gas_face_t, kind);
+    AT(ideatek_gas_face_t, species);
+    AT(ideatek_gas_face_t, temperature);
+    AT(ideatek_gas_face_t, pressure);
+}
+
+static void show_gas_fill(void)
+{
+    SIZE(ideatek_gas_fill_t);
+    AT(ideatek_gas_fill_t, volume);
+    AT(ideatek_gas_fill_t, size);
+    AT(ideatek_gas_fill_t, temperature);
+    AT(ideatek_gas_fill_t, pressure);
+    AT(ideatek_gas_fill_t, species);
+    AT(ideatek_gas_fill_t, shape);
+}
+
+static void show_air_probe(void)
+{
+    SIZE(ideatek_air_probe_t);
+    AT(ideatek_air_probe_t, pressure);
+    AT(ideatek_air_probe_t, temperature);
+    AT(ideatek_air_probe_t, density);
+    AT(ideatek_air_probe_t, covered);
+}
+
+static void show_spin_area(void)
+{
+    SIZE(ideatek_spin_area_t);
+    AT(ideatek_spin_area_t, size);
+    AT(ideatek_spin_area_t, rate);
+    AT(ideatek_spin_area_t, inner);
+    AT(ideatek_spin_area_t, falloff);
+    AT(ideatek_spin_area_t, priority);
+    AT(ideatek_spin_area_t, shape);
+}
+
+static void show_contact_work(void)
+{
+    SIZE(ideatek_contact_work_t);
+    AT(ideatek_contact_work_t, a);
+    AT(ideatek_contact_work_t, b);
+    AT(ideatek_contact_work_t, point);
+    AT(ideatek_contact_work_t, energy);
+    AT(ideatek_contact_work_t, work);
+    AT(ideatek_contact_work_t, points);
+    AT(ideatek_contact_work_t, chunk_a);
+    AT(ideatek_contact_work_t, chunk_b);
+}
+
+static void show_contact_work_list(void)
+{
+    SIZE(ideatek_contact_work_list_t);
+    AT(ideatek_contact_work_list_t, records);
+    AT(ideatek_contact_work_list_t, count);
+}
+
+static void show_particle_set_flags(void)
+{
+    SIZE(ideatek_particle_set_flags_t);
+}
+
+static void show_particle(void)
+{
+    SIZE(ideatek_particle_t);
+    AT(ideatek_particle_t, position);
+    AT(ideatek_particle_t, radius);
+    AT(ideatek_particle_t, velocity);
+    AT(ideatek_particle_t, mass);
+}
+
+static void show_particle_set(void)
+{
+    SIZE(ideatek_particle_set_t);
+    AT(ideatek_particle_set_t, particles);
+    AT(ideatek_particle_set_t, count);
+    AT(ideatek_particle_set_t, cap);
+    AT(ideatek_particle_set_t, material);
+    AT(ideatek_particle_set_t, flags);
+}
+
+static void show_solver(void)
+{
+    SIZE(ideatek_solver_t);
+}
+
+static void show_phase_request(void)
+{
+    SIZE(ideatek_phase_request_t);
+    AT(ideatek_phase_request_t, entity);
+    AT(ideatek_phase_request_t, index);
+    AT(ideatek_phase_request_t, solver);
+    AT(ideatek_phase_request_t, particle);
+    AT(ideatek_phase_request_t, species);
+}
+
+static void show_phase_request_list(void)
+{
+    SIZE(ideatek_phase_request_list_t);
+    AT(ideatek_phase_request_list_t, records);
+    AT(ideatek_phase_request_list_t, count);
+}
+
+static void show_surface_material(void)
+{
+    SIZE(ideatek_surface_material_t);
+    AT(ideatek_surface_material_t, body);
+    AT(ideatek_surface_material_t, material);
+    AT(ideatek_surface_material_t, chunk);
+}
+
+static void show_surface_material_list(void)
+{
+    SIZE(ideatek_surface_material_list_t);
+    AT(ideatek_surface_material_list_t, records);
+    AT(ideatek_surface_material_list_t, count);
+}
+
+static void show_heat_source(void)
+{
+    SIZE(ideatek_heat_source_t);
+    AT(ideatek_heat_source_t, position);
+    AT(ideatek_heat_source_t, area);
+    AT(ideatek_heat_source_t, temperature);
+    AT(ideatek_heat_source_t, rate);
+    AT(ideatek_heat_source_t, smoke);
+    AT(ideatek_heat_source_t, ash);
+    AT(ideatek_heat_source_t, smoke_species);
+}
+
+static void show_heat_source_list(void)
+{
+    SIZE(ideatek_heat_source_list_t);
+    AT(ideatek_heat_source_list_t, records);
+    AT(ideatek_heat_source_list_t, count);
+}
+
+static void show_heat_taken(void)
+{
+    SIZE(ideatek_heat_taken_t);
+    AT(ideatek_heat_taken_t, heats);
+    AT(ideatek_heat_taken_t, count);
+}
+
 static void show_descriptors(void)
 {
     const char *descriptors[] = {
@@ -1135,7 +1288,25 @@ static void show_descriptors(void)
         ideatek_wind_t_desc, ideatek_force_field_t_desc,
         ideatek_gravity_area_t_desc, ideatek_time_mode_t_desc,
         ideatek_time_area_t_desc, ideatek_air_mode_t_desc,
-        ideatek_air_area_t_desc };
+        ideatek_air_area_t_desc,
+        ideatek_gas_face_kind_t_desc,
+        ideatek_gas_face_t_desc,
+        ideatek_gas_fill_t_desc,
+        ideatek_air_probe_t_desc,
+        ideatek_spin_area_t_desc,
+        ideatek_contact_work_t_desc,
+        ideatek_contact_work_list_t_desc,
+        ideatek_particle_set_flags_t_desc,
+        ideatek_particle_t_desc,
+        ideatek_particle_set_t_desc,
+        ideatek_solver_t_desc,
+        ideatek_phase_request_t_desc,
+        ideatek_phase_request_list_t_desc,
+        ideatek_surface_material_t_desc,
+        ideatek_surface_material_list_t_desc,
+        ideatek_heat_source_t_desc,
+        ideatek_heat_source_list_t_desc,
+        ideatek_heat_taken_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -1239,7 +1410,25 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_TIME_MODE_VALUES),
         TEXT_OF(IDEATEK_TIME_AREA_FIELDS),
         TEXT_OF(IDEATEK_AIR_MODE_VALUES),
-        TEXT_OF(IDEATEK_AIR_AREA_FIELDS) };
+        TEXT_OF(IDEATEK_AIR_AREA_FIELDS),
+        TEXT_OF(IDEATEK_GAS_FACE_KIND_VALUES),
+        TEXT_OF(IDEATEK_GAS_FACE_FIELDS),
+        TEXT_OF(IDEATEK_GAS_FILL_FIELDS),
+        TEXT_OF(IDEATEK_AIR_PROBE_FIELDS),
+        TEXT_OF(IDEATEK_SPIN_AREA_FIELDS),
+        TEXT_OF(IDEATEK_CONTACT_WORK_FIELDS),
+        TEXT_OF(IDEATEK_CONTACT_WORK_LIST_FIELDS),
+        TEXT_OF(IDEATEK_PARTICLE_SET_FLAGS_VALUES),
+        TEXT_OF(IDEATEK_PARTICLE_FIELDS),
+        TEXT_OF(IDEATEK_PARTICLE_SET_FIELDS),
+        TEXT_OF(IDEATEK_SOLVER_VALUES),
+        TEXT_OF(IDEATEK_PHASE_REQUEST_FIELDS),
+        TEXT_OF(IDEATEK_PHASE_REQUEST_LIST_FIELDS),
+        TEXT_OF(IDEATEK_SURFACE_MATERIAL_FIELDS),
+        TEXT_OF(IDEATEK_SURFACE_MATERIAL_LIST_FIELDS),
+        TEXT_OF(IDEATEK_HEAT_SOURCE_FIELDS),
+        TEXT_OF(IDEATEK_HEAT_SOURCE_LIST_FIELDS),
+        TEXT_OF(IDEATEK_HEAT_TAKEN_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -1343,6 +1532,24 @@ int main(int argc, char **argv)
         { "time_mode", show_time_mode },
         { "time_area", show_time_area },
         { "air_mode", show_air_mode }, { "air_area", show_air_area },
+        { "gas_face_kind", show_gas_face_kind },
+        { "gas_face", show_gas_face },
+        { "gas_fill", show_gas_fill },
+        { "air_probe", show_air_probe },
+        { "spin_area", show_spin_area },
+        { "contact_work", show_contact_work },
+        { "contact_work_list", show_contact_work_list },
+        { "particle_set_flags", show_particle_set_flags },
+        { "particle", show_particle },
+        { "particle_set", show_particle_set },
+        { "solver", show_solver },
+        { "phase_request", show_phase_request },
+        { "phase_request_list", show_phase_request_list },
+        { "surface_material", show_surface_material },
+        { "surface_material_list", show_surface_material_list },
+        { "heat_source", show_heat_source },
+        { "heat_source_list", show_heat_source_list },
+        { "heat_taken", show_heat_taken },
         { "descriptors", show_descriptors }, { "texts", show_texts }
     };
 
