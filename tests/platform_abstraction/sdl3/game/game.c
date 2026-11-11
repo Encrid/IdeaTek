@@ -15,6 +15,8 @@
 #include "game_ktx2.h"
 #include "game_space.h"
 #include "game_gltf.h"
+#include "game_bench.h"
+#include "game_level.h"
 #include "game_frame.h"
 #include "game_gpu.h"
 
@@ -195,15 +197,24 @@ BRIDGE_NATIVE(show_modes)
 
 BRIDGE_NATIVE(show_drops)
 {
-    bridge_native_say(api, BRIDGE_LOG_INFO, "r%u drops %u", game.round,
-        game_rows(api, queries[3], game.slots.drop, show_drop));
+    [[maybe_unused]] uint32_t count = game_rows(api, queries[3],
+        game.slots.drop, show_drop);
+
+#if !defined(GAME_BENCH)
+    bridge_native_say(api, BRIDGE_LOG_INFO, "r%u drops %u", game.round, count);
+#endif
     return (0);
 }
 
 BRIDGE_NATIVE(show_pastes)
 {
+    [[maybe_unused]] uint32_t count = game_rows(api, queries[4],
+        game.slots.paste, show_paste);
+
+#if !defined(GAME_BENCH)
     bridge_native_say(api, BRIDGE_LOG_INFO, "r%u pastes %u", game.round,
-        game_rows(api, queries[4], game.slots.paste, show_paste));
+        count);
+#endif
     return (0);
 }
 
@@ -392,11 +403,14 @@ BRIDGE_NATIVE(init)
 #if defined(GAME_KTX2)
     game_watch_ktx2(api);
 #endif
-#if defined(GAME_SPACE)
+#if defined(GAME_SPACE) && !defined(GAME_BENCH)
     game_watch_space(api);
 #endif
 #if defined(GAME_GLTF)
     game_watch_gltf(api);
+#endif
+#if defined(GAME_LEVEL)
+    game_watch_level(api);
 #endif
 #if defined(GAME_AUDIO)
     game_watch_audio(api);
@@ -415,6 +429,12 @@ BRIDGE_NATIVE(init)
 
 BRIDGE_NATIVE(shutdown)
 {
+#if defined(GAME_BENCH)
+    game_bench_end(api);
+#endif
+#if defined(GAME_LEVEL)
+    game_level_end(api);
+#endif
     return (0);
 }
 

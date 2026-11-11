@@ -1,0 +1,51 @@
+[[case]]
+name = "the single program of the bench reads a level of 2 glTF files with their buffers and KTX2 images, and gives its sums"
+helper = { run = ["{out}/gltf_bench{exe}", "write", "{case}/level", "2", "16", "4"], wait = "written 2", stdin = "", claims = { has = ["written 2"] } }
+run = ["{out}/gltf_bench{exe}", "read", "{case}/level", "2"]
+claims = { status = 0, has = ["level 2 models 2 meshes 2 textures 2 vertices 32 indices 108 texels 2048"] }
+false = { run = ["{out}/gltf_bench{exe}", "read", "{case}/level", "3"] }
+
+[case.files]
+"{case}/level/keep.txt" = "keep"
+
+[[case]]
+name = "the loaders read the same level of the bench, and give the sums of the single program"
+helper = { run = ["{out}/gltf_bench{exe}", "write", "{case}/host/content", "2", "16", "4"], wait = "written 2", stdin = "", claims = { has = ["written 2"] } }
+run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
+env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
+claims = { status = 0, has = ["level 2 models 2 meshes 2 textures 2 vertices 32 indices 108 texels 2048"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_level.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "2:level 3|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+''' } }
+
+[case.folders]
+"{case}/host" = ["{bridge_host}/bridge-host{exe}"]
+"{case}/m" = ["files_mosl", "resources_files", "loader_ktx2", "loader_gltf", "sdl3_game_level", "SDL3_test"]
+
+[case.files]
+"{case}/host/content/keep.txt" = "keep"
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_level.toml"]
+rounds = 20
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_loader_gltf:loader@0.1.0".config]
+parse_bytes = 4194304
+output_bytes = 8388608
+[module."test:game@1.0.0".config]
+script = "2:level 2|3:stall 300|5:stall 300|7:stall 300|9:stall 300|11:stall 300|13:stall 300|15:stall 300|17:stall 300|19:stall 300"
+'''

@@ -1,0 +1,42 @@
+[[case]]
+name = "the single program of the bench places 8 waves of 10 leaves of a tree of 1000 nodes, and gives its sum"
+run = ["{out}/space_bench{exe}", "1000", "10", "8"]
+claims = { status = 0, has = ["waves 8 sum 00d8b88e4252c8a9"] }
+false = { run = ["{out}/space_bench{exe}", "1000", "10", "7"] }
+
+[[case]]
+name = "the space module places the same 8 waves of the bench game, and gives the sum of the single program"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "ideatek_test", IDEATEK_TEST_DISPLAYS = "a,Main,1920x1080@60,1920x1080@60,desktop,1,1" }
+claims = { status = 0, has = ["waves 8 sum 00d8b88e4252c8a9"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 11
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:swarm 1000|2:wave 10|11:still"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "space_bridge", "sdl3_game_bench", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_space.toml"]
+rounds = 10
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_frame_sdl3:clock@0.1.0".config]
+time_source = "fixed"
+[module."test:game@1.0.0".config]
+script = "1:swarm 1000|2:wave 10|10:still"
+'''

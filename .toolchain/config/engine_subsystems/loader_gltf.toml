@@ -46,3 +46,12 @@ part = "loader_gltf"
 test = true
 sources = ["tests/platform_abstraction/sdl3/reload.c"]
 link = ["{out}/loader_gltf{library}"]
+
+[[artifact]]
+name = "gltf_bench"
+kind = "program"
+part = "loader_gltf"
+test = true
+sources = ["tests/engine_subsystems/loader_gltf/bench.c", "src/engine_subsystems/loader_ktx2/ktx2_bytes.c", "src/engine_subsystems/loader_ktx2/ktx2_head.c", "src/engine_subsystems/loader_ktx2/ktx2_shape.c", "src/engine_subsystems/loader_ktx2/ktx2_block.c", "src/engine_subsystems/loader_ktx2/ktx2_levels.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include", "src/engine_subsystems/loader_ktx2", "{cgltf_root}"]
+link = ["{out}/cgltf.a"]
