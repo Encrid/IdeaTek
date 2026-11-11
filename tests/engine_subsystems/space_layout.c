@@ -83,6 +83,7 @@ static void show_world_transform(void)
     SIZE(ideatek_world_transform_t);
     AT(ideatek_world_transform_t, origin);
     AT(ideatek_world_transform_t, basis);
+    AT(ideatek_world_transform_t, revision);
 }
 
 static void show_children(void)
