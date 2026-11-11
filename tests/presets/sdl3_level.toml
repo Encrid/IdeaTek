@@ -1,0 +1,4 @@
+presets = ["sdl3_gltf.toml"]
+
+[budget]
+systems = 96

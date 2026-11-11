@@ -43,6 +43,14 @@ sources = ["tests/engine_subsystems/space_bridge/math.c", "src/engine_subsystems
 include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include", "src/engine_subsystems/space_bridge"]
 
 [[artifact]]
+name = "space_bench"
+kind = "program"
+part = "space_bridge"
+test = true
+sources = ["tests/engine_subsystems/space_bridge/bench.c", "tests/engine_subsystems/space_bridge/bench_sum.c", "src/engine_subsystems/space_bridge/space_math.c", "src/engine_subsystems/space_bridge/space_local.c", "src/engine_subsystems/space_bridge/space_split.c", "src/engine_subsystems/space_bridge/space_rotation.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include", "src/engine_subsystems/space_bridge", "tests/engine_subsystems/space_bridge"]
+
+[[artifact]]
 name = "space_set"
 kind = "program"
 part = "space_bridge"

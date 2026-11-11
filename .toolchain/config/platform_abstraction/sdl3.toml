@@ -202,6 +202,13 @@ defines = ["GAME_FRAME", "GAME_SPACE"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]
+name = "sdl3_game_bench"
+defines = ["GAME_SPACE", "GAME_BENCH"]
+sources = ["tests/platform_abstraction/sdl3/game/*.c", "tests/engine_subsystems/space_bridge/bench_sum.c"]
+include = ["include/platform_abstraction", "include/kernel", "include/engine_subsystems", "tests/engine_subsystems/space_bridge"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
 name = "sdl3_game_resources"
 defines = ["GAME_FILES", "GAME_RESOURCES"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
@@ -219,6 +226,11 @@ manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 [[artifact.variants]]
 name = "sdl3_game_gltf"
 defines = ["GAME_FILES", "GAME_RESOURCES", "GAME_KTX2", "GAME_GLTF"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
+name = "sdl3_game_level"
+defines = ["GAME_FILES", "GAME_RESOURCES", "GAME_KTX2", "GAME_GLTF", "GAME_LEVEL"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]
