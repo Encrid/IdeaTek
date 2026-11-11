@@ -54,6 +54,7 @@ engine_subsystems/
     ideatek_effects.h
     ideatek_input_mapping.h
     ideatek_localization.h
+    ideatek_matter.h
     ideatek_navigation.h
     ideatek_networking.h
     ideatek_persistence.h

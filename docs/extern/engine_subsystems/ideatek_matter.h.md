@@ -58,7 +58,7 @@ A chunk is in 1 solver of the physics part: `ideatek_solver_t`. Its phase follow
 | Gas | Liquid, soft, solid | The temperature falls below the same points, in the other order. |
 
 A phase that the material cannot reach is skipped. When a phase changes, the matter module writes `ideatek:PhaseRequest` of the physics part.
-The physics module moves the chunk to the solver of the new phase. A deployment with no solver for a phase keeps the chunk in its phase, and the log gets 1 line.
+The physics module moves the chunk to the solver of the new phase: `docs/extern/engine_subsystems/ideatek_physics.h.md`, *The requests of the phases*.
 
 ## The burn
 
@@ -117,7 +117,7 @@ A particle that cools and comes to rest becomes a coating of the chunk under it.
 
 The defaults of `radiation_between` and `arcs` are `false` until a bench measures their cost on the reference hardware.
 The defaults of `sigma`, of the breakdown and of Paschen are the values of physics for air at sea level.
-The other defaults are typical values: `air_rate` is the flow of still air, and `contact_area` is 1 cm^2. A measure on the reference hardware can change each of them.
+The other defaults are typical values: `air_rate` is the flow of still air, and `contact_area` is 1 cm^2. A bench on the reference hardware can set each of them.
 
 ## ideatek:ideatek_coating_rule_t
 
