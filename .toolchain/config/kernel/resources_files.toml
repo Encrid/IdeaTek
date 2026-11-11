@@ -14,7 +14,7 @@ resources_files_words = [
     "config.max_resources=4096", "config.max_uses=8192", "config.max_loaders=64",
     "config.max_sources=16", "config.max_variables=64", "config.max_reads=64",
     "config.max_labels=4096", "config.path_bytes=256", "config.settings_bytes=256",
-    "scratch=16384", "log_ring=2048", "spans=16384", "spawns=4176", "changes=65536",
+    "scratch=16384", "log_ring=2048", "spans=32768", "spawns=4176", "changes=65536",
     "persistent=8388608", "hot_reload=false",
 ]
 
