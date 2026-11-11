@@ -38,6 +38,15 @@ const void *game_cell(const bridge_api_t *api, uint64_t id, uint32_t slot)
     return (at ? api->shared_base + at : nullptr);
 }
 
+bridge_text_t game_put_text(const bridge_api_t *api, const char *text)
+{
+    uint32_t len = (uint32_t)strlen(text);
+    uint32_t at = api->alloc(api, len ? len : 1);
+
+    memcpy(api->shared_base + at, text, len);
+    return ((bridge_text_t){ .at = at, .len = len });
+}
+
 uint64_t game_find_display(const char *name)
 {
     for (uint32_t i = 0; i < game.display_count; i++)

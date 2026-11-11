@@ -33,15 +33,6 @@ static uint8_t index_of(const char *word, const char *const *words,
     return ((uint8_t)atoi(word));
 }
 
-static bridge_text_t put_bytes(const bridge_api_t *api, const char *text)
-{
-    uint32_t len = (uint32_t)strlen(text);
-    uint32_t at = api->alloc(api, len ? len : 1);
-
-    memcpy(api->shared_base + at, text, len);
-    return ((bridge_text_t){ .at = at, .len = len });
-}
-
 static const char *field(char **left)
 {
     char *start = *left;
@@ -69,10 +60,10 @@ static void ask_file(const bridge_api_t *api, char *args)
 
     r.storage = index_of(storage, STORAGES, 2);
     r.action = index_of(action, ACTIONS, 5);
-    r.path = put_bytes(api, path);
+    r.path = game_put_text(api, path);
     r.priority = (uint8_t)atoi(priority);
     if (r.action == IDEATEK_FILE_ACTION_WRITE)
-        r.data = put_bytes(api, third);
+        r.data = game_put_text(api, third);
     if (r.action == IDEATEK_FILE_ACTION_READ) {
         r.offset = strtoull(third, nullptr, 0);
         r.length = strtoull(fourth, nullptr, 0);
