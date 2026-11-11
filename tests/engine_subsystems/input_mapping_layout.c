@@ -56,6 +56,7 @@ static void show_input_action_state(void)
     AT(ideatek_input_action_state_t, held);
     AT(ideatek_input_action_state_t, state);
     AT(ideatek_input_action_state_t, edges);
+    AT(ideatek_input_action_state_t, tick);
 }
 
 static void show_input_source(void)
