@@ -6,8 +6,9 @@ Its fields use `ideatek_entity_t` of the world part and `ideatek_vec3_t` of the 
 
 ## The roles
 
-- The game, a loader or a tool writes each type of the part. It is the author.
-- The render module reads each type, and `ideatek:WorldTransform` of the space part. It draws the cameras.
+- The game, a loader or a tool writes each type of the part but `ideatek:Capture` and `ideatek:RenderStats`. It is the author.
+- The render module reads each other type, and `ideatek:WorldTransform`, `ideatek:PreviousWorldTransform` and `ideatek:WorldMoves` of the space part. It draws the cameras.
+- The render module writes `ideatek:Capture` and `ideatek:RenderStats`, and the author reads them.
 - The render module chooses its techniques: the global illumination, the shadows, the order of the passes. No type of the part names a technique.
 
 ## The units
@@ -109,6 +110,25 @@ A camera with the type gets the effect, and a camera without it does not.
 The sky with the highest `priority` is the active sky. The render module lights the scene from it.
 All fogs add: their densities sum where they overlap.
 A sky of the kind `IDEATEK_SKY_KIND_ATMOSPHERE` takes the sun from each directional light.
+
+## The captures
+
+An author asks for the image of a target with `ideatek:CaptureRequest` on an entity of its own. Each attach or change of the type asks for 1 capture.
+
+The render module copies the target after the last camera of the round that draws into it. The copy is the image that the target shows.
+When the copy is done, the render module attaches `ideatek:Capture` to the same entity. The GPU works after its round, so the capture comes some rounds later.
+
+The pixels are in the order of the rows, from the top. Each pixel has 4 bytes: red, green, blue and alpha, as sRGB. No bytes are between the rows.
+The bytes are in the persistent arena of the render module, and a setting of the module gives their count.
+The module keeps 2 captures at a time, so the bytes of a capture stay good until the second capture after it.
+
+A capture that cannot be made gets its status: *ideatek:ideatek_capture_status_t*. To write a capture into a file, the author asks the files part: `docs/extern/platform_abstraction/ideatek_files.h.md`.
+
+## The counts of a frame
+
+After each frame that the GPU ends, the render module attaches the singleton `ideatek:RenderStats`: the counts of that frame, for all its cameras.
+The GPU ends a frame after its round, so the counts are of an earlier round, which `round` names. The CPU never waits for them.
+A setting of the render module can turn the counts off. Then the module attaches no `ideatek:RenderStats`.
 
 ## ideatek:ideatek_color_t
 
@@ -319,6 +339,20 @@ Bytes 29 to 31 hold no field.
 | 0 | `IDEATEK_LIGHT_KIND_DIRECTIONAL` | Parallel light, in lux. |
 | 1 | `IDEATEK_LIGHT_KIND_POINT` | Light from a point to all sides, in candela. |
 | 2 | `IDEATEK_LIGHT_KIND_SPOT` | Light from a point in a cone, in candela. |
+
+## ideatek:ideatek_capture_status_t
+
+`ideatek_capture_status_t` tells the result of a capture: *The captures*.
+`ideatek_capture_status_t` is an enum of 1 byte.
+
+| Value | Name | Meaning |
+| --- | --- | --- |
+| 0 | `IDEATEK_CAPTURE_STATUS_OK` | The pixels are the image of the target. |
+| 1 | `IDEATEK_CAPTURE_STATUS_NO_TARGET` | No camera of the render module drew into the target in the round. |
+| 2 | `IDEATEK_CAPTURE_STATUS_TOO_BIG` | The pixels need more bytes than the module keeps for 1 capture. |
+| 3 | `IDEATEK_CAPTURE_STATUS_FAILED` | The GPU could not copy the image, for example after a lost device. |
+
+With a status that is not `IDEATEK_CAPTURE_STATUS_OK`, `pixels` is empty, and `width` and `height` are 0.
 
 ## ideatek:ideatek_cast_shadow_t
 
@@ -937,6 +971,50 @@ The faces are in the order +X, -X, +Y, -Y, +Z, -Z. The probes fill the box evenl
 
 Bytes 25 to 31 hold no field.
 
+## ideatek:CaptureRequest
+
+`ideatek:CaptureRequest` asks for the image of a target: *The captures*.
+`ideatek_capture_request_t` takes 24 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Default | Value |
+| --- | --- | --- | --- | --- |
+| `target` | `ideatek_entity_t` | 0 | No default | A window, or a texture entity, as `target` of `ideatek:Camera`. |
+| `area` | `ideatek_rect_t` | 8 | No default | The part of the target. A width or a height of 0 means the whole target. |
+
+## ideatek:Capture
+
+`ideatek:Capture` is the image that a request asked for: *The captures*.
+`ideatek_capture_t` takes 32 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `pixels` | `bridge_text_t` | 0 | The pixels, 4 bytes for each. |
+| `round` | `uint64_t` | 8 | The round of the image: `index` of `ideatek:Frame`. |
+| `width` | `uint32_t` | 16 | The width of the image, in pixels. |
+| `height` | `uint32_t` | 20 | The height of the image, in pixels. |
+| `status` | `ideatek_capture_status_t` | 24 | The result. |
+
+Bytes 25 to 31 hold no field.
+
+## ideatek:RenderStats
+
+`ideatek:RenderStats` is the singleton of the counts of a frame: *The counts of a frame*.
+`ideatek_render_stats_t` takes 56 bytes. Its alignment is 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `round` | `uint64_t` | 0 | The round of the frame: `index` of `ideatek:Frame`. |
+| `triangles` | `uint64_t` | 8 | The triangles that the frame drew. |
+| `gpu_bytes` | `uint64_t` | 16 | The GPU memory that the module holds, in bytes. |
+| `instances` | `uint32_t` | 24 | The drawn instances that the cameras tested. |
+| `visible` | `uint32_t` | 28 | The instances that the frame drew. |
+| `frustum_culled` | `uint32_t` | 32 | The instances out of the view of each camera. |
+| `occlusion_culled` | `uint32_t` | 36 | The instances behind other geometry. |
+| `draws` | `uint32_t` | 40 | The commands of the draws. |
+| `generic_draws` | `uint32_t` | 44 | The draws with a generic pipeline, while their own pipeline is not ready. |
+| `pipelines_ready` | `uint32_t` | 48 | The pipelines that the module built. |
+| `pipelines_pending` | `uint32_t` | 52 | The pipelines that the module still builds. |
+
 ## The C types
 
 | Type of Bridge | C type | Descriptor | Macro of the text |
@@ -962,6 +1040,7 @@ Bytes 25 to 31 hold no field.
 | `ideatek:ideatek_fog_shape_t` | `ideatek_fog_shape_t` | `ideatek_fog_shape_t_desc` | `IDEATEK_FOG_SHAPE_VALUES` |
 | `ideatek:ideatek_sky_kind_t` | `ideatek_sky_kind_t` | `ideatek_sky_kind_t_desc` | `IDEATEK_SKY_KIND_VALUES` |
 | `ideatek:ideatek_tonemap_curve_t` | `ideatek_tonemap_curve_t` | `ideatek_tonemap_curve_t_desc` | `IDEATEK_TONEMAP_CURVE_VALUES` |
+| `ideatek:ideatek_capture_status_t` | `ideatek_capture_status_t` | `ideatek_capture_status_t_desc` | `IDEATEK_CAPTURE_STATUS_VALUES` |
 | `ideatek:Camera` | `ideatek_camera_t` | `ideatek_camera_t_desc` | `IDEATEK_CAMERA_FIELDS` |
 | `ideatek:Projection` | `ideatek_projection_t` | `ideatek_projection_t_desc` | `IDEATEK_PROJECTION_FIELDS` |
 | `ideatek:ProjectionAngles` | `ideatek_projection_angles_t` | `ideatek_projection_angles_t_desc` | `IDEATEK_PROJECTION_ANGLES_FIELDS` |
@@ -1001,6 +1080,9 @@ Bytes 25 to 31 hold no field.
 | `ideatek:ReflectionProbe` | `ideatek_reflection_probe_t` | `ideatek_reflection_probe_t_desc` | `IDEATEK_REFLECTION_PROBE_FIELDS` |
 | `ideatek:IrradianceVolume` | `ideatek_irradiance_volume_t` | `ideatek_irradiance_volume_t_desc` | `IDEATEK_IRRADIANCE_VOLUME_FIELDS` |
 | `ideatek:Lightmap` | `ideatek_lightmap_t` | `ideatek_lightmap_t_desc` | `IDEATEK_LIGHTMAP_FIELDS` |
+| `ideatek:CaptureRequest` | `ideatek_capture_request_t` | `ideatek_capture_request_t_desc` | `IDEATEK_CAPTURE_REQUEST_FIELDS` |
+| `ideatek:Capture` | `ideatek_capture_t` | `ideatek_capture_t_desc` | `IDEATEK_CAPTURE_FIELDS` |
+| `ideatek:RenderStats` | `ideatek_render_stats_t` | `ideatek_render_stats_t_desc` | `IDEATEK_RENDER_STATS_FIELDS` |
 
 ```text
 { float r; float g; float b; float a; }
@@ -1024,6 +1106,7 @@ Bytes 25 to 31 hold no field.
 { IDEATEK_FOG_SHAPE_INFINITE = 0, IDEATEK_FOG_SHAPE_BOX = 1, IDEATEK_FOG_SHAPE_ELLIPSOID = 2 }
 { IDEATEK_SKY_KIND_ATMOSPHERE = 0, IDEATEK_SKY_KIND_TEXTURE = 1 }
 { IDEATEK_TONEMAP_CURVE_AGX = 0, IDEATEK_TONEMAP_CURVE_NEUTRAL = 1, IDEATEK_TONEMAP_CURVE_ACES = 2, IDEATEK_TONEMAP_CURVE_LINEAR = 3 }
+{ IDEATEK_CAPTURE_STATUS_OK = 0, IDEATEK_CAPTURE_STATUS_NO_TARGET = 1, IDEATEK_CAPTURE_STATUS_TOO_BIG = 2, IDEATEK_CAPTURE_STATUS_FAILED = 3 }
 { ideatek_entity_t target; uint64_t groups; ideatek_rect_t viewport; int32_t order; bool active; }
 { float fov; float height; float near; float far; ideatek_projection_kind_t kind; }
 { float left; float right; float up; float down; }
@@ -1063,6 +1146,9 @@ Bytes 25 to 31 hold no field.
 { ideatek_entity_t cube; ideatek_vec3_t half_size; float falloff; float intensity; int32_t priority; }
 { ideatek_entity_t texture; ideatek_vec3_t half_size; float intensity; int32_t priority; }
 { ideatek_entity_t texture; ideatek_rect_t uv_rect; uint8_t texcoord; }
+{ ideatek_entity_t target; ideatek_rect_t area; }
+{ bridge_text_t pixels; uint64_t round; uint32_t width; uint32_t height; ideatek_capture_status_t status; }
+{ uint64_t round; uint64_t triangles; uint64_t gpu_bytes; uint32_t instances; uint32_t visible; uint32_t frustum_culled; uint32_t occlusion_culled; uint32_t draws; uint32_t generic_draws; uint32_t pipelines_ready; uint32_t pipelines_pending; }
 ```
 
 ## The declarations
@@ -1092,6 +1178,7 @@ Bytes 25 to 31 hold no field.
 | `ideatek:ideatek_fog_shape_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_sky_kind_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ideatek_tonemap_curve_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:ideatek_capture_status_t` | `BRIDGE_ENUM` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Camera` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Projection` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:ProjectionAngles` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
@@ -1132,10 +1219,13 @@ Bytes 25 to 31 hold no field.
 | `ideatek:ReflectionProbe` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:IrradianceVolume` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Lightmap` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:CaptureRequest` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:Capture` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:RenderStats` | `BRIDGE_STRUCT` | `BRIDGE_SINGLETON` | `BRIDGE_ON_DESTROY_REMOVE` |
 
 ## The grants
 
 | Role | `write` | `read` |
 | --- | --- | --- |
-| An author | Each type of the part | The types of the fields |
-| The render module | No type. | Each type of the part, `ideatek:WorldTransform`, and the types of the fields |
+| An author | Each type of the part but `ideatek:Capture` and `ideatek:RenderStats` | `ideatek:Capture`, `ideatek:RenderStats` and the types of the fields |
+| The render module | `ideatek:Capture` and `ideatek:RenderStats` | Each other type of the part, `ideatek:WorldTransform`, `ideatek:PreviousWorldTransform`, `ideatek:WorldMoves` and the types of the fields |
