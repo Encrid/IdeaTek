@@ -51,7 +51,7 @@ static void move_child(const bridge_api_t *api, uint64_t id,
     rewrite(api, now, list);
 }
 
-BRIDGE_NATIVE(link)
+static void link_all(const bridge_api_t *api)
 {
     const bridge_list_t *l = bridge_native_get_list(api,
         space_module.lists[LIST_LINK]);
@@ -64,5 +64,9 @@ BRIDGE_NATIVE(link)
     for (uint32_t k = 0; k < 2 * parents.room; k++)
         if (parents.slots[k])
             rewrite(api, parents.slots[k], l);
-    return (0);
+}
+
+BRIDGE_NATIVE(link)
+{
+    return (run_started(api, link_all));
 }

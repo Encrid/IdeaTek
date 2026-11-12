@@ -45,7 +45,7 @@ static void visit_children(const bridge_api_t *api, uint64_t id,
         api->detach(api, id, CHILDREN);
 }
 
-BRIDGE_NATIVE(gone)
+static void gone_all(const bridge_api_t *api)
 {
     const bridge_list_t *l = bridge_native_get_list(api,
         space_module.lists[LIST_GONE]);
@@ -58,5 +58,9 @@ BRIDGE_NATIVE(gone)
         api->detach(api, t[i].id, PREVIOUS);
         visit_children(api, t[i].id, &stack);
     }
-    return (0);
+}
+
+BRIDGE_NATIVE(gone)
+{
+    return (run_started(api, gone_all));
 }

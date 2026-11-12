@@ -35,4 +35,6 @@ void declare_types(const bridge_api_t *api)
     SPACE_TAG(api, "ideatek:Teleported");
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:Tick", ideatek_tick_t, BRIDGE_STRIP,
         BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
+    SPACE_SINGLE(api, "ideatek:WorldMoves", ideatek_world_moves_t);
+    SPACE_SINGLE(api, "ideatek_space_bridge:Settings", space_settings_t);
 }
