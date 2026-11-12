@@ -15,6 +15,7 @@ static void settle_device(const bridge_api_t *api)
 
     drop_device(api);
     gpu_module.remake = false;
+    gpu_module.released = false;
     for (uint32_t i = 0; i < gpu_module.gpu_count; i++) {
         hit = gpu_module.gpus[i].entity == r->gpu.id;
         chosen = hit * i + !hit * chosen;
@@ -45,7 +46,11 @@ bool settle(const bridge_api_t *api)
         start_gpus(api);
     if (gpu_module.broken)
         return (false);
-    if (gpu_module.remake)
+    if (gpu_module.dropping && --gpu_module.dropping == 0)
+        drop_device(api);
+    if (gpu_module.remake && gpu_module.device && !gpu_module.released)
+        release_device(api);
+    else if (gpu_module.remake)
         settle_device(api);
     gpu_module.remake |= gpu_module.lost;
     gpu_module.lost = false;

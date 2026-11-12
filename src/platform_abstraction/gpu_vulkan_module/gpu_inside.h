@@ -62,6 +62,8 @@ typedef struct {
     bool stale;
     bool lost;
     bool remake;
+    bool released;
+    uint32_t dropping;
     VkInstance instance;
     VkDebugUtilsMessengerEXT messenger;
     gpu_adapter_t gpus[GPU_GPUS + 1];
@@ -157,6 +159,7 @@ void find_queues(VkPhysicalDevice gpu);
 bool make_device(const bridge_api_t *api, ideatek_gpu_feature_t asked,
     uint64_t asked_gpu);
 bool settle(const bridge_api_t *api);
+void release_device(const bridge_api_t *api);
 void drop_device(const bridge_api_t *api);
 void note_result(const bridge_api_t *api, VkResult result);
 void attach_device(const bridge_api_t *api, ideatek_gpu_status_t status,
