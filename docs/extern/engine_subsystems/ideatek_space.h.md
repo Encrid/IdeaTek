@@ -3,6 +3,7 @@
 `include/engine_subsystems/ideatek_space.h` gives the types of the place of an entity in the world: their C types and their descriptors.
 `readme.md`, *The contracts*, tells the rules of each contract.
 Its fields name entities with `ideatek_entity_t` of `include/platform_abstraction/ideatek_world.h`, so the header includes it.
+The moves are bytes of Bridge in a `bridge_text_t`, so the header also includes `bridge_abi.h`.
 
 ## The space
 
@@ -15,8 +16,8 @@ Its fields name entities with `ideatek_entity_t` of `include/platform_abstractio
 ## The roles
 
 - A mover writes `ideatek:Transform`, `ideatek:Parent`, `ideatek:Interpolated` and `ideatek:Teleported`. Physics, animation and a character controller are movers.
-- The space module reads `ideatek:Transform`, `ideatek:Parent` and `ideatek:Tick`. It writes `ideatek:WorldTransform`, `ideatek:Children`, `ideatek:Sibling` and `ideatek:PreviousWorldTransform`.
-- A reader reads `ideatek:WorldTransform`. Render, audio and the net modules are readers.
+- The space module reads `ideatek:Transform`, `ideatek:Parent` and `ideatek:Tick`. It writes `ideatek:WorldTransform`, `ideatek:Children`, `ideatek:Sibling`, `ideatek:PreviousWorldTransform` and `ideatek:WorldMoves`.
+- A reader reads `ideatek:WorldTransform` and `ideatek:WorldMoves`. Render, audio and the net modules are readers.
 
 `ideatek:WorldTransform` has one writer: the space module.
 The space module also writes `ideatek:Transform` and `ideatek:Parent` in the cases that `keep` and `orphan` tell, and detaches `ideatek:Teleported`.
@@ -132,7 +133,8 @@ The deployment gives the space module `observer_passes` of 3 or more. A new pare
 The space module writes a value only when its origin or its basis differs from the old value. Then it goes on to the children.
 
 In 1 call, the observer places only the changed entities that have no changed ancestor in that call. The walk of the ancestor places the others, so each entity is placed once.
-A reader that waits for a change keeps the last `revision` that it read, and compares it in a later round. It hears `BRIDGE_ON_ENTER` at the first place, and `BRIDGE_ON_LEAVE` when the type goes.
+A reader that waits for a change reads the moves: *ideatek:WorldMoves*. It hears `BRIDGE_ON_ENTER` at the first place, and `BRIDGE_ON_LEAVE` when the type goes.
+A reader of a few entities can instead keep the last `revision` that it read, and compare it in a later round.
 An observer of another module that reads `ideatek:WorldTransform` at a barrier needs a pair of the deployment with the observer of the space module.
 
 ```pseudo
@@ -160,6 +162,29 @@ ENDPROCEDURE
 - For each bit of `absolute`, `compose` takes that part from the local place. It splits the basis of the parent as *The split of a basis* tells.
 - A parent that is alive and has no `ideatek:WorldTransform` counts as no parent.
 - An entity that is its own parent, or that is in a cycle of `ideatek:Parent`, gets no `ideatek:WorldTransform`. The space module writes 1 line to the log.
+
+## ideatek:WorldMoves
+
+`ideatek:WorldMoves` is the singleton of the moves: the entities whose `ideatek:WorldTransform` the space module wrote in place.
+Its C type `ideatek_world_moves_t` has 24 bytes, and an alignment of 8.
+
+| Field | C type | Offset | Value |
+| --- | --- | --- | --- |
+| `moves` | `bridge_text_t` | 0 | The ring of the moves: `capacity` values of `ideatek_entity_t`. |
+| `total` | `uint64_t` | 8 | The count of the moves since the load of the space module. |
+| `capacity` | `uint32_t` | 16 | The count of the values in the ring. |
+
+Bytes 20 to 23 hold no field.
+
+Each write in place of `ideatek:WorldTransform` is 1 move. The first place is no move: a reader hears it as `BRIDGE_ON_ENTER`.
+For each move, the space module writes the entity at the index `total` modulo `capacity` of `moves`, then adds 1 to `total`.
+So the moves are in the order of the writes, which is the order of the walk. An entity that moves at 2 barriers is in the ring 2 times.
+The bytes of `moves` are in the persistent arena of the space module, and a setting of the space module gives `capacity`.
+
+A reader keeps the last `total` that it read. In a later round, it reads the moves from that `total` up to the new `total`.
+When the new `total` minus its last `total` is more than `capacity`, the ring holds no longer each move that it missed.
+Then the reader compares `revision` of each entity that it reads, for that round, and keeps the new `total`.
+An entity of the ring can be gone. Its `BRIDGE_ON_LEAVE` tells the reader.
 
 ## The split of a basis
 
@@ -251,6 +276,7 @@ A part of a model that other entities follow, for example a hand, is an entity w
 | `ideatek:Children` | `ideatek_children_t` | `ideatek_children_t_desc` | `IDEATEK_CHILDREN_FIELDS` |
 | `ideatek:Sibling` | `ideatek_sibling_t` | `ideatek_sibling_t_desc` | `IDEATEK_SIBLING_FIELDS` |
 | `ideatek:PreviousWorldTransform` | `ideatek_previous_world_transform_t` | `ideatek_previous_world_transform_t_desc` | `IDEATEK_PREVIOUS_WORLD_TRANSFORM_FIELDS` |
+| `ideatek:WorldMoves` | `ideatek_world_moves_t` | `ideatek_world_moves_t_desc` | `IDEATEK_WORLD_MOVES_FIELDS` |
 
 `IDEATEK_ABSOLUTE_POSITION`, `IDEATEK_ABSOLUTE_ROTATION` and `IDEATEK_ABSOLUTE_SCALE` are the bits of `absolute`.
 
@@ -267,6 +293,7 @@ A part of a model that other entities follow, for example a hand, is an entity w
 { ideatek_entity_t first; ideatek_entity_t last; uint32_t count; }
 { ideatek_entity_t prev; ideatek_entity_t next; ideatek_entity_t parent; }
 { ideatek_world_transform_t world; uint64_t tick; }
+{ bridge_text_t moves; uint64_t total; uint32_t capacity; }
 ```
 
 ## The declarations
@@ -286,6 +313,7 @@ A part of a model that other entities follow, for example a hand, is an entity w
 | `ideatek:Children` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_KEEP` |
 | `ideatek:Sibling` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_KEEP` |
 | `ideatek:PreviousWorldTransform` | `BRIDGE_STRUCT` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
+| `ideatek:WorldMoves` | `BRIDGE_STRUCT` | `BRIDGE_SINGLETON` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Interpolated` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 | `ideatek:Teleported` | `BRIDGE_TAG` | `BRIDGE_TABLE` | `BRIDGE_ON_DESTROY_REMOVE` |
 
@@ -296,5 +324,5 @@ A module declares a type before the struct that names it. Bridge finds the type 
 | Role | `write` | `read` |
 | --- | --- | --- |
 | A mover | `ideatek:Transform`, `ideatek:Parent`, `ideatek:Interpolated` and `ideatek:Teleported` | The 7 types of the fields |
-| The space module | `ideatek:Transform`, `ideatek:Parent`, `ideatek:WorldTransform`, `ideatek:Children`, `ideatek:Sibling`, `ideatek:PreviousWorldTransform` and `ideatek:Teleported` | `ideatek:Interpolated`, `ideatek:Tick` and the 7 types of the fields |
-| A reader | No type. | `ideatek:WorldTransform`, `ideatek:PreviousWorldTransform`, `ideatek:Children`, `ideatek:Sibling`, `ideatek:Interpolated` and the 7 types of the fields |
+| The space module | `ideatek:Transform`, `ideatek:Parent`, `ideatek:WorldTransform`, `ideatek:Children`, `ideatek:Sibling`, `ideatek:PreviousWorldTransform`, `ideatek:WorldMoves` and `ideatek:Teleported` | `ideatek:Interpolated`, `ideatek:Tick` and the 7 types of the fields |
+| A reader | No type. | `ideatek:WorldTransform`, `ideatek:PreviousWorldTransform`, `ideatek:WorldMoves`, `ideatek:Children`, `ideatek:Sibling`, `ideatek:Interpolated` and the 7 types of the fields |
