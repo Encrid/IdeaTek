@@ -151,6 +151,11 @@ static void show_tonemap_curve(void)
     SIZE(ideatek_tonemap_curve_t);
 }
 
+static void show_capture_status(void)
+{
+    SIZE(ideatek_capture_status_t);
+}
+
 static void show_camera(void)
 {
     SIZE(ideatek_camera_t);
@@ -518,6 +523,39 @@ static void show_lightmap(void)
     AT(ideatek_lightmap_t, texcoord);
 }
 
+static void show_capture_request(void)
+{
+    SIZE(ideatek_capture_request_t);
+    AT(ideatek_capture_request_t, target);
+    AT(ideatek_capture_request_t, area);
+}
+
+static void show_capture(void)
+{
+    SIZE(ideatek_capture_t);
+    AT(ideatek_capture_t, pixels);
+    AT(ideatek_capture_t, round);
+    AT(ideatek_capture_t, width);
+    AT(ideatek_capture_t, height);
+    AT(ideatek_capture_t, status);
+}
+
+static void show_render_stats(void)
+{
+    SIZE(ideatek_render_stats_t);
+    AT(ideatek_render_stats_t, round);
+    AT(ideatek_render_stats_t, triangles);
+    AT(ideatek_render_stats_t, gpu_bytes);
+    AT(ideatek_render_stats_t, instances);
+    AT(ideatek_render_stats_t, visible);
+    AT(ideatek_render_stats_t, frustum_culled);
+    AT(ideatek_render_stats_t, occlusion_culled);
+    AT(ideatek_render_stats_t, draws);
+    AT(ideatek_render_stats_t, generic_draws);
+    AT(ideatek_render_stats_t, pipelines_ready);
+    AT(ideatek_render_stats_t, pipelines_pending);
+}
+
 static void show_descriptors(void)
 {
     const char *descriptors[] = {
@@ -530,7 +568,8 @@ static void show_descriptors(void)
         ideatek_dimension_t_desc, ideatek_filter_t_desc, ideatek_wrap_t_desc,
         ideatek_light_kind_t_desc, ideatek_cast_shadow_t_desc,
         ideatek_fog_shape_t_desc, ideatek_sky_kind_t_desc,
-        ideatek_tonemap_curve_t_desc, ideatek_camera_t_desc,
+        ideatek_tonemap_curve_t_desc, ideatek_capture_status_t_desc,
+        ideatek_camera_t_desc,
         ideatek_projection_t_desc, ideatek_projection_angles_t_desc,
         ideatek_mesh_t_desc, ideatek_mesh_instance_t_desc,
         ideatek_mesh_instances_t_desc,
@@ -550,7 +589,8 @@ static void show_descriptors(void)
         ideatek_material_anisotropy_t_desc,
         ideatek_material_diffuse_transmission_t_desc,
         ideatek_reflection_probe_t_desc, ideatek_irradiance_volume_t_desc,
-        ideatek_lightmap_t_desc };
+        ideatek_lightmap_t_desc, ideatek_capture_request_t_desc,
+        ideatek_capture_t_desc, ideatek_render_stats_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -569,7 +609,8 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_FILTER_VALUES), TEXT_OF(IDEATEK_WRAP_VALUES),
         TEXT_OF(IDEATEK_LIGHT_KIND_VALUES), TEXT_OF(IDEATEK_CAST_SHADOW_VALUES),
         TEXT_OF(IDEATEK_FOG_SHAPE_VALUES), TEXT_OF(IDEATEK_SKY_KIND_VALUES),
-        TEXT_OF(IDEATEK_TONEMAP_CURVE_VALUES), TEXT_OF(IDEATEK_CAMERA_FIELDS),
+        TEXT_OF(IDEATEK_TONEMAP_CURVE_VALUES),
+        TEXT_OF(IDEATEK_CAPTURE_STATUS_VALUES), TEXT_OF(IDEATEK_CAMERA_FIELDS),
         TEXT_OF(IDEATEK_PROJECTION_FIELDS),
         TEXT_OF(IDEATEK_PROJECTION_ANGLES_FIELDS), TEXT_OF(IDEATEK_MESH_FIELDS),
         TEXT_OF(IDEATEK_MESH_INSTANCE_FIELDS),
@@ -596,7 +637,9 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_MATERIAL_DIFFUSE_TRANSMISSION_FIELDS),
         TEXT_OF(IDEATEK_REFLECTION_PROBE_FIELDS),
         TEXT_OF(IDEATEK_IRRADIANCE_VOLUME_FIELDS),
-        TEXT_OF(IDEATEK_LIGHTMAP_FIELDS) };
+        TEXT_OF(IDEATEK_LIGHTMAP_FIELDS),
+        TEXT_OF(IDEATEK_CAPTURE_REQUEST_FIELDS),
+        TEXT_OF(IDEATEK_CAPTURE_FIELDS), TEXT_OF(IDEATEK_RENDER_STATS_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -615,7 +658,8 @@ int main(int argc, char **argv)
         { "filter", show_filter }, { "wrap", show_wrap },
         { "light_kind", show_light_kind }, { "cast_shadow", show_cast_shadow },
         { "fog_shape", show_fog_shape }, { "sky_kind", show_sky_kind },
-        { "tonemap_curve", show_tonemap_curve }, { "camera", show_camera },
+        { "tonemap_curve", show_tonemap_curve },
+        { "capture_status", show_capture_status }, { "camera", show_camera },
         { "projection", show_projection },
         { "projection_angles", show_projection_angles }, { "mesh", show_mesh },
         { "mesh_instance", show_mesh_instance },
@@ -642,7 +686,10 @@ int main(int argc, char **argv)
         { "material_diffuse_transmission", show_material_diffuse_transmission },
         { "reflection_probe", show_reflection_probe },
         { "irradiance_volume", show_irradiance_volume },
-        { "lightmap", show_lightmap }, { "descriptors", show_descriptors },
+        { "lightmap", show_lightmap },
+        { "capture_request", show_capture_request },
+        { "capture", show_capture }, { "render_stats", show_render_stats },
+        { "descriptors", show_descriptors },
         { "texts", show_texts }
     };
 

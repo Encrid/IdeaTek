@@ -125,6 +125,12 @@ claims = { status = 0, order = ["size 1", "alignment 1"] }
 false = { run = ["{out}/rendering_layout{exe}", "camera"] }
 
 [[case]]
+name = "ideatek_capture_status_t is 1 byte"
+run = ["{out}/rendering_layout{exe}", "capture_status"]
+claims = { status = 0, order = ["size 1", "alignment 1"] }
+false = { run = ["{out}/rendering_layout{exe}", "camera"] }
+
+[[case]]
 name = "ideatek_camera_t has the size, the alignment and the offsets of its Usage"
 run = ["{out}/rendering_layout{exe}", "camera"]
 claims = { status = 0, order = ["size 40", "alignment 8", "target 0", "groups 8", "viewport 16", "order 32", "active 36"] }
@@ -359,6 +365,24 @@ claims = { status = 0, order = ["size 32", "alignment 8", "texture 0", "uv_rect 
 false = { run = ["{out}/rendering_layout{exe}", "color"] }
 
 [[case]]
+name = "ideatek_capture_request_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "capture_request"]
+claims = { status = 0, order = ["size 24", "alignment 8", "target 0", "area 8"] }
+false = { run = ["{out}/rendering_layout{exe}", "lightmap"] }
+
+[[case]]
+name = "ideatek_capture_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "capture"]
+claims = { status = 0, order = ["size 32", "alignment 8", "pixels 0", "round 8", "width 16", "height 20", "status 24"] }
+false = { run = ["{out}/rendering_layout{exe}", "lightmap"] }
+
+[[case]]
+name = "ideatek_render_stats_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/rendering_layout{exe}", "render_stats"]
+claims = { status = 0, order = ["size 56", "alignment 8", "round 0", "triangles 8", "gpu_bytes 16", "instances 24", "visible 28", "frustum_culled 32", "occlusion_culled 36", "draws 40", "generic_draws 44", "pipelines_ready 48", "pipelines_pending 52"] }
+false = { run = ["{out}/rendering_layout{exe}", "capture"] }
+
+[[case]]
 name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/rendering_layout{exe}", "descriptors"]
 claims = { status = 0, line = [
@@ -383,6 +407,7 @@ claims = { status = 0, line = [
     "uint8_t { IDEATEK_FOG_SHAPE_INFINITE = 0, IDEATEK_FOG_SHAPE_BOX = 1, IDEATEK_FOG_SHAPE_ELLIPSOID = 2 }",
     "uint8_t { IDEATEK_SKY_KIND_ATMOSPHERE = 0, IDEATEK_SKY_KIND_TEXTURE = 1 }",
     "uint8_t { IDEATEK_TONEMAP_CURVE_AGX = 0, IDEATEK_TONEMAP_CURVE_NEUTRAL = 1, IDEATEK_TONEMAP_CURVE_ACES = 2, IDEATEK_TONEMAP_CURVE_LINEAR = 3 }",
+    "uint8_t { IDEATEK_CAPTURE_STATUS_OK = 0, IDEATEK_CAPTURE_STATUS_NO_TARGET = 1, IDEATEK_CAPTURE_STATUS_TOO_BIG = 2, IDEATEK_CAPTURE_STATUS_FAILED = 3 }",
     "{ ideatek_entity_t target; uint64_t groups; ideatek_rect_t viewport; int32_t order; bool active; }",
     "{ float fov; float height; float near; float far; ideatek_projection_kind_t kind; }",
     "{ float left; float right; float up; float down; }",
@@ -422,6 +447,9 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t cube; ideatek_vec3_t half_size; float falloff; float intensity; int32_t priority; }",
     "{ ideatek_entity_t texture; ideatek_vec3_t half_size; float intensity; int32_t priority; }",
     "{ ideatek_entity_t texture; ideatek_rect_t uv_rect; uint8_t texcoord; }",
+    "{ ideatek_entity_t target; ideatek_rect_t area; }",
+    "{ bridge_text_t pixels; uint64_t round; uint32_t width; uint32_t height; ideatek_capture_status_t status; }",
+    "{ uint64_t round; uint64_t triangles; uint64_t gpu_bytes; uint32_t instances; uint32_t visible; uint32_t frustum_culled; uint32_t occlusion_culled; uint32_t draws; uint32_t generic_draws; uint32_t pipelines_ready; uint32_t pipelines_pending; }",
 ] }
 false = { run = ["{out}/rendering_layout{exe}", "texts"] }
 
@@ -450,6 +478,7 @@ claims = { status = 0, line = [
     "{ IDEATEK_FOG_SHAPE_INFINITE = 0, IDEATEK_FOG_SHAPE_BOX = 1, IDEATEK_FOG_SHAPE_ELLIPSOID = 2 }",
     "{ IDEATEK_SKY_KIND_ATMOSPHERE = 0, IDEATEK_SKY_KIND_TEXTURE = 1 }",
     "{ IDEATEK_TONEMAP_CURVE_AGX = 0, IDEATEK_TONEMAP_CURVE_NEUTRAL = 1, IDEATEK_TONEMAP_CURVE_ACES = 2, IDEATEK_TONEMAP_CURVE_LINEAR = 3 }",
+    "{ IDEATEK_CAPTURE_STATUS_OK = 0, IDEATEK_CAPTURE_STATUS_NO_TARGET = 1, IDEATEK_CAPTURE_STATUS_TOO_BIG = 2, IDEATEK_CAPTURE_STATUS_FAILED = 3 }",
     "{ ideatek_entity_t target; uint64_t groups; ideatek_rect_t viewport; int32_t order; bool active; }",
     "{ float fov; float height; float near; float far; ideatek_projection_kind_t kind; }",
     "{ float left; float right; float up; float down; }",
@@ -489,6 +518,9 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t cube; ideatek_vec3_t half_size; float falloff; float intensity; int32_t priority; }",
     "{ ideatek_entity_t texture; ideatek_vec3_t half_size; float intensity; int32_t priority; }",
     "{ ideatek_entity_t texture; ideatek_rect_t uv_rect; uint8_t texcoord; }",
+    "{ ideatek_entity_t target; ideatek_rect_t area; }",
+    "{ bridge_text_t pixels; uint64_t round; uint32_t width; uint32_t height; ideatek_capture_status_t status; }",
+    "{ uint64_t round; uint64_t triangles; uint64_t gpu_bytes; uint32_t instances; uint32_t visible; uint32_t frustum_culled; uint32_t occlusion_culled; uint32_t draws; uint32_t generic_draws; uint32_t pipelines_ready; uint32_t pipelines_pending; }",
 ] }
 false = { run = ["{out}/rendering_layout{exe}", "descriptors"] }
 
@@ -499,7 +531,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/rendering_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 63 types, each type after the types of its fields"
+name = "a module declares the 67 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/rendering_probe{library}"] }
 
@@ -526,7 +558,7 @@ read = [
     "ideatek:ideatek_filter_t", "ideatek:ideatek_wrap_t",
     "ideatek:ideatek_light_kind_t", "ideatek:ideatek_cast_shadow_t",
     "ideatek:ideatek_fog_shape_t", "ideatek:ideatek_sky_kind_t",
-    "ideatek:ideatek_tonemap_curve_t", "ideatek:Camera", "ideatek:Projection",
+    "ideatek:ideatek_tonemap_curve_t", "ideatek:ideatek_capture_status_t", "ideatek:Camera", "ideatek:Projection",
     "ideatek:ProjectionAngles", "ideatek:Mesh", "ideatek:MeshInstance",
     "ideatek:MeshInstances", "ideatek:MeshInstanceValues",
     "ideatek:MeshMaterials", "ideatek:Visibility",
@@ -540,7 +572,8 @@ read = [
     "ideatek:MaterialSpecular", "ideatek:MaterialTransmission",
     "ideatek:MaterialAnisotropy", "ideatek:MaterialDiffuseTransmission",
     "ideatek:MaterialUnlit", "ideatek:ReflectionProbe",
-    "ideatek:IrradianceVolume", "ideatek:Lightmap",
+    "ideatek:IrradianceVolume", "ideatek:Lightmap", "ideatek:CaptureRequest", "ideatek:Capture",
+    "ideatek:RenderStats",
 ]
 '''
 
@@ -577,7 +610,7 @@ write = [
     "ideatek:MaterialSpecular", "ideatek:MaterialTransmission",
     "ideatek:MaterialAnisotropy", "ideatek:MaterialDiffuseTransmission",
     "ideatek:MaterialUnlit", "ideatek:ReflectionProbe",
-    "ideatek:IrradianceVolume", "ideatek:Lightmap",
+    "ideatek:IrradianceVolume", "ideatek:Lightmap", "ideatek:CaptureRequest",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -589,7 +622,8 @@ read = [
     "ideatek:ideatek_filter_t", "ideatek:ideatek_wrap_t",
     "ideatek:ideatek_light_kind_t", "ideatek:ideatek_cast_shadow_t",
     "ideatek:ideatek_fog_shape_t", "ideatek:ideatek_sky_kind_t",
-    "ideatek:ideatek_tonemap_curve_t",
+    "ideatek:ideatek_tonemap_curve_t", "ideatek:ideatek_capture_status_t", "ideatek:Capture",
+    "ideatek:RenderStats",
 ]
 '''
 
@@ -615,7 +649,7 @@ write = [
     "ideatek:MaterialSpecular", "ideatek:MaterialTransmission",
     "ideatek:MaterialAnisotropy", "ideatek:MaterialDiffuseTransmission",
     "ideatek:MaterialUnlit", "ideatek:ReflectionProbe",
-    "ideatek:IrradianceVolume",
+    "ideatek:IrradianceVolume", "ideatek:CaptureRequest",
 ]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
@@ -627,12 +661,13 @@ read = [
     "ideatek:ideatek_filter_t", "ideatek:ideatek_wrap_t",
     "ideatek:ideatek_light_kind_t", "ideatek:ideatek_cast_shadow_t",
     "ideatek:ideatek_fog_shape_t", "ideatek:ideatek_sky_kind_t",
-    "ideatek:ideatek_tonemap_curve_t", "ideatek:Lightmap",
+    "ideatek:ideatek_tonemap_curve_t", "ideatek:ideatek_capture_status_t", "ideatek:Capture",
+    "ideatek:RenderStats", "ideatek:Lightmap",
 ]
 '''
 
 [[case]]
-name = "the render module loads with read on the types of the rendering and the place"
+name = "the render module loads with write on the captures and the counts, and read on the other types and the place"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:renderer@1.0.0, native, m/rendering_renderer{library}"] }
 
@@ -647,6 +682,7 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:renderer@1.0.0"]
+write = ["ideatek:Capture", "ideatek:RenderStats"]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_position_t", "ideatek:ideatek_color_t",
@@ -658,6 +694,8 @@ read = [
     "ideatek:ideatek_wrap_t", "ideatek:ideatek_light_kind_t",
     "ideatek:ideatek_cast_shadow_t", "ideatek:ideatek_fog_shape_t",
     "ideatek:ideatek_sky_kind_t", "ideatek:ideatek_tonemap_curve_t",
+    "ideatek:ideatek_capture_status_t", "ideatek:CaptureRequest", "ideatek:ideatek_world_transform_t",
+    "ideatek:PreviousWorldTransform", "ideatek:WorldMoves",
     "ideatek:Camera", "ideatek:Projection", "ideatek:ProjectionAngles",
     "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshInstances",
     "ideatek:MeshInstanceValues", "ideatek:MeshMaterials", "ideatek:Visibility", "ideatek:Affects",
@@ -683,6 +721,7 @@ paths = ["m"]
 [backend.native]
 library = "{bb_native}/bridge_native"
 [module."test:renderer@1.0.0"]
+write = ["ideatek:Capture", "ideatek:RenderStats"]
 read = [
     "ideatek:ideatek_entity_t", "ideatek:ideatek_vec3_t",
     "ideatek:ideatek_position_t", "ideatek:ideatek_color_t",
@@ -694,6 +733,8 @@ read = [
     "ideatek:ideatek_wrap_t", "ideatek:ideatek_light_kind_t",
     "ideatek:ideatek_cast_shadow_t", "ideatek:ideatek_fog_shape_t",
     "ideatek:ideatek_sky_kind_t", "ideatek:ideatek_tonemap_curve_t",
+    "ideatek:ideatek_capture_status_t", "ideatek:CaptureRequest", "ideatek:ideatek_world_transform_t",
+    "ideatek:PreviousWorldTransform", "ideatek:WorldMoves",
     "ideatek:Camera", "ideatek:Projection", "ideatek:ProjectionAngles",
     "ideatek:Mesh", "ideatek:MeshInstance", "ideatek:MeshInstances",
     "ideatek:MeshInstanceValues", "ideatek:MeshMaterials", "ideatek:Visibility", "ideatek:Affects",

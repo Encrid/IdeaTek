@@ -43,6 +43,14 @@ static const char WHO[] = MANIFEST;
     ENUM(api, "ideatek:ideatek_fog_shape_t", ideatek_fog_shape_t);
     ENUM(api, "ideatek:ideatek_sky_kind_t", ideatek_sky_kind_t);
     ENUM(api, "ideatek:ideatek_tonemap_curve_t", ideatek_tonemap_curve_t);
+    ENUM(api, "ideatek:ideatek_capture_status_t", ideatek_capture_status_t);
+}
+
+[[maybe_unused]] static uint32_t declare_stats(const bridge_api_t *api)
+{
+    return (BRIDGE_NATIVE_COMPONENT(api, "ideatek:RenderStats",
+        ideatek_render_stats_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
+        BRIDGE_ON_DESTROY_REMOVE));
 }
 
 [[maybe_unused]] static void declare_late(const bridge_api_t *api)
@@ -97,6 +105,9 @@ static const char WHO[] = MANIFEST;
     STRUCT(api, "ideatek:ReflectionProbe", ideatek_reflection_probe_t);
     STRUCT(api, "ideatek:IrradianceVolume", ideatek_irradiance_volume_t);
     STRUCT(api, "ideatek:Lightmap", ideatek_lightmap_t);
+    STRUCT(api, "ideatek:CaptureRequest", ideatek_capture_request_t);
+    STRUCT(api, "ideatek:Capture", ideatek_capture_t);
+    declare_stats(api);
 }
 
 [[maybe_unused]] static void role_author(const bridge_api_t *api)
@@ -201,6 +212,31 @@ static const char WHO[] = MANIFEST;
         ideatek_irradiance_volume_t), BRIDGE_ZEROED);
     api->attach(api, id, STRUCT(api, "ideatek:Lightmap", ideatek_lightmap_t),
         BRIDGE_ZEROED);
+    ENUM(api, "ideatek:ideatek_capture_status_t", ideatek_capture_status_t);
+    api->attach(api, id, STRUCT(api, "ideatek:CaptureRequest",
+        ideatek_capture_request_t), BRIDGE_ZEROED);
+    STRUCT(api, "ideatek:Capture", ideatek_capture_t);
+    declare_stats(api);
+}
+
+[[maybe_unused]] static void declare_place(const bridge_api_t *api)
+{
+    STRUCT(api, "ideatek:ideatek_world_transform_t", ideatek_world_transform_t);
+    STRUCT(api, "ideatek:PreviousWorldTransform",
+        ideatek_previous_world_transform_t);
+    BRIDGE_NATIVE_COMPONENT(api, "ideatek:WorldMoves", ideatek_world_moves_t,
+        BRIDGE_STRIP, BRIDGE_SINGLETON, BRIDGE_ON_DESTROY_REMOVE);
+}
+
+[[maybe_unused]] static void write_results(const bridge_api_t *api)
+{
+    uint64_t id = api->spawn(api);
+
+    ENUM(api, "ideatek:ideatek_capture_status_t", ideatek_capture_status_t);
+    STRUCT(api, "ideatek:CaptureRequest", ideatek_capture_request_t);
+    api->attach(api, id, STRUCT(api, "ideatek:Capture", ideatek_capture_t),
+        BRIDGE_ZEROED);
+    api->attach(api, 0, declare_stats(api), BRIDGE_ZEROED);
 }
 
 [[maybe_unused]] static void role_renderer(const bridge_api_t *api)
@@ -271,6 +307,8 @@ static const char WHO[] = MANIFEST;
     BRIDGE_NATIVE_COMPONENT(api, "ideatek:WorldTransform",
         ideatek_world_transform_t, BRIDGE_STRIP, BRIDGE_TABLE,
         BRIDGE_ON_DESTROY_REMOVE);
+    declare_place(api);
+    write_results(api);
 }
 
 BRIDGE_NATIVE(init)
