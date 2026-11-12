@@ -24,7 +24,8 @@ The C interface of glslang is the API: https://github.com/KhronosGroup/glslang/b
 
 1. `glslang_initialize_process` starts glslang, once for each process. `glslang_finalize_process` stops it.
 2. `glslang_shader_create` takes 1 stage of GLSL with the client `GLSLANG_CLIENT_VULKAN` and the target `GLSLANG_TARGET_SPV`.
-3. `glslang_shader_set_preamble` adds text before the source. The rendering module puts each setting of a shader there as a `#define`.
+3. `glslang_shader_set_preamble` adds text before the source. The render module puts there each setting that takes effect at its load, as a `#define`.
+   The settings in play go to the pipelines as specialization constants instead: `docs/usage/engine_subsystems/rendering_vulkan.md`, *The shaders*.
 4. `glslang_shader_preprocess` and `glslang_shader_parse` read the source. On a fault, `glslang_shader_get_info_log` gives the text of the fault.
 5. `glslang_program_link` and `glslang_program_SPIRV_generate` make the SPIR-V. `glslang_program_SPIRV_get_ptr` and `glslang_program_SPIRV_get_size` give its words.
 
