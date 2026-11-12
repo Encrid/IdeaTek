@@ -55,4 +55,4 @@ manifest = ["test:author@1.0.0", "{rendering_spawn_words}"]
 [[artifact.variants]]
 name = "rendering_renderer"
 defines = ["ROLE_RENDERER"]
-manifest = ["test:renderer@1.0.0", "{rendering_probe_words}"]
+manifest = ["test:renderer@1.0.0", "{rendering_spawn_words}"]

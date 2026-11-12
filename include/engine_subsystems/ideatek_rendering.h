@@ -236,6 +236,18 @@ BRIDGE_SCHEMA_ENUM_TYPE(ideatek_tonemap_curve_t,
 BRIDGE_SCHEMA_ENUM_DESC(ideatek_tonemap_curve_t,
     uint8_t, IDEATEK_TONEMAP_CURVE_VALUES);
 
+    #define IDEATEK_CAPTURE_STATUS_VALUES { \
+        IDEATEK_CAPTURE_STATUS_OK = 0, \
+        IDEATEK_CAPTURE_STATUS_NO_TARGET = 1, \
+        IDEATEK_CAPTURE_STATUS_TOO_BIG = 2, \
+        IDEATEK_CAPTURE_STATUS_FAILED = 3 \
+    }
+
+BRIDGE_SCHEMA_ENUM_TYPE(ideatek_capture_status_t,
+    uint8_t, IDEATEK_CAPTURE_STATUS_VALUES);
+BRIDGE_SCHEMA_ENUM_DESC(ideatek_capture_status_t,
+    uint8_t, IDEATEK_CAPTURE_STATUS_VALUES);
+
     #define IDEATEK_CAMERA_FIELDS { \
         ideatek_entity_t target; \
         uint64_t groups; \
@@ -673,5 +685,43 @@ BRIDGE_SCHEMA_STRUCT_DESC(ideatek_irradiance_volume_t,
 
 BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_lightmap_t, IDEATEK_LIGHTMAP_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_lightmap_t, IDEATEK_LIGHTMAP_FIELDS);
+
+    #define IDEATEK_CAPTURE_REQUEST_FIELDS { \
+        ideatek_entity_t target; \
+        ideatek_rect_t area; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_capture_request_t,
+    IDEATEK_CAPTURE_REQUEST_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_capture_request_t,
+    IDEATEK_CAPTURE_REQUEST_FIELDS);
+
+    #define IDEATEK_CAPTURE_FIELDS { \
+        bridge_text_t pixels; \
+        uint64_t round; \
+        uint32_t width; \
+        uint32_t height; \
+        ideatek_capture_status_t status; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_capture_t, IDEATEK_CAPTURE_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_capture_t, IDEATEK_CAPTURE_FIELDS);
+
+    #define IDEATEK_RENDER_STATS_FIELDS { \
+        uint64_t round; \
+        uint64_t triangles; \
+        uint64_t gpu_bytes; \
+        uint32_t instances; \
+        uint32_t visible; \
+        uint32_t frustum_culled; \
+        uint32_t occlusion_culled; \
+        uint32_t draws; \
+        uint32_t generic_draws; \
+        uint32_t pipelines_ready; \
+        uint32_t pipelines_pending; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_render_stats_t, IDEATEK_RENDER_STATS_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_render_stats_t, IDEATEK_RENDER_STATS_FIELDS);
 
 #endif
