@@ -21,6 +21,7 @@
         uint32_t previous;
         uint32_t interpolated;
         uint32_t teleported;
+        uint32_t moves;
     } game_space_slots_t;
 
 #else

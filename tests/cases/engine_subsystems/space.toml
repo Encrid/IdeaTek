@@ -71,6 +71,12 @@ claims = { status = 0, order = ["size 72", "alignment 8", "world 0", "tick 64"] 
 false = { run = ["{out}/space_layout{exe}", "world_transform"] }
 
 [[case]]
+name = "ideatek_world_moves_t has the size, the alignment and the offsets of its Usage"
+run = ["{out}/space_layout{exe}", "moves"]
+claims = { status = 0, order = ["size 24", "alignment 8", "moves 0", "total 8", "capacity 16"] }
+false = { run = ["{out}/space_layout{exe}", "children"] }
+
+[[case]]
 name = "each descriptor holds the bytes of its Usage"
 run = ["{out}/space_layout{exe}", "descriptors"]
 claims = { status = 0, line = [
@@ -85,6 +91,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t first; ideatek_entity_t last; uint32_t count; }",
     "{ ideatek_entity_t prev; ideatek_entity_t next; ideatek_entity_t parent; }",
     "{ ideatek_world_transform_t world; uint64_t tick; }",
+    "{ bridge_text_t moves; uint64_t total; uint32_t capacity; }",
 ] }
 false = { run = ["{out}/space_layout{exe}", "texts"] }
 
@@ -103,6 +110,7 @@ claims = { status = 0, line = [
     "{ ideatek_entity_t first; ideatek_entity_t last; uint32_t count; }",
     "{ ideatek_entity_t prev; ideatek_entity_t next; ideatek_entity_t parent; }",
     "{ ideatek_world_transform_t world; uint64_t tick; }",
+    "{ bridge_text_t moves; uint64_t total; uint32_t capacity; }",
 ] }
 false = { run = ["{out}/space_layout{exe}", "descriptors"] }
 
@@ -113,7 +121,7 @@ claims = { status = 0 }
 false = { run = ["{zig}", "cc", "-target", "{triple}", "-mcpu={cpu}", "{language}", "-I", "include/engine_subsystems", "-I", "include/platform_abstraction", "-c", "tests/engine_subsystems/space_alone.c", "-o", "{case}/alone.o"] }
 
 [[case]]
-name = "a module declares the 15 types, each type after the types of its fields"
+name = "a module declares the 16 types, each type after the types of its fields"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:probe@1.0.0, native, m/space_probe{library}"] }
 
@@ -132,7 +140,7 @@ read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
     "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
     "ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
-    "ideatek:PreviousWorldTransform", "ideatek:Interpolated", "ideatek:Teleported",
+    "ideatek:PreviousWorldTransform", "ideatek:Interpolated", "ideatek:Teleported", "ideatek:WorldMoves",
 ]
 '''
 
@@ -179,7 +187,7 @@ read = [
 '''
 
 [[case]]
-name = "the space module loads with write on its 7 types and read on ideatek:Interpolated and ideatek:Tick"
+name = "the space module loads with write on its 8 types and read on ideatek:Interpolated and ideatek:Tick"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 claims = { status = 0, line = ["loaded: test:space@1.0.0, native, m/space_place{library}"] }
 
@@ -195,7 +203,7 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:space@1.0.0"]
 write = ["ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
-    "ideatek:PreviousWorldTransform", "ideatek:Teleported",
+    "ideatek:PreviousWorldTransform", "ideatek:WorldMoves", "ideatek:Teleported",
 ]
 read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
@@ -213,7 +221,7 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:space@1.0.0"]
 write = ["ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
-    "ideatek:Teleported",
+    "ideatek:WorldMoves", "ideatek:Teleported",
 ]
 read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
@@ -243,7 +251,7 @@ read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
     "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
     "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling", "ideatek:PreviousWorldTransform",
-    "ideatek:Interpolated",
+    "ideatek:WorldMoves", "ideatek:Interpolated",
 ]
 '''
 
@@ -259,6 +267,7 @@ read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
     "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
     "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling", "ideatek:PreviousWorldTransform",
+    "ideatek:WorldMoves",
 ]
 '''
 
@@ -282,7 +291,7 @@ paths = ["m"]
 library = "{bb_native}/bridge_native"
 [module."test:space@1.0.0"]
 write = ["ideatek:Transform", "ideatek:Parent", "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling",
-    "ideatek:PreviousWorldTransform", "ideatek:Teleported",
+    "ideatek:PreviousWorldTransform", "ideatek:WorldMoves", "ideatek:Teleported",
 ]
 read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
@@ -294,7 +303,7 @@ read = [
     "ideatek:ideatek_vec3_t", "ideatek:ideatek_quat_t", "ideatek:ideatek_position_t", "ideatek:ideatek_entity_t",
     "ideatek:ideatek_keep_t", "ideatek:ideatek_orphan_t", "ideatek:ideatek_world_transform_t",
     "ideatek:WorldTransform", "ideatek:Children", "ideatek:Sibling", "ideatek:PreviousWorldTransform",
-    "ideatek:Interpolated",
+    "ideatek:WorldMoves", "ideatek:Interpolated",
 ]
 '''
 
