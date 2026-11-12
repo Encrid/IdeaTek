@@ -49,6 +49,7 @@ static void write_world(const bridge_api_t *api, uint64_t id,
     } else if (!is_same_world(old, world)) {
         world->revision = old->revision + 1;
         *old = *world;
+        write_move(id);
     } else
         world->revision = old->revision;
 }

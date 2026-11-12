@@ -8,6 +8,7 @@
 
     #include <stdint.h>
 
+    #include "bridge_abi.h"
     #include "bridge_schema.h"
     #include "ideatek_world.h"
 
@@ -117,5 +118,14 @@ BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_previous_world_transform_t,
     IDEATEK_PREVIOUS_WORLD_TRANSFORM_FIELDS);
 BRIDGE_SCHEMA_STRUCT_DESC(ideatek_previous_world_transform_t,
     IDEATEK_PREVIOUS_WORLD_TRANSFORM_FIELDS);
+
+    #define IDEATEK_WORLD_MOVES_FIELDS { \
+        bridge_text_t moves; \
+        uint64_t total; \
+        uint32_t capacity; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(ideatek_world_moves_t, IDEATEK_WORLD_MOVES_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(ideatek_world_moves_t, IDEATEK_WORLD_MOVES_FIELDS);
 
 #endif

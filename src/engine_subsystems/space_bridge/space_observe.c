@@ -5,11 +5,11 @@
 */
 #include "space_inside.h"
 
-static constexpr uint32_t PLACES[] = { WORLD, PREVIOUS, TELEPORTED };
-static constexpr uint32_t REMEMBERS[] = { PREVIOUS };
-static constexpr uint32_t LINKS[] = { SIBLING, CHILDREN, TRANSFORM };
+static constexpr uint32_t PLACES[] = { WORLD, PREVIOUS, TELEPORTED, MOVES };
+static constexpr uint32_t REMEMBERS[] = { PREVIOUS, MOVES };
+static constexpr uint32_t LINKS[] = { SIBLING, CHILDREN, TRANSFORM, MOVES };
 static constexpr uint32_t GONE[] = { WORLD, PREVIOUS, CHILDREN, PARENT,
-    SIBLING, TRANSFORM };
+    SIBLING, TRANSFORM, MOVES };
 static constexpr uint32_t EVENTS[] = { BRIDGE_ON_ENTER | BRIDGE_ON_ATTACH
     | BRIDGE_ON_LEAVE, BRIDGE_ON_ENTER | BRIDGE_ON_ATTACH, BRIDGE_ON_ENTER
     | BRIDGE_ON_ATTACH | BRIDGE_ON_LEAVE, BRIDGE_ON_ENTER | BRIDGE_ON_LEAVE,
@@ -42,23 +42,23 @@ static uint32_t add_observer(const bridge_api_t *api, uint32_t k,
 
 static void add_step(const bridge_api_t *api)
 {
-    const uint32_t changes[] = { PREVIOUS };
+    const uint32_t changes[] = { PREVIOUS, MOVES };
     bridge_term_t terms[3] = {{ INTERPOLATED, BRIDGE_READ, BRIDGE_AND, 0 },
         { WORLD, BRIDGE_READ, BRIDGE_AND, 0 },
         { PREVIOUS, BRIDGE_WRITE, BRIDGE_AND, 0 }};
 
     space_module.step = BRIDGE_NATIVE_ADD_SYSTEM(api, "step", "fixed", terms,
-        3, changes, 1, nullptr, 0);
+        3, changes, 2, nullptr, 0);
 }
 
 void add_observers(const bridge_api_t *api)
 {
-    space_module.lists[LIST_LINK] = add_observer(api, LIST_LINK, LINKS, 3);
-    space_module.lists[LIST_PLACE] = add_observer(api, LIST_PLACE, PLACES, 3);
+    space_module.lists[LIST_LINK] = add_observer(api, LIST_LINK, LINKS, 4);
+    space_module.lists[LIST_PLACE] = add_observer(api, LIST_PLACE, PLACES, 4);
     space_module.lists[LIST_RELINK] = add_observer(api, LIST_RELINK, PLACES,
-        3);
+        4);
     space_module.lists[LIST_PREVIOUS] = add_observer(api, LIST_PREVIOUS,
-        REMEMBERS, 1);
-    space_module.lists[LIST_GONE] = add_observer(api, LIST_GONE, GONE, 6);
+        REMEMBERS, 2);
+    space_module.lists[LIST_GONE] = add_observer(api, LIST_GONE, GONE, 7);
     add_step(api);
 }

@@ -30,7 +30,7 @@ static void place_entity(const bridge_api_t *api, space_stack_t *stack,
         walk(api, stack, id);
 }
 
-static void place_list(const bridge_api_t *api, uint32_t slot)
+void place_list(const bridge_api_t *api, uint32_t slot)
 {
     const bridge_list_t *l = bridge_native_get_list(api,
         space_module.lists[slot]);
@@ -49,14 +49,13 @@ static void place_list(const bridge_api_t *api, uint32_t slot)
         place_entity(api, &stack, t[i].id, &set);
 }
 
-BRIDGE_NATIVE(place)
+static void place_all(const bridge_api_t *api)
 {
     place_list(api, LIST_PLACE);
-    return (0);
+    publish_moves(api);
 }
 
-BRIDGE_NATIVE(relink)
+BRIDGE_NATIVE(place)
 {
-    place_list(api, LIST_RELINK);
-    return (0);
+    return (run_started(api, place_all));
 }

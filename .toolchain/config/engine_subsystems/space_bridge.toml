@@ -6,8 +6,9 @@ third_party = []
 
 [variables]
 space_bridge_words = [
-    "abi=1", "config=none", "pinned=false", "reloadable=false", "scratch=1048576", "log_ring=512",
-    "spans=65536", "spawns=none", "changes=262144", "persistent=none", "hot_reload=false",
+    "abi=1", "config=ideatek_space_bridge:Settings", "settings=moves", "config.moves=65536",
+    "pinned=false", "reloadable=false", "scratch=1048576", "log_ring=512",
+    "spans=65536", "spawns=none", "changes=262144", "persistent=524288", "hot_reload=false",
 ]
 
 [[artifact]]

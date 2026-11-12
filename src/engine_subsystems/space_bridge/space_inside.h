@@ -22,6 +22,16 @@
     #define SPACE_FIND(api, id, slot, T) ((const T *)space_find(api, id, \
         slot))
     #define SPACE_EDIT(api, id, slot, T) ((T *)space_find(api, id, slot))
+    #define SPACE_SINGLE(api, name, T) BRIDGE_NATIVE_DECLARE(api, \
+        BRIDGE_STRUCT, name, T, BRIDGE_STRIP, BRIDGE_SINGLETON, \
+        BRIDGE_ON_DESTROY_REMOVE)
+
+    #define SPACE_SETTINGS_FIELDS { \
+        uint32_t moves; \
+    }
+
+BRIDGE_SCHEMA_STRUCT_TYPE(space_settings_t, SPACE_SETTINGS_FIELDS);
+BRIDGE_SCHEMA_STRUCT_DESC(space_settings_t, SPACE_SETTINGS_FIELDS);
 
 constexpr uint32_t ENTITY = 0;
 constexpr uint32_t TRANSFORM = 7;
@@ -33,6 +43,8 @@ constexpr uint32_t PREVIOUS = 12;
 constexpr uint32_t INTERPOLATED = 13;
 constexpr uint32_t TELEPORTED = 14;
 constexpr uint32_t TICK = 15;
+constexpr uint32_t MOVES = 16;
+constexpr uint32_t SETTINGS = 17;
 
 constexpr uint32_t LIST_LINK = 0;
 constexpr uint32_t LIST_PLACE = 1;
@@ -45,11 +57,24 @@ constexpr uint32_t ANCESTOR_CHANGED = 1;
 constexpr uint32_t ANCESTOR_CYCLE = 2;
 
 constexpr uint32_t STACK_ROOM = 1024;
+constexpr uint32_t MOST_MOVES = 16777216;
+
+typedef struct {
+    bridge_text_t bytes;
+    uint64_t *ids;
+    uint64_t total;
+    uint32_t at;
+    uint32_t capacity;
+    bool started;
+    bool broken;
+    bool written;
+} space_ring_t;
 
 typedef struct {
     uint32_t lists[5];
     uint32_t step;
     uint64_t tick;
+    space_ring_t ring;
 } space_module_t;
 
 typedef struct {
@@ -71,6 +96,8 @@ typedef struct {
     uint32_t count;
     uint32_t room;
 } space_ids_t;
+
+typedef void (*space_work_t)(const bridge_api_t *api);
 
 extern space_module_t space_module;
 
@@ -99,5 +126,11 @@ void write_list(const bridge_api_t *api, uint64_t parent,
     const space_ids_t *buf);
 void keep_world(const bridge_api_t *api, uint64_t child, uint64_t parent);
 void keep_orphan(const bridge_api_t *api, uint64_t child);
+int run_started(const bridge_api_t *api, space_work_t work);
+void place_list(const bridge_api_t *api, uint32_t slot);
+void remember(const bridge_api_t *api, uint64_t id, uint64_t tick);
+uint64_t get_tick(const bridge_api_t *api);
+void write_move(uint64_t id);
+void publish_moves(const bridge_api_t *api);
 
 #endif
