@@ -109,6 +109,14 @@ static void show_previous(void)
     AT(ideatek_previous_world_transform_t, tick);
 }
 
+static void show_moves(void)
+{
+    SIZE(ideatek_world_moves_t);
+    AT(ideatek_world_moves_t, moves);
+    AT(ideatek_world_moves_t, total);
+    AT(ideatek_world_moves_t, capacity);
+}
+
 static void show_descriptors(void)
 {
     const char *descriptors[] = { ideatek_vec3_t_desc, ideatek_quat_t_desc,
@@ -116,7 +124,7 @@ static void show_descriptors(void)
         ideatek_orphan_t_desc, ideatek_transform_t_desc,
         ideatek_parent_t_desc, ideatek_world_transform_t_desc,
         ideatek_children_t_desc, ideatek_sibling_t_desc,
-        ideatek_previous_world_transform_t_desc };
+        ideatek_previous_world_transform_t_desc, ideatek_world_moves_t_desc };
 
     for (size_t i = 0; i < sizeof(descriptors) / sizeof(descriptors[0]); i++)
         printf("%s\n", descriptors[i]);
@@ -131,7 +139,8 @@ static void show_texts(void)
         TEXT_OF(IDEATEK_PARENT_FIELDS),
         TEXT_OF(IDEATEK_WORLD_TRANSFORM_FIELDS),
         TEXT_OF(IDEATEK_CHILDREN_FIELDS), TEXT_OF(IDEATEK_SIBLING_FIELDS),
-        TEXT_OF(IDEATEK_PREVIOUS_WORLD_TRANSFORM_FIELDS) };
+        TEXT_OF(IDEATEK_PREVIOUS_WORLD_TRANSFORM_FIELDS),
+        TEXT_OF(IDEATEK_WORLD_MOVES_FIELDS) };
 
     for (size_t i = 0; i < sizeof(texts) / sizeof(texts[0]); i++)
         printf("%s\n", texts[i]);
@@ -147,7 +156,8 @@ int main(int argc, char **argv)
         { "parent", show_parent },
         { "world_transform", show_world_transform },
         { "children", show_children }, { "sibling", show_sibling },
-        { "previous", show_previous }, { "descriptors", show_descriptors },
+        { "previous", show_previous }, { "moves", show_moves },
+        { "descriptors", show_descriptors },
         { "texts", show_texts }
     };
 

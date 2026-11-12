@@ -167,6 +167,56 @@ static void show_space(const bridge_api_t *api)
     }
 }
 
+static uint64_t moves_read;
+
+static int put_node(char *out, size_t size, size_t at, uint64_t id)
+{
+    return (snprintf(out + at, size - at, " %d", index_of(id)));
+}
+
+static void show_moves(const bridge_api_t *api)
+{
+    const ideatek_world_moves_t *m = bridge_native_get_single(api,
+        game_space_slots.moves);
+    const uint64_t *ring;
+    char out[1024];
+    size_t at = 0;
+
+    if (!m) {
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u moves none", game.round);
+        return;
+    }
+    ring = (const void *)(api->shared_base + m->moves.at);
+    if (m->total - moves_read > m->capacity)
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u moves missed %llu of "
+            "total %llu", game.round,
+            (unsigned long long)(m->total - moves_read),
+            (unsigned long long)m->total);
+    for (uint64_t n = moves_read; m->total - moves_read <= m->capacity
+        && n < m->total && at < sizeof(out) - 16; n++)
+        at += (size_t)put_node(out, sizeof(out), at, ring[n % m->capacity]);
+    out[at] = '\0';
+    if (m->total - moves_read <= m->capacity)
+        bridge_native_say(api, BRIDGE_LOG_INFO, "r%u moves total %llu:%s",
+            game.round, (unsigned long long)m->total, out);
+    moves_read = m->total;
+}
+
+static void show_ring(const bridge_api_t *api)
+{
+    const ideatek_world_moves_t *m = bridge_native_get_single(api,
+        game_space_slots.moves);
+    const uint64_t *ring = (const void *)(api->shared_base + m->moves.at);
+    char out[1024];
+    size_t at = 0;
+
+    for (uint32_t k = 0; k < m->capacity && at < sizeof(out) - 16; k++)
+        at += (size_t)put_node(out, sizeof(out), at, ring[k]);
+    out[at] = '\0';
+    bridge_native_say(api, BRIDGE_LOG_INFO, "r%u ring capacity %u len %u:%s",
+        game.round, m->capacity, m->moves.len, out);
+}
+
 static bool step_more(const bridge_api_t *api, const char *verb, char *args)
 {
     bool done = true;
@@ -187,6 +237,10 @@ static bool step_more(const bridge_api_t *api, const char *verb, char *args)
         api->detach(api, nodes[k], game_space_slots.interpolated);
     else if (!strcmp(verb, "show_space"))
         show_space(api);
+    else if (!strcmp(verb, "show_moves"))
+        show_moves(api);
+    else if (!strcmp(verb, "show_ring"))
+        show_ring(api);
     else
         done = false;
     return (done);
@@ -234,6 +288,9 @@ void game_declare_space(const bridge_api_t *api)
         ideatek_previous_world_transform_t);
     s->interpolated = TAG(api, "ideatek:Interpolated");
     s->teleported = TAG(api, "ideatek:Teleported");
+    s->moves = BRIDGE_NATIVE_COMPONENT(api, "ideatek:WorldMoves",
+        ideatek_world_moves_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
+        BRIDGE_ON_DESTROY_REMOVE);
 }
 
 BRIDGE_NATIVE(seen_world)

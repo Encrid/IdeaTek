@@ -35,6 +35,13 @@ static uint32_t declare_sibling(const bridge_api_t *api)
         BRIDGE_ON_DESTROY_KEEP));
 }
 
+static uint32_t declare_moves(const bridge_api_t *api)
+{
+    return (BRIDGE_NATIVE_COMPONENT(api, "ideatek:WorldMoves",
+        ideatek_world_moves_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
+        BRIDGE_ON_DESTROY_REMOVE));
+}
+
 typedef struct {
     uint32_t transform;
     uint32_t parent;
@@ -44,6 +51,7 @@ typedef struct {
     uint32_t previous;
     uint32_t interpolated;
     uint32_t teleported;
+    uint32_t moves;
 } slots_t;
 
 [[maybe_unused]] static void declare_fields(const bridge_api_t *api)
@@ -78,6 +86,7 @@ typedef struct {
         ideatek_previous_world_transform_t);
     slots.interpolated = TAG(api, "ideatek:Interpolated");
     slots.teleported = TAG(api, "ideatek:Teleported");
+    slots.moves = declare_moves(api);
     return (slots);
 }
 
@@ -90,6 +99,7 @@ typedef struct {
     STRUCT(api, "ideatek:PreviousWorldTransform",
         ideatek_previous_world_transform_t);
     TAG(api, "ideatek:Interpolated");
+    declare_moves(api);
 }
 
 [[maybe_unused]] static void move(const bridge_api_t *api)
@@ -119,6 +129,7 @@ typedef struct {
     ideatek_transform_t transform = { .rotation = { .w = 1.0f },
         .scale = { 1.0f, 1.0f, 1.0f } };
     ideatek_parent_t parent = { .order = 0 };
+    ideatek_world_moves_t moves = { .total = 0 };
     slots_t slots = declare_all(api);
     uint64_t id = api->spawn(api);
 
@@ -131,6 +142,7 @@ typedef struct {
     BRIDGE_NATIVE_ATTACH(api, id, slots.sibling, sibling);
     BRIDGE_NATIVE_ATTACH(api, id, slots.previous, previous);
     api->attach(api, id, slots.teleported, BRIDGE_ZEROED);
+    BRIDGE_NATIVE_ATTACH(api, 0, slots.moves, moves);
 }
 
 BRIDGE_NATIVE(init)
