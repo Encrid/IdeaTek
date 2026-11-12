@@ -22,11 +22,11 @@ BRIDGE_NATIVE(init)
 
 static void leave_request(const bridge_api_t *api, uint64_t id)
 {
-    drop_device(api);
     api->detach(api, id, GPU_DEVICE);
     api->detach(api, id, VULKAN_DEVICE);
     gpu_module.request = 0;
     gpu_module.remake = false;
+    gpu_module.dropping = 2;
 }
 
 static void take_request(const bridge_api_t *api, uint64_t id)

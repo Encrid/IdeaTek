@@ -29,6 +29,12 @@ void attach_device(const bridge_api_t *api,
         BRIDGE_NATIVE_ATTACH(api, gpu_module.request, VULKAN_DEVICE, v);
 }
 
+void release_device(const bridge_api_t *api)
+{
+    attach_device(api, IDEATEK_GPU_STATUS_NONE, 0);
+    gpu_module.released = true;
+}
+
 void drop_device([[maybe_unused]] const bridge_api_t *api)
 {
     if (!gpu_module.device)
@@ -53,6 +59,7 @@ void note_result(const bridge_api_t *api, VkResult result)
         return;
     bridge_native_say(api, BRIDGE_LOG_WARN, "the device is lost");
     gpu_module.lost = true;
+    gpu_module.released = true;
     attach_device(api, IDEATEK_GPU_STATUS_LOST, 0);
 }
 
