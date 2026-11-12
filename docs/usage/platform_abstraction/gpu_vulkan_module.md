@@ -64,7 +64,7 @@ The log of the module holds these lines:
 | `no swapchain: <result>` | Vulkan refuses the swapchain. The window gets the status `IDEATEK_SWAPCHAIN_STATUS_SKIPPED`, and the next round tries again. |
 | `the present mode <mode> is not there: vsync` | The window cannot use `present_mode` of the request. The swapchain uses `IDEATEK_PRESENT_MODE_VSYNC`. |
 | `no hdr: <reason>` | `hdr` of the request is `true`, and `hdr` of the window is `false` (`the display has no hdr`), or the surface has no format of HDR (`the surface has no format of hdr`). The swapchain uses `IDEATEK_COLOR_SPACE_SRGB`. |
-| `the device is lost` | A call of Vulkan loses the device. The status is `IDEATEK_GPU_STATUS_LOST` for 1 round, then a new device comes. |
+| `the device is lost` | A call of Vulkan loses the device. The status is `IDEATEK_GPU_STATUS_LOST` for 1 round, then a new device comes. That round is also the round in which the drawers free their objects. |
 
 With `validation`, the layer and the loader of Vulkan add their own lines to the log, as warnings.
 A setting outside its range gets its line of `readme.md`, *The contracts*.

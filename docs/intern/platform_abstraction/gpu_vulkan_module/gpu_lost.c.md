@@ -10,7 +10,8 @@ This file attaches the status of the device, ends the device, and watches the re
 - `VK_ERROR_DEVICE_LOST` writes `the device is lost` and attaches the status `IDEATEK_GPU_STATUS_LOST`.
 
 The next round keeps the status lost, and the round after makes a new device with the same request.
-Thus each drawer sees the status lost for 1 round: `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The device*.
+Thus each drawer sees the status lost for 1 round: `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The device*. The loss also marks the device as released.
+`release_device` attaches the status none, and marks the device as released, for the round before a new device.
 
 ## The end
 
@@ -31,4 +32,5 @@ Thus each drawer sees the status lost for 1 round: `docs/extern/platform_abstrac
 | `attach_device` | Attaches `ideatek:GpuDevice`, and `ideatek:VulkanDevice` with the status ready. |
 | `drop_device` | Destroys the device and its objects. |
 | `note_result` | Marks the swapchain as stale, or the device as lost, from a result. |
+| `release_device` | Attaches the status none for the round of the drawers. |
 | `shutdown` | Destroys the objects of the module. |

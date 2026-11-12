@@ -11,6 +11,7 @@ The rule G4 of the style makes an exception for it, as for the window module and
 | --- | --- |
 | `started`, `broken` | The first round read the settings. A setting outside its range breaks the module. |
 | `stale`, `lost`, `remake` | The swapchain must be made again; the device was lost in this round; the device must be made again. |
+| `released`, `dropping` | The drawers had their round before the new device; the rounds before the drop of a device whose request left. |
 | `instance`, `messenger` | The handles of the instance and of its messenger. |
 | `gpus`, `gpu_count`, `default_gpu`, `chosen` | The adapters with their entities, their count, the default, and the adapter of the device. |
 | `device`, `physical`, `queues`, `families`, `timeline` | The device, its adapter, its 3 queues, their families, and the semaphore of the type timeline. |
