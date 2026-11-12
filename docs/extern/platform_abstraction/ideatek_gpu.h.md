@@ -31,10 +31,15 @@ The device turns on each feature of `features` of the request that the GPU has.
 A feature that the GPU does not have stays off, and the log gets 1 line.
 `features` of `ideatek:GpuDevice` tells the features that are on.
 
-When the game attaches `ideatek:GpuRequest` again with a different GPU, the GPU module destroys the device and makes a new one.
+When the game attaches `ideatek:GpuRequest` again with a different GPU, the status is `IDEATEK_GPU_STATUS_NONE` for 1 round.
+In the next round, the GPU module destroys the device and makes a new one.
+When the request leaves, `ideatek:GpuDevice` and `ideatek:VulkanDevice` leave. The GPU module destroys the device 1 round later.
+
 When the device is lost, the status is `IDEATEK_GPU_STATUS_LOST` for 1 round. Then the GPU module makes a new device.
 After each new device, `generation` grows by 1. A drawer then makes all its objects of the GPU again.
-While the status is not `IDEATEK_GPU_STATUS_READY`, a drawer draws nothing.
+
+While the status is not `IDEATEK_GPU_STATUS_READY`, or the device has left, a drawer draws nothing.
+In that round, the device still lives, so the drawer frees its objects of the GPU. Each object of a drawer goes before the device that made it.
 
 ## The swapchain
 

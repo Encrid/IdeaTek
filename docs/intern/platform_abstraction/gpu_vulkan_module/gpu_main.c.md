@@ -12,7 +12,7 @@ The first round reads the settings and loads Vulkan: `docs/intern/platform_abstr
 
 The observer `request` sees each write and each detach of `ideatek:GpuRequest`:
 
-1. A detach destroys the device, and detaches `ideatek:GpuDevice` and `ideatek:VulkanDevice` from the entity.
+1. A detach detaches `ideatek:GpuDevice` and `ideatek:VulkanDevice` from the entity. It sets `dropping` to 2, so the device lives 1 more round for the drawers.
 2. A request of a second entity writes `a second request <entity> gets no device`, and changes nothing.
 3. Else the module keeps the entity and the value. A new entity or a different value asks for a new device.
 
@@ -26,14 +26,14 @@ The same value again keeps the device. A different GPU or different features mak
 | The same request again. | The device stays. |
 | A request with a different value. | A new device, with the next generation. |
 | A second entity with a request. | The line of the second request. |
-| A detach of the request. | The device goes, and its values leave. |
+| A detach of the request. | Its values leave, and the device goes 1 round later. |
 
 ## Functions
 
 | Function | Result |
 | --- | --- |
 | `init` | Keeps `dxgi.dll` loaded, and declares the types and the systems. |
-| `leave_request` | Destroys the device and detaches its values. |
+| `leave_request` | Detaches the values of the device, and sets its drop for later. |
 | `take_request` | Keeps the request of the first entity, and asks for a new device when the value changes. |
 | `request` | Follows the entity of the request. |
 | `reload` | Gives 0. |
