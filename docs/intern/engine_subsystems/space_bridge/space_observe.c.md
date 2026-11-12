@@ -10,6 +10,7 @@ This file registers the 5 observers and the system of the module.
 | `previous` | `ideatek:Interpolated` | Enter and leave | `ideatek:PreviousWorldTransform` |
 | `gone` | `ideatek:Transform` | Leave | The places, the lists, `ideatek:Parent` and `ideatek:Transform` |
 
+Each observer and the system also change `ideatek:WorldMoves`, since the first call attaches it: `docs/intern/engine_subsystems/space_bridge/space_moves.c.md`.
 Each observer runs after the observer before it in the table. The query of `step` names `ideatek:Interpolated`, `ideatek:WorldTransform` and `ideatek:PreviousWorldTransform`, and writes the last.
 
 `place` and `relink` also have 2 terms that write `ideatek:WorldTransform` and `ideatek:PreviousWorldTransform`, with `BRIDGE_OPTIONAL`. They change no match.

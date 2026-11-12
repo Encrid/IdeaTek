@@ -16,4 +16,5 @@ When the buffer of a list does not fit, the list keeps its old links, and the lo
 | `get_old_parent` | The parent of the old list of a child, or 0. |
 | `rewrite` | Writes the list of 1 parent again. |
 | `move_child` | Notes the 2 parents of a child, or writes their lists. |
-| `link` | The observer of `ideatek:Parent`. Gives 0. |
+| `link_all` | Moves each child of the list, then rewrites the lists of the parents. |
+| `link` | The observer of `ideatek:Parent`. Runs `link_all` through `run_started`. |
