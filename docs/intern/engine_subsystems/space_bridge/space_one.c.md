@@ -6,7 +6,7 @@ This file places 1 entity of a walk.
 2. A refused transform detaches `ideatek:WorldTransform`, writes 1 line, and stops the walk there.
 3. The place is the composition with the place of the parent of the item, with `absolute` of its `ideatek:Parent`.
 4. The place before goes on as `keep_previous` tells.
-5. An entity with no place yet gets it by an attach, with `revision` 1. An entity whose origin or basis changed gets the place written in place, with its `revision` plus 1.
+5. An entity with no place yet gets it by an attach, with `revision` 1. An entity whose origin or basis changed gets the place written in place, with its `revision` plus 1. The write is a move: `docs/intern/engine_subsystems/space_bridge/space_moves.c.md`.
    An equal place is not written. The walk goes on to the children in each case.
 
 `keep_previous` sets `ideatek:PreviousWorldTransform` to the new place in 2 cases: for an interpolated entity that has no place before yet, and with a teleport.

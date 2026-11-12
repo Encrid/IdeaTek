@@ -57,7 +57,7 @@ A deployment with more raises `spans` by 16 bytes for each entity.
 | `reloadable` | `false` | A reload of the module has no case yet. |
 | `spawns` | `"none"` | The module makes no entity. It only destroys orphans. |
 | `changes` | 262144 | The first attach of `ideatek:WorldTransform` of each new entity, and the links of a round. A moved entity takes no changes. |
-| `persistent` | 524288 | At least `moves` times 8 bytes, for the ring of the moves. |
+| `persistent` | 524288 | At least `moves` times 8 bytes, for the ring of the moves. Less stops the module at its first call: Bridge writes the reason of `alloc`. |
 | `scratch` | 1048576 | The set of the entities of 1 call of `place`, 16 bytes for each, and the stack of the walk. |
 | `log_ring` | 512 | 16 log lines fit, with 32 bytes for each line. |
 | `spans` | 65536 | The cells of its 18 types and the spans of its query: 76 bytes for each table id, and 376 bytes. Also 16 bytes for each entity in the lists of its observers at 1 barrier. |

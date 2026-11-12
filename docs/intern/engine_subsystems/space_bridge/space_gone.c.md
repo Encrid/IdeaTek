@@ -21,4 +21,5 @@ A child whose `ideatek:Parent` names another entity, or no entity, left the husk
 | `is_husk` | `true` when the entity carries `ideatek:Children` and no place. |
 | `release_child` | Applies `orphan` of 1 child that still names the husk. |
 | `visit_children` | Releases the children of a husk, or walks the children of a living parent. |
-| `gone` | The observer. Gives 0. |
+| `gone_all` | Detaches the places of each entity of the list, and applies `orphan` to its children. |
+| `gone` | The observer. Runs `gone_all` through `run_started`. |
