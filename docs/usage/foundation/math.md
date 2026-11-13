@@ -66,6 +66,8 @@ The cross product and each rotation are right-handed. Each angle is in radians.
 
 A vector of 3 takes 16 bytes in 32 bits and 32 bytes in 64 bits, and it is aligned to its size.
 So rule 9 keeps a component at the size of its 3 numbers.
+A block of `malloc` is aligned to 16 bytes, and a `vec3d_t` needs 32. A vector type in such a block ends the program.
+So keep plain numbers in such a block, or get the block with the alignment of the type.
 
 ### The flags of a caller
 
@@ -86,6 +88,9 @@ Each function gives the same bits for the same values, on each run, each process
 - The part calls no function of the C library whose result differs between 2 systems. It has its own sine, cosine, arc tangent and logarithm.
 - A caller can use `sqrt` of the C library: IEEE 754 fixes its result.
 - No function reads the clock, a random number or an address.
+- The promise holds for the default floating-point state of the thread.
+  In that state each result rounds to the nearest number, and a small number is not changed to 0.
+  A library on the same thread can change that state. The part `BL-IdeaTek-Processor` reads it.
 - 1 thing is not the same on each processor: the sign and the payload of a NaN that an operation makes.
   A sum of 2 infinities of opposite signs gives a NaN with the sign bit on x64, and without it on arm64. So check a value with `f64_is_finite`.
 
