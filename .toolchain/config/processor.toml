@@ -1,0 +1,17 @@
+[targets.x86_64-windows-gnu]
+processor = "x86_64_v3"
+
+[targets.x86_64-linux-gnu]
+processor = "x86_64_v3"
+
+[targets.x86_64-macos]
+processor = "x86_64_v3"
+
+[targets.aarch64-macos]
+processor = "apple_m1"
+
+[targets.aarch64-linux-gnu]
+processor = "generic"
+
+[targets.aarch64-windows-gnu]
+processor = "generic"

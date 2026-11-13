@@ -1,0 +1,28 @@
+[parts.math]
+name = "BL-IdeaTek-Math"
+folder = "foundation/math"
+uses = []
+third_party = ["musl"]
+
+[compose.math]
+part = "math"
+from = "src/foundation/math"
+headers = ["math_*.h", "generic_*.h"]
+into = "include"
+
+[[artifact]]
+name = "math"
+kind = "archive"
+part = "math"
+sources = ["src/foundation/math/*.c"]
+flags = ["-mcpu={processor}", "-ffp-contract=off", "-fenable-matrix", "-fvisibility=hidden"]
+
+[[artifact]]
+name = "math_probe"
+kind = "program"
+part = "math"
+test = true
+sources = ["tests/foundation/math/*.c"]
+include = ["src/foundation/math"]
+link = ["{out}/math.a"]
+flags = ["-mcpu={processor}", "-fenable-matrix"]

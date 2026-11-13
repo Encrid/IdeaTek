@@ -9,7 +9,7 @@ copies = 1
 needs = ["display", "gl", "vulkan"]
 
 [check]
-unicode = ["third_party/sdl3_linux/license"]
+unicode = ["third_party/sdl3_linux/license", "third_party/musl/license"]
 guides = ["layers.md"]
 
 [[style.exception]]
@@ -101,6 +101,16 @@ why = "The prototypes of the flat calls of GameNetworkingSockets keep the argume
 rule = "F5"
 path = "src/platform_abstraction/sockets_gns/sockets_signals.c"
 why = "send_signal has the 5 arguments that GameNetworkingSockets gives to a signaling callback."
+
+[[style.exception]]
+rule = "H2"
+path = "src/foundation/math/generic_*.h"
+why = "A generic text is included 1 time for each width of a number, so that 1 formula has 1 text."
+
+[[style.exception]]
+rule = "V1"
+path = "src/foundation/math/math_*.h"
+why = "Each generic name gets the name of its width before the include of the generic text, and loses it after."
 
 [[branches.exception]]
 path = "src/platform_abstraction/sockets_gns/sockets_receive.c"
@@ -274,3 +284,10 @@ line = 18
 col = 61
 side = "true"
 why = "The resources module attaches ideatek:Resource to each resource before the handle of its use, so the test of its value is a guard."
+
+[[branches.exception]]
+path = "src/foundation/math/trig_large_digits.c"
+line = 80
+col = 9
+side = "false"
+why = "This side needs 96 bits of the fraction of an angle at 0 in a row. The angle of 64 bits that is nearest to a quarter turn has 61 such bits."
