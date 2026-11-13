@@ -26,3 +26,13 @@ sources = ["tests/foundation/math/*.c"]
 include = ["src/foundation/math"]
 link = ["{out}/math.a"]
 flags = ["-mcpu={processor}", "-fenable-matrix"]
+
+[[artifact]]
+name = "math_bench"
+kind = "program"
+part = "math"
+test = true
+sources = ["tests/foundation/math/bench/contact.c"]
+include = ["src/foundation/math"]
+link = ["{out}/math.a"]
+flags = ["-mcpu={processor}", "-fenable-matrix", "-ffp-contract=off"]
