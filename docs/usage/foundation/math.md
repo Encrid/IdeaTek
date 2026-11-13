@@ -58,7 +58,7 @@ The cross product and each rotation are right-handed. Each angle is in radians.
 2. Give a `rigid_t` or an `affine_t` through a pointer.
 3. Use `+`, `-`, `*` and `/` between 2 vectors, or between a vector and a number. Each one works part by part.
 4. Use `+` and `-` between 2 matrices, and `*` between a matrix and a number.
-5. `*` between 2 matrices is the matrix product. It does not work part by part.
+5. Do not use `*` between 2 matrices. No document fixes the order of its sums. Call `mat3d_get_product`.
 6. Call a function of the part for each other product.
 7. Read and write a part of a vector by its name, for example `v.x`. The compiler refuses the address of a part.
 8. Write a sum of the parts of a vector in the order `x`, `y`, `z`, `w`.
@@ -167,6 +167,8 @@ Below the first length, `vec3d_get_length` gives 0 and `vec3d_get_unit` gives th
 
 | Function | Twin in 32 bits | Result |
 | --- | --- | --- |
+| `quatd_get_dot(a, b)` | `quatf_get_dot` | The dot product of the 4 parts. |
+| `quatd_get_length(q)` | `quatf_get_length` | The length of the 4 parts. |
 | `quatd_get_product(a, b)` | `quatf_get_product` | The rotation `b`, then the rotation `a`. |
 | `quatd_get_conjugate(q)` | `quatf_get_conjugate` | The opposite rotation of a quaternion of length 1. |
 | `quatd_get_unit(q)` | `quatf_get_unit` | `q` at the length 1. A quaternion of length 0 gives `{ 0, 0, 0, 1 }`. |
@@ -174,8 +176,8 @@ Below the first length, `vec3d_get_length` gives 0 and `vec3d_get_unit` gives th
 | `quatd_turn_back(q, v)` | `quatf_turn_back` | The vector `v` turned by the opposite of `q`. |
 | `quatd_make_turn(axis, angle)` | `quatf_make_turn` | The rotation of `angle` radians about an axis of length 1, right-handed. |
 | `quatd_get_angle(q)` | `quatf_get_angle` | The angle of the rotation, from 0 to pi. |
-| `quatd_get_axis(q)` | `quatf_get_axis` | The axis of the rotation, at the length 1. A rotation of the angle 0 gives the X axis. |
-| `quatd_get_blend(a, b, share)` | `quatf_get_blend` | The spherical blend from `a` to `b`, by the shorter way. |
+| `quatd_get_axis(q)` | `quatf_get_axis` | The axis of the rotation, at the length 1, for the angle from 0 to pi. A rotation of the angle 0 gives the X axis. |
+| `quatd_get_blend(a, b, share)` | `quatf_get_blend` | The spherical blend from `a` to `b`, by the shorter way. A share of 0 gives `a` exactly. A share of 1 gives `b` or its opposite, which is the same rotation. |
 | `quatd_step(q, speed, time)` | None | `q` after it turns at the angular speed `speed`, in radians for each second, for `time` seconds. |
 | `quatd_is_finite(q)` | `quatf_is_finite` | `true` if each part is finite. |
 | `quatd_is_unit(q, margin)` | `quatf_is_unit` | `true` if the length differs from 1 by `margin` at most. |
@@ -184,6 +186,7 @@ Below the first length, `vec3d_get_length` gives 0 and `vec3d_get_unit` gives th
 
 `quatd_step` is exact for a constant speed: it turns by the angle `length of speed` times `time` about the axis of `speed`.
 A speed of 0 gives `q`. The result has the length 1.
+`speed` is in the space in which `q` turns a vector.
 
 ### The matrices of 3 by 3
 
@@ -192,14 +195,22 @@ A speed of 0 gives `q`. The result has the length 1.
 | Function | Twin in 32 bits | Result |
 | --- | --- | --- |
 | `mat3d_turn(m, v)` | `mat3f_turn` | The product of the matrix and the vector. |
+| `mat3d_get_product(a, b)` | `mat3f_get_product` | The product of 2 matrices: `b` first, then `a`. |
+| `mat3d_get_column(m, column)` | `mat3f_get_column` | 1 column of the matrix, as a vector of 3. |
+| `mat3d_make_columns(x, y, z)` | `mat3f_make_columns` | The matrix whose 3 columns are the 3 vectors. |
 | `mat3d_get_transpose(m)` | `mat3f_get_transpose` | The rows as columns. |
 | `mat3d_get_determinant(m)` | `mat3f_get_determinant` | The determinant. |
 | `mat3d_get_inverse(m, inverse)` | `mat3f_get_inverse` | Writes the inverse and gives `true`. With a determinant of 0, it gives `false` and writes nothing. |
+| `mat3d_make_rotation(q)` | `mat3f_make_rotation` | The matrix of a quaternion of length 1. |
 | `mat3d_make_basis(rotation, scale)` | `mat3f_make_basis` | The basis of a rotation and a scale on each axis: each column of the rotation times its scale. |
 | `mat3d_get_rotation(m)` | `mat3f_get_rotation` | The quaternion of a matrix whose columns have the length 1 and are at right angles. |
+| `mat3d_get_frame(m)` | `mat3f_get_frame` | The basis with its 3 columns made orthonormal, in the order X, Y, Z. |
 | `mat3d_split(m, rotation, scale)` | `mat3f_split` | Writes the 2 halves of a basis, its rotation and its scale: *The split of a basis*. |
 | `mat3d_load(numbers)` | `mat3f_load` | The matrix of 9 plain numbers at a pointer, column by column. |
 | `mat3d_store(m, numbers)` | `mat3f_store` | Writes the 9 numbers at a pointer, column by column. |
+
+2 more functions are steps of the functions above, and a caller rarely needs them.
+`mat3d_get_part` gives 1 part of the quaternion of `mat3d_get_rotation`, and `mat3d_fill_unit` gives 1 column of `mat3d_get_frame`.
 
 ### The split of a basis
 
@@ -228,6 +239,10 @@ For a basis with no shear, `mat3d_make_basis` of these 2 values gives the basis 
 | `affine_compose(parent, local, out)` | Writes the place of `local` in the space where `parent` is: the product of the 2 bases, and the origin in 64 bits. |
 | `affine_invert(place, out)` | Writes the opposite place and gives `true`. With a basis whose determinant is 0, it gives `false` and writes nothing. |
 | `affine_move(place, point)` | The point moved from the space of the place into the space where the place is, in 64 bits. |
+| `mat3f_get_wide(m)` | The matrix of 32 bits as a matrix of 64 bits, with no loss. |
+
+The output of a function of a place can be 1 of its inputs.
+`rigid_compose` does not bring the rotation back to the length 1. Call `quatd_get_unit` on a place that is composed many times.
 
 ### The matrices of 4 by 4
 
@@ -236,6 +251,7 @@ For a basis with no shear, `mat3d_make_basis` of these 2 values gives the basis 
 | Function | Result |
 | --- | --- |
 | `mat4f_turn(m, v)` | The product of the matrix and a vector of 4. |
+| `mat4f_get_product(a, b)` | The product of 2 matrices: `b` first, then `a`. |
 | `mat4f_get_transpose(m)` | The rows as columns. |
 | `mat4f_get_inverse(m, inverse)` | Writes the inverse and gives `true`. With a determinant of 0, it gives `false` and writes nothing. |
 | `mat4f_make_perspective(lens)` | The perspective projection of a `mat4f_lens_t`: 1 vertical angle. |
@@ -253,14 +269,16 @@ The camera of each projection looks along -Z, and its +Y is up. The depth of the
 | --- | --- |
 | `fov` | The vertical field of view, in radians. |
 | `aspect` | The width divided by the height. |
-| `near` | The distance of the near plane, above 0. |
-| `far` | The distance of the far plane, above `near`. An infinity gives a projection with no far plane. |
+| `near_plane` | The distance of the near plane, above 0. |
+| `far_plane` | The distance of the far plane, above `near_plane`. An infinity gives a projection with no far plane. |
 | `reverse` | `true`: the depth is 1 at the near plane and 0 at the far plane. `false`: 0 at the near plane and 1 at the far plane. |
 | `y_down` | `true`: +Y of the clip space points down. `false`: it points up. |
 
 `mat4f_frustum_t` holds 4 angles in radians in place of `fov` and `aspect`: `left`, `right`, `up` and `down`.
 `left` is negative on the left of the view axis, and `down` is negative below it. Its 4 other fields are those of `mat4f_lens_t`.
-`mat4f_box_t` holds `left`, `right`, `bottom`, `top`, `near` and `far`, in meters, and the same `reverse` and `y_down`.
+`mat4f_box_t` holds `left`, `right`, `bottom`, `top`, `near_plane` and `far_plane`, in meters, and the same `reverse` and `y_down`.
+The names are not `near` and `far`, because the headers of Windows define these 2 words as macros.
+Each projection takes its structure through a pointer, and computes in 64 bits before it rounds each number to 32 bits.
 
 ### The view and the model
 
