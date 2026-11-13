@@ -1,0 +1,23 @@
+[[case]]
+name = "vec4f_get_dot gives the sum of the 4 products"
+run = ["{out}/math_probe{exe}", "vec4f_get_dot", "1", "2", "3", "4", "5", "6", "7", "8"]
+claims = { status = 0, line = ["vec4f_get_dot 428c0000"] }
+false = { run = ["{out}/math_probe{exe}", "vec4f_get_dot", "1", "2", "3", "4", "5", "6", "7", "9"] }
+
+[[case]]
+name = "vec4f_get_dot adds the products in the order x, y, z, w"
+run = ["{out}/math_probe{exe}", "vec4f_get_dot", "16777216", "1", "1", "1", "1", "1", "1", "1"]
+claims = { status = 0, line = ["vec4f_get_dot 4b800000"] }
+false = { run = ["{out}/math_probe{exe}", "vec4f_get_dot", "1", "1", "1", "16777216", "1", "1", "1", "1"] }
+
+[[case]]
+name = "vec4f_load reads 4 plain numbers at a pointer"
+run = ["{out}/math_probe{exe}", "vec4f_load", "1", "2", "3", "4"]
+claims = { status = 0, line = ["vec4f_load 3f800000 40000000 40400000 40800000"] }
+false = { run = ["{out}/math_probe{exe}", "vec4f_load", "1", "2", "3", "5"] }
+
+[[case]]
+name = "vec4f_store writes 4 plain numbers and leaves the fifth number as it is"
+run = ["{out}/math_probe{exe}", "vec4f_store", "1", "2", "3", "4"]
+claims = { status = 0, line = ["vec4f_store 3f800000 40000000 40400000 40800000 bf800000"] }
+false = { run = ["{out}/math_probe{exe}", "vec4f_store", "1", "2", "3", "5"] }

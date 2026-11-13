@@ -1,0 +1,23 @@
+[[case]]
+name = "f64_get_sin is at most 1 unit in the last place from the sine of the C library on 20000 angles"
+run = ["{out}/math_probe{exe}", "f64_distance", "sin", "1"]
+claims = { status = 0, line = ["f64_distance sin within 1"] }
+false = { run = ["{out}/math_probe{exe}", "f64_distance", "sin", "-1"] }
+
+[[case]]
+name = "f64_get_cos is at most 1 unit in the last place from the cosine of the C library on 20000 angles"
+run = ["{out}/math_probe{exe}", "f64_distance", "cos", "1"]
+claims = { status = 0, line = ["f64_distance cos within 1"] }
+false = { run = ["{out}/math_probe{exe}", "f64_distance", "cos", "-1"] }
+
+[[case]]
+name = "f64_get_atan2 is at most 1 unit in the last place from the arc tangent of the C library on 20000 points"
+run = ["{out}/math_probe{exe}", "f64_distance", "atan2", "1"]
+claims = { status = 0, line = ["f64_distance atan2 within 1"] }
+false = { run = ["{out}/math_probe{exe}", "f64_distance", "atan2", "-1"] }
+
+[[case]]
+name = "f64_get_log is at most 1 unit in the last place from the logarithm of the C library on 20000 numbers"
+run = ["{out}/math_probe{exe}", "f64_distance", "log", "1"]
+claims = { status = 0, line = ["f64_distance log within 1"] }
+false = { run = ["{out}/math_probe{exe}", "f64_distance", "log", "-1"] }

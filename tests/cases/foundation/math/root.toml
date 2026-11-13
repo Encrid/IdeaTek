@@ -1,0 +1,53 @@
+[[case]]
+name = "f64_find_root finds the root of a rising function after 60 halvings"
+run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "2", "1", "2", "60"]
+claims = { status = 0, line = ["f64_find_root 1 3ff6a09e667f3bcc"] }
+false = { run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "3", "1", "2", "60"] }
+
+[[case]]
+name = "f64_find_root finds the root of a falling function after 60 halvings"
+run = ["{out}/math_probe{exe}", "f64_find_root", "falling", "2", "1", "2", "60"]
+claims = { status = 0, line = ["f64_find_root 1 3ff6a09e667f3bcc"] }
+false = { run = ["{out}/math_probe{exe}", "f64_find_root", "falling", "3", "1", "2", "60"] }
+
+[[case]]
+name = "f64_find_root halves the range the given number of times and writes the middle of the last range"
+run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "2", "1", "2", "4"]
+claims = { status = 0, line = ["f64_find_root 1 3ff6800000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "2", "1", "2", "5"] }
+
+[[case]]
+name = "f64_find_root gives false and writes nothing when the 2 results are above 0"
+run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "2", "2", "3", "60"]
+claims = { status = 0, line = ["f64_find_root 0 bff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "2", "1", "3", "60"] }
+
+[[case]]
+name = "f64_find_root gives false and writes nothing when the 2 results are below 0"
+run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "20", "1", "2", "60"]
+claims = { status = 0, line = ["f64_find_root 0 bff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "2", "1", "2", "60"] }
+
+[[case]]
+name = "f64_find_root writes the low bound when the result at the low bound is 0"
+run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "1", "1", "2", "60"]
+claims = { status = 0, line = ["f64_find_root 1 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "2", "1", "2", "60"] }
+
+[[case]]
+name = "f64_find_root writes the high bound when the result at the high bound is 0"
+run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "4", "1", "2", "60"]
+claims = { status = 0, line = ["f64_find_root 1 4000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "2", "1", "2", "60"] }
+
+[[case]]
+name = "f64_find_root ends at a middle whose result is 0 and writes that middle"
+run = ["{out}/math_probe{exe}", "f64_find_root", "line", "0.75", "0", "1", "60"]
+claims = { status = 0, line = ["f64_find_root 1 3fe8000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_find_root", "line", "0.625", "0", "1", "60"] }
+
+[[case]]
+name = "f64_find_root gives false and writes nothing when the function gives a NaN at a middle"
+run = ["{out}/math_probe{exe}", "f64_find_root", "broken", "2", "1", "2", "60"]
+claims = { status = 0, line = ["f64_find_root 0 bff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_find_root", "rising", "2", "1", "2", "60"] }

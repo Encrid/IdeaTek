@@ -1,0 +1,239 @@
+[[case]]
+name = "vec3d_get_dot gives the sum of the 3 products"
+run = ["{out}/math_probe{exe}", "vec3d_get_dot", "1", "2", "3", "4", "5", "6"]
+claims = { status = 0, line = ["vec3d_get_dot 4040000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_dot", "1", "2", "3", "4", "5", "7"] }
+
+[[case]]
+name = "vec3d_get_dot adds the products in the order x, y, z"
+run = ["{out}/math_probe{exe}", "vec3d_get_dot", "9007199254740992", "1", "1", "1", "1", "1"]
+claims = { status = 0, line = ["vec3d_get_dot 4340000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_dot", "1", "1", "9007199254740992", "1", "1", "1"] }
+
+[[case]]
+name = "vec3d_get_dot joins no product and no sum inside a caller that is built with the fusion on"
+run = ["{out}/math_probe{exe}", "vec3d_get_dot", "0x1.0000002p+0", "-0x1.0000004p+0", "0", "0x1.0000002p+0", "1", "0"]
+claims = { status = 0, line = ["vec3d_get_dot 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_dot", "0x1.0000002p+0", "-0x1.0000004p+0", "0", "0x1.0000002p+0", "2", "0"] }
+
+[[case]]
+name = "vec3f_get_dot gives the sum of the 3 products"
+run = ["{out}/math_probe{exe}", "vec3f_get_dot", "1", "2", "3", "4", "5", "6"]
+claims = { status = 0, line = ["vec3f_get_dot 42000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_dot", "1", "2", "3", "4", "5", "7"] }
+
+[[case]]
+name = "vec3f_get_dot adds the products in the order x, y, z"
+run = ["{out}/math_probe{exe}", "vec3f_get_dot", "16777216", "1", "1", "1", "1", "1"]
+claims = { status = 0, line = ["vec3f_get_dot 4b800000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_dot", "1", "1", "16777216", "1", "1", "1"] }
+
+[[case]]
+name = "vec3d_get_cross of the X axis and the Y axis is the Z axis"
+run = ["{out}/math_probe{exe}", "vec3d_get_cross", "1", "0", "0", "0", "1", "0"]
+claims = { status = 0, line = ["vec3d_get_cross 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_cross", "0", "1", "0", "1", "0", "0"] }
+
+[[case]]
+name = "vec3d_get_cross gives the cross product of 2 vectors"
+run = ["{out}/math_probe{exe}", "vec3d_get_cross", "1", "2", "3", "4", "5", "6"]
+claims = { status = 0, line = ["vec3d_get_cross c008000000000000 4018000000000000 c008000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_cross", "1", "2", "3", "4", "5", "7"] }
+
+[[case]]
+name = "vec3f_get_cross gives the cross product of 2 vectors"
+run = ["{out}/math_probe{exe}", "vec3f_get_cross", "1", "2", "3", "4", "5", "6"]
+claims = { status = 0, line = ["vec3f_get_cross c0400000 40c00000 c0400000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_cross", "1", "2", "3", "4", "5", "7"] }
+
+[[case]]
+name = "vec3d_get_square gives the square of the length"
+run = ["{out}/math_probe{exe}", "vec3d_get_square", "1", "2", "3"]
+claims = { status = 0, line = ["vec3d_get_square 402c000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_square", "1", "2", "4"] }
+
+[[case]]
+name = "vec3f_get_square gives the square of the length"
+run = ["{out}/math_probe{exe}", "vec3f_get_square", "1", "2", "3"]
+claims = { status = 0, line = ["vec3f_get_square 41600000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_square", "1", "2", "4"] }
+
+[[case]]
+name = "vec3d_get_length gives the length of a vector"
+run = ["{out}/math_probe{exe}", "vec3d_get_length", "3", "4", "0"]
+claims = { status = 0, line = ["vec3d_get_length 4014000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_length", "3", "4", "1"] }
+
+[[case]]
+name = "vec3d_get_length rounds a length that is no exact number as IEEE 754 tells"
+run = ["{out}/math_probe{exe}", "vec3d_get_length", "1", "1", "1"]
+claims = { status = 0, line = ["vec3d_get_length 3ffbb67ae8584caa"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_length", "1", "1", "2"] }
+
+[[case]]
+name = "vec3f_get_length gives the length of a vector"
+run = ["{out}/math_probe{exe}", "vec3f_get_length", "1", "1", "1"]
+claims = { status = 0, line = ["vec3f_get_length 3fddb3d7"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_length", "1", "1", "2"] }
+
+[[case]]
+name = "vec3d_get_distance gives the length from the first point to the second point"
+run = ["{out}/math_probe{exe}", "vec3d_get_distance", "1", "2", "3", "4", "6", "3"]
+claims = { status = 0, line = ["vec3d_get_distance 4014000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_distance", "1", "2", "3", "4", "6", "4"] }
+
+[[case]]
+name = "vec3f_get_distance gives the length from the first point to the second point"
+run = ["{out}/math_probe{exe}", "vec3f_get_distance", "1", "2", "3", "4", "6", "3"]
+claims = { status = 0, line = ["vec3f_get_distance 40a00000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_distance", "1", "2", "3", "4", "6", "4"] }
+
+[[case]]
+name = "vec3d_get_unit divides each part by the length"
+run = ["{out}/math_probe{exe}", "vec3d_get_unit", "3", "4", "0"]
+claims = { status = 0, line = ["vec3d_get_unit 3fe3333333333333 3fe999999999999a 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_unit", "4", "3", "0"] }
+
+[[case]]
+name = "vec3d_get_unit keeps a vector of length 0 at 0"
+run = ["{out}/math_probe{exe}", "vec3d_get_unit", "0", "0", "0"]
+claims = { status = 0, line = ["vec3d_get_unit 0000000000000000 0000000000000000 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_unit", "3", "4", "0"] }
+
+[[case]]
+name = "vec3f_get_unit divides each part by the length"
+run = ["{out}/math_probe{exe}", "vec3f_get_unit", "3", "4", "0"]
+claims = { status = 0, line = ["vec3f_get_unit 3f19999a 3f4ccccd 00000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_unit", "4", "3", "0"] }
+
+[[case]]
+name = "vec3d_get_blend gives the middle of 2 vectors for a share of a half"
+run = ["{out}/math_probe{exe}", "vec3d_get_blend", "1", "2", "3", "3", "4", "5", "0.5"]
+claims = { status = 0, line = ["vec3d_get_blend 4000000000000000 4008000000000000 4010000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_blend", "1", "2", "3", "3", "4", "5", "0.25"] }
+
+[[case]]
+name = "vec3d_get_blend gives the second vector for a share of 1, also when the first vector is much larger"
+run = ["{out}/math_probe{exe}", "vec3d_get_blend", "10000000000000000", "10000000000000000", "10000000000000000", "1", "2", "3", "1"]
+claims = { status = 0, line = ["vec3d_get_blend 3ff0000000000000 4000000000000000 4008000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_blend", "10000000000000000", "10000000000000000", "10000000000000000", "1", "2", "3", "0"] }
+
+[[case]]
+name = "vec3f_get_blend gives the middle of 2 vectors for a share of a half"
+run = ["{out}/math_probe{exe}", "vec3f_get_blend", "1", "2", "3", "3", "4", "5", "0.5"]
+claims = { status = 0, line = ["vec3f_get_blend 40000000 40400000 40800000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_blend", "1", "2", "3", "3", "4", "5", "0.25"] }
+
+[[case]]
+name = "vec3d_get_least gives the smaller number of each part"
+run = ["{out}/math_probe{exe}", "vec3d_get_least", "1", "5", "3", "4", "2", "6"]
+claims = { status = 0, line = ["vec3d_get_least 3ff0000000000000 4000000000000000 4008000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_least", "1", "5", "3", "4", "5", "6"] }
+
+[[case]]
+name = "vec3d_get_least gives the same result with the 2 vectors in the other order"
+run = ["{out}/math_probe{exe}", "vec3d_get_least", "4", "2", "6", "1", "5", "3"]
+claims = { status = 0, line = ["vec3d_get_least 3ff0000000000000 4000000000000000 4008000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_least", "4", "5", "6", "1", "5", "3"] }
+
+[[case]]
+name = "vec3f_get_least gives the smaller number of each part"
+run = ["{out}/math_probe{exe}", "vec3f_get_least", "1", "5", "3", "4", "2", "6"]
+claims = { status = 0, line = ["vec3f_get_least 3f800000 40000000 40400000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_least", "1", "5", "3", "4", "5", "6"] }
+
+[[case]]
+name = "vec3d_get_most gives the larger number of each part"
+run = ["{out}/math_probe{exe}", "vec3d_get_most", "1", "5", "3", "4", "2", "6"]
+claims = { status = 0, line = ["vec3d_get_most 4010000000000000 4014000000000000 4018000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_most", "1", "2", "3", "4", "2", "6"] }
+
+[[case]]
+name = "vec3d_get_most gives the same result with the 2 vectors in the other order"
+run = ["{out}/math_probe{exe}", "vec3d_get_most", "4", "2", "6", "1", "5", "3"]
+claims = { status = 0, line = ["vec3d_get_most 4010000000000000 4014000000000000 4018000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_most", "4", "2", "6", "1", "2", "3"] }
+
+[[case]]
+name = "vec3f_get_most gives the larger number of each part"
+run = ["{out}/math_probe{exe}", "vec3f_get_most", "1", "5", "3", "4", "2", "6"]
+claims = { status = 0, line = ["vec3f_get_most 40800000 40a00000 40c00000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_most", "1", "2", "3", "4", "2", "6"] }
+
+[[case]]
+name = "vec3d_is_finite gives true when each part is finite"
+run = ["{out}/math_probe{exe}", "vec3d_is_finite", "1", "2", "3"]
+claims = { status = 0, line = ["vec3d_is_finite 1"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_is_finite", "inf", "2", "3"] }
+
+[[case]]
+name = "vec3d_is_finite gives false for an infinity in x"
+run = ["{out}/math_probe{exe}", "vec3d_is_finite", "inf", "2", "3"]
+claims = { status = 0, line = ["vec3d_is_finite 0"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_is_finite", "1", "2", "3"] }
+
+[[case]]
+name = "vec3d_is_finite gives false for a NaN in y"
+run = ["{out}/math_probe{exe}", "vec3d_is_finite", "1", "nan", "3"]
+claims = { status = 0, line = ["vec3d_is_finite 0"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_is_finite", "1", "2", "3"] }
+
+[[case]]
+name = "vec3d_is_finite gives false for an infinity in z"
+run = ["{out}/math_probe{exe}", "vec3d_is_finite", "1", "2", "-inf"]
+claims = { status = 0, line = ["vec3d_is_finite 0"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_is_finite", "1", "2", "3"] }
+
+[[case]]
+name = "vec3f_is_finite gives false for an infinity in z"
+run = ["{out}/math_probe{exe}", "vec3f_is_finite", "1", "2", "inf"]
+claims = { status = 0, line = ["vec3f_is_finite 0"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_is_finite", "1", "2", "3"] }
+
+[[case]]
+name = "vec3d_load reads 3 plain numbers at a pointer"
+run = ["{out}/math_probe{exe}", "vec3d_load", "1", "2", "3"]
+claims = { status = 0, line = ["vec3d_load 3ff0000000000000 4000000000000000 4008000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_load", "1", "2", "4"] }
+
+[[case]]
+name = "vec3d_store writes 3 plain numbers and leaves the fourth number as it is"
+run = ["{out}/math_probe{exe}", "vec3d_store", "1", "2", "3"]
+claims = { status = 0, line = ["vec3d_store 3ff0000000000000 4000000000000000 4008000000000000 bff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_store", "1", "2", "4"] }
+
+[[case]]
+name = "vec3f_load reads 3 plain numbers at a pointer"
+run = ["{out}/math_probe{exe}", "vec3f_load", "1", "2", "3"]
+claims = { status = 0, line = ["vec3f_load 3f800000 40000000 40400000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_load", "1", "2", "4"] }
+
+[[case]]
+name = "vec3f_store writes 3 plain numbers and leaves the fourth number as it is"
+run = ["{out}/math_probe{exe}", "vec3f_store", "1", "2", "3"]
+claims = { status = 0, line = ["vec3f_store 3f800000 40000000 40400000 bf800000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_store", "1", "2", "4"] }
+
+[[case]]
+name = "vec3d_get_narrow rounds each part to the nearest number of 32 bits"
+run = ["{out}/math_probe{exe}", "vec3d_get_narrow", "0x1.999999999999ap-4", "1", "16777217"]
+claims = { status = 0, line = ["vec3d_get_narrow 3dcccccd 3f800000 4b800000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_get_narrow", "0x1.999999999999ap-4", "1", "16777218"] }
+
+[[case]]
+name = "vec3f_get_wide gives the same numbers in 64 bits"
+run = ["{out}/math_probe{exe}", "vec3f_get_wide", "0x1.99999a0000000p-4", "1", "2"]
+claims = { status = 0, line = ["vec3f_get_wide 3fb99999a0000000 3ff0000000000000 4000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3f_get_wide", "0x1.99999a0000000p-3", "1", "2"] }
+
+[[case]]
+name = "vec3d_split writes each part as a number of 32 bits and the rest of each part"
+run = ["{out}/math_probe{exe}", "vec3d_split", "0x1.999999999999ap-4", "0x1.d6f34547df3b6p+26", "1"]
+claims = { status = 0, line = ["vec3d_split 3dcccccd 4ceb79a3 3f800000 b0cccccd c03820c5 00000000"] }
+false = { run = ["{out}/math_probe{exe}", "vec3d_split", "0x1.999999999999ap-3", "0x1.d6f34547df3b6p+26", "1"] }
+
+[[case]]
+name = "f64_split writes a number as a number of 32 bits and the rest"
+run = ["{out}/math_probe{exe}", "f64_split", "0x1.d6f34547df3b6p+26"]
+claims = { status = 0, line = ["f64_split 4ceb79a3 c03820c5"] }
+false = { run = ["{out}/math_probe{exe}", "f64_split", "123456789.5"] }

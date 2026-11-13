@@ -1,0 +1,131 @@
+[[case]]
+name = "f64_get_log of 1 is 0"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p+0"]
+claims = { status = 0, line = ["f64_get_log 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.8000000000000p+0"] }
+
+[[case]]
+name = "f64_get_log of a number just below 1 uses the series near 1"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.e666666666666p-1"]
+claims = { status = 0, line = ["f64_get_log bfaa431d5bcc193e"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.eb851eb851eb8p-1"] }
+
+[[case]]
+name = "f64_get_log of a number just above 1 uses the series near 1"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0cccccccccccdp+0"]
+claims = { status = 0, line = ["f64_get_log 3fa8fb063ef2c7f0"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0f5c28f5c28f6p+0"] }
+
+[[case]]
+name = "f64_get_log of 0.9375 is the first number of the series near 1"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.e000000000000p-1"]
+claims = { status = 0, line = ["f64_get_log bfb08598b59e3a07"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.e666666666666p-1"] }
+
+[[case]]
+name = "f64_get_log of the number below 0.9375 uses the table"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.dffffffffffffp-1"]
+claims = { status = 0, line = ["f64_get_log bfb08598b59e3a0f"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.ccccccccccccdp-1"] }
+
+[[case]]
+name = "f64_get_log of the last number of the series near 1"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.108ffffffffffp+0"]
+claims = { status = 0, line = ["f64_get_log 3fb00c7c14184eb6"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0cccccccccccdp+0"] }
+
+[[case]]
+name = "f64_get_log of the first number above the series near 1 uses the table"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.1090000000000p+0"]
+claims = { status = 0, line = ["f64_get_log 3fb00c7c14184ec5"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.11eb851eb851fp+0"] }
+
+[[case]]
+name = "f64_get_log of 2 is the number nearest to the logarithm of 2"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p+1"]
+claims = { status = 0, line = ["f64_get_log 3fe62e42fefa39ef"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.8000000000000p+1"] }
+
+[[case]]
+name = "f64_get_log of 10"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.4000000000000p+3"]
+claims = { status = 0, line = ["f64_get_log 40026bb1bbb55516"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.6000000000000p+3"] }
+
+[[case]]
+name = "f64_get_log of a half is negative"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["f64_get_log bfe62e42fefa39ef"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p-2"] }
+
+[[case]]
+name = "f64_get_log of 10^300"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.7e43c8800759cp+996"]
+claims = { status = 0, line = ["f64_get_log 4085963447f87fb5"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.31cfd3999f7b0p+993"] }
+
+[[case]]
+name = "f64_get_log of 10^-300"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.56e1fc2f8f359p-997"]
+claims = { status = 0, line = ["f64_get_log c085963447f87fb5"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.ac9a7b3b7302fp-994"] }
+
+[[case]]
+name = "f64_get_log of the smallest normal number"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p-1022"]
+claims = { status = 0, line = ["f64_get_log c086232bdd7abcd2"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.59283684dba77p-1022"] }
+
+[[case]]
+name = "f64_get_log of a subnormal number"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x0.012688b70e62bp-1022"]
+claims = { status = 0, line = ["f64_get_log c0864e69394d9508"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x0.024d116e1cc56p-1022"] }
+
+[[case]]
+name = "f64_get_log of the smallest number above 0"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x0.0000000000001p-1022"]
+claims = { status = 0, line = ["f64_get_log c0874385446d71c3"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x0.0000000000002p-1022"] }
+
+[[case]]
+name = "f64_get_log of the largest number"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.fffffffffffffp+1023"]
+claims = { status = 0, line = ["f64_get_log 40862e42fefa39ef"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.1ccf385ebc8a0p+1023"] }
+
+[[case]]
+name = "f64_get_log of a positive infinity is that infinity"
+run = ["{out}/math_probe{exe}", "f64_get_log", "inf"]
+claims = { status = 0, line = ["f64_get_log 7ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p+0"] }
+
+[[case]]
+name = "f64_get_log of 0 is the fixed NaN"
+run = ["{out}/math_probe{exe}", "f64_get_log", "0x0.0p+0"]
+claims = { status = 0, line = ["f64_get_log 7ff8000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p+0"] }
+
+[[case]]
+name = "f64_get_log of -0 is the fixed NaN"
+run = ["{out}/math_probe{exe}", "f64_get_log", "-0x0.0p+0"]
+claims = { status = 0, line = ["f64_get_log 7ff8000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p+1"] }
+
+[[case]]
+name = "f64_get_log of a negative number is the fixed NaN"
+run = ["{out}/math_probe{exe}", "f64_get_log", "-0x1.0000000000000p+1"]
+claims = { status = 0, line = ["f64_get_log 7ff8000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p+1"] }
+
+[[case]]
+name = "f64_get_log of a negative infinity is the fixed NaN"
+run = ["{out}/math_probe{exe}", "f64_get_log", "-inf"]
+claims = { status = 0, line = ["f64_get_log 7ff8000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p+1"] }
+
+[[case]]
+name = "f64_get_log of a NaN is the fixed NaN"
+run = ["{out}/math_probe{exe}", "f64_get_log", "nan"]
+claims = { status = 0, line = ["f64_get_log 7ff8000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_log", "0x1.0000000000000p+1"] }
