@@ -1,0 +1,2 @@
+[order]
+unload_before = [["ideatek_gpu_vulkan:gpu", "ideatek_window_sdl3:window"]]
