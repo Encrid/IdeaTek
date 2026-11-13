@@ -15,6 +15,7 @@
 #include "game_ktx2.h"
 #include "game_space.h"
 #include "game_gltf.h"
+#include "game_render.h"
 #include "game_bench.h"
 #include "game_level.h"
 #include "game_frame.h"
@@ -298,6 +299,9 @@ static void declare_types(const bridge_api_t *api)
 #if defined(GAME_GLTF)
     game_declare_gltf(api);
 #endif
+#if defined(GAME_RENDER)
+    game_declare_render(api);
+#endif
     s->settings = BRIDGE_NATIVE_COMPONENT(api, "test:Settings",
         game_settings_t, BRIDGE_STRIP, BRIDGE_SINGLETON,
         BRIDGE_ON_DESTROY_REMOVE);
@@ -375,6 +379,11 @@ BRIDGE_NATIVE(init)
     changes[count++] = game_space_slots.interpolated;
     changes[count++] = game_space_slots.teleported;
 #endif
+#if defined(GAME_RENDER)
+    changes[count++] = game_render_slots.camera;
+    changes[count++] = game_render_slots.projection;
+    changes[count++] = game_render_slots.request;
+#endif
     BRIDGE_NATIVE_ADD_SYSTEM(api, "play", "check", nullptr, 0, changes, count,
         nullptr, 0);
     queries[0] = ADD_SHOW(api, "show_state", game.slots.state);
@@ -408,6 +417,9 @@ BRIDGE_NATIVE(init)
 #endif
 #if defined(GAME_GLTF)
     game_watch_gltf(api);
+#endif
+#if defined(GAME_RENDER)
+    game_watch_render(api);
 #endif
 #if defined(GAME_LEVEL)
     game_watch_level(api);

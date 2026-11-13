@@ -1,0 +1,1121 @@
+[[case]]
+name = "a capture of a window with a camera gives its pixels, black where nothing is drawn"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 ok 320x240 round [0-9]+ pixel 0 0 0 255"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a capture of a window that no camera draws gives no target"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 no_target 0x0 round [0-9]+ pixel 0 0 0 0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a capture of a part gives the pixels of that part"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 ok 160x120 round"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0.5,0.5,0.5,0.5"
+'''
+
+[[case]]
+name = "a part wider than the window is cut at the edge of the window"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 ok 160x240 round"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,2,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0.5,0,2,0"
+'''
+
+[[case]]
+name = "a capture of more bytes than the half of capture_bytes gives too big"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 too_big 0x0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_rendering_vulkan:render@0.1.0".config]
+capture_bytes = 2
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a capture_bytes of 0 keeps no capture, so each capture is too big"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 too_big 0x0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_rendering_vulkan:render@0.1.0".config]
+capture_bytes = 614400
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_rendering_vulkan:render@0.1.0".config]
+capture_bytes = 0
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a capture of a target that is not the window gives no target"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 no_target"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0,1"
+'''
+
+[[case]]
+name = "2 captures of 1 round come in 2 rounds, 1 copy in each round"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 ok 320x240 round ([0-9]+) .*capture 1 ok 320x240 round (?!\\1)[0-9]+"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_rendering_vulkan:render@0.1.0".config]
+capture_bytes = 2
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a change of a request asks for 1 more capture"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 ok .*capture 0 ok "] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|10:recapture 0,0,0,0,0"
+'''
+
+[[case]]
+name = "a request that leaves before its copy gets no capture"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches_not = ["capture 0 "] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|6:uncapture 0"
+'''
+
+[[case]]
+name = "cameras of several orders and an inactive camera draw the window in the order of order"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 ok 320x240"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,0|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 2,0,0,0.5,0.5,1|4:camera 1,0.5,0.5,0,0,1|4:camera 0,0,0,0,0,0|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a camera that leaves no longer draws the window"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 no_target"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|7:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|5:uncamera 0|7:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a 65th camera is not drawn, with the line of the room"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, has = ["no room for cameras in round"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:cameras 64"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:cameras 65"
+'''
+
+[[case]]
+name = "a 17th capture that waits is not kept, with the line of the room"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, has = ["no room for captures in round"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a round with no device writes the line of no device once"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["no device: the gpu module has no device"], matches_not = ["no device: the gpu module has no device.*no device: the gpu module has no device"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:gpuoff|8:gpureq none"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1"
+'''
+
+[[case]]
+name = "a capture in a round where the window shows no image gives no target"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 no_target"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|8:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:minimize|8:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a new device ends the capture that copies as failed"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 failed 0x0"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|7:gpureq none 0x1"
+'''
+
+[[case]]
+name = "numbers outside their range write their lines, and the module is broken"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 1, has = ["lod_threshold: 0 is outside above 0", "capture_bytes: 3 is outside 0 to 1073741824, an even number", "max_lights: 0 is outside 1 to 65536"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_rendering_vulkan:render@0.1.0".config]
+lod_threshold = 1
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_rendering_vulkan:render@0.1.0".config]
+lod_threshold = 0
+capture_bytes = 3
+max_lights = 0
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1"
+'''
+
+[[case]]
+name = "a choice outside its words writes its line, and the module is broken"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 1, has = ["diffuse: lamberx is outside lambert or burley"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_rendering_vulkan:render@0.1.0".config]
+diffuse = "burley"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_rendering_vulkan:render@0.1.0".config]
+diffuse = "lamberx"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1"
+'''
+
+[[case]]
+name = "a change of a camera keeps it as 1 camera of the window"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 ok 320x240"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|7:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|5:recamera 0|7:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a camera that the room left out can leave with no trace"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, has = ["no room for cameras in round"], matches = ["capture 0 ok"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:cameras 64|5:uncamera 63|7:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:cameras 65|5:uncamera 64|7:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a change of a request that waits keeps 1 capture"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 1 ok"], matches_not = ["capture 1 ok.*capture 1 ok"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|6:capture 0,0,0,0|10:recapture 1,0,0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|6:capture 0,0,0,0|7:recapture 1,0,0,0,0,0"
+'''
+
+[[case]]
+name = "a request that leaves after its capture leaves no trace"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 ok"], matches_not = ["capture 0 ok.*capture 0 ok"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|10:recapture 0,0,0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0|10:uncapture 0"
+'''
+
+[[case]]
+name = "a camera on another target does not draw the window"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 no_target"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a game with no device writes the line of no device once, and draws nothing"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["no device: the gpu module has no device"], matches_not = ["no device: the gpu module has no device.*no device: the gpu module has no device"] }
+false = { files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:gpuoff|8:gpureq none"
+''' } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|4:camera 0,0,0,0,0,1"
+'''
+
+[[case]]
+name = "a refused command pool writes the line of the objects, and draws nothing"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkCreateCommandPool = 1 }
+claims = { has = ["no device: vulkan refuses the objects of the module"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "refused command buffers write the line of the objects, and draw nothing"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkAllocateCommandBuffers = 1 }
+claims = { has = ["no device: vulkan refuses the objects of the module"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a refused read buffer writes the line of the objects, and draws nothing"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkCreateBuffer = 1 }
+claims = { has = ["no device: vulkan refuses the objects of the module"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "refused memory of a read buffer writes the line of the objects"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkAllocateMemory = 1 }
+claims = { has = ["no device: vulkan refuses the objects of the module"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a refused bind of a read buffer writes the line of the objects"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkBindBufferMemory = 1 }
+claims = { has = ["no device: vulkan refuses the objects of the module"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a refused map of a read buffer writes the line of the objects"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkMapMemory = 1 }
+claims = { has = ["no device: vulkan refuses the objects of the module"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a refused image of the window writes its line once, and draws nothing"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkCreateImage = 1 }
+claims = { has = ["no image for the window: vulkan refuses it"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "refused memory of the image of the window writes the line of the image"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkAllocateMemory = 4 }
+claims = { has = ["no image for the window: vulkan refuses it"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a refused bind of the image of the window writes the line of the image"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkBindImageMemory = 1 }
+claims = { has = ["no image for the window: vulkan refuses it"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a refused view of the image of the window writes the line of the image"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+fail = { vkCreateImageView = 1 }
+claims = { has = ["no image for the window: vulkan refuses it"] }
+false = { fail = {} }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
+name = "a reload gives 1, because the module is not reloadable"
+run = ["{out}/rendering_vulkan_reload{exe}", "reload"]
+claims = { status = 0, line = ["reload 1"] }
+false = { run = ["{out}/rendering_vulkan_reload{exe}", "shutdown"] }
+
+[[case]]
+name = "a capture in a game with no ideatek:Frame gives the round 0"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}" }
+claims = { status = 0, matches = ["capture 0 ok 320x240 round 0 pixel"] }
+false = { folders = { "{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"] }, files = { "{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+''' } }
+
+[case.folders]
+"{case}/m" = ["window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render_alone.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''

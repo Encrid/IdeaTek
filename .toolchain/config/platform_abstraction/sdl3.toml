@@ -172,6 +172,11 @@ defines = ["GAME_GPU"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
 
 [[artifact.variants]]
+name = "sdl3_game_render"
+defines = ["GAME_GPU", "GAME_FRAME", "GAME_RENDER"]
+manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
+
+[[artifact.variants]]
 name = "sdl3_game_frame"
 defines = ["GAME_FRAME"]
 manifest = ["test:game@1.0.0", "{sdl3_game_words}"]
