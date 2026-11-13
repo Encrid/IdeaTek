@@ -5,7 +5,7 @@
 */
 #include "gpu_inside.h"
 
-static void keep_image(uint32_t i)
+static VkResult keep_image(uint32_t i)
 {
     VkImageViewCreateInfo info = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -14,24 +14,31 @@ static void keep_image(uint32_t i)
         .image = gpu_module.swap_images[i] };
     VkSemaphoreCreateInfo sem = {
         .sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO };
+    VkResult result;
 
-    vkCreateImageView(gpu_module.device, &info, nullptr, &gpu_module.views[i]);
-    vkCreateSemaphore(gpu_module.device, &sem, nullptr, &gpu_module.done[i]);
+    gpu_module.views[i] = VK_NULL_HANDLE;
+    gpu_module.done[i] = VK_NULL_HANDLE;
+    result = vkCreateImageView(gpu_module.device, &info, nullptr,
+        &gpu_module.views[i]);
+    return (first_result(result, vkCreateSemaphore(gpu_module.device, &sem,
+        nullptr, &gpu_module.done[i])));
 }
 
-void take_images(void)
+VkResult take_images(void)
 {
     uint32_t count = GPU_IMAGES;
     VkResult result;
+    VkResult kept = VK_SUCCESS;
 
     result = vkGetSwapchainImagesKHR(gpu_module.device, gpu_module.swapchain,
         &count, gpu_module.swap_images);
     count *= result >= 0;
     gpu_module.image_count = count;
     for (uint32_t i = 0; i < count; i++)
-        keep_image(i);
+        kept = first_result(kept, keep_image(i));
     gpu_module.swap_value.width = gpu_module.pixel_width;
     gpu_module.swap_value.height = gpu_module.pixel_height;
+    return (kept);
 }
 
 void drop_swapchain(void)

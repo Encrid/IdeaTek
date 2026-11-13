@@ -95,11 +95,12 @@ bool make_swapchain(const bridge_api_t *api)
     choose_present(api, &info);
     result = vkCreateSwapchainKHR(gpu_module.device, &info, nullptr,
         &gpu_module.swapchain);
+    if (result == VK_SUCCESS)
+        result = take_images();
     if (result != VK_SUCCESS) {
         bridge_native_say(api, BRIDGE_LOG_WARN, "no swapchain: %d", result);
-        gpu_module.swapchain = VK_NULL_HANDLE;
+        drop_swapchain();
         return (false);
     }
-    take_images();
     return (true);
 }

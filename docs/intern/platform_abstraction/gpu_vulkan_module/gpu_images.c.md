@@ -11,7 +11,7 @@ For each image, `keep_image` makes 1 view of the whole image and the semaphore `
 
 | Function | Result |
 | --- | --- |
-| `keep_image` | Makes the view and the semaphore of 1 image. |
-| `take_images` | Takes the images of the swapchain, and keeps their views and semaphores. |
+| `keep_image` | Makes the view and the semaphore of 1 image. Gives the first refused result, or `VK_SUCCESS`. |
+| `take_images` | Takes the images of the swapchain, and keeps their views and semaphores. Gives the first refused result of an image, or `VK_SUCCESS`. |
 | `drop_swapchain` | Destroys the views, their semaphores and the swapchain. |
 | `drop_surface` | Destroys the swapchain and the surface. |
