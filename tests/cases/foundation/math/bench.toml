@@ -1,0 +1,17 @@
+[[case]]
+name = "the contact kernel with vectors that are loaded from plain numbers gives its sum"
+run = ["{out}/math_bench{exe}", "vector", "1024", "4096", "8"]
+claims = { status = 0, line = ["sum 4d9eec96e090f405"] }
+false = { run = ["{out}/math_bench{exe}", "vector", "1024", "4096", "7"] }
+
+[[case]]
+name = "the contact kernel with plain structures gives the sum of the kernel with vectors"
+run = ["{out}/math_bench{exe}", "plain", "1024", "4096", "8"]
+claims = { status = 0, line = ["sum 4d9eec96e090f405"] }
+false = { run = ["{out}/math_bench{exe}", "plain", "1024", "4096", "7"] }
+
+[[case]]
+name = "the contact kernel with bodies that are stored as vectors gives the same sum"
+run = ["{out}/math_bench{exe}", "stored", "1024", "4096", "8"]
+claims = { status = 0, line = ["sum 4d9eec96e090f405"] }
+false = { run = ["{out}/math_bench{exe}", "stored", "1024", "4096", "7"] }
