@@ -30,8 +30,6 @@ bool get_local(const ideatek_world_transform_t *parent,
 
 void split_basis(const float basis[9], ideatek_quat_t *rotation,
     ideatek_vec3_t *scale);
-ideatek_quat_t get_rotation(const float m[9]);
-void get_rotation_matrix(const ideatek_quat_t *r, float m[9]);
 
 void start_set(space_set_t *set, uint64_t *slots, uint32_t room);
 bool set_put(space_set_t *set, uint64_t id);
