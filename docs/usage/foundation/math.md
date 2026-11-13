@@ -11,6 +11,9 @@ Each folder of `BL-IdeaTek-Math.zip` also holds this readme and the licence.
 
 The part needs no other part and no library beside it. It includes only headers of the C library.
 On x64, the archive is built for a processor with AVX2, FMA and BMI2: the level `x86_64_v3`.
+
+That level is for the functions of the archive only. A function of a header is built with its caller, at the level of that caller.
+So a caller that uses only header functions needs no processor above its own level.
 A project names the zip of `BL-IdeaTek-Math` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
 ## Usage

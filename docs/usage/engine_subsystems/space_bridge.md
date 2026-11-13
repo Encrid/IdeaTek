@@ -10,7 +10,8 @@ In `BM-IdeaTek-Space-Bridge`, each folder holds the module `space_bridge.dll`, `
 Each folder of `BM-IdeaTek-Space-Bridge.zip` also holds this readme and the licence.
 
 The module needs only Bridge, so no library goes beside it in a deployment.
-The math part of IdeaTek is inside the module. Its code needs the level `x86_64_v3` on x64: `docs/usage/foundation/math.md`, *Install*.
+The module uses the math part of IdeaTek only through functions of its headers, which are built with the module.
+So the module holds no code of the archive `math.a`, and it needs no processor above the lowest level of its target.
 A project names the zip of `BM-IdeaTek-Space-Bridge` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
 ## Usage

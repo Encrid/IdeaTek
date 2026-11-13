@@ -10,7 +10,8 @@ In `BM-IdeaTek-Loader-Gltf`, each folder holds the module `loader_gltf.dll`, `lo
 Each folder of `BM-IdeaTek-Loader-Gltf.zip` also holds this readme, the licence and the notice of cgltf.
 
 cgltf 1.15 is inside the module, so a deployment needs no other library: https://github.com/jkuhlmann/cgltf/releases/tag/v1.15.
-The module also holds code of the math part. So on x64 it runs only on a processor of the level `x86_64_v3`: `docs/usage/foundation/math.md`, *Install*.
+The module calls only header functions of the math part of IdeaTek, and the compiler builds them at the level of the module.
+Thus no object of `math.a` is inside it, and each processor of the target runs it.
 A project names the zip of `BM-IdeaTek-Loader-Gltf` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
 
 ## Usage
