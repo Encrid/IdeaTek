@@ -1,6 +1,6 @@
 # BM-IdeaTek-Rendering-Vulkan
 
-The render module of IdeaTek on Vulkan: the core that culls, picks the levels of detail and lights the meshes of each camera.
+The render module of IdeaTek on Vulkan: it culls, picks the levels and lights the meshes of each camera.
 
 ## Install
 
@@ -113,8 +113,10 @@ An instance, a light or a resource beyond its setting is not drawn. *The message
 | `spans` | 65536 | The cells of its types and the lists of its observers. |
 
 - The module takes the grants of the render module: `docs/extern/engine_subsystems/ideatek_rendering.h.md`, *The grants*.
+  It also takes the grants of a drawer of the GPU part, `docs/extern/platform_abstraction/ideatek_gpu.h.md` and `docs/extern/platform_abstraction/ideatek_gpu_vulkan.h.md`, *The grants*, and reads `ideatek:Frame`.
   With `shader_folder`, it also takes the grants of a game of the files part: `docs/extern/platform_abstraction/ideatek_files.h.md`.
-- Its system `draw` runs in the last phase of the deployment. A pair puts it after `ideatek_gpu_vulkan:gpu:begin`, and before `ideatek_gpu_vulkan:gpu:present`.
+- Its system `draw` runs in the last phase of the deployment, so it comes after `ideatek_gpu_vulkan:gpu:begin` of the first phase.
+  A pair puts it before `ideatek_gpu_vulkan:gpu:present`.
 - The module reads `ideatek:WorldTransform` after the barriers of the space module in the round, so a pair puts `draw` after the movers of the round.
 
 ### The messages
@@ -125,6 +127,8 @@ The module writes these lines:
 | --- | --- |
 | `<setting>: <value> is outside <range>` | A setting is outside its range. The module is broken, and `draw` gives 1. |
 | `no device: the gpu module has no device` | No entity has `ideatek:VulkanDevice` in the round. The module draws nothing in it. |
+| `no device: vulkan refuses the objects of the module` | Vulkan refuses the pool, the command buffers or the read buffers. The module draws nothing until a new device. |
+| `no image for the window: vulkan refuses it` | Vulkan refuses the image of the module at the size of the window. The module draws nothing until the size changes. |
 | `<entity> has no Visibility, so it is not drawn` | An entity with a mesh has no `ideatek:Visibility`. The line comes once for each entity. |
 | `<entity> is not drawn: <reason>` | The module cannot read a stream, a format or a number of joint sets of the mesh or the texture. The line comes once. |
 | `the shader <name> keeps the shader of the module: <reason>` | A shader of `shader_folder` does not come back, or does not compile. |
