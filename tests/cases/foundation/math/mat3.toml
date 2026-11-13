@@ -1,0 +1,257 @@
+[[case]]
+name = "mat3d_load reads 9 plain numbers column by column, and mat3d_store writes them back"
+run = ["{out}/math_probe{exe}", "mat3d_load", "1", "2", "3", "4", "5", "6", "7", "8", "10"]
+claims = { status = 0, line = ["mat3d_load 3ff0000000000000 4000000000000000 4008000000000000 4010000000000000 4014000000000000 4018000000000000 401c000000000000 4020000000000000 4024000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_load", "1", "2", "3", "4", "5", "6", "7", "8", "11"] }
+
+[[case]]
+name = "mat3f_load reads 9 plain numbers column by column, and mat3d_store writes them back"
+run = ["{out}/math_probe{exe}", "mat3f_load", "1", "2", "3", "4", "5", "6", "7", "8", "10"]
+claims = { status = 0, line = ["mat3f_load 3f800000 40000000 40400000 40800000 40a00000 40c00000 40e00000 41000000 41200000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_load", "1", "2", "3", "4", "5", "6", "7", "8", "11"] }
+
+[[case]]
+name = "mat3d_get_column gives the 3 numbers of a column"
+run = ["{out}/math_probe{exe}", "mat3d_get_column", "1", "2", "3", "4", "5", "6", "7", "8", "10", "1"]
+claims = { status = 0, line = ["mat3d_get_column 4010000000000000 4014000000000000 4018000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_column", "1", "2", "3", "4", "5", "6", "7", "8", "10", "2"] }
+
+[[case]]
+name = "mat3f_get_column gives the 3 numbers of a column"
+run = ["{out}/math_probe{exe}", "mat3f_get_column", "1", "2", "3", "4", "5", "6", "7", "8", "10", "1"]
+claims = { status = 0, line = ["mat3f_get_column 40800000 40a00000 40c00000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_get_column", "1", "2", "3", "4", "5", "6", "7", "8", "10", "2"] }
+
+[[case]]
+name = "mat3d_make_columns puts 3 vectors into the 3 columns"
+run = ["{out}/math_probe{exe}", "mat3d_make_columns", "1", "2", "3", "4", "5", "6", "7", "8", "10"]
+claims = { status = 0, line = ["mat3d_make_columns 3ff0000000000000 4000000000000000 4008000000000000 4010000000000000 4014000000000000 4018000000000000 401c000000000000 4020000000000000 4024000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_make_columns", "1", "2", "3", "4", "5", "6", "7", "8", "11"] }
+
+[[case]]
+name = "mat3f_make_columns puts 3 vectors into the 3 columns"
+run = ["{out}/math_probe{exe}", "mat3f_make_columns", "1", "2", "3", "4", "5", "6", "7", "8", "10"]
+claims = { status = 0, line = ["mat3f_make_columns 3f800000 40000000 40400000 40800000 40a00000 40c00000 40e00000 41000000 41200000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_make_columns", "1", "2", "3", "4", "5", "6", "7", "8", "11"] }
+
+[[case]]
+name = "mat3d_get_transpose gives the rows as columns"
+run = ["{out}/math_probe{exe}", "mat3d_get_transpose", "1", "2", "3", "4", "5", "6", "7", "8", "10"]
+claims = { status = 0, line = ["mat3d_get_transpose 3ff0000000000000 4010000000000000 401c000000000000 4000000000000000 4014000000000000 4020000000000000 4008000000000000 4018000000000000 4024000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_transpose", "1", "2", "3", "4", "5", "6", "7", "8", "11"] }
+
+[[case]]
+name = "mat3f_get_transpose gives the rows as columns"
+run = ["{out}/math_probe{exe}", "mat3f_get_transpose", "1", "2", "3", "4", "5", "6", "7", "8", "10"]
+claims = { status = 0, line = ["mat3f_get_transpose 3f800000 40800000 40e00000 40000000 40a00000 41000000 40400000 40c00000 41200000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_get_transpose", "1", "2", "3", "4", "5", "6", "7", "8", "11"] }
+
+[[case]]
+name = "mat3d_turn gives the product of the matrix and a vector"
+run = ["{out}/math_probe{exe}", "mat3d_turn", "1", "2", "3", "4", "5", "6", "7", "8", "10", "1", "2", "3"]
+claims = { status = 0, line = ["mat3d_turn 403e000000000000 4042000000000000 4046800000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_turn", "1", "2", "3", "4", "5", "6", "7", "8", "10", "1", "2", "4"] }
+
+[[case]]
+name = "mat3f_turn gives the product of the matrix and a vector"
+run = ["{out}/math_probe{exe}", "mat3f_turn", "1", "2", "3", "4", "5", "6", "7", "8", "10", "1", "2", "3"]
+claims = { status = 0, line = ["mat3f_turn 41f00000 42100000 42340000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_turn", "1", "2", "3", "4", "5", "6", "7", "8", "10", "1", "2", "4"] }
+
+[[case]]
+name = "mat3d_turn adds the 3 products of a row in the order of the columns"
+run = ["{out}/math_probe{exe}", "mat3d_turn", "0x1.0000000000000p+53", "0", "0", "1", "0", "0", "1", "0", "0", "1", "1", "1"]
+claims = { status = 0, line = ["mat3d_turn 4340000000000000 0000000000000000 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_turn", "1", "0", "0", "1", "0", "0", "0x1.0000000000000p+53", "0", "0", "1", "1", "1"] }
+
+[[case]]
+name = "mat3d_get_product gives the product of 2 matrices"
+run = ["{out}/math_probe{exe}", "mat3d_get_product", "1", "2", "3", "4", "5", "6", "7", "8", "10", "2", "0", "1", "1", "3", "0", "0", "1", "4"]
+claims = { status = 0, line = ["mat3d_get_product 4022000000000000 4028000000000000 4030000000000000 402a000000000000 4031000000000000 4035000000000000 4040000000000000 4042800000000000 4047000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_product", "1", "2", "3", "4", "5", "6", "7", "8", "10", "2", "0", "1", "1", "3", "0", "0", "1", "5"] }
+
+[[case]]
+name = "mat3f_get_product gives the product of 2 matrices"
+run = ["{out}/math_probe{exe}", "mat3f_get_product", "1", "2", "3", "4", "5", "6", "7", "8", "10", "2", "0", "1", "1", "3", "0", "0", "1", "4"]
+claims = { status = 0, line = ["mat3f_get_product 41100000 41400000 41800000 41500000 41880000 41a80000 42000000 42140000 42380000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_get_product", "1", "2", "3", "4", "5", "6", "7", "8", "10", "2", "0", "1", "1", "3", "0", "0", "1", "5"] }
+
+[[case]]
+name = "mat3d_get_product adds the 3 products of a number in the order of the columns of the first matrix"
+run = ["{out}/math_probe{exe}", "mat3d_get_product", "0x1.0000000000000p+53", "0", "0", "1", "0", "0", "1", "0", "0", "1", "1", "1", "0", "0", "0", "0", "0", "0"]
+claims = { status = 0, line = ["mat3d_get_product 4340000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_product", "1", "0", "0", "1", "0", "0", "0x1.0000000000000p+53", "0", "0", "1", "1", "1", "0", "0", "0", "0", "0", "0"] }
+
+[[case]]
+name = "mat3d_get_determinant gives the determinant"
+run = ["{out}/math_probe{exe}", "mat3d_get_determinant", "1", "2", "3", "4", "5", "6", "7", "8", "10"]
+claims = { status = 0, line = ["mat3d_get_determinant c008000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_determinant", "1", "2", "3", "4", "5", "6", "7", "8", "11"] }
+
+[[case]]
+name = "mat3f_get_determinant gives the determinant"
+run = ["{out}/math_probe{exe}", "mat3f_get_determinant", "1", "2", "3", "4", "5", "6", "7", "8", "10"]
+claims = { status = 0, line = ["mat3f_get_determinant c0400000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_get_determinant", "1", "2", "3", "4", "5", "6", "7", "8", "11"] }
+
+[[case]]
+name = "mat3d_get_determinant of a mirrored basis is negative"
+run = ["{out}/math_probe{exe}", "mat3d_get_determinant", "-1", "0", "0", "0", "1", "0", "0", "0", "1"]
+claims = { status = 0, line = ["mat3d_get_determinant bff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_determinant", "1", "0", "0", "0", "1", "0", "0", "0", "1"] }
+
+[[case]]
+name = "mat3d_get_inverse writes the inverse and gives true"
+run = ["{out}/math_probe{exe}", "mat3d_get_inverse", "2", "0", "1", "1", "3", "0", "0", "1", "4"]
+claims = { status = 0, line = ["mat3d_get_inverse 1 3fdeb851eb851eb8 3fa47ae147ae147b bfbeb851eb851eb8 bfc47ae147ae147b 3fd47ae147ae147b 3fa47ae147ae147b 3fa47ae147ae147b bfb47ae147ae147b 3fceb851eb851eb8"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_inverse", "2", "0", "1", "1", "3", "0", "0", "1", "5"] }
+
+[[case]]
+name = "mat3f_get_inverse writes the inverse and gives true"
+run = ["{out}/math_probe{exe}", "mat3f_get_inverse", "2", "0", "1", "1", "3", "0", "0", "1", "4"]
+claims = { status = 0, line = ["mat3f_get_inverse 1 3ef5c28f 3d23d70a bdf5c28f be23d70a 3ea3d70a 3d23d70a 3d23d70a bda3d70a 3e75c28f"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_get_inverse", "2", "0", "1", "1", "3", "0", "0", "1", "5"] }
+
+[[case]]
+name = "mat3d_get_inverse gives false and writes nothing for a determinant of 0"
+run = ["{out}/math_probe{exe}", "mat3d_get_inverse", "1", "2", "3", "2", "4", "6", "0", "0", "1"]
+claims = { status = 0, line = ["mat3d_get_inverse 0 3ff0000000000000 4000000000000000 4008000000000000 4000000000000000 4010000000000000 4018000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_inverse", "2", "0", "1", "1", "3", "0", "0", "1", "4"] }
+
+[[case]]
+name = "mat3f_get_inverse gives false and writes nothing for a determinant of 0"
+run = ["{out}/math_probe{exe}", "mat3f_get_inverse", "1", "2", "3", "2", "4", "6", "0", "0", "1"]
+claims = { status = 0, line = ["mat3f_get_inverse 0 3f800000 40000000 40400000 40000000 40800000 40c00000 00000000 00000000 3f800000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_get_inverse", "2", "0", "1", "1", "3", "0", "0", "1", "4"] }
+
+[[case]]
+name = "mat3d_get_rotation gives the quaternion of a matrix that turns by a third of a turn about the diagonal"
+run = ["{out}/math_probe{exe}", "mat3d_get_rotation", "0", "1", "0", "0", "0", "1", "1", "0", "0"]
+claims = { status = 0, line = ["mat3d_get_rotation 3fe0000000000000 3fe0000000000000 3fe0000000000000 3fe0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_rotation", "1", "0", "0", "0", "1", "0", "0", "0", "1"] }
+
+[[case]]
+name = "mat3f_get_rotation gives the quaternion of a matrix that turns by a third of a turn about the diagonal"
+run = ["{out}/math_probe{exe}", "mat3f_get_rotation", "0", "1", "0", "0", "0", "1", "1", "0", "0"]
+claims = { status = 0, line = ["mat3f_get_rotation 3f000000 3f000000 3f000000 3f000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_get_rotation", "1", "0", "0", "0", "1", "0", "0", "0", "1"] }
+
+[[case]]
+name = "mat3d_get_rotation of the matrix that turns nothing is the quaternion that turns nothing"
+run = ["{out}/math_probe{exe}", "mat3d_get_rotation", "1", "0", "0", "0", "1", "0", "0", "0", "1"]
+claims = { status = 0, line = ["mat3d_get_rotation 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_rotation", "0", "1", "0", "0", "0", "1", "1", "0", "0"] }
+
+[[case]]
+name = "mat3d_get_rotation of a half turn about Z"
+run = ["{out}/math_probe{exe}", "mat3d_get_rotation", "-1", "0", "0", "0", "-1", "0", "0", "0", "1"]
+claims = { status = 0, line = ["mat3d_get_rotation 0000000000000000 0000000000000000 3ff0000000000000 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_rotation", "0", "1", "0", "0", "0", "1", "1", "0", "0"] }
+
+[[case]]
+name = "mat3d_make_rotation gives the matrix of a quaternion of length 1"
+run = ["{out}/math_probe{exe}", "mat3d_make_rotation", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["mat3d_make_rotation 0000000000000000 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000 3ff0000000000000 0000000000000000 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_make_rotation", "1", "0", "0", "0"] }
+
+[[case]]
+name = "mat3f_make_rotation gives the matrix of a quaternion of length 1"
+run = ["{out}/math_probe{exe}", "mat3f_make_rotation", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["mat3f_make_rotation 00000000 3f800000 00000000 00000000 00000000 3f800000 3f800000 00000000 00000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_make_rotation", "1", "0", "0", "0"] }
+
+[[case]]
+name = "mat3d_make_rotation of a quaternion with parts that are no exact numbers"
+run = ["{out}/math_probe{exe}", "mat3d_make_rotation", "0x1.3333333333333p-1", "0", "0", "0x1.999999999999ap-1"]
+claims = { status = 0, line = ["mat3d_make_rotation 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3fd1eb851eb851ec 3feeb851eb851eb8 0000000000000000 bfeeb851eb851eb8 3fd1eb851eb851ec"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_make_rotation", "0x1.999999999999ap-1", "0", "0", "0x1.3333333333333p-1"] }
+
+[[case]]
+name = "mat3d_make_basis gives each column of the rotation times its scale"
+run = ["{out}/math_probe{exe}", "mat3d_make_basis", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "2", "3", "4"]
+claims = { status = 0, line = ["mat3d_make_basis 0000000000000000 4000000000000000 0000000000000000 0000000000000000 0000000000000000 4008000000000000 4010000000000000 0000000000000000 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_make_basis", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "2", "3", "5"] }
+
+[[case]]
+name = "mat3f_make_basis gives each column of the rotation times its scale"
+run = ["{out}/math_probe{exe}", "mat3f_make_basis", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "2", "3", "4"]
+claims = { status = 0, line = ["mat3f_make_basis 00000000 40000000 00000000 00000000 00000000 40400000 40800000 00000000 00000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_make_basis", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "2", "3", "5"] }
+
+[[case]]
+name = "mat3d_get_frame makes the 3 columns orthonormal in the order X, Y, Z"
+run = ["{out}/math_probe{exe}", "mat3d_get_frame", "2", "0", "0", "1", "3", "0", "0", "0", "4"]
+claims = { status = 0, line = ["mat3d_get_frame 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_frame", "2", "0", "0", "0", "3", "1", "0", "0", "4"] }
+
+[[case]]
+name = "mat3f_get_frame makes the 3 columns orthonormal in the order X, Y, Z"
+run = ["{out}/math_probe{exe}", "mat3f_get_frame", "2", "0", "0", "1", "3", "0", "0", "0", "4"]
+claims = { status = 0, line = ["mat3f_get_frame 3f800000 00000000 00000000 00000000 3f800000 00000000 00000000 00000000 3f800000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_get_frame", "2", "0", "0", "0", "3", "1", "0", "0", "4"] }
+
+[[case]]
+name = "mat3d_get_frame fills a column of length 0 with the cross product of the 2 other columns"
+run = ["{out}/math_probe{exe}", "mat3d_get_frame", "0", "0", "0", "0", "3", "0", "0", "0", "4"]
+claims = { status = 0, line = ["mat3d_get_frame 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_frame", "0", "0", "0", "0", "0", "4", "0", "3", "0"] }
+
+[[case]]
+name = "mat3d_get_frame fills a second column that is along the first column"
+run = ["{out}/math_probe{exe}", "mat3d_get_frame", "2", "0", "0", "4", "0", "0", "0", "0", "4"]
+claims = { status = 0, line = ["mat3d_get_frame 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_frame", "2", "0", "0", "0", "0", "4", "0", "4", "0"] }
+
+[[case]]
+name = "mat3d_get_frame fills a third column of length 0"
+run = ["{out}/math_probe{exe}", "mat3d_get_frame", "2", "0", "0", "0", "3", "0", "0", "0", "0"]
+claims = { status = 0, line = ["mat3d_get_frame 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_get_frame", "0", "2", "0", "3", "0", "0", "0", "0", "0"] }
+
+[[case]]
+name = "mat3d_split gives the lengths of the columns as the scale"
+run = ["{out}/math_probe{exe}", "mat3d_split", "2", "0", "0", "0", "3", "0", "0", "0", "4"]
+claims = { status = 0, line = ["mat3d_split 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000 4000000000000000 4008000000000000 4010000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_split", "2", "0", "0", "0", "3", "0", "0", "0", "5"] }
+
+[[case]]
+name = "mat3f_split gives the lengths of the columns as the scale"
+run = ["{out}/math_probe{exe}", "mat3f_split", "2", "0", "0", "0", "3", "0", "0", "0", "4"]
+claims = { status = 0, line = ["mat3f_split 00000000 00000000 00000000 3f800000 40000000 40400000 40800000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_split", "2", "0", "0", "0", "3", "0", "0", "0", "5"] }
+
+[[case]]
+name = "mat3d_split gives a negative scale on Z for a basis with a negative determinant"
+run = ["{out}/math_probe{exe}", "mat3d_split", "-1", "0", "0", "0", "1", "0", "0", "0", "1"]
+claims = { status = 0, line = ["mat3d_split 0000000000000000 bff0000000000000 0000000000000000 0000000000000000 3ff0000000000000 3ff0000000000000 bff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_split", "1", "0", "0", "0", "1", "0", "0", "0", "1"] }
+
+[[case]]
+name = "mat3f_split gives a negative scale on Z for a basis with a negative determinant"
+run = ["{out}/math_probe{exe}", "mat3f_split", "-1", "0", "0", "0", "1", "0", "0", "0", "1"]
+claims = { status = 0, line = ["mat3f_split 00000000 bf800000 00000000 00000000 3f800000 3f800000 bf800000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_split", "1", "0", "0", "0", "1", "0", "0", "0", "1"] }
+
+[[case]]
+name = "mat3d_split gives the rotation and the scale of a turned and scaled basis"
+run = ["{out}/math_probe{exe}", "mat3d_split", "0", "2", "0", "0", "0", "3", "4", "0", "0"]
+claims = { status = 0, line = ["mat3d_split 3fe0000000000000 3fe0000000000000 3fe0000000000000 3fe0000000000000 4000000000000000 4008000000000000 4010000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_split", "0", "2", "0", "0", "0", "3", "5", "0", "0"] }
+
+[[case]]
+name = "mat3f_split gives the rotation and the scale of a turned and scaled basis"
+run = ["{out}/math_probe{exe}", "mat3f_split", "0", "2", "0", "0", "0", "3", "4", "0", "0"]
+claims = { status = 0, line = ["mat3f_split 3f000000 3f000000 3f000000 3f000000 40000000 40400000 40800000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_split", "0", "2", "0", "0", "0", "3", "5", "0", "0"] }
+
+[[case]]
+name = "mat3d_split drops a shear and keeps the lengths of the columns"
+run = ["{out}/math_probe{exe}", "mat3d_split", "2", "0", "0", "1", "3", "0", "0", "0", "4"]
+claims = { status = 0, line = ["mat3d_split 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000 4000000000000000 40094c583ada5b53 4010000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_split", "2", "0", "0", "0", "3", "0", "0", "0", "4"] }
+
+[[case]]
+name = "mat3d_split gives a scale of 0 for a column of length 0"
+run = ["{out}/math_probe{exe}", "mat3d_split", "0", "0", "0", "0", "3", "0", "0", "0", "4"]
+claims = { status = 0, line = ["mat3d_split 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000 0000000000000000 4008000000000000 4010000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3d_split", "2", "0", "0", "0", "3", "0", "0", "0", "4"] }

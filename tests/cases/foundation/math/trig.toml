@@ -1,0 +1,287 @@
+[[case]]
+name = "f64_get_sin gives an angle below 2^-26 with no change"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p-27"]
+claims = { status = 0, line = ["f64_get_sin 3e40000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p-28"] }
+
+[[case]]
+name = "f64_get_sin of 0 is 0"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x0.0p+0"]
+claims = { status = 0, line = ["f64_get_sin 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "f64_get_sin of -0 is -0"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x0.0p+0"]
+claims = { status = 0, line = ["f64_get_sin 8000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x0.0p+0"] }
+
+[[case]]
+name = "f64_get_sin of an angle below a quarter of pi comes from the series alone"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["f64_get_sin 3fdeaee8744b05f0"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p-2"] }
+
+[[case]]
+name = "f64_get_sin of an infinity is the fixed NaN"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "inf"]
+claims = { status = 0, line = ["f64_get_sin 7ff8000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "f64_get_sin of a NaN is the fixed NaN"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "nan"]
+claims = { status = 0, line = ["f64_get_sin 7ff8000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "f64_get_sin of an angle near 1 quarter turn subtracts 1 time a half of pi"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p+0"]
+claims = { status = 0, line = ["f64_get_sin 3feaed548f090cee"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.4000000000000p+0"] }
+
+[[case]]
+name = "f64_get_sin of an angle near 2 quarter turns subtracts 2 times a half of pi"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.8000000000000p+1"]
+claims = { status = 0, line = ["f64_get_sin 3fc210386db6d55b"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.a000000000000p+1"] }
+
+[[case]]
+name = "f64_get_sin of an angle near 3 quarter turns subtracts 3 times a half of pi"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.2000000000000p+2"]
+claims = { status = 0, line = ["f64_get_sin bfef47ed3dc74080"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.3000000000000p+2"] }
+
+[[case]]
+name = "f64_get_sin of an angle near 4 quarter turns subtracts 4 times a half of pi"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.a000000000000p+2"]
+claims = { status = 0, line = ["f64_get_sin 3fcb890d40c6cb3c"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.b000000000000p+2"] }
+
+[[case]]
+name = "f64_get_sin of a negative angle near 1 quarter turn adds 1 time a half of pi"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x1.0000000000000p+0"]
+claims = { status = 0, line = ["f64_get_sin bfeaed548f090cee"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x1.4000000000000p+0"] }
+
+[[case]]
+name = "f64_get_sin of a negative angle near 3 quarter turns adds 3 times a half of pi"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x1.2000000000000p+2"]
+claims = { status = 0, line = ["f64_get_sin 3fef47ed3dc74080"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x1.3000000000000p+2"] }
+
+[[case]]
+name = "f64_get_sin of the number nearest to a half of pi is 1"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.921fb54442d18p+0"]
+claims = { status = 0, line = ["f64_get_sin 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p+0"] }
+
+[[case]]
+name = "f64_get_sin of the number nearest to pi keeps the bits that the cancellation leaves"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.921fb54442d18p+1"]
+claims = { status = 0, line = ["f64_get_sin 3ca1a62633145c07"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.8000000000000p+1"] }
+
+[[case]]
+name = "f64_get_sin of the number nearest to 3 halves of pi goes through the 3 rounds"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.2d97c7f3321d2p+2"]
+claims = { status = 0, line = ["f64_get_sin bff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.2000000000000p+2"] }
+
+[[case]]
+name = "f64_get_sin of the number nearest to 2 pi goes through the 3 rounds"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.921fb54442d18p+2"]
+claims = { status = 0, line = ["f64_get_sin bcb1a62633145c07"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.a000000000000p+2"] }
+
+[[case]]
+name = "f64_get_sin of an angle above 9 quarters of pi rounds the count of quarter turns"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p+3"]
+claims = { status = 0, line = ["f64_get_sin 3fefa8d2a028cf7b"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.2000000000000p+3"] }
+
+[[case]]
+name = "f64_get_sin of 100 needs 1 round of the reduction"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.9000000000000p+6"]
+claims = { status = 0, line = ["f64_get_sin bfe03425b78c4db8"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.9400000000000p+6"] }
+
+[[case]]
+name = "f64_get_sin of 1000000 needs 2 rounds of the reduction"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.e848000000000p+19"]
+claims = { status = 0, line = ["f64_get_sin bfd6664b2568d867"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.e848200000000p+19"] }
+
+[[case]]
+name = "f64_get_sin lowers the count of quarter turns when the rest is below minus a quarter of pi"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.78fdb9effea46p+3"]
+claims = { status = 0, line = ["f64_get_sin bfe6a09e667f3bd5"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.7000000000000p+3"] }
+
+[[case]]
+name = "f64_get_sin raises the count of quarter turns when the rest is above a quarter of pi"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.ab41b09886feap+3"]
+claims = { status = 0, line = ["f64_get_sin 3fe6a09e667f3bcf"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.b000000000000p+3"] }
+
+[[case]]
+name = "f64_get_sin of an angle just above 2^20 halves of pi uses the reduction of a large angle"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.eff124ad6617cp+20"]
+claims = { status = 0, line = ["f64_get_sin bfe35f1cf7eb7043"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.eff124ad6617dp+20"] }
+
+[[case]]
+name = "f64_get_sin of 10^22 is exact to the last bit"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0f0cf064dd592p+73"]
+claims = { status = 0, line = ["f64_get_sin bfeb453ab76bf397"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0f0cf064dd592p+74"] }
+
+[[case]]
+name = "f64_get_sin of -10^22 is the opposite of the sine of 10^22"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x1.0f0cf064dd592p+73"]
+claims = { status = 0, line = ["f64_get_sin 3feb453ab76bf397"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0f0cf064dd592p+73"] }
+
+[[case]]
+name = "f64_get_sin of 10^300 is exact to the last bit"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.7e43c8800759cp+996"]
+claims = { status = 0, line = ["f64_get_sin bfea2c16b010e385"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.7e43c8800759cp+997"] }
+
+[[case]]
+name = "f64_get_sin of a large angle whose rest is below a half keeps the rest"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.4e08b99a4fa06p+184"]
+claims = { status = 0, line = ["f64_get_sin bfef946960d42c0a"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.4e08b99a4fa07p+184"] }
+
+[[case]]
+name = "f64_get_sin of a large negative angle with 1 bit of the count in the top digit"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x1.796101376bef1p+216"]
+claims = { status = 0, line = ["f64_get_sin bfefcfcd045dc8ba"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x1.796101376bef2p+216"] }
+
+[[case]]
+name = "f64_get_sin of a large negative angle with 2 bits of the count in the top digit"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x1.34feb903dfce3p+97"]
+claims = { status = 0, line = ["f64_get_sin 3feffee407106878"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "-0x1.34feb903dfce4p+97"] }
+
+[[case]]
+name = "f64_get_sin of a large angle whose count ends at a digit"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.a717603972542p+983"]
+claims = { status = 0, line = ["f64_get_sin bfef9c9d66eea1e0"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.a717603972543p+983"] }
+
+[[case]]
+name = "f64_get_sin of the angle of 64 bits that is nearest to a quarter turn"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.6ac5b262ca1ffp+849"]
+claims = { status = 0, line = ["f64_get_sin 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.6ac5b262ca200p+849"] }
+
+[[case]]
+name = "f64_get_sin of a power of 2 uses 1 digit of the angle"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p+100"]
+claims = { status = 0, line = ["f64_get_sin bfebe8ed97ac1f59"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.0000000000000p+101"] }
+
+[[case]]
+name = "f64_get_sin of a large angle with 2 digits"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.9b4c9f46d9820p+227"]
+claims = { status = 0, line = ["f64_get_sin bfe55439c8d3baac"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.9b4c9f46d9830p+227"] }
+
+[[case]]
+name = "f64_get_sin of a large angle whose lowest digit is 0"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.33ee51d5fad53p+100"]
+claims = { status = 0, line = ["f64_get_sin 3fef556f4be72979"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.33ee51d5fad54p+100"] }
+
+[[case]]
+name = "f64_get_sin of a large angle that starts before the table of 2/pi"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.7088b848aa85dp+62"]
+claims = { status = 0, line = ["f64_get_sin 3fe4d5adc7550104"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.7088b848aa85ep+62"] }
+
+[[case]]
+name = "f64_get_sin of the largest number of 64 bits"
+run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.fffffffffffffp+1023"]
+claims = { status = 0, line = ["f64_get_sin 3f7452fc98b34e97"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_sin", "0x1.ffffffffffffep+1023"] }
+
+[[case]]
+name = "f64_get_cos of 0 is 1"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x0.0p+0"]
+claims = { status = 0, line = ["f64_get_cos 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "f64_get_cos of an angle below 2^-27 is 1"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0000000000000p-28"]
+claims = { status = 0, line = ["f64_get_cos 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "f64_get_cos of an angle below a quarter of pi comes from the series alone"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["f64_get_cos 3fec1528065b7d50"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0000000000000p-2"] }
+
+[[case]]
+name = "f64_get_cos of an infinity is the fixed NaN"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "-inf"]
+claims = { status = 0, line = ["f64_get_cos 7ff8000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "f64_get_cos of an angle near 1 quarter turn"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0000000000000p+0"]
+claims = { status = 0, line = ["f64_get_cos 3fe14a280fb5068c"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.4000000000000p+0"] }
+
+[[case]]
+name = "f64_get_cos of an angle near 2 quarter turns"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.8000000000000p+1"]
+claims = { status = 0, line = ["f64_get_cos bfefae04be85e5d2"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.a000000000000p+1"] }
+
+[[case]]
+name = "f64_get_cos of an angle near 3 quarter turns"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.2000000000000p+2"]
+claims = { status = 0, line = ["f64_get_cos bfcafb5b54583d6a"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.3000000000000p+2"] }
+
+[[case]]
+name = "f64_get_cos of an angle near 4 quarter turns"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.a000000000000p+2"]
+claims = { status = 0, line = ["f64_get_cos 3fef4034b145c3c8"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.b000000000000p+2"] }
+
+[[case]]
+name = "f64_get_cos of the number nearest to a half of pi keeps the bits that the cancellation leaves"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.921fb54442d18p+0"]
+claims = { status = 0, line = ["f64_get_cos 3c91a62633145c07"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0000000000000p+0"] }
+
+[[case]]
+name = "f64_get_cos of 10^22 is exact to the last bit"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0f0cf064dd592p+73"]
+claims = { status = 0, line = ["f64_get_cos 3fe0be2cef01c8f4"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.0f0cf064dd592p+74"] }
+
+[[case]]
+name = "f64_get_cos of the angle of 64 bits that is nearest to a quarter turn"
+run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.6ac5b262ca1ffp+849"]
+claims = { status = 0, line = ["f64_get_cos bc214ae72e6ba22f"] }
+false = { run = ["{out}/math_probe{exe}", "f64_get_cos", "0x1.6ac5b262ca200p+849"] }
+
+[[case]]
+name = "f32_get_sin gives the sine of 64 bits, rounded to 32 bits"
+run = ["{out}/math_probe{exe}", "f32_get_sin", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["f32_get_sin 3ef57744"] }
+false = { run = ["{out}/math_probe{exe}", "f32_get_sin", "0x1.0000000000000p-2"] }
+
+[[case]]
+name = "f32_get_cos gives the cosine of 64 bits, rounded to 32 bits"
+run = ["{out}/math_probe{exe}", "f32_get_cos", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["f32_get_cos 3f60a940"] }
+false = { run = ["{out}/math_probe{exe}", "f32_get_cos", "0x1.0000000000000p-2"] }

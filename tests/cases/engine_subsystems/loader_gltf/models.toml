@@ -2,7 +2,7 @@
 name = "the nodes of a scene come in the order of a walk, with the parts of their matrices"
 run = ["{case}/host/bridge-host{exe}", "{case}/d.toml"]
 env = { APPDATA = "{case}/data", XDG_DATA_HOME = "{case}/data", HOME = "{case}/data" }
-claims = { status = 0, has = ["model [m.gltf] nodes 4", "node 1 [1] parent 0", "pos 5.00 6.00 7.00 rot 0.00 0.00 0.71 0.71 scale 1.00 1.00 2.00", "node 2 [Mirror] parent 1", "scale -1.00 1.00 1.00", "node 3 [Flat] parent 0", "scale 0.00 1.00 1.00"] }
+claims = { status = 0, has = ["model [m.gltf] nodes 4", "node 1 [1] parent 0", "pos 5.00 6.00 7.00 rot 0.00 0.00 0.71 0.71 scale 1.00 1.00 2.00", "node 2 [Mirror] parent 1", "rot 0.00 -1.00 0.00 0.00 scale 1.00 1.00 -1.00", "node 3 [Flat] parent 0", "scale 0.00 1.00 1.00"] }
 false = { files = { "{case}/host/content/m.gltf" = '''
 {"asset":{"version":"2.0"},"buffers":[{"byteLength":42,"uri":"data:application/octet-stream;base64,AAAAAAAAAAAAAAAAAACAPwAAAAAAAAAAAAAAAAAAgD8AAAAAAAABAAIA"}],"bufferViews":[{"buffer":0,"byteOffset":0,"byteLength":36},{"buffer":0,"byteOffset":36,"byteLength":6}],"accessors":[{"bufferView":0,"componentType":5126,"count":3,"type":"VEC3","min":[0,0,0],"max":[1,1,0]},{"bufferView":1,"componentType":5123,"count":3,"type":"SCALAR"}],"meshes":[{"name":"Tri","primitives":[{"attributes":{"POSITION":0},"indices":1,"material":0}]}],"materials":[{"name":"Red","pbrMetallicRoughness":{"baseColorFactor":[1,0,0,1],"metallicFactor":0}}],"nodes":[{"name":"Root","mesh":0,"translation":[1,2,3]}],"scenes":[{"name":"Main","nodes":[0]}],"scene":0}''' } }
 

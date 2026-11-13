@@ -6,6 +6,7 @@
 #include <math.h>
 
 #include "gltf_inside.h"
+#include "math_mat3.h"
 
 float weight_of(const cgltf_node *n, uint32_t k)
 {
@@ -16,33 +17,17 @@ float weight_of(const cgltf_node *n, uint32_t k)
     return (0.0f);
 }
 
-static float column_length(const float m[16], uint32_t c)
-{
-    return (sqrtf(m[c * 4] * m[c * 4] + m[c * 4 + 1] * m[c * 4 + 1]
-        + m[c * 4 + 2] * m[c * 4 + 2]));
-}
-
 void split_matrix(const float m[16], ideatek_model_node_t *out)
 {
-    float s[3] = { column_length(m, 0), column_length(m, 1),
-        column_length(m, 2) };
-    float det = m[0] * (m[5] * m[10] - m[9] * m[6]) - m[4] * (m[1] * m[10]
-        - m[9] * m[2]) + m[8] * (m[1] * m[6] - m[5] * m[2]);
-    float r[9];
+    const float basis[9] = { m[0], m[1], m[2], m[4], m[5], m[6], m[8], m[9],
+        m[10] };
+    quatf_t q;
+    vec3f_t s;
 
-    s[0] = det < 0.0f ? -s[0] : s[0];
-    for (uint32_t k = 0; k < 9; k++)
-        r[k] = s[k / 3] != 0.0f ? m[(k / 3) * 4 + k % 3] / s[k / 3] : 0.0f;
+    mat3f_split(mat3f_load(basis), &q, &s);
     out->position = (ideatek_position_t){ m[12], m[13], m[14] };
-    out->scale = (ideatek_vec3_t){ s[0], s[1], s[2] };
-    out->rotation = (ideatek_quat_t){
-        copysignf(sqrtf(fmaxf(0.0f, 1.0f + r[0] - r[4] - r[8])) / 2.0f,
-            r[5] - r[7]),
-        copysignf(sqrtf(fmaxf(0.0f, 1.0f - r[0] + r[4] - r[8])) / 2.0f,
-            r[6] - r[2]),
-        copysignf(sqrtf(fmaxf(0.0f, 1.0f - r[0] - r[4] + r[8])) / 2.0f,
-            r[1] - r[3]),
-        sqrtf(fmaxf(0.0f, 1.0f + r[0] + r[4] + r[8])) / 2.0f };
+    out->scale = (ideatek_vec3_t){ s.x, s.y, s.z };
+    out->rotation = (ideatek_quat_t){ q.x, q.y, q.z, q.w };
 }
 
 void fill_light(const cgltf_light *l, ideatek_light_t *out)

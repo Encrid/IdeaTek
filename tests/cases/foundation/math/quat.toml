@@ -1,0 +1,311 @@
+[[case]]
+name = "quatd_get_dot gives the sum of the 4 products"
+run = ["{out}/math_probe{exe}", "quatd_get_dot", "1", "2", "3", "4", "5", "6", "7", "8"]
+claims = { status = 0, line = ["quatd_get_dot 4051800000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_dot", "1", "2", "3", "4", "5", "6", "7", "9"] }
+
+[[case]]
+name = "quatf_get_dot gives the sum of the 4 products"
+run = ["{out}/math_probe{exe}", "quatf_get_dot", "1", "2", "3", "4", "5", "6", "7", "8"]
+claims = { status = 0, line = ["quatf_get_dot 428c0000"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_get_dot", "1", "2", "3", "4", "5", "6", "7", "9"] }
+
+[[case]]
+name = "quatd_get_length gives the length of the 4 parts"
+run = ["{out}/math_probe{exe}", "quatd_get_length", "1", "2", "2", "4"]
+claims = { status = 0, line = ["quatd_get_length 4014000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_length", "1", "2", "2", "5"] }
+
+[[case]]
+name = "quatf_get_length gives the length of the 4 parts"
+run = ["{out}/math_probe{exe}", "quatf_get_length", "1", "2", "2", "4"]
+claims = { status = 0, line = ["quatf_get_length 40a00000"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_get_length", "1", "2", "2", "5"] }
+
+[[case]]
+name = "quatd_get_product gives the product of 2 quaternions"
+run = ["{out}/math_probe{exe}", "quatd_get_product", "1", "2", "3", "4", "5", "6", "7", "8"]
+claims = { status = 0, line = ["quatd_get_product 4038000000000000 4048000000000000 4048000000000000 c018000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_product", "1", "2", "3", "4", "5", "6", "7", "9"] }
+
+[[case]]
+name = "quatf_get_product gives the product of 2 quaternions"
+run = ["{out}/math_probe{exe}", "quatf_get_product", "1", "2", "3", "4", "5", "6", "7", "8"]
+claims = { status = 0, line = ["quatf_get_product 41c00000 42400000 42400000 c0c00000"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_get_product", "1", "2", "3", "4", "5", "6", "7", "9"] }
+
+[[case]]
+name = "quatd_get_product with the quaternion that turns nothing gives the other quaternion"
+run = ["{out}/math_probe{exe}", "quatd_get_product", "0", "0", "0", "1", "5", "6", "7", "8"]
+claims = { status = 0, line = ["quatd_get_product 4014000000000000 4018000000000000 401c000000000000 4020000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_product", "0", "0", "0", "2", "5", "6", "7", "8"] }
+
+[[case]]
+name = "quatd_get_conjugate gives the opposite axis and the same real part"
+run = ["{out}/math_probe{exe}", "quatd_get_conjugate", "1", "2", "3", "4"]
+claims = { status = 0, line = ["quatd_get_conjugate bff0000000000000 c000000000000000 c008000000000000 4010000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_conjugate", "1", "2", "3", "5"] }
+
+[[case]]
+name = "quatf_get_conjugate gives the opposite axis and the same real part"
+run = ["{out}/math_probe{exe}", "quatf_get_conjugate", "1", "2", "3", "4"]
+claims = { status = 0, line = ["quatf_get_conjugate bf800000 c0000000 c0400000 40800000"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_get_conjugate", "1", "2", "3", "5"] }
+
+[[case]]
+name = "quatd_get_unit divides each part by the length"
+run = ["{out}/math_probe{exe}", "quatd_get_unit", "0", "3", "0", "4"]
+claims = { status = 0, line = ["quatd_get_unit 0000000000000000 3fe3333333333333 0000000000000000 3fe999999999999a"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_unit", "0", "4", "0", "3"] }
+
+[[case]]
+name = "quatf_get_unit divides each part by the length"
+run = ["{out}/math_probe{exe}", "quatf_get_unit", "0", "3", "0", "4"]
+claims = { status = 0, line = ["quatf_get_unit 00000000 3f19999a 00000000 3f4ccccd"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_get_unit", "0", "4", "0", "3"] }
+
+[[case]]
+name = "quatd_get_unit of a quaternion of length 0 is the quaternion that turns nothing"
+run = ["{out}/math_probe{exe}", "quatd_get_unit", "0", "0", "0", "0"]
+claims = { status = 0, line = ["quatd_get_unit 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_unit", "0", "3", "0", "4"] }
+
+[[case]]
+name = "quatd_turn turns a vector by a third of a turn about the diagonal"
+run = ["{out}/math_probe{exe}", "quatd_turn", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3"]
+claims = { status = 0, line = ["quatd_turn 4008000000000000 3ff0000000000000 4000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_turn", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "4"] }
+
+[[case]]
+name = "quatf_turn turns a vector by a third of a turn about the diagonal"
+run = ["{out}/math_probe{exe}", "quatf_turn", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3"]
+claims = { status = 0, line = ["quatf_turn 40400000 3f800000 40000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_turn", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "4"] }
+
+[[case]]
+name = "quatd_turn turns a vector by a half turn about X"
+run = ["{out}/math_probe{exe}", "quatd_turn", "1", "0", "0", "0", "1", "2", "3"]
+claims = { status = 0, line = ["quatd_turn 3ff0000000000000 c000000000000000 c008000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_turn", "0", "1", "0", "0", "1", "2", "3"] }
+
+[[case]]
+name = "quatd_turn_back turns a vector the other way"
+run = ["{out}/math_probe{exe}", "quatd_turn_back", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3"]
+claims = { status = 0, line = ["quatd_turn_back 4000000000000000 4008000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_turn_back", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "4"] }
+
+[[case]]
+name = "quatf_turn_back turns a vector the other way"
+run = ["{out}/math_probe{exe}", "quatf_turn_back", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3"]
+claims = { status = 0, line = ["quatf_turn_back 40000000 40400000 3f800000"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_turn_back", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "4"] }
+
+[[case]]
+name = "quatd_make_turn makes a half turn about Z from the number nearest to pi"
+run = ["{out}/math_probe{exe}", "quatd_make_turn", "0", "0", "1", "0x1.921fb54442d18p+1"]
+claims = { status = 0, line = ["quatd_make_turn 0000000000000000 0000000000000000 3ff0000000000000 3c91a62633145c07"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_make_turn", "0", "0", "1", "1"] }
+
+[[case]]
+name = "quatf_make_turn makes a half turn about Z from the number nearest to pi"
+run = ["{out}/math_probe{exe}", "quatf_make_turn", "0", "0", "1", "0x1.921fb60000000p+1"]
+claims = { status = 0, line = ["quatf_make_turn 00000000 00000000 3f800000 b33bbd2e"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_make_turn", "0", "0", "1", "1"] }
+
+[[case]]
+name = "quatd_make_turn with an angle of 0 makes the quaternion that turns nothing"
+run = ["{out}/math_probe{exe}", "quatd_make_turn", "0", "0", "1", "0"]
+claims = { status = 0, line = ["quatd_make_turn 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_make_turn", "0", "0", "1", "1"] }
+
+[[case]]
+name = "quatd_make_turn makes a turn of 1 radian about X"
+run = ["{out}/math_probe{exe}", "quatd_make_turn", "1", "0", "0", "1"]
+claims = { status = 0, line = ["quatd_make_turn 3fdeaee8744b05f0 0000000000000000 0000000000000000 3fec1528065b7d50"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_make_turn", "1", "0", "0", "2"] }
+
+[[case]]
+name = "quatd_get_angle of a half turn is the number nearest to pi"
+run = ["{out}/math_probe{exe}", "quatd_get_angle", "0", "0", "1", "0"]
+claims = { status = 0, line = ["quatd_get_angle 400921fb54442d18"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_angle", "0", "0", "1", "1"] }
+
+[[case]]
+name = "quatf_get_angle of a half turn is the number nearest to pi"
+run = ["{out}/math_probe{exe}", "quatf_get_angle", "0", "0", "1", "0"]
+claims = { status = 0, line = ["quatf_get_angle 40490fdb"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_get_angle", "0", "0", "1", "1"] }
+
+[[case]]
+name = "quatd_get_angle of the quaternion that turns nothing is 0"
+run = ["{out}/math_probe{exe}", "quatd_get_angle", "0", "0", "0", "1"]
+claims = { status = 0, line = ["quatd_get_angle 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_angle", "0", "0", "1", "1"] }
+
+[[case]]
+name = "quatd_get_angle of a quaternion with a negative real part is between 0 and pi"
+run = ["{out}/math_probe{exe}", "quatd_get_angle", "0", "0", "1", "-1"]
+claims = { status = 0, line = ["quatd_get_angle 3ff921fb54442d18"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_angle", "0", "0", "1", "-2"] }
+
+[[case]]
+name = "quatd_get_axis gives the axis at the length 1"
+run = ["{out}/math_probe{exe}", "quatd_get_axis", "0", "0", "2", "1"]
+claims = { status = 0, line = ["quatd_get_axis 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_axis", "0", "2", "0", "1"] }
+
+[[case]]
+name = "quatf_get_axis gives the axis at the length 1"
+run = ["{out}/math_probe{exe}", "quatf_get_axis", "0", "0", "2", "1"]
+claims = { status = 0, line = ["quatf_get_axis 00000000 00000000 3f800000"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_get_axis", "0", "2", "0", "1"] }
+
+[[case]]
+name = "quatd_get_axis gives the opposite axis for a negative real part"
+run = ["{out}/math_probe{exe}", "quatd_get_axis", "0", "0", "2", "-1"]
+claims = { status = 0, line = ["quatd_get_axis 8000000000000000 8000000000000000 bff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_axis", "0", "0", "2", "1"] }
+
+[[case]]
+name = "quatd_get_axis of a rotation of the angle 0 is the X axis"
+run = ["{out}/math_probe{exe}", "quatd_get_axis", "0", "0", "0", "1"]
+claims = { status = 0, line = ["quatd_get_axis 3ff0000000000000 0000000000000000 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_axis", "0", "0", "2", "1"] }
+
+[[case]]
+name = "quatd_get_blend gives the rotation of the middle for a share of a half"
+run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "1", "0", "0", "0", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["quatd_get_blend 3fe6a09e667f3bcc 0000000000000000 0000000000000000 3fe6a09e667f3bcc"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "1", "0", "0", "0", "0x1.0000000000000p-2"] }
+
+[[case]]
+name = "quatf_get_blend gives the rotation of the middle for a share of a half"
+run = ["{out}/math_probe{exe}", "quatf_get_blend", "0", "0", "0", "1", "1", "0", "0", "0", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["quatf_get_blend 3f3504f3 00000000 00000000 3f3504f3"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_get_blend", "0", "0", "0", "1", "1", "0", "0", "0", "0x1.0000000000000p-2"] }
+
+[[case]]
+name = "quatd_get_blend gives the first quaternion for a share of 0"
+run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "1", "0", "0", "0", "0"]
+claims = { status = 0, line = ["quatd_get_blend 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "1", "0", "0", "0", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "quatd_get_blend gives the second quaternion for a share of 1"
+run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "1", "0", "0", "0", "1"]
+claims = { status = 0, line = ["quatd_get_blend 3ff0000000000000 0000000000000000 0000000000000000 0000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "1", "0", "0", "0", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "quatd_get_blend goes by the shorter way when the 2 quaternions are more than a quarter turn apart"
+run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "-0x1.0000000000000p-1", "-0x1.0000000000000p-1", "-0x1.0000000000000p-1", "-0x1.0000000000000p-1", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["quatd_get_blend 3fd279a74590331c 3fd279a74590331c 3fd279a74590331c 3febb67ae8584caa"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "-0x1.0000000000000p-1", "-0x1.0000000000000p-1", "-0x1.0000000000000p-1", "-0x1.0000000000000p-1", "0x1.0000000000000p-2"] }
+
+[[case]]
+name = "quatd_get_blend of a quaternion and its opposite gives the first quaternion"
+run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "0", "0", "0", "-1", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["quatd_get_blend 0000000000000000 0000000000000000 0000000000000000 3ff0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_blend", "0", "0", "0", "1", "1", "0", "0", "0", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "quatd_is_finite gives true when each part is finite"
+run = ["{out}/math_probe{exe}", "quatd_is_finite", "1", "2", "3", "4"]
+claims = { status = 0, line = ["quatd_is_finite 1"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_is_finite", "1", "2", "3", "inf"] }
+
+[[case]]
+name = "quatf_is_finite gives true when each part is finite"
+run = ["{out}/math_probe{exe}", "quatf_is_finite", "1", "2", "3", "4"]
+claims = { status = 0, line = ["quatf_is_finite 1"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_is_finite", "1", "2", "3", "inf"] }
+
+[[case]]
+name = "quatd_is_finite gives false for an infinity in x"
+run = ["{out}/math_probe{exe}", "quatd_is_finite", "inf", "2", "3", "4"]
+claims = { status = 0, line = ["quatd_is_finite 0"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_is_finite", "1", "2", "3", "4"] }
+
+[[case]]
+name = "quatd_is_finite gives false for an infinity in y"
+run = ["{out}/math_probe{exe}", "quatd_is_finite", "1", "inf", "3", "4"]
+claims = { status = 0, line = ["quatd_is_finite 0"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_is_finite", "1", "2", "3", "4"] }
+
+[[case]]
+name = "quatd_is_finite gives false for an infinity in z"
+run = ["{out}/math_probe{exe}", "quatd_is_finite", "1", "2", "inf", "4"]
+claims = { status = 0, line = ["quatd_is_finite 0"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_is_finite", "1", "2", "3", "4"] }
+
+[[case]]
+name = "quatd_is_finite gives false for an infinity in w"
+run = ["{out}/math_probe{exe}", "quatd_is_finite", "1", "2", "3", "inf"]
+claims = { status = 0, line = ["quatd_is_finite 0"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_is_finite", "1", "2", "3", "4"] }
+
+[[case]]
+name = "quatd_is_unit gives true for a length of 1 with a margin of 0"
+run = ["{out}/math_probe{exe}", "quatd_is_unit", "0", "0", "0", "1", "0"]
+claims = { status = 0, line = ["quatd_is_unit 1"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_is_unit", "0", "0", "0", "2", "0"] }
+
+[[case]]
+name = "quatf_is_unit gives true for a length of 1 with a margin of 0"
+run = ["{out}/math_probe{exe}", "quatf_is_unit", "0", "0", "0", "1", "0"]
+claims = { status = 0, line = ["quatf_is_unit 1"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_is_unit", "0", "0", "0", "2", "0"] }
+
+[[case]]
+name = "quatd_is_unit gives true when the length differs from 1 by the margin"
+run = ["{out}/math_probe{exe}", "quatd_is_unit", "0", "0", "0", "0x1.4000000000000p+0", "0x1.0000000000000p-2"]
+claims = { status = 0, line = ["quatd_is_unit 1"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_is_unit", "0", "0", "0", "0x1.8000000000000p+0", "0x1.0000000000000p-2"] }
+
+[[case]]
+name = "quatd_is_unit gives false when the length differs from 1 by more than the margin"
+run = ["{out}/math_probe{exe}", "quatd_is_unit", "0", "0", "0", "2", "0x1.0000000000000p-1"]
+claims = { status = 0, line = ["quatd_is_unit 0"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_is_unit", "0", "0", "0", "1", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "quatd_turn by a product turns by the second quaternion first"
+run = ["{out}/math_probe{exe}", "quatd_turn_product", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "0", "0", "0", "1", "2", "3"]
+claims = { status = 0, line = ["quatd_turn_product c008000000000000 3ff0000000000000 c000000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_turn_product", "1", "0", "0", "0", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3"] }
+
+[[case]]
+name = "quatd_step turns by the speed times the time about the axis of the speed"
+run = ["{out}/math_probe{exe}", "quatd_step", "0", "0", "0", "1", "0", "0", "0x1.921fb54442d18p+1", "1"]
+claims = { status = 0, line = ["quatd_step 0000000000000000 0000000000000000 3ff0000000000000 3c91a62633145c07"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_step", "0", "0", "0", "1", "0", "0", "0x1.921fb54442d18p+1", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "quatd_step of a turned quaternion keeps the length 1"
+run = ["{out}/math_probe{exe}", "quatd_step", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3", "0x1.0000000000000p-2"]
+claims = { status = 0, line = ["quatd_step 3fdc9036f697ba2c 3fe5fe40cbc93880 3fe2232e238a8acb 3fb5b71c147e9fa2"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_step", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3", "0x1.0000000000000p-1"] }
+
+[[case]]
+name = "quatd_step with a speed of 0 gives the quaternion with no change"
+run = ["{out}/math_probe{exe}", "quatd_step", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0", "0", "0", "1"]
+claims = { status = 0, line = ["quatd_step 3fe0000000000000 3fe0000000000000 3fe0000000000000 3fe0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_step", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0", "0", "1", "1"] }
+
+[[case]]
+name = "quatd_step with a time of 0 gives the quaternion with no change"
+run = ["{out}/math_probe{exe}", "quatd_step", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3", "0"]
+claims = { status = 0, line = ["quatd_step 3fe0000000000000 3fe0000000000000 3fe0000000000000 3fe0000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_step", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3", "1"] }
+
+[[case]]
+name = "quatd_get_narrow rounds each part to the nearest number of 32 bits"
+run = ["{out}/math_probe{exe}", "quatd_get_narrow", "0x1.999999999999ap-4", "1", "2", "16777217"]
+claims = { status = 0, line = ["quatd_get_narrow 3dcccccd 3f800000 40000000 4b800000"] }
+false = { run = ["{out}/math_probe{exe}", "quatd_get_narrow", "0x1.999999999999ap-4", "1", "2", "16777218"] }
+
+[[case]]
+name = "quatf_get_wide gives the same numbers in 64 bits"
+run = ["{out}/math_probe{exe}", "quatf_get_wide", "0x1.99999a0000000p-4", "1", "2", "3"]
+claims = { status = 0, line = ["quatf_get_wide 3fb99999a0000000 3ff0000000000000 4000000000000000 4008000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "quatf_get_wide", "0x1.99999a0000000p-4", "1", "2", "4"] }
