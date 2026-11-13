@@ -59,6 +59,16 @@ why = "files_module holds the state of the native module between 2 calls, which 
 
 [[style.exception]]
 rule = "G4"
+path = "src/engine_subsystems/rendering_vulkan/render_main.c"
+why = "render_module holds the state of the native module between 2 calls, which no argument of a call carries."
+
+[[style.exception]]
+rule = "G4"
+path = "src/engine_subsystems/rendering_vulkan/render_inside.h"
+why = "The declaration of render_module, the state of the native module between 2 calls."
+
+[[style.exception]]
+rule = "G4"
 path = "src/platform_abstraction/files_mosl/files_inside.h"
 why = "The declaration of files_module, the state of the native module between 2 calls."
 
@@ -274,3 +284,10 @@ line = 18
 col = 61
 side = "true"
 why = "The resources module attaches ideatek:Resource to each resource before the handle of its use, so the test of its value is a guard."
+
+[[branches.exception]]
+path = "src/engine_subsystems/rendering_vulkan/render_device.c"
+line = 33
+col = 9
+side = "true"
+why = "volkInitialize fails only on a machine with no Vulkan loader, and such a machine gives the module no device of the GPU module."
