@@ -36,7 +36,7 @@ kind = "native_module"
 part = "loader_gltf"
 sources = ["src/engine_subsystems/loader_gltf/*.c", "src/kernel/resources_files/resources_arena.c"]
 include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel", "src/engine_subsystems/loader_gltf", "src/kernel/resources_files", "{cgltf_root}", "src/foundation/math"]
-link = ["{out}/cgltf.a", "{out}/math.a"]
+link = ["{out}/cgltf.a"]
 flags = ["-fenable-matrix"]
 manifest = ["ideatek_loader_gltf:loader@0.1.0", "{loader_gltf_words}"]
 

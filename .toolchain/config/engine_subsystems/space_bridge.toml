@@ -17,7 +17,6 @@ kind = "native_module"
 part = "space_bridge"
 sources = ["src/engine_subsystems/space_bridge/*.c"]
 include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel", "src/engine_subsystems/space_bridge", "src/foundation/math"]
-link = ["{out}/math.a"]
 flags = ["-fenable-matrix"]
 manifest = ["ideatek_space_bridge:space@0.1.0", "{space_bridge_words}"]
 
@@ -44,7 +43,6 @@ part = "space_bridge"
 test = true
 sources = ["tests/engine_subsystems/space_bridge/math.c", "src/engine_subsystems/space_bridge/space_math.c", "src/engine_subsystems/space_bridge/space_local.c", "src/engine_subsystems/space_bridge/space_split.c"]
 include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include", "src/engine_subsystems/space_bridge", "src/foundation/math"]
-link = ["{out}/math.a"]
 flags = ["-fenable-matrix"]
 
 [[artifact]]
@@ -54,7 +52,6 @@ part = "space_bridge"
 test = true
 sources = ["tests/engine_subsystems/space_bridge/bench.c", "tests/engine_subsystems/space_bridge/bench_sum.c", "src/engine_subsystems/space_bridge/space_math.c", "src/engine_subsystems/space_bridge/space_local.c", "src/engine_subsystems/space_bridge/space_split.c"]
 include = ["include/engine_subsystems", "include/platform_abstraction", "{bridge}/include", "src/engine_subsystems/space_bridge", "tests/engine_subsystems/space_bridge", "src/foundation/math"]
-link = ["{out}/math.a"]
 flags = ["-fenable-matrix"]
 
 [[artifact]]
