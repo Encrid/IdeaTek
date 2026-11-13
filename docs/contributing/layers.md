@@ -20,6 +20,8 @@ that place a type on a layer. Each part of the project is on 1 layer.
 ## The layers of the project
 
 The project holds the contracts of layers 2, 3 and 4. It also holds their implementations, as module parts and library parts.
+The project also holds layer 1, as library parts. Layer 1 has no contract: no module exchanges a type of layer 1 with a module of another author.
+A library part of layer 1 includes no header of a contract and no header of Bridge.
 
 ## The parts
 
@@ -67,6 +69,9 @@ engine_subsystems/
     ideatek_terrain.h
     ideatek_ui.h
 ```
+
+The folder of layer 1 is `foundation`. It holds no header of a contract, so `include` has no folder `foundation`.
+The headers of a library part of layer 1 are with its sources, in `src/foundation/<part>/`.
 
 The world part is on layer 2: it holds only the type that names an entity, and Bridge holds the
 world model.

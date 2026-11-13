@@ -2,7 +2,7 @@
 
 This file gives the rotation and the scale of a basis. It reads only its arguments. The cases of the split in `space_math` check it.
 
-`split_basis` follows the 4 steps of `docs/extern/engine_subsystems/ideatek_space.h.md`, *The split of a basis*, in their order, and with no branch.
+`split_basis` follows the 4 steps of `docs/usage/foundation/math.md`, *The split of a basis*, in their order, and with no branch.
 A column of length 0 takes the cross of the others, made of length 1. Two columns of length 0 give no rotation of use.
 
 ## Functions

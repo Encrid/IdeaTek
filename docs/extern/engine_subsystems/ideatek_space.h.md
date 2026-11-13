@@ -188,15 +188,10 @@ An entity of the ring can be gone. Its `BRIDGE_ON_LEAVE` tells the reader.
 
 ## The split of a basis
 
-The space module splits a basis into a rotation and a scale in 1 way only:
-
-1. The scale on each axis is the length of the column of that axis.
-2. The rotation is the 3 columns made orthonormal by Gram-Schmidt in the order X, Y, Z.
-3. If the determinant of the basis is less than 0, the scale of Z is negative.
-4. A column of length 0 has a scale of 0. Its column in the rotation is the cross product of the 2 other columns.
+The space module splits a basis into a rotation and a scale in 1 way only.
+The rule is that of the math part: `docs/usage/foundation/math.md`, *The split of a basis*.
 
 A blend of 2 places is a linear blend of the origins, a spherical blend of the rotations and a linear blend of the scales.
-A shear does not go through the split: the split gives the nearest place without a shear.
 
 ## ideatek:Children
 
