@@ -1,0 +1,65 @@
+[[case]]
+name = "rigid_move turns a point and adds the origin"
+run = ["{out}/math_probe{exe}", "rigid_move", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "10", "20", "30", "1", "2", "3"]
+claims = { status = 0, line = ["rigid_move 402a000000000000 4035000000000000 4040000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "rigid_move", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "10", "20", "30", "1", "2", "4"] }
+
+[[case]]
+name = "rigid_move_back subtracts the origin and turns the point the other way"
+run = ["{out}/math_probe{exe}", "rigid_move_back", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "10", "20", "30", "13", "21", "32"]
+claims = { status = 0, line = ["rigid_move_back 3ff0000000000000 4000000000000000 4008000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "rigid_move_back", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "10", "20", "30", "13", "21", "33"] }
+
+[[case]]
+name = "rigid_compose gives the product of the 2 rotations and the origin of the local place moved by the parent"
+run = ["{out}/math_probe{exe}", "rigid_compose", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "10", "20", "30", "1", "0", "0", "0", "1", "2", "3"]
+claims = { status = 0, line = ["rigid_compose 3fe0000000000000 3fe0000000000000 bfe0000000000000 bfe0000000000000 402a000000000000 4035000000000000 4040000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "rigid_compose", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "10", "20", "30", "1", "0", "0", "0", "1", "2", "4"] }
+
+[[case]]
+name = "rigid_compose writes the result into a place that is also its first place"
+run = ["{out}/math_probe{exe}", "rigid_compose", "1", "0", "0", "0", "10", "20", "30", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "3"]
+claims = { status = 0, line = ["rigid_compose 3fe0000000000000 bfe0000000000000 3fe0000000000000 bfe0000000000000 4026000000000000 4032000000000000 403b000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "rigid_compose", "1", "0", "0", "0", "10", "20", "30", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "1", "2", "4"] }
+
+[[case]]
+name = "rigid_invert gives the opposite rotation and the origin seen from the place"
+run = ["{out}/math_probe{exe}", "rigid_invert", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "10", "20", "30"]
+claims = { status = 0, line = ["rigid_invert bfe0000000000000 bfe0000000000000 bfe0000000000000 3fe0000000000000 c034000000000000 c03e000000000000 c024000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "rigid_invert", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "0x1.0000000000000p-1", "10", "20", "31"] }
+
+[[case]]
+name = "affine_move multiplies a point by the basis in 64 bits and adds the origin"
+run = ["{out}/math_probe{exe}", "affine_move", "2", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30", "1", "2", "3"]
+claims = { status = 0, line = ["affine_move 4028000000000000 403c000000000000 404b000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "affine_move", "2", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30", "1", "2", "4"] }
+
+[[case]]
+name = "affine_move keeps the bits of a far point that 32 bits cannot hold"
+run = ["{out}/math_probe{exe}", "affine_move", "0x1.99999a0000000p-4", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30", "0x1.dcd6500200000p+29", "2", "3"]
+claims = { status = 0, line = ["affine_move 4197d7842e0f7a9a 403c000000000000 404b000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "affine_move", "0x1.99999a0000000p-4", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30", "0x1.dcd6500400000p+29", "2", "3"] }
+
+[[case]]
+name = "affine_compose gives the product of the 2 bases and the origin of the local place moved by the parent"
+run = ["{out}/math_probe{exe}", "affine_compose", "2", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30", "1", "2", "0", "0", "1", "0", "3", "0", "1", "1", "2", "3"]
+claims = { status = 0, line = ["affine_compose 40000000 41000000 00000000 00000000 40800000 00000000 40c00000 00000000 41000000 4028000000000000 403c000000000000 404b000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "affine_compose", "2", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30", "1", "2", "0", "0", "1", "0", "3", "0", "1", "1", "2", "4"] }
+
+[[case]]
+name = "affine_invert writes the opposite place and gives true"
+run = ["{out}/math_probe{exe}", "affine_invert", "2", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30"]
+claims = { status = 0, line = ["affine_invert 1 3f000000 00000000 00000000 00000000 3e800000 00000000 00000000 00000000 3e000000 c014000000000000 c014000000000000 c00e000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "affine_invert", "2", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "31"] }
+
+[[case]]
+name = "affine_invert gives false and writes nothing for a basis with a determinant of 0"
+run = ["{out}/math_probe{exe}", "affine_invert", "1", "2", "3", "2", "4", "6", "0", "0", "1", "10", "20", "30"]
+claims = { status = 0, line = ["affine_invert 0 3f800000 40000000 40400000 40000000 40800000 40c00000 00000000 00000000 3f800000 4024000000000000 4034000000000000 403e000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "affine_invert", "2", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30"] }
+
+[[case]]
+name = "mat3f_get_wide gives the same numbers in 64 bits"
+run = ["{out}/math_probe{exe}", "mat3f_get_wide", "0x1.99999a0000000p-4", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30"]
+claims = { status = 0, line = ["mat3f_get_wide 3fb99999a0000000 0000000000000000 0000000000000000 0000000000000000 4010000000000000 0000000000000000 0000000000000000 0000000000000000 4020000000000000"] }
+false = { run = ["{out}/math_probe{exe}", "mat3f_get_wide", "0x1.99999a0000000p-3", "0", "0", "0", "4", "0", "0", "0", "8", "10", "20", "30"] }

@@ -31,6 +31,12 @@ extern const probe_group_t VEC3_NUMBER_PROBES;
 extern const probe_group_t VEC4_PROBES;
 extern const probe_group_t TRIG_PROBES;
 extern const probe_group_t DISTANCE_PROBES;
+extern const probe_group_t QUATD_PROBES;
+extern const probe_group_t QUATF_PROBES;
+extern const probe_group_t MAT3D_PROBES;
+extern const probe_group_t MAT3F_PROBES;
+extern const probe_group_t PLACE_PROBES;
+extern const probe_group_t MAT4_PROBES;
 
 double read_f64(const char *text);
 float read_f32(const char *text);

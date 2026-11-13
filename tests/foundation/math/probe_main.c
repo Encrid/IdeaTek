@@ -12,7 +12,9 @@ static const probe_entry_t *find_entry(const char *name)
 {
     const probe_group_t *groups[] = { &SCALAR_PROBES, &ROOT_PROBES,
         &VEC3_PROBES, &VEC3_SHAPE_PROBES, &VEC3_NUMBER_PROBES, &VEC4_PROBES,
-        &TRIG_PROBES, &DISTANCE_PROBES };
+        &TRIG_PROBES, &DISTANCE_PROBES, &QUATD_PROBES, &QUATF_PROBES,
+        &MAT3D_PROBES, &MAT3F_PROBES, &PLACE_PROBES,
+        &MAT4_PROBES };
 
     for (size_t g = 0; g < sizeof(groups) / sizeof(groups[0]); g++)
         for (size_t i = 0; i < groups[g]->count; i++)
