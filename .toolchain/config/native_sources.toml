@@ -1,6 +1,6 @@
 [[source]]
 name = "bridge"
-url = "https://github.com/Encrid/Bridge/releases/download/v0.6.0/Bridge-{target}.zip"
+url = "https://github.com/Encrid/Bridge/releases/download/v0.7.0/Bridge-{target}.zip"
 sha256 = "{bridge_sha256}"
 into = "build/third_party/bridge/{target}"
 
@@ -12,7 +12,7 @@ into = "build/third_party/bb_native/{target}"
 
 [[source]]
 name = "bridge_host"
-url = "https://github.com/Encrid/Bridge-Host/releases/download/host-v0.7.0/Bridge-Host.zip"
-sha256 = "ea38fbbe30ff6a054a62d8d5c90ed7e1d7d14bcdbd3433d1458670f42aa41e68"
+url = "https://github.com/Encrid/Bridge-Host/releases/download/host-v0.8.0/Bridge-Host.zip"
+sha256 = "72029031afd6c1138345d99242b7f2b063ca187916223fa218c2fbd17591e44b"
 into = "build/third_party/bridge_host"
 top = "{target}"
