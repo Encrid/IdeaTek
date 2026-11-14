@@ -17,6 +17,8 @@ A project names the zip of `BM-IdeaTek-Rendering-Vulkan` in a `[[source]]`: `.to
 The identity of the module is `ideatek_rendering_vulkan:render@0.1.0`.
 Its role is the render module: `docs/extern/engine_subsystems/ideatek_rendering.h.md`, *The roles*.
 It draws through the device and the window images of the GPU module: `docs/extern/platform_abstraction/ideatek_gpu_vulkan.h.md`.
+It takes each function of Vulkan from the loader of the GPU module, through `get_instance_proc_addr`.
+For each image and each buffer, it takes a type of memory that has the properties of the object. It skips each type that the object allows and that lacks these properties.
 
 ### What the module draws
 

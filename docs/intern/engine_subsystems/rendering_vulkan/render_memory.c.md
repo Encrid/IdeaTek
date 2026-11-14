@@ -3,6 +3,8 @@
 This file finds the types of memory of the GPU, and makes the read buffers of the captures.
 
 `find_memory` gives the first type of memory that the needs of an object allow and that has each asked property.
+It walks the types from the last to the first, and keeps the last match, so it skips each allowed type that lacks a property.
+Vulkan gives each buffer a type that is visible to the host and coherent. It gives each image a type of the device. So a match is always there.
 
 `make_reads` makes 1 read buffer for each slot, of the size of the half of `capture_bytes`. With a half of 0, it makes none.
 The memory of a read buffer is visible to the host and coherent, and stays mapped. So the CPU reads the pixels of a capture with no other copy.

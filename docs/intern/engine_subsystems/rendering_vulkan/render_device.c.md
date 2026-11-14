@@ -10,14 +10,13 @@ With no device, the module draws nothing in the round. `tell_absence` writes the
 
 Each new device comes after a round whose status is not ready: `docs/extern/platform_abstraction/ideatek_gpu.h.md`. In that round the module ends the copies of its captures as failed and frees each object. In the first ready round it makes its objects again:
 
-1. `volkInitialize` opens the Vulkan library of the machine. `take_handles` keeps the handles.
+1. `take_handles` gives `get_instance_proc_addr` of `ideatek:VulkanDevice` to `volkInitializeCustom`, so the module uses the loader of the GPU module. It keeps the handles.
    It fills the calls with `volkLoadInstanceOnly` and `volkLoadDevice`.
    The module links its own copy of volk, so the calls of the GPU module do not change.
 2. `make_objects` makes 1 command pool on the family of `queue`, and 1 command buffer for each slot.
    It also makes the read buffers: `docs/intern/engine_subsystems/rendering_vulkan/render_memory.c.md`.
 
 When Vulkan refuses an object, the module writes the line of the refusal, and keeps the device as refused. It tries again only after a round with no ready device.
-`volkInitialize` fails only on a machine with no loader. Such a machine has no device of the GPU module, so no case reaches that branch. The branch has an exception in `.toolchain/project.toml`.
 
 ## The slots
 
