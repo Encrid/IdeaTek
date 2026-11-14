@@ -20,6 +20,7 @@ void attach_device(const bridge_api_t *api,
         .compute_queue = (uint64_t)gpu_module.queues[1],
         .transfer_queue = (uint64_t)gpu_module.queues[2],
         .timeline = (uint64_t)gpu_module.timeline,
+        .get_instance_proc_addr = (uint64_t)(uintptr_t)vkGetInstanceProcAddr,
         .queue_family = gpu_module.families[0],
         .compute_family = gpu_module.families[1],
         .transfer_family = gpu_module.families[2] };
