@@ -32,6 +32,31 @@ script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vs
 '''
 
 [[case]]
+name = "a type of memory that an object allows and that lacks its properties is skipped, so the capture gives its pixels"
+run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
+env = { SDL_VIDEO_DRIVER = "{window_row1}", STAND_IN_MEMORY_FLAGS = "0" }
+claims = { status = 0, matches = ["capture 0 ok 320x240 round [0-9]+ pixel 0 0 0 255"] }
+false = { env = { SDL_VIDEO_DRIVER = "{window_row1}", STAND_IN_MEMORY_FLAGS = "7" } }
+
+[case.folders]
+"{case}/m" = ["frame_sdl3", "window_sdl3", "gpu_vulkan_module", "rendering_vulkan", "sdl3_game_render", "SDL3_test", "vulkan_stand_in"]
+
+[case.files]
+"{case}/d.toml" = '''
+presets = ["{root}/tests/presets/sdl3_render.toml"]
+rounds = 14
+[content]
+paths = ["m"]
+ignore = ["m/SDL3{library}", "m/vulkan_stand_in{library}"]
+[backend.native]
+library = "{bb_native}/bridge_native"
+[module."ideatek_gpu_vulkan:gpu@0.1.0".config]
+loader = "./vulkan_stand_in{library}"
+[module."test:game@1.0.0".config]
+script = "1:request Game,320,240,windowed,default,-,-|1:gpureq none|2:swapreq vsync|4:camera 0,0,0,0,0,1|6:capture 0,0,0,0"
+'''
+
+[[case]]
 name = "a capture of a window that no camera draws gives no target"
 run = ["{bridge_host}/bridge-host{exe}", "{case}/d.toml"]
 env = { SDL_VIDEO_DRIVER = "{window_row1}" }
