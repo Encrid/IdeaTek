@@ -22,6 +22,8 @@ The tools import it. It does not run alone.
 | `known(table, what, where)` | Gives `table`. It stops if `table` has a key that `KEYS[what]` does not have. |
 | `merged(into, more, name, whence, above)` | Adds the keys of `more`, the file `name`, to `into`, as the section *The configuration* tells. `whence` gives the file of each key. |
 | `config(root)` | Gives the configuration of the project in `root`. |
+| `held(path, folder)` | Tells if a path is the folder of a part, or is in it. |
+| `part_of(config, path)` | Gives the part whose folder holds the path, or `None`. With nested folders, the longest folder wins. |
 | `tables(config, values, name)` | Gives the table `[<name>]` of the configuration, then the table `[<name>]` of each file of its key `with`. It replaces the variables in each path, and stops if a file is not there. |
 | `located(text, values)` | Gives the path of `text` in the root, after it replaces the variables. |
 | `expand(text, values)` | Gives `text` with the value of each variable in place of the variable. |

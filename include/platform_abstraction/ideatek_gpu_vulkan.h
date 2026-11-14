@@ -19,6 +19,7 @@
         uint64_t compute_queue; \
         uint64_t transfer_queue; \
         uint64_t timeline; \
+        uint64_t get_instance_proc_addr; \
         uint32_t queue_family; \
         uint32_t compute_family; \
         uint32_t transfer_family; \

@@ -116,7 +116,9 @@ A sky of the kind `IDEATEK_SKY_KIND_ATMOSPHERE` takes the sun from each directio
 An author asks for the image of a target with `ideatek:CaptureRequest` on an entity of its own. Each attach or change of the type asks for 1 capture.
 
 The render module copies the target after the last camera of the round that draws into it. The copy is the image that the target shows.
-When the copy is done, the render module attaches `ideatek:Capture` to the same entity. The GPU works after its round, so the capture comes some rounds later.
+When the copy is done, the render module attaches `ideatek:Capture` to the same entity. The GPU works after its round, so the capture comes later.
+It comes in the next round that gets an image in the same slot: `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The rounds*.
+When each round gets an image, that round is `frames_in_flight` rounds later.
 
 The pixels are in the order of the rows, from the top. Each pixel has 4 bytes: red, green, blue and alpha, as sRGB. No bytes are between the rows.
 The bytes are in the persistent arena of the render module, and a setting of the module gives their count.
@@ -989,7 +991,7 @@ Bytes 25 to 31 hold no field.
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
 | `pixels` | `bridge_text_t` | 0 | The pixels, 4 bytes for each. |
-| `round` | `uint64_t` | 8 | The round of the image: `index` of `ideatek:Frame`. |
+| `round` | `uint64_t` | 8 | The round of the image: `index` of `ideatek:Frame`, or 0 in a game with no `ideatek:Frame`. |
 | `width` | `uint32_t` | 16 | The width of the image, in pixels. |
 | `height` | `uint32_t` | 20 | The height of the image, in pixels. |
 | `status` | `ideatek_capture_status_t` | 24 | The result. |
@@ -1003,7 +1005,7 @@ Bytes 25 to 31 hold no field.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
-| `round` | `uint64_t` | 0 | The round of the frame: `index` of `ideatek:Frame`. |
+| `round` | `uint64_t` | 0 | The round of the frame: `index` of `ideatek:Frame`, or 0 in a game with no `ideatek:Frame`. |
 | `triangles` | `uint64_t` | 8 | The triangles that the frame drew. |
 | `gpu_bytes` | `uint64_t` | 16 | The GPU memory that the module holds, in bytes. |
 | `instances` | `uint32_t` | 24 | The drawn instances that the cameras tested. |

@@ -58,3 +58,12 @@ test = true
 sources = ["tests/platform_abstraction/gpu_vulkan_module/formats.c", "src/platform_abstraction/gpu_vulkan_module/gpu_formats.c"]
 include = ["include/platform_abstraction", "src/platform_abstraction/gpu_vulkan_module", "{bridge}/include"]
 flags = ["{vulkan_include}"]
+
+[[artifact]]
+name = "vulkan_stand_in"
+kind = "library"
+part = "gpu_vulkan_module"
+test = true
+sources = ["tests/platform_abstraction/gpu_vulkan_module/stand_in.c"]
+defines = ["STAND_IN_LOADER=\"{gpu_loader}\""]
+flags = ["{vulkan_include}"]

@@ -1,0 +1,8 @@
+presets = ["sdl3_render_alone.toml"]
+
+[module."ideatek_frame_sdl3:clock@0.1.0"]
+write = ["ideatek:Frame", "ideatek:Tick", "ideatek:TimeRequest", "ideatek:EventWait"]
+read = ["ideatek:ideatek_entity_t", "ideatek:ideatek_window_mode_t", "ideatek:ideatek_surface_t", "ideatek:WindowState"]
+
+[order]
+before = [["ideatek_frame_sdl3:clock:round", "ideatek_window_sdl3:window:events"]]

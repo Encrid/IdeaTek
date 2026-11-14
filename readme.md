@@ -93,6 +93,7 @@ Each part has a readme, which its release holds.
 | `loader_ktx2` | `BM-IdeaTek-Loader-KTX2` | `docs/usage/engine_subsystems/loader_ktx2.md` |
 | `space_bridge` | `BM-IdeaTek-Space-Bridge` | `docs/usage/engine_subsystems/space_bridge.md` |
 | `loader_gltf` | `BM-IdeaTek-Loader-Gltf` | `docs/usage/engine_subsystems/loader_gltf.md` |
+| `rendering_vulkan` | `BM-IdeaTek-Rendering-Vulkan` | `docs/usage/engine_subsystems/rendering_vulkan.md` |
 
 ### The implementations
 
@@ -117,6 +118,7 @@ Each implementation is a part with its own release. A module part fills the role
 | `loader_ktx2` | `BM-IdeaTek-Loader-KTX2` | `ideatek_loader_ktx2:loader@0.1.0` | A loader module of the resources part | The resources module of the deployment |
 | `space_bridge` | `BM-IdeaTek-Space-Bridge` | `ideatek_space_bridge:space@0.1.0` | The space module | Nothing: it stands on Bridge alone |
 | `loader_gltf` | `BM-IdeaTek-Loader-Gltf` | `ideatek_loader_gltf:loader@0.1.0` | A loader module of the resources part | The resources module and the KTX2 loader of the deployment |
+| `rendering_vulkan` | `BM-IdeaTek-Rendering-Vulkan` | `ideatek_rendering_vulkan:render@0.1.0` | The render module | The GPU module of the deployment, and its Vulkan loader |
 
 - The behavior and the settings of each role are in the document of its contract, under the name of the role.
 - The namespace of each identity is the key of its part, so no module has the namespace `ideatek`.

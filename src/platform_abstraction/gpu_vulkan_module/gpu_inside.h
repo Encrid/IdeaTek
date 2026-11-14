@@ -156,12 +156,14 @@ void query_chain(VkPhysicalDevice gpu, gpu_chain_t *c);
 uint32_t roadmap_lacks(const gpu_chain_t *c);
 void find_queues(VkPhysicalDevice gpu);
 
+bool make_sync(const bridge_api_t *api);
 bool make_device(const bridge_api_t *api, ideatek_gpu_feature_t asked,
     uint64_t asked_gpu);
 bool settle(const bridge_api_t *api);
 void release_device(const bridge_api_t *api);
 void drop_device(const bridge_api_t *api);
 void note_result(const bridge_api_t *api, VkResult result);
+VkResult first_result(VkResult kept, VkResult result);
 void attach_device(const bridge_api_t *api, ideatek_gpu_status_t status,
     ideatek_gpu_feature_t on);
 
@@ -170,7 +172,7 @@ void drop_surface(const bridge_api_t *api);
 
 bool make_swapchain(const bridge_api_t *api);
 void drop_swapchain(void);
-void take_images(void);
+VkResult take_images(void);
 
 void attach_round(const bridge_api_t *api, ideatek_swapchain_status_t status);
 

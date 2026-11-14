@@ -1,0 +1,36 @@
+[parts.rendering_vulkan]
+name = "BM-IdeaTek-Rendering-Vulkan"
+folder = "engine_subsystems/rendering_vulkan"
+uses = ["vulkan", "gpu", "gpu_vulkan_module", "rendering", "space", "frame", "frame_sdl3", "window_sdl3", "sdl3"]
+third_party = ["volk", "vulkan_headers"]
+
+[variables]
+rendering_vulkan_words = [
+    "abi=1", "config=ideatek_rendering_vulkan:Settings",
+    "settings=lod_threshold occlusion diffuse specular shading stats shader_folder world_precision origin_distance max_instances max_lights cluster_x cluster_y cluster_z lights_per_cell geometry_bytes texture_bytes capture_bytes",
+    "config.lod_threshold=1", "config.occlusion=false", "config.diffuse=lambert", "config.specular=ggx",
+    "config.shading=pixel", "config.stats=true", "config.shader_folder=", "config.world_precision=double_float",
+    "config.origin_distance=1000000000", "config.max_instances=65536", "config.max_lights=1024",
+    "config.cluster_x=16", "config.cluster_y=9", "config.cluster_z=24", "config.lights_per_cell=256",
+    "config.geometry_bytes=268435456", "config.texture_bytes=536870912", "config.capture_bytes=67108864",
+    "pinned=true", "reloadable=false", "spawns=64", "changes=65536", "persistent=67174400",
+    "scratch=1048576", "log_ring=2048", "spans=65536", "hot_reload=false",
+]
+
+[[artifact]]
+name = "rendering_vulkan"
+kind = "native_module"
+part = "rendering_vulkan"
+sources = ["src/engine_subsystems/rendering_vulkan/*.c"]
+include = ["include/engine_subsystems", "include/platform_abstraction", "include/kernel", "src/engine_subsystems/rendering_vulkan", "{volk_root}", "{vulkan_root}/include"]
+link = ["{out}/volk.a"]
+flags = ["{vulkan_include}", "-D_GNU_SOURCE"]
+manifest = ["ideatek_rendering_vulkan:render@0.1.0", "{rendering_vulkan_words}"]
+
+[[artifact]]
+name = "rendering_vulkan_reload"
+kind = "program"
+part = "rendering_vulkan"
+test = true
+sources = ["tests/platform_abstraction/sdl3/reload.c"]
+link = ["{out}/rendering_vulkan{library}"]

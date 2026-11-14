@@ -18,6 +18,7 @@
 #include "game_resources.h"
 #include "game_ktx2.h"
 #include "game_gltf.h"
+#include "game_render.h"
 #include "game_bench.h"
 #include "game_level.h"
 
@@ -342,6 +343,10 @@ static void run_step(const bridge_api_t *api, const char *verb, char *args)
 #endif
 #if defined(GAME_GLTF)
     if (game_gltf_step(api, verb, args))
+        return;
+#endif
+#if defined(GAME_RENDER)
+    if (game_render_step(api, verb, args))
         return;
 #endif
     if (!strcmp(verb, "request"))

@@ -9,6 +9,7 @@ The header includes no header of Vulkan. Each handle is a `uint64_t`, and a draw
 The GPU module attaches `ideatek:VulkanDevice` to the entity of `ideatek:GpuDevice`, when the status is `IDEATEK_GPU_STATUS_READY`.
 It attaches `ideatek:VulkanSwapchain` to the entity of the window in each round with an image.
 A drawer makes no device and no swapchain. It gives its work to the 3 queues, and destroys no handle of the GPU module.
+A drawer opens no loader of Vulkan. It takes each function of Vulkan from `get_instance_proc_addr`, so the GPU module and each drawer use 1 loader.
 
 ## The image of a round
 
@@ -55,7 +56,7 @@ With `validation`, the GPU module turns on the layer `VK_LAYER_KHRONOS_validatio
 ## ideatek:VulkanDevice
 
 `ideatek:VulkanDevice` gives the handles of the device.
-`ideatek_vulkan_device_t` takes 72 bytes. Its alignment is 8.
+`ideatek_vulkan_device_t` takes 80 bytes. Its alignment is 8.
 
 | Field | C type | Offset | Value |
 | --- | --- | --- | --- |
@@ -66,11 +67,12 @@ With `validation`, the GPU module turns on the layer `VK_LAYER_KHRONOS_validatio
 | `compute_queue` | `uint64_t` | 32 | The `VkQueue` of async compute. It can do compute and transfer. |
 | `transfer_queue` | `uint64_t` | 40 | The `VkQueue` of uploads, for the streaming. It can do transfer. |
 | `timeline` | `uint64_t` | 48 | The `VkSemaphore` of the type timeline: *The image of a round*. |
-| `queue_family` | `uint32_t` | 56 | The index of the family of `queue`. |
-| `compute_family` | `uint32_t` | 60 | The index of the family of `compute_queue`. |
-| `transfer_family` | `uint32_t` | 64 | The index of the family of `transfer_queue`. |
+| `get_instance_proc_addr` | `uint64_t` | 56 | The `vkGetInstanceProcAddr` of the loader that the GPU module opened. |
+| `queue_family` | `uint32_t` | 64 | The index of the family of `queue`. |
+| `compute_family` | `uint32_t` | 68 | The index of the family of `compute_queue`. |
+| `transfer_family` | `uint32_t` | 72 | The index of the family of `transfer_queue`. |
 
-Bytes 68 to 71 hold no field.
+Bytes 76 to 79 hold no field.
 The GPU module takes `compute_queue` from a family with compute and no graphics.
 It takes `transfer_queue` from a family with transfer and no graphics and no compute.
 If the GPU has no such family, the handle is `queue`, and the index is `queue_family`.
