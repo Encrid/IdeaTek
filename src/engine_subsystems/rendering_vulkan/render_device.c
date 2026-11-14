@@ -13,6 +13,8 @@ static void take_handles(render_device_t *d,
         .physical = (VkPhysicalDevice)vk->physical_device,
         .device = (VkDevice)vk->device, .queue = (VkQueue)vk->queue,
         .family = vk->queue_family };
+    volkInitializeCustom(
+        (PFN_vkGetInstanceProcAddr)(uintptr_t)vk->get_instance_proc_addr);
     volkLoadInstanceOnly(d->instance);
     volkLoadDevice(d->device);
 }
@@ -30,8 +32,6 @@ static bool make_objects(const ideatek_vulkan_device_t *vk)
         .commandBufferCount = RENDER_SLOTS };
     bool ok;
 
-    if (volkInitialize() != VK_SUCCESS)
-        return (false);
     take_handles(d, vk);
     ok = vkCreateCommandPool(d->device, &pool, nullptr, &d->pool)
         == VK_SUCCESS;

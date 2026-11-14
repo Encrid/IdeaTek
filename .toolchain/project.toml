@@ -284,10 +284,3 @@ line = 18
 col = 61
 side = "true"
 why = "The resources module attaches ideatek:Resource to each resource before the handle of its use, so the test of its value is a guard."
-
-[[branches.exception]]
-path = "src/engine_subsystems/rendering_vulkan/render_device.c"
-line = 33
-col = 9
-side = "true"
-why = "volkInitialize fails only on a machine with no Vulkan loader, and such a machine gives the module no device of the GPU module."
