@@ -13,6 +13,11 @@ The next round keeps the status lost, and the round after makes a new device wit
 Thus each drawer sees the status lost for 1 round: `docs/extern/platform_abstraction/ideatek_gpu.h.md`, *The device*. The loss also marks the device as released.
 `release_device` attaches the status none, and marks the device as released, for the round before a new device.
 
+## The handles
+
+`attach_device` puts the handles of the device into `ideatek:VulkanDevice`.
+`get_instance_proc_addr` holds the `vkGetInstanceProcAddr` of volk, which `load_vulkan` took from the loader: `docs/intern/platform_abstraction/gpu_vulkan_module/gpu_loader.c.md`.
+
 ## The end
 
 `drop_device` waits for the device, destroys the swapchain, the pool, the semaphores and the device.

@@ -10,6 +10,7 @@ In `BM-IdeaTek-Gpu-Vulkan`, each folder holds the module `gpu_vulkan_module.dll`
 Each folder of `BM-IdeaTek-Gpu-Vulkan.zip` also holds this readme and the licence.
 
 The module loads the loader of Vulkan at its start: the loader of the machine, or the one that the setting `loader` names.
+Each drawer uses the same loader, through `get_instance_proc_addr` of `ideatek:VulkanDevice`.
 A game that ships its own loader puts it beside the module, and puts the manifest of its driver in `vulkan/icd.d` beside the program.
 A machine with no loader of Vulkan, or with no Vulkan 1.4, gets no entity of `ideatek:Gpu`, and the module writes 1 line.
 A project names the zip of `BM-IdeaTek-Gpu-Vulkan` in a `[[source]]`: `.toolchain/docs/workflows.py.md`, *The release*.
